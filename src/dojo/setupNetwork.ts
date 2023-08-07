@@ -1,13 +1,11 @@
 import { defineContractComponents } from "./contractComponents";
 import { world } from "./world";
-import { number } from 'starknet';
+import { RPCProvider, Query } from "@dojoengine/core";
+import { Account, num } from "starknet";
 
-import { Providers, Query, SyncWorker} from "@dojoengine/core";
-import { Account, ec } from "starknet";
-
-export const KATANA_ACCOUNT_1_ADDRESS = "0x06f62894bfd81d2e396ce266b2ad0f21e0668d604e5bb1077337b6d570a54aea"
-export const KATANA_ACCOUNT_1_PRIVATEKEY = "0x07230b49615d175307d580c33d6fda61fc7b9aec91df0f5c1a5ebe3b8cbfee02"
-export const WORLD_ADDRESS = "0x126c4c3e537fb74ced27b005d9db03a086da316a034519df97fe16a817c717f"
+export const KATANA_ACCOUNT_1_ADDRESS = "0x03ee9e18edc71a6df30ac3aca2e0b02a198fbce19b7480a63a0d71cbd76652e0"
+export const KATANA_ACCOUNT_1_PRIVATEKEY = "0x0300001800000000300000180000000000030000000000003006001800006600"
+export const WORLD_ADDRESS = "0xbe7ba74325b10832a747f87c1dbca5c1a70c6d56c1000a0f89f90cb126287f"
 export const EVENT_KEY = "0x1a2f334228cee715f1f0f54053bb6b5eac54fa336e0bc1aacf7516decb0471d"
 
 
@@ -17,20 +15,25 @@ export async function setupNetwork() {
 
     const contractComponents = defineContractComponents(world);
 
-    const provider = new Providers.RPCProvider(WORLD_ADDRESS);
+    const provider = new RPCProvider(WORLD_ADDRESS);
 
-    const signer = new Account(provider.sequencerProvider, KATANA_ACCOUNT_1_ADDRESS, ec.getKeyPair(KATANA_ACCOUNT_1_PRIVATEKEY))
-
-    const syncWorker = new SyncWorker(provider, contractComponents, EVENT_KEY);
+    const signer = new Account(
+        {
+            rpc: {
+                nodeUrl: "http://localhost:5050"
+            }
+        },
+        KATANA_ACCOUNT_1_ADDRESS,
+        KATANA_ACCOUNT_1_PRIVATEKEY
+    )
 
     return {
         contractComponents,
         provider,
         signer,
-        execute: async (system: string, call_data: number.BigNumberish[]) => provider.execute(signer, system, call_data),
+        execute: async (system: string, call_data: num.BigNumberish[]) => provider.execute(signer, system, call_data),
         entity: async (component: string, query: Query) => provider.entity(component, query),
-        entities: async (component: string, partition: string) => provider.entities(component, partition),
-        world,
-        syncWorker
+        entities: async (component: string, partition: number) => provider.entities(component, partition),
+        world
     };
 }
