@@ -1,5 +1,5 @@
 import { SetupNetworkResult } from "./setupNetwork";
-import { InvokeTransactionReceiptResponse, shortString } from "starknet";
+import { Account, InvokeTransactionReceiptResponse, shortString } from "starknet";
 import { EntityIndex, setComponent } from "@latticexyz/recs";
 
 export type SystemCalls = ReturnType<typeof createSystemCalls>;
@@ -12,10 +12,12 @@ export enum Direction {
 }
 
 export function createSystemCalls(
-    { execute, signer, contractComponents }: SetupNetworkResult,
+    { execute, contractComponents }: SetupNetworkResult,
 ) {
-    const spawn = async () => {
-        const tx = await execute("spawn", []);
+    const spawn = async (signer: Account) => {
+        const tx = await execute(signer, "spawn", []);
+
+        console.log(tx)
         const receipt = await signer.waitForTransaction(tx.transaction_hash, { retryInterval: 500 })
 
         const events = parseEvent(receipt)
@@ -30,8 +32,8 @@ export function createSystemCalls(
         return receipt
     };
 
-    const move = async (direction: Direction) => {
-        const tx = await execute("move", [direction]);
+    const move = async (signer: Account, direction: Direction) => {
+        const tx = await execute(signer, "move", [direction]);
         const receipt = await signer.waitForTransaction(tx.transaction_hash, { retryInterval: 500 })
 
         const events = parseEvent(receipt)
