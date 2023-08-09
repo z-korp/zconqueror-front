@@ -48,7 +48,6 @@ export function createSystemCalls(
         return receipt
     };
 
-
     return {
         spawn,
         move
