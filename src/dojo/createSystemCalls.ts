@@ -28,22 +28,26 @@ export function createSystemCalls(
             value: { remaining: 10 },
         });
 
-        const tx = await execute(signer, "spawn", []);
-        const receipt = await signer.waitForTransaction(tx.transaction_hash, { retryInterval: 100 })
+        try {
+            const tx = await execute(signer, "spawn", []);
+            const receipt = await signer.waitForTransaction(tx.transaction_hash, { retryInterval: 100 })
 
-        const events = parseEvent(receipt)
-        const entity = parseInt(events[0].entity.toString()) as EntityIndex
+            const events = parseEvent(receipt)
+            const entity = parseInt(events[0].entity.toString()) as EntityIndex
 
-        const movesEvent = events[0] as Moves;
-        setComponent(contractComponents.Moves, entity, { remaining: movesEvent.remaining })
+            const movesEvent = events[0] as Moves;
+            setComponent(contractComponents.Moves, entity, { remaining: movesEvent.remaining })
 
-        const positionEvent = events[1] as Position;
-        setComponent(contractComponents.Position, entity, { x: positionEvent.x, y: positionEvent.y })
-
-        Position.removeOverride(positionId);
-        Moves.removeOverride(movesId);
-
-        return receipt
+            const positionEvent = events[1] as Position;
+            setComponent(contractComponents.Position, entity, { x: positionEvent.x, y: positionEvent.y })
+        } catch (e) {
+            console.log(e)
+            Position.removeOverride(positionId);
+            Moves.removeOverride(movesId);
+        } finally {
+            Position.removeOverride(positionId);
+            Moves.removeOverride(movesId);
+        }
     };
 
     const move = async (signer: Account, direction: Direction) => {
@@ -55,29 +59,32 @@ export function createSystemCalls(
         });
 
         const movesId = uuid();
-
-
         Moves.addOverride(movesId, {
             entity: entityId,
             value: { remaining: (getComponentValue(Moves, entityId)?.remaining || 0) - 1 },
         });
 
-        const tx = await execute(signer, "move", [direction]);
-        const receipt = await signer.waitForTransaction(tx.transaction_hash, { retryInterval: 100 })
+        try {
+            const tx = await execute(signer, "move", [direction]);
+            const receipt = await signer.waitForTransaction(tx.transaction_hash, { retryInterval: 100 })
 
-        const events = parseEvent(receipt)
-        const entity = parseInt(events[0].entity.toString()) as EntityIndex
+            const events = parseEvent(receipt)
+            const entity = parseInt(events[0].entity.toString()) as EntityIndex
 
-        const movesEvent = events[0] as Moves;
-        setComponent(contractComponents.Moves, entity, { remaining: movesEvent.remaining })
+            const movesEvent = events[0] as Moves;
+            setComponent(contractComponents.Moves, entity, { remaining: movesEvent.remaining })
 
-        const positionEvent = events[1] as Position;
-        setComponent(contractComponents.Position, entity, { x: positionEvent.x, y: positionEvent.y })
+            const positionEvent = events[1] as Position;
+            setComponent(contractComponents.Position, entity, { x: positionEvent.x, y: positionEvent.y })
+        } catch (e) {
+            console.log(e)
+            Position.removeOverride(positionId);
+            Moves.removeOverride(movesId);
+        } finally {
+            Position.removeOverride(positionId);
+            Moves.removeOverride(movesId);
+        }
 
-        Position.removeOverride(positionId);
-        Moves.removeOverride(movesId);
-
-        return receipt
     };
 
     return {
