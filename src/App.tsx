@@ -1,10 +1,11 @@
 import './App.css';
 import { useDojo } from './DojoContext';
 import { useComponentValue } from "@dojoengine/react";
-import { Direction, Moves, Position } from './dojo/createSystemCalls'
+import { Direction, } from './dojo/createSystemCalls'
 import { EntityIndex, setComponent } from '@latticexyz/recs';
 import { useEffect } from 'react';
 import { extractAndCleanKey, getFirstComponentByType } from './utils';
+import { Moves, Position } from './generated/graphql';
 
 function App() {
   const {
