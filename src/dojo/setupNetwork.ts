@@ -5,13 +5,14 @@ import { Account, num } from "starknet";
 import { GraphQLClient } from 'graphql-request';
 import { getSdk } from '../generated/graphql';
 
-export const WORLD_ADDRESS = "0x26065106fa319c3981618e7567480a50132f23932226a51c219ffb8e47daa84"
+export const WORLD_ADDRESS = "0x789c94ef39aeebc7f8c4c4633030faefb8bee454e358ae53d06ced36136d7d6"
 
 export type SetupNetworkResult = Awaited<ReturnType<typeof setupNetwork>>;
 
 export async function setupNetwork() {
 
     const client = new GraphQLClient('http://localhost:8080');
+
     const graphSdk = getSdk(client);
 
     const contractComponents = defineContractComponents(world);

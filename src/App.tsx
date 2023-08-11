@@ -28,7 +28,6 @@ function App() {
     const fetchData = async () => {
       const { data } = await graphSdk.getEntities();
 
-      console.log(data)
 
       if (data) {
         let remaining = getFirstComponentByType(data.entities, 'Moves') as Moves;

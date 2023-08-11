@@ -19,7 +19,7 @@ export function createSystemCalls(
         const positionId = uuid();
         Position.addOverride(positionId, {
             entity: entityId,
-            value: { x: 0, y: 0 },
+            value: { x: 10, y: 10 },
         });
 
         const movesId = uuid();
@@ -30,6 +30,8 @@ export function createSystemCalls(
 
         try {
             const tx = await execute(signer, "spawn", []);
+
+            console.log(tx)
             const receipt = await signer.waitForTransaction(tx.transaction_hash, { retryInterval: 100 })
 
             const events = parseEvent(receipt)
@@ -66,7 +68,11 @@ export function createSystemCalls(
 
         try {
             const tx = await execute(signer, "move", [direction]);
+
+            console.log(tx)
             const receipt = await signer.waitForTransaction(tx.transaction_hash, { retryInterval: 100 })
+
+            console.log(receipt)
 
             const events = parseEvent(receipt)
             const entity = parseInt(events[0].entity.toString()) as EntityIndex
