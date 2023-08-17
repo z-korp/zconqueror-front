@@ -8,8 +8,8 @@ export function getFirstComponentByType(entities: any[] | null | undefined, type
     if (!isValidArray(entities)) return null;
 
     for (let entity of entities) {
-        if (isValidArray(entity?.components)) {
-            const foundComponent = entity.components.find((comp: any) => comp.__typename === typename);
+        if (isValidArray(entity?.node.components)) {
+            const foundComponent = entity.node.components.find((comp: any) => comp.__typename === typename);
             if (foundComponent) return foundComponent;
         }
     }

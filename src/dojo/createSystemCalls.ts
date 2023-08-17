@@ -11,10 +11,10 @@ export function createSystemCalls(
     { execute, contractComponents }: SetupNetworkResult,
     { Position, Moves }: ClientComponents
 ) {
-    // dojo signer
-    const entityId = parseInt('0x3ee9e18edc71a6df30ac3aca2e0b02a198fbce19b7480a63a0d71cbd76652e0') as EntityIndex;
 
     const spawn = async (signer: Account) => {
+
+        const entityId = parseInt(signer.address) as EntityIndex;
 
         const positionId = uuid();
         Position.addOverride(positionId, {
@@ -53,6 +53,8 @@ export function createSystemCalls(
     };
 
     const move = async (signer: Account, direction: Direction) => {
+
+        const entityId = parseInt(signer.address) as EntityIndex;
 
         const positionId = uuid();
         Position.addOverride(positionId, {

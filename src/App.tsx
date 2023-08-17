@@ -4,7 +4,7 @@ import { useComponentValue } from "@dojoengine/react";
 import { Direction, } from './dojo/createSystemCalls'
 import { EntityIndex, setComponent } from '@latticexyz/recs';
 import { useEffect } from 'react';
-import { extractAndCleanKey, getFirstComponentByType } from './utils';
+import { getFirstComponentByType } from './utils';
 import { Moves, Position } from './generated/graphql';
 
 function App() {
@@ -14,49 +14,46 @@ function App() {
       components: { Moves, Position },
       network: { graphSdk }
     },
-    account: { create, list, select, account }
+    account: { create, list, select, account, isDeploying }
   } = useDojo();
 
-  // entity id of master account
-  const entityId = '0x3ee9e18edc71a6df30ac3aca2e0b02a198fbce19b7480a63a0d71cbd76652e0';
+  // entity id - this example uses the account address as the entity id
+  const entityId = account.address;
 
   // get current component values
   const position = useComponentValue(Position, parseInt(entityId.toString()) as EntityIndex);
   const moves = useComponentValue(Moves, parseInt(entityId.toString()) as EntityIndex);
 
   useEffect(() => {
+
+    if (!entityId) return;
+
     const fetchData = async () => {
       const { data } = await graphSdk.getEntities();
 
-
       if (data) {
-        let remaining = getFirstComponentByType(data.entities, 'Moves') as Moves;
-        let position = getFirstComponentByType(data.entities, 'Position') as Position;
+        let remaining = getFirstComponentByType(data.entities?.edges, 'Moves') as Moves;
+        let position = getFirstComponentByType(data.entities?.edges, 'Position') as Position;
 
-        let key = extractAndCleanKey(data.entities) ?? ''
-
-        setComponent(Moves, parseInt(key.toString()) as EntityIndex, { remaining: remaining.remaining })
-        setComponent(Position, parseInt(key.toString()) as EntityIndex, { x: position.x, y: position.y })
+        setComponent(Moves, parseInt(entityId.toString()) as EntityIndex, { remaining: remaining.remaining })
+        setComponent(Position, parseInt(entityId.toString()) as EntityIndex, { x: position.x, y: position.y })
       }
     }
 
     fetchData();
-  }, []);
+  }, [account.address]);
 
 
   return (
     <>
-      <div>
-        <div className="card">
-          Current Signer: {account?.address}
-        </div>
-      </div>
+      <button onClick={create}>{isDeploying ? "deploying burner" : "create burner"}</button>
       <div className="card">
-        <button onClick={create}>create burner</button>
-
-        {list().map((account, index) => {
-          return <button onClick={() => select(account.address)} key={index}>{account.address}</button>
-        })}
+        select signer:{" "}
+        <select onChange={e => select(e.target.value)}>
+          {list().map((account, index) => {
+            return <option value={account.address} key={index}>{account.address}</option>
+          })}
+        </select>
       </div>
 
       <div className="card">
