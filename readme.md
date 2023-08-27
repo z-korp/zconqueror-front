@@ -1,6 +1,6 @@
-## Integrate Phaser with Dojo: A Quick Start Guide
+## Integrate React with Dojo: A Quick Start Guide
 
-Dive into this straightforward example to understand how to meld Phaser with Dojo.
+Dive into this straightforward example to understand how to meld React with Dojo.
 
 This integration taps into the powerful libraries designed by [Lattice](https://lattice.xyz/):
 
