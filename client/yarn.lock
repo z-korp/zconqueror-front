@@ -697,10 +697,10 @@
     "@babel/helper-validator-identifier" "^7.19.1"
     to-fast-properties "^2.0.0"
 
-"@dojoengine/core@^0.0.15":
-  version "0.0.15"
-  resolved "https://registry.yarnpkg.com/@dojoengine/core/-/core-0.0.15.tgz#d8fa1875af2c79e3d85d3df68007ff01d47a2581"
-  integrity sha512-P4Qf7tKvleSW2FX2eatmicJr3RC+lot+S4BFthDmGsx+F2ou2W9IYaa0p5jVb+e1FpXk3uAMDwuUhKngAtczPw==
+"@dojoengine/core@^0.0.16":
+  version "0.0.16"
+  resolved "https://registry.yarnpkg.com/@dojoengine/core/-/core-0.0.16.tgz#7c23ec41d841d487a69133d751dd50ffcc85475c"
+  integrity sha512-saJwRZLqYJO7BPAq5TaJ841Z2tQUmd+3VjVUG7T80zyG5dGHfoHaz/6z3M49WcBaNH0MABSxxRQK4X5tBJmJSw==
 
 "@dojoengine/create-burner@^0.0.3":
   version "0.0.3"
@@ -2816,16 +2816,6 @@ ethers@^5.7.2:
     "@ethersproject/web" "5.7.1"
     "@ethersproject/wordlists" "5.7.0"
 
-eventemitter3@^5.0.0:
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-5.0.1.tgz#53f5ffd0a492ac800721bb42c66b841de96423c4"
-  integrity sha512-GWkBvjiSZK87ELrYOSESUYeVIc9mvLLf/nXalMOS5dYrgZq9o5OVkbZAVM06CVxYsCwH9BDZFPlQTlPA1j4ahA==
-
-events@^3.3.0:
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/events/-/events-3.3.0.tgz#31a95ad0a924e2d2c419a813aeb2c4e878ea7400"
-  integrity sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==
-
 external-editor@^3.0.3:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/external-editor/-/external-editor-3.1.0.tgz#cb03f740befae03ea4d283caed2741a83f335495"
@@ -3861,13 +3851,6 @@ path-type@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/path-type/-/path-type-4.0.0.tgz#84ed01c0a7ba380afe09d90a8c180dcd9d03043b"
   integrity sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw==
-
-phaser@^3.60.0:
-  version "3.60.0"
-  resolved "https://registry.yarnpkg.com/phaser/-/phaser-3.60.0.tgz#8a555623e64c707482e6321485b4bda84604590d"
-  integrity sha512-IKUy35EnoEVcl2EmJ8WOyK4X8OoxHYdlhZLgRGpNrvD1fEagYffhVmwHcapE/tGiLgyrnezmXIo5RrH2NcrTHw==
-  dependencies:
-    eventemitter3 "^5.0.0"
 
 picocolors@^1.0.0:
   version "1.0.0"
