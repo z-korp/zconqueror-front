@@ -16,13 +16,14 @@ export const DojoProvider = ({ children, value }: Props) => {
     return <DojoContext.Provider value={value}>{children}</DojoContext.Provider>;
 };
 
-const provider = new RpcProvider({
-    nodeUrl: import.meta.env.VITE_LOCAL_NODE_URL,
-});
+
 
 export const useDojo = () => {
     const value = useContext(DojoContext);
 
+    const provider = new RpcProvider({
+        nodeUrl: import.meta.env.VITE_PUBLIC_NODE_URL!,
+    });
     // 
     // this can be substituted with a wallet provider
     //
@@ -36,6 +37,8 @@ export const useDojo = () => {
             accountClassHash: import.meta.env.VITE_PUBLIC_ACCOUNT_CLASS_HASH!
         }
     );
+
+    console.log("account", account)
 
     if (!value) throw new Error("Must be used within a DojoProvider");
 

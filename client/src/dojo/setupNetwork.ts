@@ -9,7 +9,7 @@ export type SetupNetworkResult = Awaited<ReturnType<typeof setupNetwork>>;
 
 export async function setupNetwork() {
 
-    const provider = new RPCProvider(import.meta.env.VITE_PUBLIC_WORLD_ADDRESS!, import.meta.env.VITE_LOCAL_NODE_URL);
+    const provider = new RPCProvider(import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, import.meta.env.VITE_PUBLIC_NODE_URL);
 
     return {
         contractComponents: defineContractComponents(world),
@@ -18,6 +18,6 @@ export async function setupNetwork() {
         entity: async (component: string, query: Query) => provider.entity(component, query),
         entities: async (component: string, partition: number) => provider.entities(component, partition),
         world,
-        graphSdk: getSdk(new GraphQLClient(import.meta.env.VITE_LOCAL_TORII))
+        graphSdk: getSdk(new GraphQLClient(import.meta.env.VITE_PUBLIC_TORII))
     };
 }

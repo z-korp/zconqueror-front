@@ -43,7 +43,6 @@ function App() {
     fetchData();
   }, [account.address]);
 
-
   return (
     <>
       <button onClick={create}>{isDeploying ? "deploying burner" : "create burner"}</button>

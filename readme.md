@@ -28,22 +28,36 @@ For an in-depth setup guide, consult the [Dojo book](https://book.dojoengine.org
 
 After cloning the project, execute the following:
 
-1. **Terminal 1**:
+1. **Terminal 1 - Katana**:
 
 ```console
 cd dojo-starter && katana --disable-fee
 ```
 
-2. **Terminal 2**:
+2. **Terminal 2 - Contracts**:
 
 ```console
 cd dojo-starter && sozo build && sozo migrate
+
+// Basic Auth - This will allow burner Accounts to interact with the contracts
+sozo auth writer Position move
+sozo auth writer Position spawn
+sozo auth writer Moves move
+sozo auth writer Moves spawn
 ```
 
-3. **Terminal 3**:
+3. **Terminal 3 - Client**:
 
 ```console
 cd client && yarn && yarn dev
+```
+
+4. **Terminal 4 - Torii**:
+
+Uncomment the 'world_address' parameter in `dojo-starter/Scarb.toml` then:
+
+```console
+torii
 ```
 
 Upon completion, launch your browser and navigate to http://localhost:5173/. You'll be greeted by the running example!
