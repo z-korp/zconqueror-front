@@ -57,7 +57,7 @@ cd client && yarn && yarn dev
 Uncomment the 'world_address' parameter in `dojo-starter/Scarb.toml` then:
 
 ```console
-torii
+cd dojo-starter && torii
 ```
 
 Upon completion, launch your browser and navigate to http://localhost:5173/. You'll be greeted by the running example!
