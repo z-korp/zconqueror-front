@@ -39,17 +39,9 @@ function App() {
         setComponent(Position, parseInt(entityId.toString()) as EntityIndex, { x: position.x, y: position.y })
       }
     }
-
-    // const calls = async (method: string, args: any[]) => {
-    //   const data = await call(method, args);
-
-    //   console.log(data);
-    // }
-
-    // calls('execute', [1, 2])
-
     fetchData();
   }, [account.address]);
+
 
   return (
     <>
@@ -62,22 +54,18 @@ function App() {
           })}
         </select>
       </div>
-
       <div className="card">
         <button onClick={() => spawn(account)}>Spawn</button>
-      </div>
-      <div className="card">
-        <button onClick={() => move(account, Direction.Up)}>Move Up</button>
-        <button onClick={() => move(account, Direction.Down)}>Move Down</button>
-        <button onClick={() => move(account, Direction.Left)}>Move Left</button>
-        <button onClick={() => move(account, Direction.Right)}>Move Right</button>
-      </div>
-      <div className="card">
         <div>Moves Left: {moves ? `${moves['remaining']}` : 'Need to Spawn'}</div>
-      </div>
-      <div className="card">
         <div>Position: {position ? `${position['x']}, ${position['y']}` : 'Need to Spawn'}</div>
       </div>
+      <div className="card">
+        <button onClick={() => move(account, Direction.Up)}>Move Up</button> <br />
+        <button onClick={() => move(account, Direction.Left)}>Move Left</button>
+        <button onClick={() => move(account, Direction.Right)}>Move Right</button> <br />
+        <button onClick={() => move(account, Direction.Down)}>Move Down</button>
+      </div>
+
     </>
   );
 }
