@@ -12,7 +12,7 @@ function App() {
     setup: {
       systemCalls: { spawn, move },
       components: { Moves, Position },
-      network: { graphSdk }
+      network: { graphSdk, call }
     },
     account: { create, list, select, account, isDeploying }
   } = useDojo();
@@ -39,6 +39,14 @@ function App() {
         setComponent(Position, parseInt(entityId.toString()) as EntityIndex, { x: position.x, y: position.y })
       }
     }
+
+    // const calls = async (method: string, args: any[]) => {
+    //   const data = await call(method, args);
+
+    //   console.log(data);
+    // }
+
+    // calls('execute', [1, 2])
 
     fetchData();
   }, [account.address]);

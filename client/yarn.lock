@@ -697,10 +697,10 @@
     "@babel/helper-validator-identifier" "^7.19.1"
     to-fast-properties "^2.0.0"
 
-"@dojoengine/core@^0.0.16":
-  version "0.0.16"
-  resolved "https://registry.yarnpkg.com/@dojoengine/core/-/core-0.0.16.tgz#7c23ec41d841d487a69133d751dd50ffcc85475c"
-  integrity sha512-saJwRZLqYJO7BPAq5TaJ841Z2tQUmd+3VjVUG7T80zyG5dGHfoHaz/6z3M49WcBaNH0MABSxxRQK4X5tBJmJSw==
+"@dojoengine/core@^0.0.17":
+  version "0.0.17"
+  resolved "https://registry.yarnpkg.com/@dojoengine/core/-/core-0.0.17.tgz#f47b1e50d6e76bd52714edb4fbfe4fdfc5351ddd"
+  integrity sha512-e2p+UQ6lRIS9YJOQa1D0vlydtwKA9w4g+bzWisj4Q2K9hTy5Rq9E6JeNCsPGRigWQYTFszisVYwt/LU89ZCObA==
 
 "@dojoengine/create-burner@^0.0.13":
   version "0.0.13"
