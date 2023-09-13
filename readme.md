@@ -1,21 +1,63 @@
-## Dojo create-react-app 
+## Integrate React with Dojo: A Quick Start Guide
 
-The pattern here is inherited from mud.dev and is a simple example of how to use the dojo engine with create-react-app.
+Dive into this straightforward example to understand how to meld React with Dojo.
 
-### Steps to Execute the Example
+This integration taps into the powerful libraries designed by [Lattice](https://lattice.xyz/):
 
-Firstly, clone the [dojo-starter](https://github.com/dojoengine/dojo-starter) project and follow the given instructions to ensure it's functioning correctly. This step is crucial as this client displays data obtained from the project.
+- [recs](https://github.com/latticexyz/mud/tree/main/packages/recs)
 
-Subsequently, clone this project and execute the following commands in the terminal:
+### Initial Setup
+
+The repository already contains the `dojo-starter` as a submodule. Feel free to remove it if you prefer.
+
+**Prerequisites:** First and foremost, ensure that Dojo is installed on your system. If it isn't, you can easily get it set up with:
 
 ```console
-yarn
-
-yarn generate
-
-yarn dev
+curl -L https://install.dojoengine.org | bash
 ```
 
-### Notes
+Followed by:
 
-This is just a simple example of how to setup a project, but in by no means is the only way.
+```console
+dojoup
+```
+
+For an in-depth setup guide, consult the [Dojo book](https://book.dojoengine.org/getting-started/quick-start.html).
+
+### Launch the Example in Under 30 Seconds
+
+After cloning the project, execute the following:
+
+1. **Terminal 1 - Katana**:
+
+```console
+cd dojo-starter && katana --disable-fee
+```
+
+2. **Terminal 2 - Contracts**:
+
+```console
+cd dojo-starter && sozo build && sozo migrate
+
+// Basic Auth - This will allow burner Accounts to interact with the contracts
+sozo auth writer Position move
+sozo auth writer Position spawn
+sozo auth writer Moves move
+sozo auth writer Moves spawn
+```
+
+3. **Terminal 3 - Client**:
+
+```console
+cd client && yarn && yarn dev
+```
+
+4. **Terminal 4 - Torii**:
+
+Uncomment the 'world_address' parameter in `dojo-starter/Scarb.toml` then:
+
+```console
+cd dojo-starter && torii
+```
+
+Upon completion, launch your browser and navigate to http://localhost:5173/. You'll be greeted by the running example!
