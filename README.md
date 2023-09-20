@@ -61,3 +61,27 @@ cd dojo-starter && torii
 ```
 
 Upon completion, launch your browser and navigate to http://localhost:5173/. You'll be greeted by the running example!
+
+## 🛠 Tech Stack
+
+This project utilizes a range of modern technologies to deliver optimal performance and user experience:
+
+- **Framework**: 
+  - [React](https://reactjs.org/)
+- **Language**: 
+  - [TypeScript](https://bun.sh/)
+- **Package Manager**: 
+  - [bun](https://www.npmjs.com/)
+- **Build Tool**: 
+  - [Vite](https://vitejs.dev/)
+- **UI**:
+  - [Shadcn](https://ui.shadcn.com/)
+  - [TailwindCSS](https://tailwindcss.com/)
+
+
+## Shadcn
+Use the add command to add components and dependencies to your project.
+
+```bash
+npx shadcn-ui@latest add [component]```
+
