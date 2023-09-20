@@ -6,7 +6,7 @@ import { EntityIndex, setComponent } from "@latticexyz/recs";
 import { useEffect } from "react";
 import { getFirstComponentByType } from "./utils";
 import { Moves, Position } from "./generated/graphql";
-import Map from "./components/map";
+import Map from "./components/ui/map/map";
 import { Button } from "./components/ui/Button";
 
 function App() {
