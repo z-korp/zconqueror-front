@@ -1,5 +1,6 @@
 import React, { createElement } from "react";
 import { useEffect, useRef, useState } from "react";
+import { darken } from "polished";
 
 interface RegionProps {
   d: string;
@@ -33,7 +34,9 @@ const Region: React.FC<RegionProps> = ({
         cx,
         cy,
         r,
-        fill: "white",
+        fill: "red",
+        stroke: darken(0.2, "red"),
+        strokeWidth: 10,
       });
       setCircle(circle);
       const troupsText = createElement("text", {
