@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
+import TroopsMarker from "./troopmarker";
 
 interface RegionProps {
   d: string;
@@ -56,19 +57,15 @@ const Region: React.FC<RegionProps> = ({
   return (
     <>
       {position &&
+        troups &&
         containerRef &&
         containerRef.current &&
         ReactDOM.createPortal(
-          <div
-            className="absolute flex justify-center items-center cursor-pointer bg-red-500 border-2 border-red-700 rounded-full w-8 h-8"
-            style={{
-              top: `calc(${position.y}px - 15px)`,
-              left: `calc(${position.x}px - 15px)`,
-            }}
-            onClick={() => handlePathClick()}
-          >
-            <span className="text-lg text-black">{troups}</span>
-          </div>,
+          <TroopsMarker
+            position={position}
+            handlePathClick={handlePathClick}
+            troups={troups}
+          />,
 
           containerRef.current // render the button directly in the body
         )}
