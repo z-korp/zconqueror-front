@@ -9,11 +9,11 @@ const PlayPanel = ({ currentStateProp: currentPhase }: PlayPanelProps) => {
   const [currentState, setCurrentState] = useState(currentPhase);
 
   let phaseText = "";
-  if (currentPhase === 1) {
+  if (currentState === 1) {
     phaseText = "Deploying";
-  } else if (currentPhase === 2) {
+  } else if (currentState === 2) {
     phaseText = "Attacking";
-  } else if (currentPhase === 3) {
+  } else if (currentState === 3) {
     phaseText = "Fortifying";
   }
 

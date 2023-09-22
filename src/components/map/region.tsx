@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import TroopsMarker from "./troopmarker";
+import Modal from "react-modal";
 
 interface RegionProps {
   d: string;
@@ -21,6 +22,8 @@ const Region: React.FC<RegionProps> = ({
 }: RegionProps) => {
   const [position, setPosition] = useState<{ x: number; y: number }>();
   const pathRef = useRef<SVGPathElement>(null);
+
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     const path = pathRef.current;
@@ -52,6 +55,11 @@ const Region: React.FC<RegionProps> = ({
   const handlePathClick = () => {
     console.log(`Clicked on region ${region}`);
     console.log(`Troups: ${troups}`);
+    setModalVisible(true);
+  };
+
+  const handleModalClose = () => {
+    setModalVisible(false);
   };
 
   return (
@@ -76,6 +84,18 @@ const Region: React.FC<RegionProps> = ({
         fillOpacity={fillOpacity}
         onClick={handlePathClick}
       ></path>
+      {modalVisible && (
+        <Modal
+          isOpen={modalVisible}
+          onRequestClose={handleModalClose}
+          className="modal-content w-96 h-96"
+        >
+          <div>
+            {" "}
+            You are in the region {region} and you have {troups} troups
+          </div>
+        </Modal>
+      )}
     </>
   );
 };
