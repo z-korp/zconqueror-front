@@ -8,9 +8,8 @@ import { getFirstComponentByType } from "./utils";
 import { Moves, Position } from "./generated/graphql";
 import Map from "./components/map/map";
 import { Button } from "./components/ui/button";
-import RoundButton from "./components/roundButton";
-import { Play } from "lucide-react";
 import PlayPanel from "./components/playPanel";
+import NewGame from "./components/NewGame";
 
 function App() {
   const {
@@ -89,6 +88,7 @@ function App() {
       <div className="card">
         <Button onClick={() => spawn(account)}>Spawn</Button>
       </div>
+      <NewGame />
       <Map handleRegionClick={handleRegionClick} />
       <div className="flex justify-center">
         <PlayPanel currentStateProp={1} />
