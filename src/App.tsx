@@ -90,8 +90,9 @@ function App() {
         <Button onClick={() => spawn(account)}>Spawn</Button>
       </div>
       <Map handleRegionClick={handleRegionClick} />
-      <PlayPanel />
-
+      <div className="flex justify-center">
+        <PlayPanel currentStateProp={1} />
+      </div>
       <div className="card">
         <Button onClick={() => move(account, Direction.Up)}>Move Up</Button>
         <Button onClick={() => move(account, Direction.Down)}>Move Down</Button>
