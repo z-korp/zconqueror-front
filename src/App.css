@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -40,14 +44,8 @@
 .read-the-docs {
   color: #888;
 }
-
-.modal-content {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: white;
-  padding: 20px;
-  border-radius: 5px;
-  outline: none;
+@layer components {
+  .modal-base {
+    @apply absolute p-4 border-4 border-black rounded shadow-lg bg-white w-[80%] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-base outline-none;
+  }
 }

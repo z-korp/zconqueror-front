@@ -88,7 +88,8 @@ const Region: React.FC<RegionProps> = ({
         <Modal
           isOpen={modalVisible}
           onRequestClose={handleModalClose}
-          className="modal-content w-96 h-96"
+          className="modal-base w-96 h-96"
+          ariaHideApp={false}
         >
           <div>
             {" "}
