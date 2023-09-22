@@ -19,13 +19,13 @@ export function createSystemCalls(
         const positionId = uuid();
         Position.addOverride(positionId, {
             entity: entityId,
-            value: { x: 10, y: 10 },
+            value: { x: 1000, y: 1000 },
         });
 
         const movesId = uuid();
         Moves.addOverride(movesId, {
             entity: entityId,
-            value: { remaining: 10 },
+            value: { remaining: 100 },
         });
 
         try {
