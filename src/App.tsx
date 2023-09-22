@@ -6,8 +6,11 @@ import { EntityIndex, setComponent } from "@latticexyz/recs";
 import { useEffect } from "react";
 import { getFirstComponentByType } from "./utils";
 import { Moves, Position } from "./generated/graphql";
-import Map from "./components/ui/map/map";
-import { Button } from "./components/ui/Button";
+import Map from "./components/map/map";
+import { Button } from "./components/ui/button";
+import RoundButton from "./components/roundButton";
+import { Play } from "lucide-react";
+import PlayPanel from "./components/playPanel";
 
 function App() {
   const {
@@ -87,6 +90,8 @@ function App() {
         <Button onClick={() => spawn(account)}>Spawn</Button>
       </div>
       <Map handleRegionClick={handleRegionClick} />
+      <PlayPanel />
+
       <div className="card">
         <Button onClick={() => move(account, Direction.Up)}>Move Up</Button>
         <Button onClick={() => move(account, Direction.Down)}>Move Down</Button>
