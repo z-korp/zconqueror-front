@@ -1,6 +1,8 @@
 import { useState } from "react";
 import Modal from "react-modal";
 import { Button } from "./ui/button";
+import NewGameModal from "./lobby/NewGameModal";
+import JoinGameModal from "./lobby/JoinGameModal";
 
 interface NewGameProps {}
 
@@ -24,6 +26,10 @@ const NewGame: React.FC = () => {
     setCreateModalVisible(false);
   };
 
+  const handleCreateGame = () => {
+    // Implement creating the game with the selected options
+  };
+
   return (
     <>
       <Button onClick={handleJoinClick} className="mx-2">
@@ -33,20 +39,16 @@ const NewGame: React.FC = () => {
         Create a new game
       </Button>
 
-      {joinModalVisible && (
-        <Modal isOpen={joinModalVisible} onRequestClose={handleJoinModalClose}>
-          <div>Join game modal content goes here</div>
-        </Modal>
-      )}
+      <JoinGameModal
+        isOpen={joinModalVisible}
+        onRequestClose={handleJoinModalClose}
+      />
 
-      {createModalVisible && (
-        <Modal
-          isOpen={createModalVisible}
-          onRequestClose={handleCreateModalClose}
-        >
-          <div>Create game modal content goes here</div>
-        </Modal>
-      )}
+      <NewGameModal
+        isOpen={createModalVisible}
+        onRequestClose={handleCreateModalClose}
+        onCreateGame={handleCreateGame}
+      />
     </>
   );
 };
