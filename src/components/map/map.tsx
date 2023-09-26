@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import carte from "../../../../public/carte.png";
+import carte from "../../../public/carte.png";
 import Region from "./region";
 
 interface MapProps {
