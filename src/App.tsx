@@ -88,7 +88,7 @@ function App() {
       <div className="card">
         <Button onClick={() => spawn(account)}>Spawn</Button>
       </div>
-      <NewGame />
+      <NewGame className="mb-10" />
       <Map handleRegionClick={handleRegionClick} />
       <div className="flex justify-center">
         <PlayPanel currentStateProp={1} />

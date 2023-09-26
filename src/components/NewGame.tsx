@@ -3,9 +3,11 @@ import { Button } from "./ui/button";
 import NewGameModal from "./lobby/NewGameModal";
 import JoinGameModal from "./lobby/JoinGameModal";
 
-interface NewGameProps {}
+interface NewGameProps {
+  className?: string;
+}
 
-const NewGame: React.FC = () => {
+const NewGame: React.FC<NewGameProps> = ({ className }) => {
   const [joinModalVisible, setJoinModalVisible] = useState(false);
   const [createModalVisible, setCreateModalVisible] = useState(false);
 
@@ -30,7 +32,7 @@ const NewGame: React.FC = () => {
   };
 
   return (
-    <>
+    <div className={className}>
       <Button onClick={handleJoinClick} className="mx-2">
         Join a game
       </Button>
@@ -48,7 +50,7 @@ const NewGame: React.FC = () => {
         onRequestClose={handleCreateModalClose}
         onCreateGame={handleCreateGame}
       />
-    </>
+    </div>
   );
 };
 
