@@ -1,5 +1,4 @@
 import { useState } from "react";
-import Modal from "react-modal";
 import { Button } from "./ui/button";
 import NewGameModal from "./lobby/NewGameModal";
 import JoinGameModal from "./lobby/JoinGameModal";
