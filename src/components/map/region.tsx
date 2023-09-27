@@ -67,7 +67,7 @@ const Region: React.FC<RegionProps> = ({
   return (
     <>
       {position &&
-        troups &&
+        troups !== undefined &&
         containerRef &&
         containerRef.current &&
         ReactDOM.createPortal(

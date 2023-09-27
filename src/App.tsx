@@ -1,18 +1,14 @@
 import { useComponentValue } from '@dojoengine/react';
-import { EntityIndex, setComponent } from '@latticexyz/recs';
-import { useEffect } from 'react';
+import { EntityIndex } from '@latticexyz/recs';
 import './App.css';
 import { useDojo } from './DojoContext';
 import NewGame from './components/NewGame';
 import Map from './components/map/map';
 import PlayPanel from './components/playPanel';
-import { Moves, Position } from './generated/graphql';
-import { getFirstComponentByType } from './utils';
 
 function App() {
   const {
     setup: {
-      systemCalls: {},
       components: { Moves, Position },
       network: { graphSdk },
     },
@@ -35,35 +31,6 @@ function App() {
   const handleRegionClick = (region: string) => {
     alert(`Vous avez cliqué sur la ${region}`);
   };
-
-  useEffect(() => {
-    if (!entityId) return;
-
-    const fetchData = async () => {
-      const { data } = await graphSdk.getEntities();
-
-      if (data) {
-        let remaining = getFirstComponentByType(
-          data.entities?.edges,
-          'Moves'
-        ) as Moves;
-        let position = getFirstComponentByType(
-          data.entities?.edges,
-          'Position'
-        ) as Position;
-
-        setComponent(Moves, parseInt(entityId.toString()) as EntityIndex, {
-          remaining: remaining.remaining,
-        });
-        setComponent(Position, parseInt(entityId.toString()) as EntityIndex, {
-          x: position.x,
-          y: position.y,
-        });
-      }
-    };
-
-    fetchData();
-  }, [account.address]);
 
   return (
     <>

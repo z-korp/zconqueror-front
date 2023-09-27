@@ -7,7 +7,7 @@ import mapDataRaw from '../../assets/map/map.json';
 const mapData: MapData = mapDataRaw;
 
 interface PathItem {
-  id: string;
+  id: number;
   path: string;
 }
 
@@ -39,11 +39,11 @@ const Map: React.FC<MapProps> = ({ handleRegionClick }: MapProps) => {
             <>
               {mapData[region].map((item) => (
                 <Region
-                  id={10}
+                  id={item.id}
                   fill={region.toLowerCase()}
                   fillOpacity={0.5}
                   region={region}
-                  troups={10}
+                  troups={item.id}
                   containerRef={containerRef}
                   d={`M${item.path} z`}
                 />
