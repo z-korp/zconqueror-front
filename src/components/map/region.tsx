@@ -1,12 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
-import ReactDOM from "react-dom";
-import TroopsMarker from "./troopmarker";
-import Modal from "react-modal";
+import React, { useEffect, useRef, useState } from 'react';
+import ReactDOM from 'react-dom';
+import Modal from 'react-modal';
+import TroopsMarker from './troopmarker';
 
 interface RegionProps {
   d: string;
   fill: string;
   fillOpacity: number;
+  id: number;
   region: string;
   troups?: number;
   containerRef?: React.MutableRefObject<null>;
@@ -16,6 +17,7 @@ const Region: React.FC<RegionProps> = ({
   d,
   fill,
   fillOpacity,
+  id,
   region,
   troups,
   containerRef,
@@ -53,7 +55,7 @@ const Region: React.FC<RegionProps> = ({
   }, [region]);
 
   const handlePathClick = () => {
-    console.log(`Clicked on region ${region}`);
+    console.log(`Clicked on tile ${id}, region ${region}`);
     console.log(`Troups: ${troups}`);
     setModalVisible(true);
   };
@@ -82,6 +84,8 @@ const Region: React.FC<RegionProps> = ({
         d={d}
         fill={fill}
         fillOpacity={fillOpacity}
+        stroke="black"
+        strokeWidth="10" // adjust this value for the desired thickness
         onClick={handlePathClick}
       ></path>
       {modalVisible && (
@@ -92,8 +96,8 @@ const Region: React.FC<RegionProps> = ({
           ariaHideApp={false}
         >
           <div>
-            {" "}
-            You are in the region {region} and you have {troups} troups
+            You are in the tile {id} region {region} and you have {troups}{' '}
+            troups
           </div>
         </Modal>
       )}
