@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import carte from '../../../public/carte.png';
 import Region from './region';
 
-import mapDataRaw from '../../assets/map/map.json';
+import mapDataRaw from '../../assets/map/map-test.json';
 
 const mapData: MapData = mapDataRaw;
 
