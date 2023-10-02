@@ -1,4 +1,10 @@
-import { Component, Components, EntityIndex, Schema } from '@latticexyz/recs';
+import {
+  Component,
+  Components,
+  EntityIndex,
+  Schema,
+  setComponent,
+} from '@latticexyz/recs';
 import { poseidonHashMany } from 'micro-starknet';
 import {
   Account,
@@ -43,14 +49,7 @@ export function createSystemCalls(
           contractComponents,
           events
         );
-        /*await executeEvents(
-          eventsTransformed,
-          add_hole,
-          set_size,
-          reset_holes,
-          set_hit_mob,
-          set_turn
-        );*/
+        await executeEvents(eventsTransformed);
       }
     } catch (e) {
       console.log(e);
@@ -62,6 +61,33 @@ export function createSystemCalls(
   return {
     create,
   };
+}
+
+export async function executeEvents(events: TransformedEvent[]) {
+  const gameEvents = events.filter(
+    (e): e is GameEvent & ComponentData => e.type === 'Game'
+  );
+  // console.log('gameEvents', gameEvents);
+  for (const e of gameEvents) {
+    setComponent(e.component, e.entityIndex, e.componentValues);
+  }
+
+  const tileEvents = events.filter(
+    (e): e is TileEvent & ComponentData => e.type === 'Tile'
+  );
+  // console.log('tileEvents', tileEvents);
+  for (const e of tileEvents) {
+    setComponent(e.component, e.entityIndex, e.componentValues);
+  }
+
+  const playerEvents = events.filter(
+    (e): e is PlayerEvent & ComponentData => e.type === 'Player'
+  );
+  // console.log('playerEvents', playerEvents);
+  for (const e of playerEvents) {
+    //console.log(e._type);
+    setComponent(e.component, e.entityIndex, e.componentValues);
+  }
 }
 
 function hexToAscii(hex: string) {
@@ -156,10 +182,12 @@ function handlePlayerEvent(
   values: string[]
 ): Omit<PlayerEvent, 'component' | 'componentValues' | 'entityIndex'> {
   const [game_id, order] = keys.map((k) => Number(k));
-  const [address, name, supplyString] = values.map((v) =>
-    shortString.decodeShortString(v)
-  );
-  const supply = Number(supplyString);
+  const [addressRaw, nameRaw, supplyRaw] = values;
+
+  const address = addressRaw;
+  const name = shortString.decodeShortString(nameRaw);
+  const supply = Number(supplyRaw);
+
   console.log(
     `[Player: KEYS: (game_id: ${game_id}, order: ${order}) - VALUES: (address: ${address}, name: ${name}, supply: ${supply})]`
   );

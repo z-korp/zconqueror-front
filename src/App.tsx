@@ -1,11 +1,25 @@
+import { useEffect } from 'react';
 import './App.css';
 import { useDojo } from './DojoContext';
 import NewGame from './components/NewGame';
 import Map from './components/map/map';
 import PlayPanel from './components/playPanel';
-import { Button } from './components/ui/button';
+import { useComponentStates } from './hooks/useComponentState';
+import useIP from './hooks/useIp';
+import { useElementStore } from './utils/store';
 
 function App() {
+  const { set_ip } = useElementStore((state) => state);
+  const { ip, error, loading } = useIP();
+  useEffect(() => {
+    if (!loading && ip) {
+      set_ip(ip);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ip, loading]);
+
+  const contractState = useComponentStates();
+
   const {
     setup: {
       systemCalls: { create },
@@ -21,9 +35,6 @@ function App() {
   return (
     <>
       <NewGame />
-      <Button onClick={() => create(account, 'test', 112223, 'testname', 4)}>
-        Create
-      </Button>
       <Map handleRegionClick={handleRegionClick} />
       <div className="flex justify-center">
         <PlayPanel currentStateProp={1} />

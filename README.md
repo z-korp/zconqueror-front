@@ -83,5 +83,5 @@ This project utilizes a range of modern technologies to deliver optimal performa
 Use the add command to add components and dependencies to your project.
 
 ```bash
-npx shadcn-ui@latest add [component]```
+bunx shadcn-ui@latest add [component]```
 
