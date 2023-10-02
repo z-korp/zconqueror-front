@@ -13,6 +13,7 @@ export function defineContractComponents(world: World) {
           over: RecsType.Number,
           seed: RecsType.Number, // felt252
           player_count: RecsType.Number,
+          nonce: RecsType.Number,
         },
         {
           metadata: {
@@ -26,7 +27,9 @@ export function defineContractComponents(world: World) {
       return defineComponent(
         world,
         {
+          address: RecsType.String, // ContractAddress
           name: RecsType.String,
+          supply: RecsType.Number,
         },
         {
           metadata: {

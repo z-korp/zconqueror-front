@@ -88,6 +88,7 @@ type GameEvent = ComponentData & {
   over: boolean;
   seed: number;
   player_count: number;
+  nonce: number;
 };
 
 function handleGameEvent(
@@ -95,19 +96,21 @@ function handleGameEvent(
   values: string[]
 ): Omit<GameEvent, 'component' | 'componentValues' | 'entityIndex'> {
   const [account] = keys.map((k) => Number(k));
-  const [id, over, seed, player_count] = values.map((v) => Number(v));
+  const [id, overNumber, seed, player_count, nonce] = values.map((v) =>
+    Number(v)
+  );
+  const over = overNumber === 1;
   console.log(
-    `[Game: KEYS: (account: ${account}) - VALUES: (game_id: ${id}, over: ${Boolean(
-      over
-    )}, seed: ${seed}, player_count: ${player_count})]`
+    `[Game: KEYS: (account: ${account}) - VALUES: (game_id: ${id}, over: ${over}, seed: ${seed}, player_count: ${player_count}, nonce: ${nonce})]`
   );
   return {
     type: 'Game',
     account,
     id,
-    over: Boolean(over),
+    over,
     seed,
     player_count,
+    nonce,
   };
 }
 
@@ -143,7 +146,9 @@ type PlayerEvent = ComponentData & {
   type: 'Player';
   game_id: number;
   order: number;
+  address: string;
   name: string;
+  supply: number;
 };
 
 function handlePlayerEvent(
@@ -151,15 +156,20 @@ function handlePlayerEvent(
   values: string[]
 ): Omit<PlayerEvent, 'component' | 'componentValues' | 'entityIndex'> {
   const [game_id, order] = keys.map((k) => Number(k));
-  const [name] = values.map((v) => shortString.decodeShortString(v));
+  const [address, name, supplyString] = values.map((v) =>
+    shortString.decodeShortString(v)
+  );
+  const supply = Number(supplyString);
   console.log(
-    `[Player: KEYS: (game_id: ${game_id}, order: ${order}) - VALUES: (name: ${name})]`
+    `[Player: KEYS: (game_id: ${game_id}, order: ${order}) - VALUES: (address: ${address}, name: ${name}, supply: ${supply})]`
   );
   return {
     type: 'Player',
     game_id,
     order,
+    address,
     name,
+    supply,
   };
 }
 
