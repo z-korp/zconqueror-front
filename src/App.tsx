@@ -35,6 +35,7 @@ function App() {
 
   const handleClick = () => {
     console.log(contractState.players);
+    console.log(contractState.tiles);
   };
 
   return (
