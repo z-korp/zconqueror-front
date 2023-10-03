@@ -26,9 +26,7 @@ export const useComponentStates = () => {
 
   useEffect(() => {
     if (game) {
-      const playersId = getComponentEntities(Player);
       const playerArray = [];
-      console.log('players', playersId);
       for (let i = 0; i < game?.player_count; i++) {
         const playerId = getEntityIdFromKeys([BigInt(game?.id), BigInt(i)]);
         const player = getComponentValue(Player, playerId);
