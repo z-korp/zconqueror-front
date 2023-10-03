@@ -30,11 +30,17 @@ function App() {
 
   const handleRegionClick = (region: string) => {
     alert(`Vous avez cliqué sur la ${region}`);
+    console.log(contractState);
+  };
+
+  const handleClick = () => {
+    console.log(contractState.players);
   };
 
   return (
     <>
       <NewGame />
+      <button onClick={handleClick}>Afficher l'état du contrat</button>
       <Map handleRegionClick={handleRegionClick} />
       <div className="flex justify-center">
         <PlayPanel currentStateProp={1} />
