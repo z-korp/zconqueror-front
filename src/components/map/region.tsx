@@ -75,6 +75,7 @@ const Region: React.FC<RegionProps> = ({
             position={position}
             handlePathClick={handlePathClick}
             troups={troups}
+            color={fill}
           />,
 
           containerRef.current // render the button directly in the body
