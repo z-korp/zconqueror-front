@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
-import { shortString } from 'starknet';
 import './App.css';
 import { useDojo } from './DojoContext';
 import persoImage from './assets/perso.png';
 import NewGame from './components/NewGame';
+import SidePlayerInfo from './components/SidePlayerInfo';
 import Map from './components/map/map';
 import PlayPanel from './components/playPanel';
-import SidePlayerInfo from './components/sidePlayerInfo';
 import { useComponentStates } from './hooks/useComponentState';
 import useIP from './hooks/useIp';
 import { colorPlayer } from './utils/colors';
@@ -41,10 +40,7 @@ function App() {
   useEffect(() => {
     const adaptedPlayers = contractState.players.map((player, index) => ({
       address: player.address,
-      name:
-        Number(player.name) < 10
-          ? `Bot_${player.name}`
-          : `${shortString.decodeShortString(player.name)}`,
+      name: Number(player.name) < 10 ? `Bot_${player.name}` : `${player.name}`,
       supply: player.supply,
       image: persoImage,
       troops: 0,

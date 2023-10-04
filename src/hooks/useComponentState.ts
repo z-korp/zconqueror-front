@@ -27,6 +27,7 @@ export const useComponentStates = () => {
       for (let i = 0; i < game?.player_count; i++) {
         const playerId = getEntityIdFromKeys([BigInt(game?.id), BigInt(i)]);
         const player = getComponentValue(Player, playerId);
+        console.log('player', player);
         playerArray.push(player);
       }
       setPlayers(playerArray);
@@ -41,6 +42,8 @@ export const useComponentStates = () => {
       setTiles(tileArray);
     }
   }, [game]);
+
+  console.log(players[2]);
 
   return {
     game: { id: game?.id, over: game?.over, seed: game?.seed },
