@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react';
+import { shortString } from 'starknet';
 import './App.css';
 import { useDojo } from './DojoContext';
+import persoImage from './assets/perso.png';
 import NewGame from './components/NewGame';
 import Map from './components/map/map';
 import PlayPanel from './components/playPanel';
+import SidePlayerInfo from './components/sidePlayerInfo';
 import { useComponentStates } from './hooks/useComponentState';
 import useIP from './hooks/useIp';
+import { colorPlayer } from './utils/colors';
 import { useElementStore } from './utils/store';
-import SidePlayerInfo from './components/sidePlayerInfo';
-import persoImage from './assets/perso.png';
 
 interface Player {
   color: string;
@@ -36,15 +38,18 @@ function App() {
   }, [ip, loading]);
 
   useEffect(() => {
-    const adaptedPlayers = contractState.players.map((player) => ({
+    const adaptedPlayers = contractState.players.map((player, index) => ({
       address: player.address,
-      name: player.name,
+      name:
+        Number(player.name) < 10
+          ? `Bot_${player.name}`
+          : `${shortString.decodeShortString(player.name)}`,
       supply: player.supply,
       image: persoImage,
       troops: 0,
       territories: 0,
       cards: 0,
-      color: 'blue',
+      color: colorPlayer[index + 1],
     }));
     setPlayers(adaptedPlayers);
   }, [contractState.players]);
@@ -59,12 +64,13 @@ function App() {
 
   const handleRegionClick = (region: string) => {
     alert(`Vous avez cliqué sur la ${region}`);
-    console.log(contractState);
+    console.log(contractState.players);
+    console.log(contractState.tiles);
   };
 
   const handleClick = () => {
     console.log(contractState.players[0]);
-    console.log(players);
+    console.log(contractState.players);
   };
 
   return (
@@ -77,6 +83,7 @@ function App() {
         {players.map((player, index) => (
           <SidePlayerInfo
             key={index}
+            name={player.name}
             image={player.image}
             color={player.color}
             troops={player.troops}

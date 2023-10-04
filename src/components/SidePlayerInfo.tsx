@@ -1,5 +1,6 @@
 interface SidePlayerInfoProps {
   image: string;
+  name: string;
   color: string;
   troops: number;
   territories: number;
@@ -8,6 +9,7 @@ interface SidePlayerInfoProps {
 
 const SidePlayerInfo: React.FC<SidePlayerInfoProps> = ({
   image,
+  name,
   color,
   troops,
   territories,
@@ -19,6 +21,7 @@ const SidePlayerInfo: React.FC<SidePlayerInfoProps> = ({
         className={`flex flex-row items-center bg-${color}-500 border-radius-lg box-shadow-md mb-2`}
       >
         <div className="flex flex-col items-start mr-4">
+          <p>{name}</p>
           <p>Troupes : {troops}</p>
           <p>Territoires : {territories}</p>
           {/* <p>Cartes : {cards}</p> */}

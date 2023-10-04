@@ -3,6 +3,7 @@ import carte from '../../../public/carte.png';
 import Region from './region';
 
 import { useComponentStates } from '@/hooks/useComponentState';
+import { colorPlayer } from '@/utils/colors';
 import mapDataRaw from '../../assets/map/map-test.json';
 
 const mapData: MapData = mapDataRaw;
@@ -19,20 +20,6 @@ interface MapData {
 interface MapProps {
   handleRegionClick: (region: string) => void;
 }
-
-const colorPlayer = [
-  'white', // 'none
-  'red',
-  'blue',
-  'green',
-  'yellow',
-  'purple',
-  'pink',
-  'orange',
-  'cyan',
-  'indigo',
-  'teal',
-];
 
 const Map: React.FC<MapProps> = ({ handleRegionClick }: MapProps) => {
   const { tiles } = useComponentStates();
@@ -55,9 +42,9 @@ const Map: React.FC<MapProps> = ({ handleRegionClick }: MapProps) => {
           {Object.keys(mapData).map((region) => (
             <>
               {mapData[region].map((item) => {
-                const tile = tiles[item.id];
+                const tile = tiles[item.id - 1];
                 const troups = tile ? tile.army : 0;
-                const color = tile ? colorPlayer[tile.owner || 0] : 'white';
+                const color = tile ? colorPlayer[tile.owner + 1 || 0] : 'white';
                 return (
                   <Region
                     id={item.id}
