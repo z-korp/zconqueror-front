@@ -3,6 +3,7 @@ import {
   Components,
   EntityIndex,
   Schema,
+  Type,
   setComponent,
 } from '@latticexyz/recs';
 import { poseidonHashMany } from 'micro-starknet';
@@ -187,6 +188,7 @@ function handlePlayerEvent(
   const address = addressRaw;
   const name = shortString.decodeShortString(nameRaw);
   const supply = Number(supplyRaw);
+  console.log(nameRaw, name);
 
   console.log(
     `[Player: KEYS: (game_id: ${game_id}, order: ${order}) - VALUES: (address: ${address}, name: ${name}, supply: ${supply})]`
@@ -196,7 +198,7 @@ function handlePlayerEvent(
     game_id,
     order,
     address,
-    name,
+    name: shortString.encodeShortString('TEST12345'),
     supply,
   };
 }
@@ -225,14 +227,16 @@ export async function setComponentsFromEvents(
 
     // Component
     const component = components[componentName];
-    const componentValues = Object.keys(component.schema).reduce(
-      (acc: Schema, key, index) => {
-        const value = values[index];
-        acc[key] = Number(value);
-        return acc;
-      },
-      {}
-    );
+    const componentValues = Object.keys(component.schema).reduce<{
+      [key: string]: string | number;
+    }>((acc, key, index) => {
+      const value = values[index];
+      acc[key] =
+        component.schema[key] === Type.String
+          ? shortString.decodeShortString(value)
+          : Number(value);
+      return acc;
+    }, {});
     const entity = getEntityIdFromKeys(keys);
 
     const baseEventData = {

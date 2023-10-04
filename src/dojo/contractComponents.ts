@@ -27,7 +27,7 @@ export function defineContractComponents(world: World) {
       return defineComponent(
         world,
         {
-          address: RecsType.String, // ContractAddress
+          address: RecsType.Number, // ContractAddress
           name: RecsType.String,
           supply: RecsType.Number,
         },

@@ -32,7 +32,7 @@ const RoundButton: FC<RoundButtonProps> = ({
 
   return (
     <div
-      className={`flex justify-center items-center cursor-pointer ${selectedColorClass} border-2 border-${color}-700 rounded-full w-8 h-8 ${className}`}
+      className={`flex justify-center items-center cursor-pointer ${selectedColorClass} border-2 rounded-full w-8 h-8 ${className}`}
       onClick={onClick}
       style={style}
     >
