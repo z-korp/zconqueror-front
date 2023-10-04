@@ -1,20 +1,23 @@
-import { FC } from "react";
-import RoundButton from "../roundButton";
+import { FC } from 'react';
+import RoundButton from '../roundButton';
 
 interface TroopsMarkerProps {
   position: { x: number; y: number };
   handlePathClick: () => void;
   troups: number;
+  color: string;
 }
 
 const TroopsMarker: FC<TroopsMarkerProps> = ({
   position,
   handlePathClick,
   troups,
+  color,
 }) => {
+  if (troups === 0) return null;
   return (
     <RoundButton
-      color="red"
+      color={color}
       onClick={handlePathClick}
       className="absolute"
       style={{

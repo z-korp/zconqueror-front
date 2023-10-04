@@ -1,18 +1,14 @@
+import { getEntityIdFromKeys } from '@/dojo/createSystemCalls';
 import { useElementStore } from '@/utils/store';
 import { useComponentValue } from '@dojoengine/react';
-import {
-  EntityIndex,
-  getComponentEntities,
-  getComponentValue,
-} from '@latticexyz/recs';
+import { EntityIndex, getComponentValue } from '@latticexyz/recs';
 import { useEffect, useState } from 'react';
 import { useDojo } from '../DojoContext';
-import { getEntityIdFromKeys } from '@/dojo/createSystemCalls';
 
 export const useComponentStates = () => {
   const {
     setup: {
-      components: { Game, Player },
+      components: { Game, Player, Tile },
     },
   } = useDojo();
 
@@ -23,6 +19,7 @@ export const useComponentStates = () => {
   const game = useComponentValue(Game, entityId);
 
   const [players, setPlayers] = useState<any[]>([]);
+  const [tiles, setTiles] = useState<any[]>([]);
 
   useEffect(() => {
     if (game) {
@@ -32,13 +29,22 @@ export const useComponentStates = () => {
         const player = getComponentValue(Player, playerId);
         playerArray.push(player);
       }
-
       setPlayers(playerArray);
+
+      const tileArray = [];
+      const NUMBER_TILES = 5;
+      for (let i = 1; i < NUMBER_TILES + 1; i++) {
+        const tileId = getEntityIdFromKeys([BigInt(game?.id), BigInt(i)]);
+        const tile = getComponentValue(Tile, tileId);
+        tileArray.push(tile);
+      }
+      setTiles(tileArray);
     }
   }, [game]);
 
   return {
     game: { id: game?.id, over: game?.over, seed: game?.seed },
     players,
+    tiles,
   };
 };

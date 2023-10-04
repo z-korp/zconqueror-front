@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import carte from '../../../public/carte.png';
 import Region from './region';
 
+import { useComponentStates } from '@/hooks/useComponentState';
 import mapDataRaw from '../../assets/map/map-test.json';
 
 const mapData: MapData = mapDataRaw;
@@ -19,7 +20,23 @@ interface MapProps {
   handleRegionClick: (region: string) => void;
 }
 
+const colorPlayer = [
+  'white', // 'none
+  'red',
+  'blue',
+  'green',
+  'yellow',
+  'purple',
+  'pink',
+  'orange',
+  'cyan',
+  'indigo',
+  'teal',
+];
+
 const Map: React.FC<MapProps> = ({ handleRegionClick }: MapProps) => {
+  const { tiles } = useComponentStates();
+
   const containerRef = useRef(null);
 
   return (
@@ -37,17 +54,22 @@ const Map: React.FC<MapProps> = ({ handleRegionClick }: MapProps) => {
         >
           {Object.keys(mapData).map((region) => (
             <>
-              {mapData[region].map((item) => (
-                <Region
-                  id={item.id}
-                  fill={region.toLowerCase()}
-                  fillOpacity={0.5}
-                  region={region}
-                  troups={item.id}
-                  containerRef={containerRef}
-                  d={`M${item.path} z`}
-                />
-              ))}
+              {mapData[region].map((item) => {
+                const tile = tiles[item.id];
+                const troups = tile ? tile.army : 0;
+                const color = tile ? colorPlayer[tile.owner || 0] : 'white';
+                return (
+                  <Region
+                    id={item.id}
+                    fill={color}
+                    fillOpacity={0.5}
+                    region={region}
+                    troups={troups}
+                    containerRef={containerRef}
+                    d={`M${item.path} z`}
+                  />
+                );
+              })}
             </>
           ))}
         </svg>
