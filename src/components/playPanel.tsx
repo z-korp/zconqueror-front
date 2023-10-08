@@ -1,20 +1,24 @@
-import { useState } from "react";
-import RoundButton from "./roundButton";
+import { useState } from 'react';
+import RoundButton from './roundButton';
 
 interface PlayPanelProps {
   currentStateProp: number;
+  supply?: number;
 }
 
-const PlayPanel = ({ currentStateProp: currentPhase }: PlayPanelProps) => {
+const PlayPanel = ({
+  currentStateProp: currentPhase,
+  supply: supply,
+}: PlayPanelProps) => {
   const [currentState, setCurrentState] = useState(currentPhase);
 
-  let phaseText = "";
+  let phaseText = '';
   if (currentState === 1) {
-    phaseText = "Deploying";
+    phaseText = 'Deploying';
   } else if (currentState === 2) {
-    phaseText = "Attacking";
+    phaseText = 'Attacking';
   } else if (currentState === 3) {
-    phaseText = "Fortifying";
+    phaseText = 'Fortifying';
   }
 
   const handleNextPhaseClick = () => {
@@ -25,11 +29,11 @@ const PlayPanel = ({ currentStateProp: currentPhase }: PlayPanelProps) => {
     }
   };
 
-  const buttonText = currentState === 3 ? "End turn" : "Next Phase";
+  const buttonText = currentState === 3 ? 'End turn' : 'Next Phase';
 
   return (
-    <div className="card flex flex-row items-center p-4 w-96">
-      <RoundButton color="red" className="h-12 w-12 mb-5"></RoundButton>
+    <div className="card flex flex-row items-center p-4 w-3/5">
+      <RoundButton color="red" className="h-24 w-24 mb-5"></RoundButton>
 
       <div className="flex-1 flex flex-col justify-center items-center space-y-4  bg-red-100">
         {/* Three bars & text */}
@@ -38,17 +42,17 @@ const PlayPanel = ({ currentStateProp: currentPhase }: PlayPanelProps) => {
           <div className="flex flex-row">
             <div
               className={`h-2 w-16 rounded-full ${
-                currentState === 1 ? "bg-red-500" : "bg-gray-500"
+                currentState === 1 ? 'bg-red-500' : 'bg-gray-500'
               }`}
             ></div>
             <div
               className={`h-2 w-16 mx-2 rounded-full ${
-                currentState === 2 ? "bg-red-500" : "bg-gray-500"
+                currentState === 2 ? 'bg-red-500' : 'bg-gray-500'
               }`}
             ></div>
             <div
               className={`h-2 w-16 rounded-full ${
-                currentState === 3 ? "bg-red-500" : "bg-gray-500"
+                currentState === 3 ? 'bg-red-500' : 'bg-gray-500'
               }`}
             ></div>
           </div>
@@ -63,7 +67,9 @@ const PlayPanel = ({ currentStateProp: currentPhase }: PlayPanelProps) => {
         </button>
       </div>
 
-      <RoundButton color="green" className="h-12 w-12 mb-5"></RoundButton>
+      <RoundButton color="green" className="h-24 w-24 mb-5 text-2xl font-bold">
+        {supply}
+      </RoundButton>
     </div>
   );
 };

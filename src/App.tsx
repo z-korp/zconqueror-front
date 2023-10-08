@@ -27,6 +27,7 @@ function App() {
   const contractState = useComponentStates();
 
   const [players, setPlayers] = useState<Player[]>([]);
+  const [currentPlayer, setCurrentPlayer] = useState<Player | null>(null);
 
   const { ip, error, loading } = useIP();
   useEffect(() => {
@@ -48,6 +49,16 @@ function App() {
       color: colorPlayer[index + 1],
     }));
     setPlayers(adaptedPlayers);
+
+    const playerWithNonZeroSupply = adaptedPlayers.find(
+      (player) => player.supply !== 0
+    );
+    if (playerWithNonZeroSupply) {
+      setCurrentPlayer(playerWithNonZeroSupply);
+      console.log(
+        `Player with non-zero supply: ${playerWithNonZeroSupply.name}`
+      );
+    }
   }, [contractState.players]);
 
   const {
@@ -75,7 +86,6 @@ function App() {
       <button onClick={handleClick}>Afficher l'état du contrat</button>
       <Map handleRegionClick={handleRegionClick} />
       <div className="absolute top-32 right-0">
-        {/* <div className="flex flex-col"> */}
         {players.map((player, index) => (
           <SidePlayerInfo
             key={index}
@@ -87,10 +97,9 @@ function App() {
             cards={player.cards}
           />
         ))}
-        {/* </div> */}
       </div>
       <div className="flex justify-center">
-        <PlayPanel currentStateProp={1} />
+        <PlayPanel currentStateProp={1} supply={currentPlayer?.supply} />
       </div>
     </>
   );

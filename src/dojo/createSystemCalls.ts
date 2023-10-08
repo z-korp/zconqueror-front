@@ -198,7 +198,7 @@ function handlePlayerEvent(
     game_id,
     order,
     address,
-    name: shortString.encodeShortString('TEST12345'),
+    name,
     supply,
   };
 }
