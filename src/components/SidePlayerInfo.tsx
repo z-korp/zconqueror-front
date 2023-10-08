@@ -18,9 +18,9 @@ const SidePlayerInfo: React.FC<SidePlayerInfoProps> = ({
   return (
     <>
       <div
-        className={`relative flex flex-row items-center bg-${color}-500 border-radius-lg box-shadow-md mb-2`}
+        className={`relative flex flex-row items-center bg-${color}-500 rounded-l-lg box-shadow-md mb-2 pl-3 py-3`}
       >
-        <div className="flex flex-col items-end mr-1 flex-grow">
+        <div className="flex flex-col items-end mr-1 flex-grow pr-3">
           <p className="text-right">{name}</p>
           <p>Troupes : {troops}</p>
           <p>Territoires : {territories}</p>
