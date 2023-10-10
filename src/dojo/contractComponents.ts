@@ -30,6 +30,8 @@ export function defineContractComponents(world: World) {
           address: RecsType.Number, // ContractAddress
           name: RecsType.String,
           supply: RecsType.Number,
+          card: RecsType.Number,
+          conqueror: RecsType.Boolean,
         },
         {
           metadata: {
@@ -46,6 +48,9 @@ export function defineContractComponents(world: World) {
           army: RecsType.Number,
           owner: RecsType.Number,
           dispatched: RecsType.Number,
+          to: RecsType.Number,
+          from: RecsType.Number,
+          order: RecsType.Number, // felt252
         },
         {
           metadata: {

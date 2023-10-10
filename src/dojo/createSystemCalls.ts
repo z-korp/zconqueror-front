@@ -31,7 +31,8 @@ export function createSystemCalls(
     playerCount: number
   ) => {
     try {
-      const tx = await execute(signer, 'create', [
+      const tx = await execute(signer, 'actions', 'create', [
+        import.meta.env.VITE_PUBLIC_WORLD_ADDRESS,
         account,
         seed,
         name,
@@ -42,6 +43,7 @@ export function createSystemCalls(
       const receipt = (await signer.waitForTransaction(tx.transaction_hash, {
         retryInterval: 100,
       })) as InvokeTransactionReceiptResponse;
+      console.log(receipt.events);
 
       const events = receipt.events;
 
