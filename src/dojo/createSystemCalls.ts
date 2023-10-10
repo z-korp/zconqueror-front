@@ -66,13 +66,26 @@ export function createSystemCalls(
   };
 }
 
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 export async function executeEvents(events: TransformedEvent[]) {
-  const gameEvents = events.filter(
+  for (const e of events) {
+    setComponent(e.component, e.entityIndex, e.componentValues);
+    if (e.type === 'Game') {
+      await sleep(1000);
+    }
+  }
+  /*const gameEvents = events.filter(
     (e): e is GameEvent & ComponentData => e.type === 'Game'
   );
   // console.log('gameEvents', gameEvents);
   for (const e of gameEvents) {
     setComponent(e.component, e.entityIndex, e.componentValues);
+    if (e.nonce >= 0) {
+      await sleep(1000);
+    }
   }
 
   const tileEvents = events.filter(
@@ -90,7 +103,7 @@ export async function executeEvents(events: TransformedEvent[]) {
   for (const e of playerEvents) {
     //console.log(e._type);
     setComponent(e.component, e.entityIndex, e.componentValues);
-  }
+  }*/
 }
 
 function hexToAscii(hex: string) {
@@ -190,7 +203,6 @@ function handlePlayerEvent(
   const address = addressRaw;
   const name = shortString.decodeShortString(nameRaw);
   const supply = Number(supplyRaw);
-  console.log(nameRaw, name);
 
   console.log(
     `[Player: KEYS: (game_id: ${game_id}, order: ${order}) - VALUES: (address: ${address}, name: ${name}, supply: ${supply})]`

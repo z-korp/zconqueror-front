@@ -42,10 +42,12 @@ const NewGame: React.FC = () => {
     if (!ip) return;
 
     create(account, ip.toString(), 123, data.username, data.numberOfPlayers);
+
+    setCreateModalVisible(false);
   }
 
   return (
-    <>
+    <div className="mb-4">
       <Button onClick={handleJoinClick} className="mx-2">
         Join a game
       </Button>
@@ -78,7 +80,7 @@ const NewGame: React.FC = () => {
           <NewGameForm onFormSubmit={handleFormSubmit} />
         </Modal>
       )}
-    </>
+    </div>
   );
 };
 

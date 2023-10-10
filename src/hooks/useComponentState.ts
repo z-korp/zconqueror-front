@@ -27,8 +27,7 @@ export const useComponentStates = () => {
       for (let i = 0; i < game?.player_count; i++) {
         const playerId = getEntityIdFromKeys([BigInt(game?.id), BigInt(i)]);
         const player = getComponentValue(Player, playerId);
-        console.log('player', player);
-        playerArray.push(player);
+        if (player !== undefined) playerArray.push(player);
       }
       setPlayers(playerArray);
 
@@ -41,9 +40,17 @@ export const useComponentStates = () => {
       }
       setTiles(tileArray);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [game]);
 
-  console.log(players[2]);
+  useEffect(() => {
+    if (game && game.nonce !== undefined) {
+      const turn = (game.nonce / 3) % game.player_count;
+      console.log('turn', turn);
+    }
+  }, [game]);
+
+  //console.log(players[2]);
 
   return {
     game: { id: game?.id, over: game?.over, seed: game?.seed },

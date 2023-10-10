@@ -10,17 +10,7 @@ import { useComponentStates } from './hooks/useComponentState';
 import useIP from './hooks/useIp';
 import { colorPlayer } from './utils/colors';
 import { useElementStore } from './utils/store';
-
-interface Player {
-  color: string;
-  address: string;
-  name: string;
-  supply: number;
-  image: string;
-  troops: number;
-  territories: number;
-  cards: number;
-}
+import { Player } from './utils/types';
 
 function App() {
   const { set_ip } = useElementStore((state) => state);
@@ -38,6 +28,7 @@ function App() {
   }, [ip, loading]);
 
   useEffect(() => {
+    console.log(contractState.players, 'contractState.players');
     const adaptedPlayers = contractState.players.map((player, index) => ({
       address: player.address,
       name: Number(player.name) < 10 ? `Bot_${player.name}` : `${player.name}`,
@@ -75,15 +66,9 @@ function App() {
     console.log(contractState.tiles);
   };
 
-  const handleClick = () => {
-    console.log(contractState.players[0]);
-    console.log(contractState.players);
-  };
-
   return (
     <>
       <NewGame />
-      <button onClick={handleClick}>Afficher l'état du contrat</button>
       <Map handleRegionClick={handleRegionClick} />
       <div className="absolute top-32 right-0">
         {players.map((player, index) => (
@@ -99,7 +84,9 @@ function App() {
         ))}
       </div>
       <div className="flex justify-center">
-        <PlayPanel currentStateProp={1} supply={currentPlayer?.supply} />
+        {currentPlayer && (
+          <PlayPanel currentStateProp={1} currentPlayer={currentPlayer} />
+        )}
       </div>
     </>
   );
