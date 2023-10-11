@@ -1,19 +1,36 @@
-import { color100, colorClasses } from '@/utils/colors';
-import { Player } from '@/utils/types';
+import { useDojo } from '@/DojoContext';
+import { useComponentStates } from '@/hooks/useComponentState';
+import { color100, colorClasses, colorPlayer } from '@/utils/colors';
+import { useComponentValue } from '@dojoengine/react';
+import { EntityIndex } from '@latticexyz/recs';
 import { useState } from 'react';
+import persoImage from '../assets/perso.png';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 
 interface PlayPanelProps {
-  currentStateProp: number;
-  currentPlayer: Player;
+  index: number;
+  entityId: EntityIndex;
 }
 
-const PlayPanel = ({
-  currentStateProp: currentPhase,
-  currentPlayer,
-}: PlayPanelProps) => {
-  const [currentState, setCurrentState] = useState(currentPhase);
+const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
+  const {
+    setup: {
+      components: { Player },
+    },
+  } = useDojo();
+
+  const [currentState, setCurrentState] = useState(1);
+
+  const { turn } = useComponentStates();
+  const player = useComponentValue(Player, entityId);
+  if (player === undefined) return null;
+  if (index !== turn) return null;
+
+  const { name: rawName, supply } = player;
+  const name = Number(rawName) < 10 ? `Bot_${rawName}` : `${rawName}`;
+  const color = colorPlayer[index + 1];
+  const image = persoImage;
 
   let phaseText = '';
   if (currentState === 1) {
@@ -36,21 +53,16 @@ const PlayPanel = ({
 
   return (
     <Card
-      className={`flex flex-row items-center p-4 mt-4 gap-6 ${
-        color100[currentPlayer.color]
-      }`}
+      className={`flex flex-row items-center p-4 mt-4 gap-6 ${color100[color]}`}
     >
-      <Card
-        className={`w-20 h-20 rounded-full border border-gray-300 flex items-center justify-center ${
-          colorClasses[currentPlayer?.color]
-        }`}
-      >
-        <img
-          src={currentPlayer?.image}
-          alt={'player'}
-          className="rounded-full"
-        />
-      </Card>
+      <div className="flex flex-col">
+        <Card
+          className={`w-20 h-20 rounded-full border border-gray-300 flex items-center justify-center ${colorClasses[color]}`}
+        >
+          <img src={image} alt={'player'} className="rounded-full" />
+        </Card>
+        <div>{name}</div>
+      </div>
 
       <div className="flex-1 flex flex-col justify-center items-center space-y-4  ">
         {/* Three bars & text */}
@@ -81,7 +93,7 @@ const PlayPanel = ({
           className={
             'bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600'
           }
-          disabled={currentPlayer.supply !== 0}
+          disabled={supply !== 0}
           onClick={handleNextPhaseClick}
         >
           {buttonText}
@@ -89,11 +101,9 @@ const PlayPanel = ({
       </div>
 
       <Card
-        className={`w-20 h-20 rounded-full border border-gray-300 flex items-center justify-center text-2xl font-bold ${
-          colorClasses[currentPlayer?.color]
-        }`}
+        className={`w-20 h-20 rounded-full border border-gray-300 flex items-center justify-center text-2xl font-bold ${colorClasses[color]}`}
       >
-        {currentPlayer.supply}
+        {supply}
       </Card>
     </Card>
   );

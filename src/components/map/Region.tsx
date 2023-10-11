@@ -72,12 +72,6 @@ const Region: React.FC<RegionProps> = ({
     }
   }, [region]);
 
-  const handlePathClick = () => {
-    console.log(`Clicked on tile ${id}, region ${region}`);
-    console.log(`Troups: ${troups}`);
-    setModalVisible(true);
-  };
-
   const handleModalClose = () => {
     setModalVisible(false);
   };

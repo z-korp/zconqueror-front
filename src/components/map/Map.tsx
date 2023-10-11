@@ -1,5 +1,4 @@
-import { useComponentStates } from '@/hooks/useComponentState';
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import carte from '../../../public/carte.png';
 import mapDataRaw from '../../assets/map/map-test.json';
 import Region from './Region';
@@ -15,13 +14,7 @@ interface MapData {
   [key: string]: PathItem[];
 }
 
-interface MapProps {
-  handleRegionClick: (region: string) => void;
-}
-
-const Map: React.FC<MapProps> = ({ handleRegionClick }: MapProps) => {
-  const { tiles } = useComponentStates();
-
+const Map = () => {
   const containerRef = useRef(null);
 
   return (
@@ -39,17 +32,16 @@ const Map: React.FC<MapProps> = ({ handleRegionClick }: MapProps) => {
         >
           {Object.keys(mapData).map((region) => (
             <>
-              {mapData[region].map((item) => {
-                return (
-                  <Region
-                    id={item.id}
-                    fillOpacity={0.5}
-                    region={region}
-                    containerRef={containerRef}
-                    d={`M${item.path} z`}
-                  />
-                );
-              })}
+              {mapData[region].map((item) => (
+                <Region
+                  key={item.id}
+                  id={item.id}
+                  fillOpacity={0.5}
+                  region={region}
+                  containerRef={containerRef}
+                  d={`M${item.path} z`}
+                />
+              ))}
             </>
           ))}
         </svg>

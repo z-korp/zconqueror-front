@@ -14,6 +14,8 @@ export const useComponentStates = () => {
 
   const { ip } = useElementStore((state) => state);
 
+  const [turn, setTurn] = useState<number>(0);
+
   const entityId = ip as EntityIndex;
 
   const game = useComponentValue(Game, entityId);
@@ -32,7 +34,6 @@ export const useComponentStates = () => {
         const playerId = getEntityIdFromKeys([BigInt(game?.id), BigInt(i)]);
         playerIdsArray.push(playerId);
         const player = getComponentValue(Player, playerId);
-        console.log('player', player);
         if (player !== undefined) {
           playerArray.push(player);
           if (player.address === import.meta.env.VITE_PUBLIC_MASTER_ADDRESS) {
@@ -59,20 +60,8 @@ export const useComponentStates = () => {
   }, [game]);
 
   useEffect(() => {
-    console.log('players changed');
-  }, [players]);
-
-  useEffect(() => {
     if (game && game.nonce !== undefined) {
-      const turn = (game.nonce / 3) % game.player_count;
-      console.log('turn', turn);
-    }
-  }, [game]);
-
-  useEffect(() => {
-    if (game && game.nonce !== undefined) {
-      const turn = (game.nonce / 3) % game.player_count;
-      console.log('turn', turn);
+      setTurn((game.nonce / 3) % game.player_count);
     }
   }, [game]);
 
@@ -85,5 +74,6 @@ export const useComponentStates = () => {
     player,
     tiles,
     tileIds,
+    turn,
   };
 };

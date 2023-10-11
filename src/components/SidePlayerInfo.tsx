@@ -1,20 +1,31 @@
+import { useDojo } from '@/DojoContext';
+import { colorPlayer } from '@/utils/colors';
+import { useComponentValue } from '@dojoengine/react';
+import { EntityIndex } from '@latticexyz/recs';
+import persoImage from '../assets/perso.png';
+
 interface SidePlayerInfoProps {
-  image: string;
-  name: string;
-  color: string;
-  troops: number;
-  territories: number;
-  cards: number;
+  index: number;
+  entityId: EntityIndex;
 }
 
-const SidePlayerInfo: React.FC<SidePlayerInfoProps> = ({
-  image,
-  name,
-  color,
-  troops,
-  territories,
-  cards,
-}) => {
+const SidePlayerInfo: React.FC<SidePlayerInfoProps> = ({ index, entityId }) => {
+  const {
+    setup: {
+      components: { Player },
+    },
+  } = useDojo();
+
+  const player = useComponentValue(Player, entityId);
+  if (player === undefined) return null;
+
+  const { name: rawName, cards } = player;
+  const name = Number(rawName) < 10 ? `Bot_${rawName}` : `${rawName}`;
+  const color = colorPlayer[index + 1];
+  const troops = 0;
+  const territories = 0;
+  const image = persoImage;
+
   return (
     <>
       <div
