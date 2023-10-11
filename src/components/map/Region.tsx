@@ -1,11 +1,16 @@
+import { useDojo } from '@/DojoContext';
+import { useComponentStates } from '@/hooks/useComponentState';
+import { colorPlayer } from '@/utils/colors';
+import { useElementStore } from '@/utils/store';
+import { useComponentValue } from '@dojoengine/react';
 import React, { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import Modal from 'react-modal';
-import TroopsMarker from './troopmarker';
+import { Button } from '../ui/button';
+import TroopsMarker from './TroopMarker';
 
 interface RegionProps {
   d: string;
-  fill: string;
   fillOpacity: number;
   id: number;
   region: string;
@@ -15,13 +20,26 @@ interface RegionProps {
 
 const Region: React.FC<RegionProps> = ({
   d,
-  fill,
   fillOpacity,
   id,
   region,
-  troups,
   containerRef,
 }: RegionProps) => {
+  const {
+    setup: {
+      components: { Tile },
+      systemCalls: { supply },
+    },
+    account: { account },
+  } = useDojo();
+  const { ip } = useElementStore((state) => state);
+  const { tileIds } = useComponentStates();
+
+  const tile = useComponentValue(Tile, tileIds[id - 1]);
+
+  const troups = tile ? tile.army : 0;
+  const color = tile ? colorPlayer[tile.owner + 1 || 0] : 'white';
+
   const [position, setPosition] = useState<{ x: number; y: number }>();
   const pathRef = useRef<SVGPathElement>(null);
 
@@ -64,6 +82,11 @@ const Region: React.FC<RegionProps> = ({
     setModalVisible(false);
   };
 
+  const handleSupply = () => {
+    if (!ip) return;
+    supply(account, ip.toString(), id, 1);
+  };
+
   return (
     <>
       {position &&
@@ -75,7 +98,7 @@ const Region: React.FC<RegionProps> = ({
             position={position}
             handlePathClick={handlePathClick}
             troups={troups}
-            color={fill}
+            color={color}
           />,
 
           containerRef.current // render the button directly in the body
@@ -83,7 +106,7 @@ const Region: React.FC<RegionProps> = ({
       <path
         ref={pathRef}
         d={d}
-        fill={fill}
+        fill={color}
         fillOpacity={fillOpacity}
         stroke="black"
         strokeWidth="10" // adjust this value for the desired thickness
@@ -100,6 +123,7 @@ const Region: React.FC<RegionProps> = ({
             You are in the tile {id} region {region} and you have {troups}{' '}
             troups
           </div>
+          <Button onClick={handleSupply}>Deploy troups</Button>
         </Modal>
       )}
     </>

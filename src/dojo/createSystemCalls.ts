@@ -61,8 +61,45 @@ export function createSystemCalls(
     }
   };
 
+  const supply = async (
+    signer: Account,
+    account: string,
+    tile_index: number,
+    supply: number
+  ) => {
+    try {
+      const tx = await execute(signer, 'actions', 'supply', [
+        import.meta.env.VITE_PUBLIC_WORLD_ADDRESS,
+        account,
+        tile_index,
+        supply,
+      ]);
+
+      console.log(tx);
+      const receipt = (await signer.waitForTransaction(tx.transaction_hash, {
+        retryInterval: 100,
+      })) as InvokeTransactionReceiptResponse;
+      console.log(receipt.events);
+
+      const events = receipt.events;
+
+      if (events) {
+        const eventsTransformed = await setComponentsFromEvents(
+          contractComponents,
+          events
+        );
+        await executeEvents(eventsTransformed);
+      }
+    } catch (e) {
+      console.log(e);
+    } finally {
+      console.log('');
+    }
+  };
+
   return {
     create,
+    supply,
   };
 }
 
