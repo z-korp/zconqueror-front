@@ -81,6 +81,10 @@ const Region: React.FC<RegionProps> = ({
     supply(account, ip.toString(), id, 1);
   };
 
+  const handlePathClick = () => {
+    console.log('click');
+  };
+
   return (
     <>
       {position &&

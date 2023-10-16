@@ -2,7 +2,7 @@ import { useDojo } from '@/DojoContext';
 import { colorPlayer } from '@/utils/colors';
 import { useComponentValue } from '@dojoengine/react';
 import { EntityIndex } from '@latticexyz/recs';
-import persoImage from '../assets/perso.png';
+import { avatars } from '../utils/pfps';
 
 interface SidePlayerInfoProps {
   index: number;
@@ -24,7 +24,7 @@ const SidePlayerInfo: React.FC<SidePlayerInfoProps> = ({ index, entityId }) => {
   const color = colorPlayer[index + 1];
   const troops = 0;
   const territories = 0;
-  const image = persoImage;
+  const image = avatars[index + 1];
 
   return (
     <>
@@ -36,7 +36,7 @@ const SidePlayerInfo: React.FC<SidePlayerInfoProps> = ({ index, entityId }) => {
           <p>Troupes : {troops}</p>
           <p>Territoires : {territories}</p>
         </div>
-        <img src={image} alt={color} />
+        <img className="w-20 h-20" src={image} alt={color} />
         <div className="absolute top-3 transform -translate-y-1/2 -rotate-6 bg-white text-black px-2 py-1 rounded">
           {cards ? cards : 0}
         </div>

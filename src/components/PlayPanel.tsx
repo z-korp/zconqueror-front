@@ -4,7 +4,7 @@ import { color100, colorClasses, colorPlayer } from '@/utils/colors';
 import { useComponentValue } from '@dojoengine/react';
 import { EntityIndex } from '@latticexyz/recs';
 import { useState } from 'react';
-import persoImage from '../assets/perso.png';
+import { avatars } from '../utils/pfps';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 
@@ -30,7 +30,7 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
   const { name: rawName, supply } = player;
   const name = Number(rawName) < 10 ? `Bot_${rawName}` : `${rawName}`;
   const color = colorPlayer[index + 1];
-  const image = persoImage;
+  const image = avatars[index + 1];
 
   let phaseText = '';
   if (currentState === 1) {
