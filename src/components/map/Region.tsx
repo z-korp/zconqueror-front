@@ -82,7 +82,7 @@ const Region: React.FC<RegionProps> = ({
   };
 
   const handlePathClick = () => {
-    console.log('click');
+    setModalVisible(true);
   };
 
   return (
