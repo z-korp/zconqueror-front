@@ -638,7 +638,7 @@
   "contracts": [
     {
       "name": "actions",
-      "address": "0x57267c91cea80765a3652186a7e03005c1cd0d129e5576443b416ed49403bf3",
+      "address": "0x23d09e0e04e5167335e45280d3421774c572074f842ed48c72d87693f6e61e7",
       "class_hash": "0x444cc91797f93b39977bf00fb15712632ee7f8c27f200260d6af0055d957b4b",
       "abi": [
         {

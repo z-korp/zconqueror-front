@@ -9,12 +9,13 @@ import {
 import { poseidonHashMany } from 'micro-starknet';
 import {
   Account,
+  Call,
   Event,
   InvokeTransactionReceiptResponse,
   shortString,
 } from 'starknet';
 import { ClientComponents } from './createClientComponents';
-import { SetupNetworkResult } from './setupNetwork';
+import { SetupNetworkResult, getContractByName } from './setupNetwork';
 
 export type SystemCalls = ReturnType<typeof createSystemCalls>;
 
@@ -31,13 +32,21 @@ export function createSystemCalls(
     playerCount: number
   ) => {
     try {
-      const tx = await execute(signer, 'actions', 'create', [
-        import.meta.env.VITE_PUBLIC_WORLD_ADDRESS,
-        account,
-        seed,
-        name,
-        playerCount,
-      ]);
+      const calls: Call[] = [
+        {
+          contractAddress: getContractByName('actions')?.address || '',
+          entrypoint: 'create',
+          calldata: [
+            import.meta.env.VITE_PUBLIC_WORLD_ADDRESS,
+            account,
+            seed,
+            name,
+            playerCount,
+          ],
+        },
+      ];
+
+      const tx = await execute(signer, calls);
 
       console.log(tx);
       const receipt = (await signer.waitForTransaction(tx.transaction_hash, {
@@ -68,13 +77,18 @@ export function createSystemCalls(
     supply: number
   ) => {
     try {
-      const tx = await execute(signer, 'actions', 'supply', [
-        import.meta.env.VITE_PUBLIC_WORLD_ADDRESS,
-        account,
-        tile_index,
-        supply,
-      ]);
+      const call: Call = {
+        contractAddress: getContractByName('actions')?.address || '',
+        entrypoint: 'supply',
+        calldata: [
+          import.meta.env.VITE_PUBLIC_WORLD_ADDRESS,
+          account,
+          tile_index,
+          supply,
+        ],
+      };
 
+      const tx = await execute(signer, call);
       console.log(tx);
       const receipt = (await signer.waitForTransaction(tx.transaction_hash, {
         retryInterval: 100,

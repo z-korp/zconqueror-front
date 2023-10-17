@@ -12,9 +12,10 @@
     "create-components": "bunx @dojoengine/core src/dojo/manifest.json src/dojo/contractComponents.ts"
   },
   "dependencies": {
-    "@dojoengine/core": "^0.1.2",
+    "@dojoengine/core": "0.1.23",
     "@dojoengine/create-burner": "^0.1.2",
     "@dojoengine/react": "^0.0.3",
+    "@dojoengine/utils": "^0.1.2",
     "@hookform/resolvers": "^3.3.1",
     "@latticexyz/react": "^2.0.0-next.9",
     "@latticexyz/recs": "^2.0.0-next.9",
