@@ -17,11 +17,13 @@ interface RegionModalProps {
   open: boolean;
   onClose: (value: boolean) => void;
   regionId: number | null;
+  player: any;
 }
 
 const RegionModal: React.FC<RegionModalProps> = ({
   open,
   onClose,
+  player,
   regionId,
 }) => {
   const {
@@ -33,10 +35,6 @@ const RegionModal: React.FC<RegionModalProps> = ({
   } = useDojo();
 
   const { ip } = useElementStore((state) => state);
-
-  const { currentPlayerId } = useComponentStates();
-  const player = useComponentValue(Player, currentPlayerId);
-
   const [troopsToDeploy, setTroopsToDeploy] = React.useState(0);
 
   const handleSupply = () => {

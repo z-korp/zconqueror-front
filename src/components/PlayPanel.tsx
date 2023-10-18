@@ -3,10 +3,10 @@ import { useComponentStates } from '@/hooks/useComponentState';
 import { color100, colorClasses, colorPlayer } from '@/utils/colors';
 import { useComponentValue } from '@dojoengine/react';
 import { EntityIndex } from '@latticexyz/recs';
-import { useState } from 'react';
 import { avatars } from '../utils/pfps';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
+import { useElementStore } from '../utils/store';
 
 interface PlayPanelProps {
   index: number;
@@ -19,8 +19,9 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
       components: { Player },
     },
   } = useDojo();
-
-  const [currentState, setCurrentState] = useState(1);
+  const { current_state, set_current_state } = useElementStore(
+    (state) => state
+  );
 
   const { turn } = useComponentStates();
   const player = useComponentValue(Player, entityId);
@@ -33,23 +34,23 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
   const image = avatars[index + 1];
 
   let phaseText = '';
-  if (currentState === 1) {
+  if (current_state === 1) {
     phaseText = 'Deploying';
-  } else if (currentState === 2) {
+  } else if (current_state === 2) {
     phaseText = 'Attacking';
-  } else if (currentState === 3) {
+  } else if (current_state === 3) {
     phaseText = 'Fortifying';
   }
 
   const handleNextPhaseClick = () => {
-    if (currentState < 3) {
-      setCurrentState(currentState + 1);
+    if (current_state < 3) {
+      set_current_state(current_state + 1);
     } else {
-      setCurrentState(1);
+      set_current_state(1);
     }
   };
 
-  const buttonText = currentState === 3 ? 'End turn' : 'Next Phase';
+  const buttonText = current_state === 3 ? 'End turn' : 'Next Phase';
 
   return (
     <Card
@@ -71,17 +72,17 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
           <div className="flex flex-row">
             <div
               className={`h-2 w-16 rounded-full ${
-                currentState === 1 ? 'bg-red-500' : 'bg-gray-500'
+                current_state === 1 ? 'bg-red-500' : 'bg-gray-500'
               }`}
             ></div>
             <div
               className={`h-2 w-16 mx-2 rounded-full ${
-                currentState === 2 ? 'bg-red-500' : 'bg-gray-500'
+                current_state === 2 ? 'bg-red-500' : 'bg-gray-500'
               }`}
             ></div>
             <div
               className={`h-2 w-16 rounded-full ${
-                currentState === 3 ? 'bg-red-500' : 'bg-gray-500'
+                current_state === 3 ? 'bg-red-500' : 'bg-gray-500'
               }`}
             ></div>
           </div>
