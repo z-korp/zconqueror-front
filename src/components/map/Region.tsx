@@ -5,10 +5,7 @@ import { useElementStore } from '@/utils/store';
 import { useComponentValue } from '@dojoengine/react';
 import React, { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
-import Modal from 'react-modal';
-import { Button } from '../ui/button';
 import TroopsMarker from './TroopMarker';
-import { Slider } from '../ui/slider';
 
 interface RegionProps {
   d: string;
@@ -17,6 +14,7 @@ interface RegionProps {
   region: string;
   troups?: number;
   containerRef?: React.MutableRefObject<null>;
+  onRegionClick: () => void;
 }
 
 const Region: React.FC<RegionProps> = ({
@@ -25,6 +23,7 @@ const Region: React.FC<RegionProps> = ({
   id,
   region,
   containerRef,
+  onRegionClick,
 }: RegionProps) => {
   const {
     setup: {
@@ -34,18 +33,17 @@ const Region: React.FC<RegionProps> = ({
     account: { account },
   } = useDojo();
   const { ip } = useElementStore((state) => state);
-  const { turn, playerIds, tileIds, currentPlayerId, players } =
-    useComponentStates();
+  const { tileIds, currentPlayerId } = useComponentStates();
 
   const tile = useComponentValue(Tile, tileIds[id - 1]);
-  const player = useComponentValue(Player, currentPlayerId);
+
   const troups = tile ? tile.army : 0;
   const color = tile ? colorPlayer[tile.owner + 1 || 0] : 'white';
 
   const [position, setPosition] = useState<{ x: number; y: number }>();
   const pathRef = useRef<SVGPathElement>(null);
 
-  const [modalVisible, setModalVisible] = useState(false);
+  const [modalOpen, setModalOpen] = useState(true);
 
   useEffect(() => {
     const path = pathRef.current;
@@ -74,27 +72,6 @@ const Region: React.FC<RegionProps> = ({
     }
   }, [region]);
 
-  const handleModalClose = () => {
-    setModalVisible(false);
-  };
-
-  const [troopsToDeploy, setTroopsToDeploy] = useState(0);
-
-  const handleSupply = () => {
-    console.log(player.supply, troopsToDeploy);
-    if (!ip) return;
-    if (player.supply < troopsToDeploy) {
-      //todo put toast here
-      alert('Not enough supply');
-      return;
-    }
-    supply(account, ip.toString(), id, troopsToDeploy);
-  };
-
-  const handlePathClick = () => {
-    setModalVisible(true);
-  };
-
   return (
     <>
       {position &&
@@ -104,13 +81,14 @@ const Region: React.FC<RegionProps> = ({
         ReactDOM.createPortal(
           <TroopsMarker
             position={position}
-            handlePathClick={handlePathClick}
+            handlePathClick={onRegionClick}
             troups={troups}
             color={color}
           />,
 
           containerRef.current // render the button directly in the body
         )}
+
       <path
         ref={pathRef}
         d={d}
@@ -118,31 +96,8 @@ const Region: React.FC<RegionProps> = ({
         fillOpacity={fillOpacity}
         stroke="black"
         strokeWidth="10" // adjust this value for the desired thickness
-        onClick={handlePathClick}
-      ></path>
-      {modalVisible && (
-        <Modal
-          isOpen={modalVisible}
-          onRequestClose={handleModalClose}
-          className="modal-base w-96 h-96"
-          ariaHideApp={false}
-        >
-          <div>
-            You are in the tile {id} region {region} and you have {troups}{' '}
-            troups
-          </div>
-
-          <Slider
-            min={0}
-            step={1}
-            max={player.supply}
-            value={[troopsToDeploy]}
-            onValueChange={(values) => setTroopsToDeploy(values[0])}
-          />
-
-          <Button onClick={handleSupply}>Deploy troups</Button>
-        </Modal>
-      )}
+        onClick={onRegionClick}
+      />
     </>
   );
 };
