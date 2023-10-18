@@ -70,6 +70,222 @@ export function createSystemCalls(
     }
   };
 
+  const attack = async (
+    signer: Account,
+    account: string,
+    attacker_index: number,
+    defender_index: number,
+    dispatched: number
+  ) => {
+    try {
+      const calls: Call[] = [
+        {
+          contractAddress: getContractByName('actions')?.address || '',
+          entrypoint: 'attack',
+          calldata: [
+            import.meta.env.VITE_PUBLIC_WORLD_ADDRESS,
+            account,
+            attacker_index,
+            defender_index,
+            dispatched,
+          ],
+        },
+      ];
+
+      const tx = await execute(signer, calls);
+
+      console.log(tx);
+      const receipt = (await signer.waitForTransaction(tx.transaction_hash, {
+        retryInterval: 100,
+      })) as InvokeTransactionReceiptResponse;
+      console.log(receipt.events);
+
+      const events = receipt.events;
+
+      if (events) {
+        const eventsTransformed = await setComponentsFromEvents(
+          contractComponents,
+          events
+        );
+        await executeEvents(eventsTransformed);
+      }
+    } catch (e) {
+      console.log(e);
+    } finally {
+      console.log('');
+    }
+  };
+
+  const defend = async (
+    signer: Account,
+    account: string,
+    attacker_index: number,
+    defender_index: number
+  ) => {
+    try {
+      const calls: Call[] = [
+        {
+          contractAddress: getContractByName('actions')?.address || '',
+          entrypoint: 'defend',
+          calldata: [
+            import.meta.env.VITE_PUBLIC_WORLD_ADDRESS,
+            account,
+            attacker_index,
+            defender_index,
+          ],
+        },
+      ];
+
+      const tx = await execute(signer, calls);
+
+      console.log(tx);
+      const receipt = (await signer.waitForTransaction(tx.transaction_hash, {
+        retryInterval: 100,
+      })) as InvokeTransactionReceiptResponse;
+      console.log(receipt.events);
+
+      const events = receipt.events;
+
+      if (events) {
+        const eventsTransformed = await setComponentsFromEvents(
+          contractComponents,
+          events
+        );
+        await executeEvents(eventsTransformed);
+      }
+    } catch (e) {
+      console.log(e);
+    } finally {
+      console.log('');
+    }
+  };
+
+  const discard = async (
+    signer: Account,
+    account: string,
+    card_one: number,
+    card_two: number,
+    card_three: number
+  ) => {
+    try {
+      const calls: Call[] = [
+        {
+          contractAddress: getContractByName('actions')?.address || '',
+          entrypoint: 'discard',
+          calldata: [
+            import.meta.env.VITE_PUBLIC_WORLD_ADDRESS,
+            account,
+            card_one,
+            card_two,
+            card_three,
+          ],
+        },
+      ];
+
+      const tx = await execute(signer, calls);
+
+      console.log(tx);
+      const receipt = (await signer.waitForTransaction(tx.transaction_hash, {
+        retryInterval: 100,
+      })) as InvokeTransactionReceiptResponse;
+      console.log(receipt.events);
+
+      const events = receipt.events;
+
+      if (events) {
+        const eventsTransformed = await setComponentsFromEvents(
+          contractComponents,
+          events
+        );
+        await executeEvents(eventsTransformed);
+      }
+    } catch (e) {
+      console.log(e);
+    } finally {
+      console.log('');
+    }
+  };
+
+  const finish = async (signer: Account, account: string) => {
+    try {
+      const calls: Call[] = [
+        {
+          contractAddress: getContractByName('actions')?.address || '',
+          entrypoint: 'finish',
+          calldata: [import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, account],
+        },
+      ];
+
+      const tx = await execute(signer, calls);
+
+      console.log(tx);
+      const receipt = (await signer.waitForTransaction(tx.transaction_hash, {
+        retryInterval: 100,
+      })) as InvokeTransactionReceiptResponse;
+      console.log(receipt.events);
+
+      const events = receipt.events;
+
+      if (events) {
+        const eventsTransformed = await setComponentsFromEvents(
+          contractComponents,
+          events
+        );
+        await executeEvents(eventsTransformed);
+      }
+    } catch (e) {
+      console.log(e);
+    } finally {
+      console.log('');
+    }
+  };
+
+  const transfer = async (
+    signer: Account,
+    account: string,
+    source_index: number,
+    target_index: number,
+    army: number
+  ) => {
+    try {
+      const calls: Call[] = [
+        {
+          contractAddress: getContractByName('actions')?.address || '',
+          entrypoint: 'transfer',
+          calldata: [
+            import.meta.env.VITE_PUBLIC_WORLD_ADDRESS,
+            account,
+            source_index,
+            target_index,
+            army,
+          ],
+        },
+      ];
+
+      const tx = await execute(signer, calls);
+
+      console.log(tx);
+      const receipt = (await signer.waitForTransaction(tx.transaction_hash, {
+        retryInterval: 100,
+      })) as InvokeTransactionReceiptResponse;
+      console.log(receipt.events);
+
+      const events = receipt.events;
+
+      if (events) {
+        const eventsTransformed = await setComponentsFromEvents(
+          contractComponents,
+          events
+        );
+        await executeEvents(eventsTransformed);
+      }
+    } catch (e) {
+      console.log(e);
+    } finally {
+      console.log('');
+    }
+  };
+
   const supply = async (
     signer: Account,
     account: string,
@@ -113,6 +329,11 @@ export function createSystemCalls(
 
   return {
     create,
+    attack,
+    defend,
+    discard,
+    finish,
+    transfer,
     supply,
   };
 }
