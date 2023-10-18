@@ -1,10 +1,17 @@
 import { useDojo } from '@/DojoContext';
 import { useElementStore } from '@/utils/store';
 import { useState } from 'react';
-import Modal from 'react-modal';
 import { z } from 'zod';
 import NewGameForm, { FormSchema } from './NewGameForm';
 import { Button } from './ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from './ui/dialog';
 
 const NewGame: React.FC = () => {
   const { ip } = useElementStore((state) => state);
@@ -16,24 +23,7 @@ const NewGame: React.FC = () => {
     account: { account },
   } = useDojo();
 
-  const [joinModalVisible, setJoinModalVisible] = useState(false);
-  const [createModalVisible, setCreateModalVisible] = useState(false);
-
-  const handleJoinClick = () => {
-    setJoinModalVisible(true);
-  };
-
-  const handleCreateClick = () => {
-    setCreateModalVisible(true);
-  };
-
-  const handleJoinModalClose = () => {
-    setJoinModalVisible(false);
-  };
-
-  const handleCreateModalClose = () => {
-    setCreateModalVisible(false);
-  };
+  const [createModalOpen, setCreateModalOpen] = useState(false);
 
   function handleFormSubmit(data: z.infer<typeof FormSchema>) {
     console.log('Form data from child:', data);
@@ -43,43 +33,39 @@ const NewGame: React.FC = () => {
 
     create(account, ip.toString(), 123, data.username, data.numberOfPlayers);
 
-    setCreateModalVisible(false);
+    setCreateModalOpen(false);
   }
 
   return (
-    <div className="mb-4">
-      <Button onClick={handleJoinClick} className="mx-2">
-        Join a game
-      </Button>
-      <Button onClick={handleCreateClick} className="mx-2">
-        Create a new game
-      </Button>
+    <div className="flex gap-3 mb-4">
+      <Dialog>
+        <DialogTrigger>
+          <Button>Join a game</Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Join a game</DialogTitle>
+            <DialogDescription></DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
 
-      {joinModalVisible && (
-        <Modal isOpen={joinModalVisible} onRequestClose={handleJoinModalClose}>
-          <div>Join game modal content goes here</div>
-        </Modal>
-      )}
-
-      {createModalVisible && (
-        <Modal
-          style={{
-            content: {
-              width: '600px',
-              height: '300px',
-              top: '50%',
-              left: '50%',
-              right: 'auto',
-              bottom: 'auto',
-              transform: 'translate(-50%, -50%)',
-            },
-          }}
-          isOpen={createModalVisible}
-          onRequestClose={handleCreateModalClose}
-        >
-          <NewGameForm onFormSubmit={handleFormSubmit} />
-        </Modal>
-      )}
+      <Dialog
+        open={createModalOpen}
+        onOpenChange={(open) => setCreateModalOpen(open)}
+      >
+        <DialogTrigger>
+          <Button>Create a new game</Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Create a new game</DialogTitle>
+            <DialogDescription>
+              <NewGameForm onFormSubmit={handleFormSubmit} />
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
