@@ -57,7 +57,7 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
     >
       <div className="flex flex-col">
         <Card
-          className={`w-20 h-20 rounded-full border border-gray-300 flex items-center justify-center ${colorClasses[color]}`}
+          className={`w-20 h-20 rounded-full border flex items-center justify-center ${colorClasses[color]}`}
         >
           <img src={image} alt={'player'} className="rounded-full" />
         </Card>
