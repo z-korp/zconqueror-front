@@ -4,6 +4,7 @@ import { useComponentValue } from '@dojoengine/react';
 import { EntityIndex, getComponentValue } from '@latticexyz/recs';
 import { useEffect, useState } from 'react';
 import { useDojo } from '../DojoContext';
+import { set } from 'zod';
 
 export const useComponentStates = () => {
   const {
@@ -60,12 +61,22 @@ export const useComponentStates = () => {
   }, [game]);
 
   useEffect(() => {
-    if (game && game.nonce !== undefined) {
-      setTurn((game.nonce / 3) % game.player_count);
+    if (
+      game &&
+      game.nonce !== undefined &&
+      Math.ceil(game.nonce / 3) % game.player_count !== turn
+    ) {
+      setTurn(Math.ceil(game.nonce / 3) % game.player_count);
     }
   }, [game]);
 
-  //console.log(players[2]);
+  const [currentPlayerId, setCurrentPlayerId] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (playerIds.length > 0 && turn < playerIds.length) {
+      setCurrentPlayerId(playerIds[turn]);
+    }
+  }, [turn, playerIds]);
 
   return {
     game: { id: game?.id, over: game?.over, seed: game?.seed },
@@ -75,5 +86,6 @@ export const useComponentStates = () => {
     tiles,
     tileIds,
     turn,
+    currentPlayerId,
   };
 };
