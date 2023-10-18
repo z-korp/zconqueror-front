@@ -8,6 +8,7 @@ import ReactDOM from 'react-dom';
 import Modal from 'react-modal';
 import { Button } from '../ui/button';
 import TroopsMarker from './TroopMarker';
+import { Slider } from '../ui/slider';
 
 interface RegionProps {
   d: string;
@@ -27,16 +28,17 @@ const Region: React.FC<RegionProps> = ({
 }: RegionProps) => {
   const {
     setup: {
-      components: { Tile },
+      components: { Tile, Player },
       systemCalls: { supply },
     },
     account: { account },
   } = useDojo();
   const { ip } = useElementStore((state) => state);
-  const { tileIds } = useComponentStates();
+  const { turn, playerIds, tileIds, currentPlayerId, players } =
+    useComponentStates();
 
   const tile = useComponentValue(Tile, tileIds[id - 1]);
-
+  const player = useComponentValue(Player, currentPlayerId);
   const troups = tile ? tile.army : 0;
   const color = tile ? colorPlayer[tile.owner + 1 || 0] : 'white';
 
@@ -76,9 +78,17 @@ const Region: React.FC<RegionProps> = ({
     setModalVisible(false);
   };
 
+  const [troopsToDeploy, setTroopsToDeploy] = useState(0);
+
   const handleSupply = () => {
+    console.log(player.supply, troopsToDeploy);
     if (!ip) return;
-    supply(account, ip.toString(), id, 1);
+    if (player.supply < troopsToDeploy) {
+      //todo put toast here
+      alert('Not enough supply');
+      return;
+    }
+    supply(account, ip.toString(), id, troopsToDeploy);
   };
 
   const handlePathClick = () => {
@@ -121,6 +131,15 @@ const Region: React.FC<RegionProps> = ({
             You are in the tile {id} region {region} and you have {troups}{' '}
             troups
           </div>
+
+          <Slider
+            min={0}
+            step={1}
+            max={player.supply}
+            value={[troopsToDeploy]}
+            onValueChange={(values) => setTroopsToDeploy(values[0])}
+          />
+
           <Button onClick={handleSupply}>Deploy troups</Button>
         </Modal>
       )}
