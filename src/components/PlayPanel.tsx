@@ -43,6 +43,7 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
   }
 
   const handleNextPhaseClick = () => {
+    //todo send finish when needed
     if (current_state < 3) {
       set_current_state(current_state + 1);
     } else {

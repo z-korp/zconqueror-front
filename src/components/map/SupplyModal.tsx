@@ -1,7 +1,5 @@
 import { useDojo } from '@/DojoContext';
-import { useComponentStates } from '@/hooks/useComponentState';
 import { useElementStore } from '@/utils/store';
-import { useComponentValue } from '@dojoengine/react';
 import React from 'react';
 import { Button } from '../ui/button';
 import {
@@ -13,14 +11,14 @@ import {
 } from '../ui/dialog';
 import { Slider } from '../ui/slider';
 
-interface RegionModalProps {
+interface SupplyModalProps {
   open: boolean;
   onClose: (value: boolean) => void;
   regionId: number | null;
   player: any;
 }
 
-const RegionModal: React.FC<RegionModalProps> = ({
+const SupplyModal: React.FC<SupplyModalProps> = ({
   open,
   onClose,
   player,
@@ -73,4 +71,4 @@ const RegionModal: React.FC<RegionModalProps> = ({
   );
 };
 
-export default RegionModal;
+export default SupplyModal;

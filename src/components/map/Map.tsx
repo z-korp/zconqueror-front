@@ -5,10 +5,11 @@ import { useRef, useState } from 'react';
 import carte from '../../../public/carte.png';
 import mapDataRaw from '../../assets/map/map-test.json';
 import Region from './Region';
-import RegionModal from './RegionModal';
+import SupplyModal from './SupplyModal';
 import { useElementStore } from '@/utils/store';
 import mapDataNeighbour from '../../assets/map/mapData/v00.json';
 import { useComponentValue } from '@dojoengine/react';
+import AttackModal from './AttackModal';
 
 const mapData: MapData = mapDataRaw;
 
@@ -33,8 +34,17 @@ const Map = () => {
   const { tileIds, turn } = useComponentStates();
   const { current_state } = useElementStore((state) => state);
 
-  const [modalOpen, setModalOpen] = useState(false);
-  const [currentRegionId, setCurrentRegionId] = useState<number | null>(null);
+  const [supplyModalOpen, setSupplyModalOpen] = useState(false);
+  const [attackModalOpen, setAttackModalOpen] = useState(false);
+  const [currentRegionSupplyId, setCurrentRegionSupplyId] = useState<
+    number | null
+  >(null);
+  const [currentRegionAttacker, setCurrentRegionAttacker] = useState<
+    number | null
+  >(null);
+  const [currentRegionDefender, setCurrentRegionDefender] = useState<
+    number | null
+  >(null);
 
   const {
     setup: {
@@ -50,6 +60,7 @@ const Map = () => {
 
   let allNeighbors: number[] = [];
 
+  // we may be able to delete this later
   ownedTiles.forEach((tile: any) => {
     let index = tileIds.findIndex((id) => id == tile);
     if (index !== -1) {
@@ -62,17 +73,30 @@ const Map = () => {
 
   const handleRegionClick = (regionId: number) => {
     console.log('Region clicked', regionId);
-    setCurrentRegionId(regionId);
-    const tile = getComponentValue(Tile, tileIds[regionId - 1]);
+
     if (current_state == 1) {
+      setCurrentRegionSupplyId(regionId);
+      const tile = getComponentValue(Tile, tileIds[regionId - 1]);
       if (tile.owner !== turn) return;
 
-      setModalOpen(true);
+      setSupplyModalOpen(true);
     } else if (current_state == 2) {
-      if (allNeighbors.includes(regionId)) {
-        console.log('ATTACK');
+      const tile = getComponentValue(Tile, tileIds[regionId - 1]);
+      if (tile.owner === turn) {
+        console.log('ownedtile');
+        setCurrentRegionAttacker(regionId);
       } else {
-        console.log('NOT ATTACK');
+        if (
+          currentRegionAttacker &&
+          mapDataNeighbour.territories[
+            currentRegionAttacker
+          ].neighbors.includes(regionId + 1)
+        ) {
+          setCurrentRegionDefender(regionId);
+          setAttackModalOpen(true);
+        } else {
+          alert('Can t interract with this tile');
+        }
       }
     }
   };
@@ -109,11 +133,18 @@ const Map = () => {
           </svg>
         </div>
       </div>
-      <RegionModal
-        open={modalOpen}
+      <SupplyModal
+        open={supplyModalOpen}
         player={player}
-        onClose={setModalOpen}
-        regionId={currentRegionId}
+        onClose={setSupplyModalOpen}
+        regionId={currentRegionSupplyId}
+      />
+      <AttackModal
+        open={attackModalOpen}
+        player={player}
+        attacker={currentRegionAttacker}
+        defender={currentRegionDefender}
+        onClose={setAttackModalOpen}
       />
     </>
   );
