@@ -19,8 +19,7 @@ export const DojoProvider = ({ children, value }: Props) => {
 export const useDojo = () => {
   const value = useContext(DojoContext);
 
-  if (!value)
-    throw new Error('The `useDojo` hook must be used within a `DojoProvider`');
+  if (!value) throw new Error('The `useDojo` hook must be used within a `DojoProvider`');
 
   const provider = useMemo(
     () =>
@@ -43,18 +42,10 @@ export const useDojo = () => {
   const { create, list, get, account, select, isDeploying } = useBurner({
     masterAccount: masterAccount,
     accountClassHash: import.meta.env.VITE_PUBLIC_ACCOUNT_CLASS_HASH!,
-    nodeUrl: import.meta.env.VITE_PUBLIC_NODE_URL!,
   });
 
   return {
     setup: value,
-    account: {
-      create,
-      list,
-      get,
-      select,
-      account: masterAccount,
-      isDeploying,
-    },
+    account: { create, list, get, select, account: account ? account : masterAccount, isDeploying },
   };
 };

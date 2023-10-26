@@ -1,19 +1,6 @@
-import {
-  Component,
-  Components,
-  EntityIndex,
-  Schema,
-  Type,
-  setComponent,
-} from '@latticexyz/recs';
+import { Component, Components, EntityIndex, Schema, Type, setComponent } from '@latticexyz/recs';
 import { poseidonHashMany } from 'micro-starknet';
-import {
-  Account,
-  Call,
-  Event,
-  InvokeTransactionReceiptResponse,
-  shortString,
-} from 'starknet';
+import { Account, Call, Event, InvokeTransactionReceiptResponse, shortString } from 'starknet';
 import { ClientComponents } from './createClientComponents';
 import { SetupNetworkResult, getContractByName } from './setupNetwork';
 
@@ -24,25 +11,13 @@ export function createSystemCalls(
   { Game, Player, Tile }: ClientComponents
 ) {
   //account: felt252, seed: felt252, name: felt252, player_count: u8
-  const create = async (
-    signer: Account,
-    account: string,
-    seed: number,
-    name: string,
-    playerCount: number
-  ) => {
+  const create = async (signer: Account, account: string, seed: number, name: string, playerCount: number) => {
     try {
       const calls: Call[] = [
         {
           contractAddress: getContractByName('actions')?.address || '',
           entrypoint: 'create',
-          calldata: [
-            import.meta.env.VITE_PUBLIC_WORLD_ADDRESS,
-            account,
-            seed,
-            name,
-            playerCount,
-          ],
+          calldata: [import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, account, seed, name, playerCount],
         },
       ];
 
@@ -57,10 +32,7 @@ export function createSystemCalls(
       const events = receipt.events;
 
       if (events) {
-        const eventsTransformed = await setComponentsFromEvents(
-          contractComponents,
-          events
-        );
+        const eventsTransformed = await setComponentsFromEvents(contractComponents, events);
         await executeEvents(eventsTransformed);
       }
     } catch (e) {
@@ -82,13 +54,7 @@ export function createSystemCalls(
         {
           contractAddress: getContractByName('actions')?.address || '',
           entrypoint: 'attack',
-          calldata: [
-            import.meta.env.VITE_PUBLIC_WORLD_ADDRESS,
-            account,
-            attacker_index,
-            defender_index,
-            dispatched,
-          ],
+          calldata: [import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, account, attacker_index, defender_index, dispatched],
         },
       ];
 
@@ -103,10 +69,7 @@ export function createSystemCalls(
       const events = receipt.events;
 
       if (events) {
-        const eventsTransformed = await setComponentsFromEvents(
-          contractComponents,
-          events
-        );
+        const eventsTransformed = await setComponentsFromEvents(contractComponents, events);
         await executeEvents(eventsTransformed);
       }
     } catch (e) {
@@ -116,23 +79,13 @@ export function createSystemCalls(
     }
   };
 
-  const defend = async (
-    signer: Account,
-    account: string,
-    attacker_index: number,
-    defender_index: number
-  ) => {
+  const defend = async (signer: Account, account: string, attacker_index: number, defender_index: number) => {
     try {
       const calls: Call[] = [
         {
           contractAddress: getContractByName('actions')?.address || '',
           entrypoint: 'defend',
-          calldata: [
-            import.meta.env.VITE_PUBLIC_WORLD_ADDRESS,
-            account,
-            attacker_index,
-            defender_index,
-          ],
+          calldata: [import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, account, attacker_index, defender_index],
         },
       ];
 
@@ -147,10 +100,7 @@ export function createSystemCalls(
       const events = receipt.events;
 
       if (events) {
-        const eventsTransformed = await setComponentsFromEvents(
-          contractComponents,
-          events
-        );
+        const eventsTransformed = await setComponentsFromEvents(contractComponents, events);
         await executeEvents(eventsTransformed);
       }
     } catch (e) {
@@ -160,25 +110,13 @@ export function createSystemCalls(
     }
   };
 
-  const discard = async (
-    signer: Account,
-    account: string,
-    card_one: number,
-    card_two: number,
-    card_three: number
-  ) => {
+  const discard = async (signer: Account, account: string, card_one: number, card_two: number, card_three: number) => {
     try {
       const calls: Call[] = [
         {
           contractAddress: getContractByName('actions')?.address || '',
           entrypoint: 'discard',
-          calldata: [
-            import.meta.env.VITE_PUBLIC_WORLD_ADDRESS,
-            account,
-            card_one,
-            card_two,
-            card_three,
-          ],
+          calldata: [import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, account, card_one, card_two, card_three],
         },
       ];
 
@@ -193,10 +131,7 @@ export function createSystemCalls(
       const events = receipt.events;
 
       if (events) {
-        const eventsTransformed = await setComponentsFromEvents(
-          contractComponents,
-          events
-        );
+        const eventsTransformed = await setComponentsFromEvents(contractComponents, events);
         await executeEvents(eventsTransformed);
       }
     } catch (e) {
@@ -227,10 +162,7 @@ export function createSystemCalls(
       const events = receipt.events;
 
       if (events) {
-        const eventsTransformed = await setComponentsFromEvents(
-          contractComponents,
-          events
-        );
+        const eventsTransformed = await setComponentsFromEvents(contractComponents, events);
         await executeEvents(eventsTransformed);
       }
     } catch (e) {
@@ -252,13 +184,7 @@ export function createSystemCalls(
         {
           contractAddress: getContractByName('actions')?.address || '',
           entrypoint: 'transfer',
-          calldata: [
-            import.meta.env.VITE_PUBLIC_WORLD_ADDRESS,
-            account,
-            source_index,
-            target_index,
-            army,
-          ],
+          calldata: [import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, account, source_index, target_index, army],
         },
       ];
 
@@ -273,10 +199,7 @@ export function createSystemCalls(
       const events = receipt.events;
 
       if (events) {
-        const eventsTransformed = await setComponentsFromEvents(
-          contractComponents,
-          events
-        );
+        const eventsTransformed = await setComponentsFromEvents(contractComponents, events);
         await executeEvents(eventsTransformed);
       }
     } catch (e) {
@@ -286,22 +209,12 @@ export function createSystemCalls(
     }
   };
 
-  const supply = async (
-    signer: Account,
-    account: string,
-    tile_index: number,
-    supply: number
-  ) => {
+  const supply = async (signer: Account, account: string, tile_index: number, supply: number) => {
     try {
       const call: Call = {
         contractAddress: getContractByName('actions')?.address || '',
         entrypoint: 'supply',
-        calldata: [
-          import.meta.env.VITE_PUBLIC_WORLD_ADDRESS,
-          account,
-          tile_index,
-          supply,
-        ],
+        calldata: [import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, account, tile_index, supply],
       };
 
       const tx = await execute(signer, call);
@@ -314,10 +227,7 @@ export function createSystemCalls(
       const events = receipt.events;
 
       if (events) {
-        const eventsTransformed = await setComponentsFromEvents(
-          contractComponents,
-          events
-        );
+        const eventsTransformed = await setComponentsFromEvents(contractComponents, events);
         await executeEvents(eventsTransformed);
       }
     } catch (e) {
@@ -410,9 +320,7 @@ function handleGameEvent(
   values: string[]
 ): Omit<GameEvent, 'component' | 'componentValues' | 'entityIndex'> {
   const [account] = keys.map((k) => Number(k));
-  const [id, overNumber, seed, player_count, nonce] = values.map((v) =>
-    Number(v)
-  );
+  const [id, overNumber, seed, player_count, nonce] = values.map((v) => Number(v));
   const over = overNumber === 1;
   console.log(
     `[Game: KEYS: (account: ${account}) - VALUES: (game_id: ${id}, over: ${over}, seed: ${seed}, player_count: ${player_count}, nonce: ${nonce})]`
@@ -497,10 +405,7 @@ type ComponentData = {
 
 type TransformedEvent = GameEvent | TileEvent | PlayerEvent;
 
-export async function setComponentsFromEvents(
-  components: Components,
-  events: Event[]
-): Promise<TransformedEvent[]> {
+export async function setComponentsFromEvents(components: Components, events: Event[]): Promise<TransformedEvent[]> {
   const transformedEvents = [];
 
   for (const event of events) {
@@ -517,10 +422,7 @@ export async function setComponentsFromEvents(
       [key: string]: string | number;
     }>((acc, key, index) => {
       const value = values[index];
-      acc[key] =
-        component.schema[key] === Type.String
-          ? shortString.decodeShortString(value)
-          : Number(value);
+      acc[key] = component.schema[key] === Type.String ? shortString.decodeShortString(value) : Number(value);
       return acc;
     }, {});
     const entity = getEntityIdFromKeys(keys);
