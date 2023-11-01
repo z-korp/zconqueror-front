@@ -13,10 +13,6 @@ function App() {
   const { set_ip } = useElementStore((state) => state);
   const { playerIds, players } = useComponentStates();
 
-  const [currentPlayerIndex, setCurrentPlayerIndex] = useState<number | null>(
-    null
-  );
-
   const { ip, loading } = useIP();
   useEffect(() => {
     if (!loading && ip) {
@@ -24,13 +20,6 @@ function App() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ip, loading]);
-
-  useEffect(() => {
-    const index = players.findIndex((player) => player.supply !== 0);
-    if (index !== -1) {
-      setCurrentPlayerIndex(index);
-    }
-  }, [players]);
 
   return (
     <TooltipProvider>

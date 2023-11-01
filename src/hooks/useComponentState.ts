@@ -61,12 +61,8 @@ export const useComponentStates = () => {
   }, [game]);
 
   useEffect(() => {
-    if (
-      game &&
-      game.nonce !== undefined &&
-      Math.ceil(game.nonce / 3) % game.player_count !== turn
-    ) {
-      setTurn(Math.ceil(game.nonce / 3) % game.player_count);
+    if (game && game.nonce !== undefined && Math.floor(game.nonce / 3) % game.player_count !== turn) {
+      setTurn(Math.floor(game.nonce / 3) % game.player_count);
     }
   }, [game]);
 

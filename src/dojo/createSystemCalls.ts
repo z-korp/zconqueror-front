@@ -2,8 +2,9 @@ import { Component, Components, EntityIndex, Schema, Type, setComponent } from '
 import { poseidonHashMany } from 'micro-starknet';
 import { Account, Call, Event, InvokeTransactionReceiptResponse, shortString } from 'starknet';
 import { ClientComponents } from './createClientComponents';
-import { SetupNetworkResult, getContractByName } from './setupNetwork';
-
+import { SetupNetworkResult } from './setupNetwork';
+import { getContractByName } from '@dojoengine/core';
+import manifest from './manifest.json';
 export type SystemCalls = ReturnType<typeof createSystemCalls>;
 
 export function createSystemCalls(
@@ -15,7 +16,7 @@ export function createSystemCalls(
     try {
       const calls: Call[] = [
         {
-          contractAddress: getContractByName('actions')?.address || '',
+          contractAddress: getContractByName(manifest, 'actions') || '',
           entrypoint: 'create',
           calldata: [import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, account, seed, name, playerCount],
         },
@@ -52,7 +53,7 @@ export function createSystemCalls(
     try {
       const calls: Call[] = [
         {
-          contractAddress: getContractByName('actions')?.address || '',
+          contractAddress: getContractByName(manifest, 'actions') || '',
           entrypoint: 'attack',
           calldata: [import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, account, attacker_index, defender_index, dispatched],
         },
@@ -83,7 +84,7 @@ export function createSystemCalls(
     try {
       const calls: Call[] = [
         {
-          contractAddress: getContractByName('actions')?.address || '',
+          contractAddress: getContractByName(manifest, 'actions') || '',
           entrypoint: 'defend',
           calldata: [import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, account, attacker_index, defender_index],
         },
@@ -114,7 +115,7 @@ export function createSystemCalls(
     try {
       const calls: Call[] = [
         {
-          contractAddress: getContractByName('actions')?.address || '',
+          contractAddress: getContractByName(manifest, 'actions') || '',
           entrypoint: 'discard',
           calldata: [import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, account, card_one, card_two, card_three],
         },
@@ -145,7 +146,7 @@ export function createSystemCalls(
     try {
       const calls: Call[] = [
         {
-          contractAddress: getContractByName('actions')?.address || '',
+          contractAddress: getContractByName(manifest, 'actions') || '',
           entrypoint: 'finish',
           calldata: [import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, account],
         },
@@ -182,7 +183,7 @@ export function createSystemCalls(
     try {
       const calls: Call[] = [
         {
-          contractAddress: getContractByName('actions')?.address || '',
+          contractAddress: getContractByName(manifest, 'actions') || '',
           entrypoint: 'transfer',
           calldata: [import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, account, source_index, target_index, army],
         },
@@ -212,7 +213,7 @@ export function createSystemCalls(
   const supply = async (signer: Account, account: string, tile_index: number, supply: number) => {
     try {
       const call: Call = {
-        contractAddress: getContractByName('actions')?.address || '',
+        contractAddress: getContractByName(manifest, 'actions') || '',
         entrypoint: 'supply',
         calldata: [import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, account, tile_index, supply],
       };

@@ -36,15 +36,9 @@ const Map = () => {
 
   const [supplyModalOpen, setSupplyModalOpen] = useState(false);
   const [attackModalOpen, setAttackModalOpen] = useState(false);
-  const [currentRegionSupplyId, setCurrentRegionSupplyId] = useState<
-    number | null
-  >(null);
-  const [currentRegionAttacker, setCurrentRegionAttacker] = useState<
-    number | null
-  >(null);
-  const [currentRegionDefender, setCurrentRegionDefender] = useState<
-    number | null
-  >(null);
+  const [currentRegionSupplyId, setCurrentRegionSupplyId] = useState<number | null>(null);
+  const [currentRegionAttacker, setCurrentRegionAttacker] = useState<number | null>(null);
+  const [currentRegionDefender, setCurrentRegionDefender] = useState<number | null>(null);
 
   const {
     setup: {
@@ -64,16 +58,12 @@ const Map = () => {
   ownedTiles.forEach((tile: any) => {
     let index = tileIds.findIndex((id) => id == tile);
     if (index !== -1) {
-      let neighbors = mapDataNeighbour.territories[index].neighbors.map(
-        (neighbor) => neighbor + 1
-      );
+      let neighbors = mapDataNeighbour.territories[index].neighbors.map((neighbor) => neighbor + 1);
       allNeighbors = allNeighbors.concat(neighbors);
     }
   });
 
   const handleRegionClick = (regionId: number) => {
-    console.log('Region clicked', regionId);
-
     if (current_state == 1) {
       setCurrentRegionSupplyId(regionId);
       const tile = getComponentValue(Tile, tileIds[regionId - 1]);
@@ -83,14 +73,11 @@ const Map = () => {
     } else if (current_state == 2) {
       const tile = getComponentValue(Tile, tileIds[regionId - 1]);
       if (tile.owner === turn) {
-        console.log('ownedtile');
         setCurrentRegionAttacker(regionId);
       } else {
         if (
           currentRegionAttacker &&
-          mapDataNeighbour.territories[
-            currentRegionAttacker
-          ].neighbors.includes(regionId + 1)
+          mapDataNeighbour.territories[currentRegionAttacker].neighbors.includes(regionId + 1)
         ) {
           setCurrentRegionDefender(regionId);
           setAttackModalOpen(true);
@@ -104,11 +91,7 @@ const Map = () => {
   return (
     <>
       <div className="relative w-full h-[500px]" ref={containerRef}>
-        <img
-          src={carte}
-          alt="Carte"
-          className="w-full h-full absolute top-0 left-0"
-        />
+        <img src={carte} alt="Carte" className="w-full h-full absolute top-0 left-0" />
         <div className="w-full h-full absolute top-0 left-0">
           <svg
             viewBox="0 0 3669 1932" // Ajustez cette valeur en fonction de vos coordonnées

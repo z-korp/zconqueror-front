@@ -3,14 +3,9 @@ import { useElementStore } from '@/utils/store';
 import { getComponentEntities, getComponentValue } from '@latticexyz/recs';
 import React, { useEffect } from 'react';
 import { Button } from '../ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '../ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Slider } from '../ui/slider';
+import { defaultFieldResolver } from 'graphql';
 
 interface AttackModalProps {
   open: boolean;
@@ -20,17 +15,11 @@ interface AttackModalProps {
   player: any;
 }
 
-const AttackModal: React.FC<AttackModalProps> = ({
-  open,
-  onClose,
-  attacker,
-  defender,
-  player,
-}) => {
+const AttackModal: React.FC<AttackModalProps> = ({ open, onClose, attacker, defender, player }) => {
   const {
     setup: {
       components: { Player, Tile },
-      systemCalls: { attack },
+      systemCalls: { attack, defend },
     },
     account: { account },
   } = useDojo();
@@ -43,17 +32,14 @@ const AttackModal: React.FC<AttackModalProps> = ({
   const [defenderTile, setDefenderTile]: any = React.useState(null);
 
   // we might here get only two tiles and not all of them
-  // adapt to be able to use the slider always
-  useEffect(() => {
-    const tilesEntities = getComponentEntities(Tile);
-    let tileRetrived = [...tilesEntities].map((id) =>
-      getComponentValue(Tile, id)
-    ) as any[];
-    setTileRetrived(tileRetrived);
-  }, []);
 
   useEffect(() => {
-    console.log('setattackerState', attacker);
+    const tilesEntities = getComponentEntities(Tile);
+    let tileRetrived = [...tilesEntities].map((id) => getComponentValue(Tile, id)) as any[];
+    setTileRetrived(tileRetrived);
+  }, [open]);
+
+  useEffect(() => {
     if (attacker === null || defender === null) return;
     setAttackerTile(tileRetrived[attacker - 1]);
     setDefenderTile(tileRetrived[defender - 1]);
@@ -77,6 +63,13 @@ const AttackModal: React.FC<AttackModalProps> = ({
     }
 
     attack(account, ip.toString(), attacker, defender, troopsToDispatch);
+  };
+
+  const handleDefend = () => {
+    if (!ip) return;
+    if (!defender) return;
+    if (!attacker) return;
+    defend(account, ip.toString(), attacker, defender);
     onClose(false);
   };
 
@@ -92,13 +85,14 @@ const AttackModal: React.FC<AttackModalProps> = ({
             <Slider
               min={0}
               step={1}
-              max={attackerTile ? attackerTile.army : 10}
+              max={attackerTile ? attackerTile.army - 1 : 0}
               value={[troopsToDispatch]}
-              onValueChange={(values: number[]) =>
-                setTroopsToDispatch(values[0])
-              }
+              onValueChange={(values: number[]) => setTroopsToDispatch(values[0])}
             />
-            <Button onClick={handleAttack}>Attack troups</Button>
+            <Button onClick={handleAttack} className="mr-3">
+              Send troups
+            </Button>
+            <Button onClick={handleDefend}> Resolve battle</Button>
           </DialogDescription>
         </DialogHeader>
       </DialogContent>
