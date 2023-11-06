@@ -51,6 +51,7 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
       finish(account, ip.toString());
       set_current_state(current_state + 1);
     } else {
+      finish(account, ip.toString());
       set_current_state(1);
     }
   };
