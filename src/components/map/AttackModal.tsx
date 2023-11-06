@@ -5,7 +5,6 @@ import React, { useEffect } from 'react';
 import { Button } from '../ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Slider } from '../ui/slider';
-import { defaultFieldResolver } from 'graphql';
 
 interface AttackModalProps {
   open: boolean;
@@ -35,7 +34,7 @@ const AttackModal: React.FC<AttackModalProps> = ({ open, onClose, attacker, defe
 
   useEffect(() => {
     const tilesEntities = getComponentEntities(Tile);
-    let tileRetrived = [...tilesEntities].map((id) => getComponentValue(Tile, id)) as any[];
+    const tileRetrived = [...tilesEntities].map((id) => getComponentValue(Tile, id)) as any[];
     setTileRetrived(tileRetrived);
   }, [open]);
 
@@ -45,12 +44,13 @@ const AttackModal: React.FC<AttackModalProps> = ({ open, onClose, attacker, defe
     setDefenderTile(tileRetrived[defender - 1]);
   }, [tileRetrived, attacker, defender, open]);
 
-  const handleAttack = () => {
-    console.log(attacker);
+  const handleAttack = async () => {
+    console.log('attacker', attacker);
+    console.log('defender', defender);
     if (attacker === null || defender === null) return;
 
-    console.log(attackerTile);
-    console.log(defenderTile);
+    console.log('attackerTile', attackerTile);
+    console.log('defenderTile', defenderTile);
 
     console.log('Troops', troopsToDispatch);
     if (!ip) return;
@@ -62,13 +62,7 @@ const AttackModal: React.FC<AttackModalProps> = ({ open, onClose, attacker, defe
       return;
     }
 
-    attack(account, ip.toString(), attacker, defender, troopsToDispatch);
-  };
-
-  const handleDefend = () => {
-    if (!ip) return;
-    if (!defender) return;
-    if (!attacker) return;
+    await attack(account, ip.toString(), attacker, defender, troopsToDispatch);
     defend(account, ip.toString(), attacker, defender);
     onClose(false);
   };
@@ -82,17 +76,19 @@ const AttackModal: React.FC<AttackModalProps> = ({ open, onClose, attacker, defe
           <DialogTitle>Attack {attacker}</DialogTitle>
           <DialogDescription>
             <div> Defender {defender}</div>
-            <Slider
-              min={0}
-              step={1}
-              max={attackerTile ? attackerTile.army - 1 : 0}
-              value={[troopsToDispatch]}
-              onValueChange={(values: number[]) => setTroopsToDispatch(values[0])}
-            />
-            <Button onClick={handleAttack} className="mr-3">
-              Send troups
-            </Button>
-            <Button onClick={handleDefend}> Resolve battle</Button>
+            <div className="flex gap-2 items-center">
+              <Slider
+                className="mt-4 mb-0"
+                min={0}
+                step={1}
+                max={attackerTile ? attackerTile.army - 1 : 0}
+                value={[troopsToDispatch]}
+                onValueChange={(values: number[]) => setTroopsToDispatch(values[0])}
+              />
+              <Button onClick={handleAttack} className="w-44">
+                Attack
+              </Button>
+            </div>
           </DialogDescription>
         </DialogHeader>
       </DialogContent>

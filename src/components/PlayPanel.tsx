@@ -3,10 +3,11 @@ import { useComponentStates } from '@/hooks/useComponentState';
 import { color100, colorClasses, colorPlayer } from '@/utils/colors';
 import { useComponentValue } from '@dojoengine/react';
 import { EntityIndex } from '@latticexyz/recs';
+import { GiAxeSword, GiBattleGear, GiCrenulatedShield } from 'react-icons/gi';
 import { avatars } from '../utils/pfps';
+import { useElementStore } from '../utils/store';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
-import { useElementStore } from '../utils/store';
 
 interface PlayPanelProps {
   index: number;
@@ -28,6 +29,14 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
   const { turn } = useComponentStates();
   const player = useComponentValue(Player, entityId);
 
+  /*useEffect(() => {
+    console.log(player);
+    if (index === turn && current_state === 1 && player && player.supply === 0) {
+      handleNextPhaseClick();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [player]);*/
+
   if (player === undefined) return null;
   if (index !== turn) return null;
 
@@ -36,14 +45,15 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
   const color = colorPlayer[index + 1];
   const image = avatars[index + 1];
 
-  let phaseText = '';
-  if (current_state === 1) {
-    phaseText = 'Deploying';
-  } else if (current_state === 2) {
-    phaseText = 'Attacking';
-  } else if (current_state === 3) {
-    phaseText = 'Fortifying';
-  }
+  const textFromState = (state: number) => {
+    if (state === 1) {
+      return 'Deploying';
+    } else if (state === 2) {
+      return 'Attacking';
+    } else if (state === 3) {
+      return 'Fortifying';
+    }
+  };
 
   const handleNextPhaseClick = () => {
     if (!ip) return;
@@ -70,11 +80,13 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
       <div className="flex-1 flex flex-col justify-center items-center space-y-4  ">
         {/* Three bars & text */}
         <div className="text-center">
-          <div className="mb-2">{phaseText}</div>
+          <div className="mb-2">{textFromState(current_state)}</div>
           <div className="flex flex-row">
-            <div className={`h-2 w-16 rounded-full ${current_state === 1 ? 'bg-red-500' : 'bg-gray-500'}`}></div>
-            <div className={`h-2 w-16 mx-2 rounded-full ${current_state === 2 ? 'bg-red-500' : 'bg-gray-500'}`}></div>
-            <div className={`h-2 w-16 rounded-full ${current_state === 3 ? 'bg-red-500' : 'bg-gray-500'}`}></div>
+            <div className={`h-2 w-16 rounded-full ${current_state === 1 ? colorClasses[color] : 'bg-gray-500'}`}></div>
+            <div
+              className={`h-2 w-16 mx-2 rounded-full ${current_state === 2 ? colorClasses[color] : 'bg-gray-500'}`}
+            ></div>
+            <div className={`h-2 w-16 rounded-full ${current_state === 3 ? colorClasses[color] : 'bg-gray-500'}`}></div>
           </div>
         </div>
 
@@ -92,7 +104,14 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
       <Card
         className={`w-20 h-20 rounded-full border border-gray-300 flex items-center justify-center text-2xl font-bold ${colorClasses[color]}`}
       >
-        {supply}
+        {current_state === 1 && (
+          <div className="flex flex-row gap-1 items-center">
+            <p className="font-space-mono">{supply}</p>
+            <GiBattleGear />
+          </div>
+        )}
+        {current_state === 2 && <GiAxeSword className="w-10 h-10" />}
+        {current_state === 3 && <GiCrenulatedShield className="w-10 h-10" />}
       </Card>
     </Card>
   );

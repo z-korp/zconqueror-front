@@ -1,15 +1,15 @@
 import { useDojo } from '@/DojoContext';
 import { useComponentStates } from '@/hooks/useComponentState';
+import { useElementStore } from '@/utils/store';
+import { useComponentValue } from '@dojoengine/react';
 import { getComponentValue, getEntitiesWithValue } from '@latticexyz/recs';
 import { useEffect, useRef, useState } from 'react';
 import carte from '../../../public/carte.png';
 import mapDataRaw from '../../assets/map/map-test.json';
+import mapDataNeighbour from '../../assets/map/mapData/v00.json';
+import AttackModal from './AttackModal';
 import Region from './Region';
 import SupplyModal from './SupplyModal';
-import { useElementStore } from '@/utils/store';
-import mapDataNeighbour from '../../assets/map/mapData/v00.json';
-import { useComponentValue } from '@dojoengine/react';
-import AttackModal from './AttackModal';
 
 const mapData: MapData = mapDataRaw;
 
@@ -60,9 +60,9 @@ const Map = () => {
   }, [current_state]);
   // we may be able to delete this later
   ownedTiles.forEach((tile: any) => {
-    let index = tileIds.findIndex((id) => id == tile);
+    const index = tileIds.findIndex((id) => id == tile);
     if (index !== -1) {
-      let neighbors = mapDataNeighbour.territories[index].neighbors.map((neighbor) => neighbor + 1);
+      const neighbors = mapDataNeighbour.territories[index].neighbors.map((neighbor) => neighbor + 1);
       allNeighbors = allNeighbors.concat(neighbors);
     }
   });

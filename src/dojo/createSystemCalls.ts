@@ -1,10 +1,10 @@
+import { getContractByName } from '@dojoengine/core';
 import { Component, Components, EntityIndex, Schema, Type, setComponent } from '@latticexyz/recs';
 import { poseidonHashMany } from 'micro-starknet';
 import { Account, Call, Event, InvokeTransactionReceiptResponse, shortString } from 'starknet';
 import { ClientComponents } from './createClientComponents';
-import { SetupNetworkResult } from './setupNetwork';
-import { getContractByName } from '@dojoengine/core';
 import manifest from './manifest.json';
+import { SetupNetworkResult } from './setupNetwork';
 export type SystemCalls = ReturnType<typeof createSystemCalls>;
 
 export function createSystemCalls(
@@ -257,7 +257,7 @@ export async function executeEvents(events: TransformedEvent[]) {
   for (const e of events) {
     setComponent(e.component, e.entityIndex, e.componentValues);
     if (e.type === 'Game') {
-      await sleep(1000);
+      //await sleep(1000);
     }
   }
   /*const gameEvents = events.filter(

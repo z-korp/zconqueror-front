@@ -2,13 +2,7 @@ import { useDojo } from '@/DojoContext';
 import { useElementStore } from '@/utils/store';
 import React from 'react';
 import { Button } from '../ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '../ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Slider } from '../ui/slider';
 
 interface SupplyModalProps {
@@ -18,12 +12,7 @@ interface SupplyModalProps {
   player: any;
 }
 
-const SupplyModal: React.FC<SupplyModalProps> = ({
-  open,
-  onClose,
-  player,
-  regionId,
-}) => {
+const SupplyModal: React.FC<SupplyModalProps> = ({ open, onClose, player, regionId }) => {
   const {
     setup: {
       components: { Player },
@@ -45,6 +34,7 @@ const SupplyModal: React.FC<SupplyModalProps> = ({
       return;
     }
     supply(account, ip.toString(), regionId, troopsToDeploy);
+    setTroopsToDeploy(player.supply - troopsToDeploy);
     onClose(false);
   };
 
@@ -56,14 +46,19 @@ const SupplyModal: React.FC<SupplyModalProps> = ({
         <DialogHeader>
           <DialogTitle>Region {regionId}</DialogTitle>
           <DialogDescription>
-            <Slider
-              min={0}
-              step={1}
-              max={player.supply}
-              value={[troopsToDeploy]}
-              onValueChange={(values: number[]) => setTroopsToDeploy(values[0])}
-            />
-            <Button onClick={handleSupply}>Deploy troups</Button>
+            <div className="flex gap-2 items-center">
+              <Slider
+                className="mt-4 mb-0"
+                min={0}
+                step={1}
+                max={player.supply}
+                value={[troopsToDeploy]}
+                onValueChange={(values: number[]) => setTroopsToDeploy(values[0])}
+              />
+              <Button onClick={handleSupply} className="w-44">
+                Deploy troops
+              </Button>
+            </div>
           </DialogDescription>
         </DialogHeader>
       </DialogContent>
