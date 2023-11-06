@@ -15,6 +15,7 @@ interface RegionProps {
   troups?: number;
   containerRef?: React.MutableRefObject<null>;
   onRegionClick: () => void;
+  isSelected: boolean; // Ajout de cette propriété
 }
 
 const Region: React.FC<RegionProps> = ({
@@ -24,6 +25,7 @@ const Region: React.FC<RegionProps> = ({
   region,
   containerRef,
   onRegionClick,
+  isSelected,
 }: RegionProps) => {
   const {
     setup: {
@@ -44,6 +46,7 @@ const Region: React.FC<RegionProps> = ({
   const pathRef = useRef<SVGPathElement>(null);
 
   const [modalOpen, setModalOpen] = useState(true);
+  const strokeColor = isSelected ? color : 'black'; // Remplacez avec les couleurs désirées
 
   useEffect(() => {
     const path = pathRef.current;
@@ -79,12 +82,7 @@ const Region: React.FC<RegionProps> = ({
         containerRef &&
         containerRef.current &&
         ReactDOM.createPortal(
-          <TroopsMarker
-            position={position}
-            handlePathClick={onRegionClick}
-            troups={troups}
-            color={color}
-          />,
+          <TroopsMarker position={position} handlePathClick={onRegionClick} troups={troups} color={color} />,
 
           containerRef.current // render the button directly in the body
         )}
@@ -94,7 +92,7 @@ const Region: React.FC<RegionProps> = ({
         d={d}
         fill={color}
         fillOpacity={fillOpacity}
-        stroke="black"
+        stroke={strokeColor} // Utilisez strokeColor pour la couleur du contour
         strokeWidth="10" // adjust this value for the desired thickness
         onClick={onRegionClick}
       />

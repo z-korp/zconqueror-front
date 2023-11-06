@@ -1,7 +1,7 @@
 import { useDojo } from '@/DojoContext';
 import { useComponentStates } from '@/hooks/useComponentState';
 import { getComponentValue, getEntitiesWithValue } from '@latticexyz/recs';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import carte from '../../../public/carte.png';
 import mapDataRaw from '../../assets/map/map-test.json';
 import Region from './Region';
@@ -33,6 +33,7 @@ const Map = () => {
 
   const { tileIds, turn } = useComponentStates();
   const { current_state } = useElementStore((state) => state);
+  const [clickedRegion, setClickedRegion] = useState<number | null>(null);
 
   const [supplyModalOpen, setSupplyModalOpen] = useState(false);
   const [attackModalOpen, setAttackModalOpen] = useState(false);
@@ -54,6 +55,9 @@ const Map = () => {
 
   let allNeighbors: number[] = [];
 
+  useEffect(() => {
+    setClickedRegion(null);
+  }, [current_state]);
   // we may be able to delete this later
   ownedTiles.forEach((tile: any) => {
     let index = tileIds.findIndex((id) => id == tile);
@@ -64,6 +68,7 @@ const Map = () => {
   });
 
   const handleRegionClick = (regionId: number) => {
+    setClickedRegion(regionId);
     if (current_state == 1) {
       setCurrentRegionSupplyId(regionId);
       const tile = getComponentValue(Tile, tileIds[regionId - 1]);
@@ -104,11 +109,14 @@ const Map = () => {
                   <Region
                     key={item.id}
                     id={item.id}
-                    fillOpacity={0.5}
                     region={region}
                     containerRef={containerRef}
                     d={`M${item.path} z`}
                     onRegionClick={() => handleRegionClick(item.id)}
+                    isSelected={item.id === clickedRegion}
+                    fillOpacity={
+                      item.id === clickedRegion ? 0.5 : 0.2 // Change opacity if clicked
+                    }
                   />
                 ))}
               </>
