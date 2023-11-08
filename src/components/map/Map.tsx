@@ -10,6 +10,7 @@ import mapDataNeighbour from '../../assets/map/mapData/v00.json';
 import AttackModal from './AttackModal';
 import Region from './Region';
 import SupplyModal from './SupplyModal';
+import { useTileValues } from '@/hooks/useTileValue';
 
 const mapData: MapData = mapDataRaw;
 
@@ -32,7 +33,8 @@ const Map = () => {
   } = useDojo();
 
   const { tileIds, turn } = useComponentStates();
-  const { current_state } = useElementStore((state) => state);
+  const { current_state, set_current_fortified, set_current_fortifier, current_fortified, current_fortifier } =
+    useElementStore((state) => state);
   const [clickedRegion, setClickedRegion] = useState<number | null>(null);
 
   const [supplyModalOpen, setSupplyModalOpen] = useState(false);
@@ -40,9 +42,6 @@ const Map = () => {
   const [currentRegionSupplyId, setCurrentRegionSupplyId] = useState<number | null>(null);
   const [currentRegionAttacker, setCurrentRegionAttacker] = useState<number | null>(null);
   const [currentRegionDefender, setCurrentRegionDefender] = useState<number | null>(null);
-
-  const [currentRegionFortifier, setCurrentRegionFortifier] = useState<number | null>(null);
-  const [currentRegionFortified, setCurrentRegionFortified] = useState<number | null>(null);
 
   const {
     setup: {
@@ -57,6 +56,7 @@ const Map = () => {
   const ownedTiles = getEntitiesWithValue(Tile, { owner: turn });
 
   let allNeighbors: number[] = [];
+  // const { source_tile, target_tile } = useTileValues(currentRegionAttacker, regionId);
 
   useEffect(() => {
     setClickedRegion(null);
@@ -71,6 +71,7 @@ const Map = () => {
   });
 
   const handleRegionClick = (regionId: number) => {
+    // console.log(source_tile, target_tile);
     setClickedRegion(regionId);
     if (current_state == 1) {
       setCurrentRegionSupplyId(regionId);
@@ -94,10 +95,10 @@ const Map = () => {
         }
       }
     } else if (current_state == 3) {
-      if (currentRegionFortifier) {
-        setCurrentRegionFortified(regionId);
+      if (current_fortifier) {
+        set_current_fortified(regionId);
       } else {
-        setCurrentRegionFortifier(regionId);
+        set_current_fortifier(regionId);
       }
     }
   };
