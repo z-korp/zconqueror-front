@@ -6,9 +6,9 @@ interface State {
   current_state: number;
   set_current_state: (current_state: number) => void;
   current_fortifier: number | undefined;
-  set_current_fortifier: (current_fortifier: number) => void;
+  set_current_fortifier: (current_fortifier: number | undefined) => void;
   current_fortified: number | undefined;
-  set_current_fortified: (current_fortified: number) => void;
+  set_current_fortified: (current_fortified: number | undefined) => void;
 }
 
 export const useElementStore = create<State>((set) => ({
@@ -17,7 +17,7 @@ export const useElementStore = create<State>((set) => ({
   current_state: 1,
   set_current_state: (current_state: number) => set(() => ({ current_state })),
   current_fortifier: undefined,
-  set_current_fortifier: (current_fortifier: number) => set(() => ({ current_fortifier })),
+  set_current_fortifier: (current_fortifier: number | undefined) => set(() => ({ current_fortifier })),
   current_fortified: undefined,
-  set_current_fortified: (current_fortified: number) => set(() => ({ current_fortified })),
+  set_current_fortified: (current_fortified: number | undefined) => set(() => ({ current_fortified })),
 }));

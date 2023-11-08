@@ -4,17 +4,12 @@ import { getComponentValue } from '@latticexyz/recs';
 import { useElementStore } from '@/utils/store';
 import { useTileValues } from '@/hooks/useTileValue';
 
-interface FortifyPanelProps {
-  source_tileId?: number;
-  target_tileId?: number;
-  onCancel?: () => void;
-}
+interface FortifyPanelProps {}
 
-const FortifyPanel: React.FC<FortifyPanelProps> = ({ source_tileId, target_tileId, onCancel }) => {
+const FortifyPanel: React.FC<FortifyPanelProps> = () => {
   const [armyCount, setArmyCount] = useState(0);
-  const { source_tile, target_tile } = useTileValues(
-    source_tileId ? source_tileId : null,
-    target_tileId ? target_tileId : null
+  const { current_fortifier, set_current_fortified, current_fortified, set_current_fortifier } = useElementStore(
+    (state) => state
   );
 
   const {
@@ -29,24 +24,18 @@ const FortifyPanel: React.FC<FortifyPanelProps> = ({ source_tileId, target_tileI
   const increment = () => setArmyCount((count) => count + 1);
   const decrement = () => setArmyCount((count) => (count > 0 ? count - 1 : 0));
 
-  //   const [source_tile, setsource_tile] = useState(null);
-  //   const [target_tile, settarget_tile] = useState(null);
+  //   const [current_fortifier, setsource_tile] = useState(null);
+  //   const [current_fortified, settarget_tile] = useState(null);
 
   useEffect(() => {
-    console.log('source_tile', source_tile);
-    console.log('target_tile', target_tile);
-    // useTileValues(source_tileId ? source_tileId : null, target_tileId ? target_tileId : null);
-  }, [source_tileId, target_tileId]);
-
-  useEffect(() => {
-    console.log('source_tile', source_tile);
-    console.log('target_tile', target_tile);
-  }, [source_tile, target_tile]);
+    console.log('current_fortifier', current_fortifier);
+    console.log('current_fortified', current_fortified);
+  }, [current_fortifier, current_fortified]);
   //   useEffect(() => {
-  //     console.log('IMPORTAZNT', source_tile);
+  //     console.log('IMPORTAZNT', current_fortifier);
   //     if (source_tileId) {
   //       const tile1Data = getComponentValue(Tile, source_tileId);
-  //       console.log('source_tile', tile1Data);
+  //       console.log('current_fortifier', tile1Data);
   //       console.log(source_tileId);
   //       setsource_tile(tile1Data);
   //     } else {
@@ -63,7 +52,7 @@ const FortifyPanel: React.FC<FortifyPanelProps> = ({ source_tileId, target_tileI
 
   const onMoveTroups = async () => {
     // TODO: Implement move troups logic
-    if (source_tile === null || target_tile === null) return;
+    if (current_fortifier === undefined || current_fortified === undefined) return;
 
     // fn transfer(
     //     self: @TContractState,
@@ -77,21 +66,29 @@ const FortifyPanel: React.FC<FortifyPanelProps> = ({ source_tileId, target_tileI
     //LOG ALL THE VAR USED IN TRANSFER FUNCTION
     // console.log('account', account);
     // console.log('ip', ip);
-    console.log('source_tile', source_tile);
-    console.log('target_tile', target_tile);
+    console.log('current_fortifier', current_fortifier);
+    console.log('current_fortified', current_fortified);
     console.log('armyCount', armyCount);
     if (!ip) return;
-    await transfer(account, ip.toString(), source_tile, target_tile, armyCount);
+    await transfer(account, ip.toString(), current_fortifier, current_fortified, armyCount);
     console.log('TRANSFER DOOONNNEE');
+  };
+
+  const removeSelected = (arg0: number): void => {
+    if (arg0 === 1) {
+      set_current_fortifier(undefined);
+    } else if (arg0 === 2) {
+      set_current_fortified(undefined);
+    }
   };
 
   return (
     <div className="flex flex-col items-center justify-center p-4 bg-gray-200 rounded-lg shadow-md">
       {/* Tile selection 1 */}
       <div className="flex items-center justify-between w-40 p-2 bg-white rounded">
-        <span>{source_tile ? `Selected Region: ${source_tile}` : 'No Region selected'}</span>
+        <span>{current_fortifier ? `Selected Region: ${current_fortifier}` : 'No Region selected'}</span>
         <button
-          onClick={onCancel}
+          onClick={() => removeSelected(1)}
           className="flex items-center justify-center w-8 h-8 bg-red-500 text-white rounded-full"
         >
           ✕
@@ -111,9 +108,9 @@ const FortifyPanel: React.FC<FortifyPanelProps> = ({ source_tileId, target_tileI
 
       {/* Tile selection 2 */}
       <div className="flex items-center justify-between w-40 p-2 bg-white rounded">
-        <span>{target_tile ? `Selected Region: ${target_tile}` : 'No Region selected'}</span>
+        <span>{current_fortified ? `Selected Region: ${current_fortified}` : 'No Region selected'}</span>
         <button
-          onClick={onCancel}
+          onClick={() => removeSelected(2)}
           className="flex items-center justify-center w-8 h-8 bg-red-500 text-white rounded-full"
         >
           ✕

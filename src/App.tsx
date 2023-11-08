@@ -32,7 +32,7 @@ function App() {
       <div className="flex">
         {isFortifyPanelVisible && (
           <div className="w-1/6 mr-8">
-            <FortifyPanel selectedTile1Id={current_fortifier} selectedTile2Id={current_fortified} />
+            <FortifyPanel />
           </div>
         )}
 
