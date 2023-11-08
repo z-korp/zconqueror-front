@@ -41,6 +41,9 @@ const Map = () => {
   const [currentRegionAttacker, setCurrentRegionAttacker] = useState<number | null>(null);
   const [currentRegionDefender, setCurrentRegionDefender] = useState<number | null>(null);
 
+  const [currentRegionFortifier, setCurrentRegionFortifier] = useState<number | null>(null);
+  const [currentRegionFortified, setCurrentRegionFortified] = useState<number | null>(null);
+
   const {
     setup: {
       components: { Player },
@@ -89,6 +92,12 @@ const Map = () => {
         } else {
           alert('Can t interract with this tile');
         }
+      }
+    } else if (current_state == 3) {
+      if (currentRegionFortifier) {
+        setCurrentRegionFortified(regionId);
+      } else {
+        setCurrentRegionFortifier(regionId);
       }
     }
   };

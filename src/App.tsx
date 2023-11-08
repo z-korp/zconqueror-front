@@ -8,6 +8,7 @@ import { TooltipProvider } from './components/ui/tooltip';
 import { useComponentStates } from './hooks/useComponentState';
 import useIP from './hooks/useIp';
 import { useElementStore } from './utils/store';
+import FortifyPanel from './components/map/FortifyPanel';
 
 function App() {
   const { set_ip } = useElementStore((state) => state);
@@ -21,10 +22,23 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ip, loading]);
 
+  const { current_state } = useElementStore((state) => state);
+
+  const isFortifyPanelVisible = current_state === 3;
   return (
     <TooltipProvider>
       <NewGame />
-      <Map />
+      <div className="flex">
+        {isFortifyPanelVisible && (
+          <div className="w-1/6 mr-8">
+            <FortifyPanel />
+          </div>
+        )}
+
+        <div className={`w-${isFortifyPanelVisible ? '3/4' : 'full'} pr-4`}>
+          <Map />
+        </div>
+      </div>
       <div className="absolute top-24 right-0 flex gap-6 flex-col">
         {playerIds.map((entityId, index) => (
           <SidePlayerInfo key={index} index={index} entityId={entityId} />
