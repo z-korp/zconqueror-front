@@ -24,7 +24,7 @@ const FortifyPanel: React.FC<FortifyPanelProps> = () => {
   const { ip } = useElementStore((state) => state);
 
   const increment = () => {
-    if (sourceTile && armyCount < sourceTile.army) {
+    if (sourceTile && armyCount < sourceTile.army - 1) {
       setArmyCount(armyCount + 1);
     }
   };

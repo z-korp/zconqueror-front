@@ -10,7 +10,6 @@ import mapDataNeighbour from '../../assets/map/mapData/v00.json';
 import AttackModal from './AttackModal';
 import Region from './Region';
 import SupplyModal from './SupplyModal';
-import { useTileValues } from '@/hooks/useTileValue';
 
 const mapData: MapData = mapDataRaw;
 
@@ -56,7 +55,6 @@ const Map = () => {
   const ownedTiles = getEntitiesWithValue(Tile, { owner: turn });
 
   let allNeighbors: number[] = [];
-  // const { source_tile, target_tile } = useTileValues(currentRegionAttacker, regionId);
 
   useEffect(() => {
     setClickedRegion(null);
@@ -71,7 +69,6 @@ const Map = () => {
   });
 
   const handleRegionClick = (regionId: number) => {
-    // console.log(source_tile, target_tile);
     setClickedRegion(regionId);
     if (current_state == 1) {
       setCurrentRegionSupplyId(regionId);
@@ -81,12 +78,15 @@ const Map = () => {
       setSupplyModalOpen(true);
     } else if (current_state == 2) {
       const tile = getComponentValue(Tile, tileIds[regionId - 1]);
+
       if (tile.owner === turn) {
+        //TODO HERE
+
         setCurrentRegionAttacker(regionId);
       } else {
         if (
           currentRegionAttacker &&
-          mapDataNeighbour.territories[currentRegionAttacker].neighbors.includes(regionId + 1)
+          mapDataNeighbour.territories[currentRegionAttacker - 1].neighbors.includes(regionId - 1)
         ) {
           setCurrentRegionDefender(regionId);
           setAttackModalOpen(true);
