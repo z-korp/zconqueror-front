@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { getComponentValue } from '@latticexyz/recs';
 import { useElementStore } from '@/utils/store';
 import { useTileValues } from '@/hooks/useTileValue';
+import { useComponentStates } from '@/hooks/useComponentState';
 
 interface FortifyPanelProps {}
 
@@ -15,22 +16,55 @@ const FortifyPanel: React.FC<FortifyPanelProps> = () => {
   const {
     setup: {
       systemCalls: { transfer },
+      components: { Tile },
     },
     account: { account },
   } = useDojo();
 
   const { ip } = useElementStore((state) => state);
 
-  const increment = () => setArmyCount((count) => count + 1);
-  const decrement = () => setArmyCount((count) => (count > 0 ? count - 1 : 0));
+  const increment = () => {
+    if (sourceTile && armyCount < sourceTile.army) {
+      setArmyCount(armyCount + 1);
+    }
+  };
+
+  const decrement = () => {
+    if (armyCount > 1) {
+      setArmyCount(armyCount - 1);
+    }
+  };
 
   //   const [current_fortifier, setsource_tile] = useState(null);
   //   const [current_fortified, settarget_tile] = useState(null);
+  const [sourceTile, setSourceTile] = useState<any | null>(null);
+  const [targetTile, setTargetTile] = useState<any | null>(null);
+
+  const { tileIds } = useComponentStates();
 
   useEffect(() => {
     console.log('current_fortifier', current_fortifier);
-    console.log('current_fortified', current_fortified);
-  }, [current_fortifier, current_fortified]);
+    console.log('tileIds', tileIds);
+    console.log('Tile', Tile);
+    console.log('sourceTile before', sourceTile);
+
+    if (current_fortifier !== undefined) {
+      const sourceTileData = getComponentValue(Tile, tileIds[current_fortifier - 1]);
+      console.log('sourceTileData', sourceTileData);
+
+      setSourceTile(sourceTileData);
+    } else {
+      setSourceTile(null);
+    }
+
+    if (current_fortified !== undefined) {
+      const targetTileData = getComponentValue(Tile, tileIds[current_fortified - 1]);
+      setTargetTile(targetTileData);
+    } else {
+      setTargetTile(null);
+    }
+    console.log('sourceTile after', sourceTile);
+  }, [current_fortifier, current_fortified, Tile, tileIds]);
   //   useEffect(() => {
   //     console.log('IMPORTAZNT', current_fortifier);
   //     if (source_tileId) {
@@ -97,11 +131,15 @@ const FortifyPanel: React.FC<FortifyPanelProps> = () => {
 
       {/* Army adjust */}
       <div className="flex items-center justify-center my-4">
-        <button onClick={decrement} className="px-4 py-2 bg-gray-300 rounded-l">
+        <button onClick={decrement} className="px-4 py-2 bg-gray-300 rounded-l" disabled={armyCount <= 1}>
           -
         </button>
         <div className="px-4 py-2 bg-white">{armyCount}</div>
-        <button onClick={increment} className="px-4 py-2 bg-gray-300 rounded-r">
+        <button
+          onClick={increment}
+          className="px-4 py-2 bg-gray-300 rounded-r"
+          disabled={!sourceTile || armyCount >= sourceTile.army}
+        >
           +
         </button>
       </div>
