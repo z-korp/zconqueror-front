@@ -95,10 +95,13 @@ const Map = () => {
         }
       }
     } else if (current_state == 3) {
-      if (current_fortifier) {
-        set_current_fortified(regionId);
-      } else {
-        set_current_fortifier(regionId);
+      const tile = getComponentValue(Tile, tileIds[regionId - 1]);
+      if (tile.owner === turn) {
+        if (current_fortifier) {
+          set_current_fortified(regionId);
+        } else {
+          set_current_fortifier(regionId);
+        }
       }
     }
   };
