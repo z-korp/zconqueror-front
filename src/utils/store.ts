@@ -9,6 +9,10 @@ interface State {
   set_current_fortifier: (current_fortifier: number | undefined) => void;
   current_fortified: number | undefined;
   set_current_fortified: (current_fortified: number | undefined) => void;
+  current_attacker: any;
+  set_current_attacker: (currentAttacker: number) => void;
+  set_current_defender: (defender: number) => void;
+  current_defender: any;
 }
 
 export const useElementStore = create<State>((set) => ({
@@ -20,4 +24,8 @@ export const useElementStore = create<State>((set) => ({
   set_current_fortifier: (current_fortifier: number | undefined) => set(() => ({ current_fortifier })),
   current_fortified: undefined,
   set_current_fortified: (current_fortified: number | undefined) => set(() => ({ current_fortified })),
+  current_attacker: null,
+  set_current_attacker: (current_attacker: number) => set(() => ({ current_attacker })),
+  current_defender: null,
+  set_current_defender: (defender: number) => set(() => ({ current_defender: defender })),
 }));

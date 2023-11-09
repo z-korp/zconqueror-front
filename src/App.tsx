@@ -22,10 +22,9 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ip, loading]);
 
-  const { current_state, current_fortified, current_fortifier, set_current_fortified, set_current_fortifier } =
-    useElementStore((state) => state);
+  const { current_state } = useElementStore((state) => state);
 
-  const isFortifyPanelVisible = current_state === 3;
+  const isFortifyPanelVisible = current_state === 3 || current_state === 2;
   return (
     <TooltipProvider>
       <NewGame />

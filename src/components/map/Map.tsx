@@ -32,15 +32,22 @@ const Map = () => {
   } = useDojo();
 
   const { tileIds, turn } = useComponentStates();
-  const { current_state, set_current_fortified, set_current_fortifier, current_fortified, current_fortifier } =
-    useElementStore((state) => state);
+  const {
+    current_state,
+    set_current_fortified,
+    set_current_fortifier,
+    current_fortified,
+    current_fortifier,
+    current_attacker,
+    current_defender,
+    set_current_attacker,
+    set_current_defender,
+  } = useElementStore((state) => state);
   const [clickedRegion, setClickedRegion] = useState<number | null>(null);
 
   const [supplyModalOpen, setSupplyModalOpen] = useState(false);
   const [attackModalOpen, setAttackModalOpen] = useState(false);
   const [currentRegionSupplyId, setCurrentRegionSupplyId] = useState<number | null>(null);
-  const [currentRegionAttacker, setCurrentRegionAttacker] = useState<number | null>(null);
-  const [currentRegionDefender, setCurrentRegionDefender] = useState<number | null>(null);
 
   const {
     setup: {
@@ -82,13 +89,10 @@ const Map = () => {
       if (tile.owner === turn) {
         //TODO HERE
 
-        setCurrentRegionAttacker(regionId);
+        set_current_attacker(regionId);
       } else {
-        if (
-          currentRegionAttacker &&
-          mapDataNeighbour.territories[currentRegionAttacker - 1].neighbors.includes(regionId - 1)
-        ) {
-          setCurrentRegionDefender(regionId);
+        if (current_attacker && mapDataNeighbour.territories[current_attacker - 1].neighbors.includes(regionId - 1)) {
+          set_current_defender(regionId);
           setAttackModalOpen(true);
         } else {
           alert('Can t interract with this tile');
@@ -146,8 +150,8 @@ const Map = () => {
       <AttackModal
         open={attackModalOpen}
         player={player}
-        attacker={currentRegionAttacker}
-        defender={currentRegionDefender}
+        attacker={current_attacker}
+        defender={current_defender}
         onClose={setAttackModalOpen}
       />
     </>
