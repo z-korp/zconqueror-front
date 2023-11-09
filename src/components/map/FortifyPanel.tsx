@@ -35,23 +35,14 @@ const FortifyPanel: React.FC<FortifyPanelProps> = () => {
     }
   };
 
-  //   const [current_fortifier, setsource_tile] = useState(null);
-  //   const [current_fortified, settarget_tile] = useState(null);
   const [sourceTile, setSourceTile] = useState<any | null>(null);
   const [targetTile, setTargetTile] = useState<any | null>(null);
 
   const { tileIds } = useComponentStates();
 
   useEffect(() => {
-    console.log('current_fortifier', current_fortifier);
-    console.log('tileIds', tileIds);
-    console.log('Tile', Tile);
-    console.log('sourceTile before', sourceTile);
-
     if (current_fortifier !== undefined) {
       const sourceTileData = getComponentValue(Tile, tileIds[current_fortifier - 1]);
-      console.log('sourceTileData', sourceTileData);
-
       setSourceTile(sourceTileData);
     } else {
       setSourceTile(null);
@@ -65,24 +56,6 @@ const FortifyPanel: React.FC<FortifyPanelProps> = () => {
     }
     console.log('sourceTile after', sourceTile);
   }, [current_fortifier, current_fortified, Tile, tileIds]);
-  //   useEffect(() => {
-  //     console.log('IMPORTAZNT', current_fortifier);
-  //     if (source_tileId) {
-  //       const tile1Data = getComponentValue(Tile, source_tileId);
-  //       console.log('current_fortifier', tile1Data);
-  //       console.log(source_tileId);
-  //       setsource_tile(tile1Data);
-  //     } else {
-  //       setsource_tile(null);
-  //     }
-
-  //     if (target_tileId) {
-  //       const tile2Data = getComponentValue(Tile, target_tileId);
-  //       settarget_tile(tile2Data);
-  //     } else {
-  //       settarget_tile(null);
-  //     }
-  //   }, [Tile, source_tileId, target_tileId]);
 
   const onMoveTroups = async () => {
     // TODO: Implement move troups logic
