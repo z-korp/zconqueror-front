@@ -147,13 +147,6 @@ const Map = () => {
         onClose={setSupplyModalOpen}
         regionId={currentRegionSupplyId}
       />
-      <AttackModal
-        open={attackModalOpen}
-        player={player}
-        attacker={current_attacker}
-        defender={current_defender}
-        onClose={setAttackModalOpen}
-      />
     </>
   );
 };
