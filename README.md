@@ -8,8 +8,6 @@ This integration taps into the powerful libraries designed by [Lattice](https://
 
 ### Initial Setup
 
-The repository already contains the `dojo-starter` as a submodule. Feel free to remove it if you prefer.
-
 **Prerequisites:** First and foremost, ensure that Dojo is installed on your system. If it isn't, you can easily get it set up with:
 
 ```console
