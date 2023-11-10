@@ -1,5 +1,7 @@
 # zConqueror
 
+zConqueror is an onChain tower defense on starknet.
+
 Dive into this straightforward example to understand how to meld React with Dojo.
 
 This integration taps into the powerful libraries designed by [Lattice](https://lattice.xyz/):
