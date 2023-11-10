@@ -1,4 +1,4 @@
-## Integrate React with Dojo: A Quick Start Guide
+# zConqueror
 
 Dive into this straightforward example to understand how to meld React with Dojo.
 
