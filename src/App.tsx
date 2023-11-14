@@ -29,13 +29,8 @@ function App() {
     <TooltipProvider>
       <NewGame />
       <div className="flex">
-        {isFortifyPanelVisible && (
-          <div className="w-1/6 mr-8">
-            <FortifyPanel />
-          </div>
-        )}
-
-        <div className={`w-${isFortifyPanelVisible ? '3/4' : 'full'} pr-4`}>
+        <div className="w-1/6 mr-4">{isFortifyPanelVisible && <FortifyPanel />}</div>
+        <div className="w-5/6 pr-8">
           <Map />
         </div>
       </div>
