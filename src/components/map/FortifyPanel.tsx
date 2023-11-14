@@ -6,6 +6,7 @@ import { useComponentStates } from '@/hooks/useComponentState';
 import SelectionPanel from '../panel/SelectionPanel';
 import Counter from '../panel/Counter';
 import { useComponentValue } from '@dojoengine/react';
+import { GiMountedKnight } from 'react-icons/gi';
 
 const FortifyPanel = () => {
   const [armyCount, setArmyCount] = useState(0);
@@ -118,7 +119,12 @@ const FortifyPanel = () => {
     <div className="flex flex-col items-center justify-center p-4 bg-gray-200 rounded-lg shadow-md">
       {isAttackTurn() ? (
         <>
-          <SelectionPanel selectedRegion={current_attacker} onRemoveSelected={removeSelected} type={1} />
+          <div className="bg-white rounded-lg">
+            <SelectionPanel selectedRegion={current_attacker} onRemoveSelected={removeSelected} type={1} />
+            <div className="mt-2 mb-2 flex justify-center items-center">
+              <GiMountedKnight className="text-4xl" />
+            </div>
+          </div>
 
           <Counter
             count={armyCount}
@@ -126,9 +132,12 @@ const FortifyPanel = () => {
             onIncrement={increment}
             maxCount={sourceTile ? sourceTile.army - 1 : Infinity}
           />
-
-          <SelectionPanel selectedRegion={current_defender} onRemoveSelected={removeSelected} type={2} />
-
+          <div className="bg-white rounded-lg">
+            <SelectionPanel selectedRegion={current_defender} onRemoveSelected={removeSelected} type={2} />
+            <div className="mt-2 mb-2 flex justify-center items-center">
+              <GiMountedKnight className="text-4xl" />
+            </div>
+          </div>
           <button onClick={onAttack} className="w-32 py-2 mt-4 text-white bg-red-500 rounded">
             Attack
           </button>
@@ -137,8 +146,12 @@ const FortifyPanel = () => {
         <>
           {/* Fortify UI elements here */}
           {/* <div className="flex items-center justify-between w-40 p-2 bg-white rounded"> */}
-          <SelectionPanel selectedRegion={current_fortifier} onRemoveSelected={removeSelected} type={1} />
-
+          <div className="bg-white rounded-lg">
+            <SelectionPanel selectedRegion={current_fortifier} onRemoveSelected={removeSelected} type={1} />
+            <div className="mt-2 mb-2 flex justify-center items-center">
+              <GiMountedKnight className="text-4xl" />
+            </div>
+          </div>
           {/* Use Counter for armyCount */}
           <Counter
             count={armyCount}
@@ -148,9 +161,13 @@ const FortifyPanel = () => {
           />
 
           {/* Use SelectionPanel for current_fortified */}
-          <SelectionPanel selectedRegion={current_fortified} onRemoveSelected={removeSelected} type={2} />
-          {/* </div> */}
-
+          <div className="bg-white rounded-lg">
+            <SelectionPanel selectedRegion={current_fortified} onRemoveSelected={removeSelected} type={2} />
+            {/* </div> */}
+            <div className="mt-2 mb-2 flex justify-center items-center">
+              <GiMountedKnight className="text-4xl" />
+            </div>
+          </div>
           <button onClick={onMoveTroops} className="w-32 py-2 mt-4 text-white bg-blue-500 rounded">
             Move Troops
           </button>
