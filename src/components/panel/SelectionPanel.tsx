@@ -1,6 +1,6 @@
 // SelectionPanel.jsx
 type SelectionPanelProps = {
-  selectedRegion: number | undefined;
+  selectedRegion: number | null;
   onRemoveSelected: (type: number) => void;
   type: number;
 };
@@ -11,7 +11,8 @@ const SelectionPanel = ({ selectedRegion, onRemoveSelected, type }: SelectionPan
       <span>{selectedRegion ? `Selected Region: ${selectedRegion}` : 'No Region selected'}</span>
       <button
         onClick={() => onRemoveSelected(type)}
-        className="flex items-center justify-center w-8 h-8 bg-red-500 text-white rounded-full"
+        className="flex items-center justify-center w-[32px] h-[32px] bg-red-500 text-white rounded-full"
+        style={{ minWidth: '2rem', minHeight: '2rem' }}
       >
         ✕
       </button>
