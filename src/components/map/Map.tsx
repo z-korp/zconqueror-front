@@ -131,7 +131,7 @@ const Map = () => {
                     onRegionClick={() => handleRegionClick(item.id)}
                     isSelected={item.id === clickedRegion}
                     fillOpacity={
-                      item.id === clickedRegion ? 0.5 : 0.2 // Change opacity if clicked
+                      item.id === clickedRegion ? 0.7 : 0.4 // Change opacity if clicked
                     }
                   />
                 ))}

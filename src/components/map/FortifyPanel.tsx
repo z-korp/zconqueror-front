@@ -3,7 +3,7 @@ import { useComponentStates } from '@/hooks/useComponentState';
 import { Phase, useElementStore } from '@/utils/store';
 import { useComponentValue } from '@dojoengine/react';
 import { getComponentValue } from '@latticexyz/recs';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Counter from '../panel/Counter';
 import SelectionPanel from '../panel/SelectionPanel';
 
@@ -65,15 +65,15 @@ const FortifyPanel = () => {
     set_current_target(null);
   }, [current_state]);
 
-  const sourceIconRef = useRef<HTMLDivElement>(null);
-  const targetIconRef = useRef<HTMLDivElement>(null);
-
   const increment = () => {
-    if (sourceTile && armyCount < sourceTile.army - 1) {
-      setArmyCount(armyCount + 1);
-    }
-    if (sourceTile && armyCount < sourceTile.army - 1) {
-      setArmyCount(armyCount + 1);
+    if (current_state === Phase.DEPLOY) {
+      if (armyCount <= player.supply) {
+        setArmyCount(armyCount + 1);
+      }
+    } else {
+      if (sourceTile && armyCount < sourceTile.army - 1) {
+        setArmyCount(armyCount + 1);
+      }
     }
   };
 
@@ -120,6 +120,7 @@ const FortifyPanel = () => {
     }
     console.log('supply', player.supply, armyCount);
     supply(account, ip.toString(), current_source, armyCount);
+    setArmyCount(player.supply - armyCount);
   };
 
   const onMoveTroops = async () => {
@@ -224,18 +225,27 @@ const FortifyPanel = () => {
         </>
       ) : (
         <>
-          <SelectionPanel title="blabla" selectedRegion={current_source} onRemoveSelected={() => removeSelected(1)} />
-
-          {/* Use Counter for armyCount */}
-          <Counter
-            count={armyCount}
-            onDecrement={decrement}
-            onIncrement={increment}
-            maxCount={sourceTile ? sourceTile.army - 1 : Infinity}
-          />
-          <button onClick={handleSupply} className="w-32 py-2 mt-4 text-white bg-blue-500 rounded hover:bg-blue-600">
-            Deploy troops
-          </button>
+          {current_source && (
+            <>
+              <SelectionPanel
+                title="Territory"
+                selectedRegion={current_source}
+                onRemoveSelected={() => removeSelected(1)}
+              />
+              <Counter
+                count={armyCount}
+                onDecrement={decrement}
+                onIncrement={increment}
+                maxCount={player ? player.supply : Infinity}
+              />
+              <button
+                onClick={handleSupply}
+                className="w-32 py-2 mt-4 text-white bg-blue-500 rounded hover:bg-blue-600"
+              >
+                Deploy troops
+              </button>
+            </>
+          )}
         </>
       )}
     </div>
