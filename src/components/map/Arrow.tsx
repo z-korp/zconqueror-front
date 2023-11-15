@@ -1,20 +1,22 @@
 type ArrowProps = {
   position: { x: number; y: number };
+  style?: CSSProperties;
 };
 
 import { CSSProperties } from 'react';
 
-const Arrow = ({ position }: ArrowProps) => {
-  const style: CSSProperties = {
+const Arrow = ({ position, style }: ArrowProps) => {
+  const arrowStyle: CSSProperties = {
     position: 'absolute',
     left: `${position.x}px`,
     top: `${position.y}px`,
-    // transform: `rotate(${angle}deg)`,
+    transform: 'rotate(-180deg)',
+    ...style,
   };
 
   return (
-    <svg style={style} width="50" height="50" viewBox="0 0 24 24">
-      <path fill="red" d="M2,21L23,12L2,3V10L17,12L2,14V21Z" />
+    <svg style={arrowStyle} width="50" height="50" viewBox="0 0 24 24">
+      <path fill="red" d="M12,2 L18,12 L14,12 L14,22 L10,22 L10,12 L6,12 Z" />
     </svg>
   );
 };
