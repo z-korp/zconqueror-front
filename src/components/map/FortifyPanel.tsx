@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDojo } from '@/DojoContext';
 import { getComponentValue } from '@latticexyz/recs';
 import { useElementStore } from '@/utils/store';
@@ -7,6 +7,7 @@ import SelectionPanel from '../panel/SelectionPanel';
 import Counter from '../panel/Counter';
 import { useComponentValue } from '@dojoengine/react';
 import { GiMountedKnight } from 'react-icons/gi';
+import Arrow from './Arrow';
 
 const FortifyPanel = () => {
   const [armyCount, setArmyCount] = useState(0);
@@ -35,6 +36,39 @@ const FortifyPanel = () => {
   const [sourceTile, setSourceTile] = useState<any | null>(null);
   const [attackerTile, setAttackerTile] = useState<any | null>(null);
   const [targetTile, setTargetTile] = useState<any | null>(null);
+
+  const [arrowPosition, setArrowPosition] = useState({ x: 0, y: 0, visible: false });
+
+  // Example positions, you'll need to calculate these based on your game's grid
+  const attackerPosition = { x: 125, y: 150 }; // Replace with actual position
+  const defenderPosition = { x: 125, y: 300 }; // Replace with actual position
+
+  // Trigger the animation on some game event, e.g., attack
+  const animateArrow = () => {
+    let start = null;
+    const duration = 1000; // Duration of animation in milliseconds
+
+    const step = (timestamp) => {
+      if (!start) start = timestamp;
+      const progress = (timestamp - start) / duration;
+      const currentX = attackerPosition.x + progress * (defenderPosition.x - attackerPosition.x);
+      const currentY = attackerPosition.y + progress * (defenderPosition.y - attackerPosition.y);
+
+      setArrowPosition({ x: currentX, y: currentY, visible: true });
+
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      } else {
+        // Hide the arrow after reaching the target
+        setArrowPosition({ ...arrowPosition, visible: false });
+      }
+    };
+
+    requestAnimationFrame(step);
+  };
+
+  const sourceIconRef = useRef<HTMLDivElement>(null);
+  const targetIconRef = useRef<HTMLDivElement>(null);
 
   const increment = () => {
     if (attackerTile && armyCount < attackerTile.army - 1) {
@@ -81,7 +115,7 @@ const FortifyPanel = () => {
     if (current_fortifier === undefined || current_fortified === undefined) return;
 
     if (!ip) return;
-
+    animateArrow();
     await transfer(account, ip.toString(), current_fortifier, current_fortified, armyCount);
   };
 
@@ -98,9 +132,10 @@ const FortifyPanel = () => {
       return;
     }
 
+    animateArrow();
+
     await attack(account, ip.toString(), current_attacker, current_defender, armyCount);
     defend(account, ip.toString(), current_attacker, current_defender);
-    // TODO: Call the attack function from your game logic or smart contract
   };
 
   const removeSelected = (type: number): void => {
@@ -122,7 +157,9 @@ const FortifyPanel = () => {
           <div className="bg-white rounded-lg">
             <SelectionPanel selectedRegion={current_attacker} onRemoveSelected={removeSelected} type={1} />
             <div className="mt-2 mb-2 flex justify-center items-center">
-              <GiMountedKnight className="text-4xl" />
+              <div ref={sourceIconRef} className="icon">
+                <GiMountedKnight className="text-4xl" />
+              </div>
             </div>
           </div>
 
@@ -135,12 +172,15 @@ const FortifyPanel = () => {
           <div className="bg-white rounded-lg">
             <SelectionPanel selectedRegion={current_defender} onRemoveSelected={removeSelected} type={2} />
             <div className="mt-2 mb-2 flex justify-center items-center">
-              <GiMountedKnight className="text-4xl" />
+              <div ref={sourceIconRef} className="icon">
+                <GiMountedKnight className="text-4xl" />
+              </div>
             </div>
           </div>
           <button onClick={onAttack} className="w-32 py-2 mt-4 text-white bg-red-500 rounded">
             Attack
           </button>
+          {arrowPosition.visible && <Arrow position={arrowPosition} />}
         </>
       ) : (
         <>
