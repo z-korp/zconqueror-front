@@ -170,11 +170,11 @@ const FortifyPanel = () => {
     <div className="flex flex-col items-center justify-center p-4 bg-gray-200 rounded-lg shadow-md">
       {isAttackTurn() ? (
         <>
-          <div className="bg-white rounded-lg">
+          <div className="bg-white rounded-lg shadow-xl">
             <SelectionPanel selectedRegion={current_source} onRemoveSelected={removeSelected} type={1} />
             <div className="mt-2 mb-2 flex justify-center items-center">
               <div ref={sourceIconRef} className="icon">
-                <GiMountedKnight className="text-4xl" />
+                <GiMountedKnight className="text-4xl " />
               </div>
             </div>
           </div>
@@ -185,7 +185,8 @@ const FortifyPanel = () => {
             onIncrement={increment}
             maxCount={sourceTile ? sourceTile.army - 1 : Infinity}
           />
-          <div className="bg-white rounded-lg">
+
+          <div className="bg-white rounded-lg shadow-xl">
             <SelectionPanel selectedRegion={current_target} onRemoveSelected={removeSelected} type={2} />
             <div className="mt-2 mb-2 flex justify-center items-center">
               <div ref={sourceIconRef} className="icon">
@@ -193,16 +194,16 @@ const FortifyPanel = () => {
               </div>
             </div>
           </div>
-          <button onClick={onAttack} className="w-32 py-2 mt-4 text-white bg-red-500 rounded">
+
+          <button onClick={onAttack} className="w-full py-2 mt-4 text-white bg-red-500 rounded hover:bg-red-600">
             Attack
           </button>
-          {arrowPosition.visible && <Arrow position={arrowPosition} />}
         </>
       ) : isFortifyTurn() ? (
         <>
           {/* Fortify UI elements here */}
           {/* <div className="flex items-center justify-between w-40 p-2 bg-white rounded"> */}
-          <div className="bg-white rounded-lg">
+          <div className="bg-white rounded-lg shadow-xl">
             <SelectionPanel selectedRegion={current_source} onRemoveSelected={removeSelected} type={1} />
             <div className="mt-2 mb-2 flex justify-center items-center">
               <GiMountedKnight className="text-4xl" />
@@ -224,13 +225,13 @@ const FortifyPanel = () => {
               <GiMountedKnight className="text-4xl" />
             </div>
           </div>
-          <button onClick={onMoveTroops} className="w-32 py-2 mt-4 text-white bg-blue-500 rounded">
+          <button onClick={onMoveTroops} className="w-full py-2 mt-4 text-white bg-blue-500 rounded hover:bg-blue-600">
             Move Troops
           </button>
         </>
       ) : (
         <>
-          <div className="bg-white rounded-lg">
+          <div className="bg-white rounded-lg shadow-xl">
             <SelectionPanel selectedRegion={current_source} onRemoveSelected={removeSelected} type={1} />
             <div className="mt-2 mb-2 flex justify-center items-center">
               <GiMountedKnight className="text-4xl" />
@@ -243,7 +244,7 @@ const FortifyPanel = () => {
             onIncrement={increment}
             maxCount={sourceTile ? sourceTile.army - 1 : Infinity}
           />
-          <button onClick={handleSupply} className="w-32 py-2 mt-4 text-white bg-blue-500 rounded">
+          <button onClick={handleSupply} className="w-32 py-2 mt-4 text-white bg-blue-500 rounded hover:bg-blue-600">
             Deploy troops
           </button>
         </>
