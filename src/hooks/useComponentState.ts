@@ -53,8 +53,6 @@ export const useComponentStates = () => {
         const tile = getComponentValue(Tile, tileId);
         tileArray.push(tile);
       }
-      console.log('tileArray', tileArray);
-      console.log('tileIdsArray', tileIdsArray);
       setTiles(tileArray);
       setTileIds(tileIdsArray);
     }

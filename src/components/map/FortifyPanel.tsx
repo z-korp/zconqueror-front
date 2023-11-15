@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
 import { useDojo } from '@/DojoContext';
-import { getComponentValue } from '@latticexyz/recs';
-import { useElementStore } from '@/utils/store';
 import { useComponentStates } from '@/hooks/useComponentState';
-import SelectionPanel from '../panel/SelectionPanel';
-import Counter from '../panel/Counter';
+import { Phase, useElementStore } from '@/utils/store';
 import { useComponentValue } from '@dojoengine/react';
+import { getComponentValue } from '@latticexyz/recs';
+import { useEffect, useState } from 'react';
+import Counter from '../panel/Counter';
+import SelectionPanel from '../panel/SelectionPanel';
 
 const FortifyPanel = () => {
   const [armyCount, setArmyCount] = useState(0);
@@ -111,7 +111,7 @@ const FortifyPanel = () => {
   };
 
   const isAttackTurn = () => {
-    return current_state === 2; // Assuming '2' is the state for attack turns
+    return current_state === Phase.ATTACK;
   };
 
   return (

@@ -1,6 +1,6 @@
 import { useDojo } from '@/DojoContext';
 import { useComponentStates } from '@/hooks/useComponentState';
-import { useElementStore } from '@/utils/store';
+import { Phase, useElementStore } from '@/utils/store';
 import { useComponentValue } from '@dojoengine/react';
 import { getComponentValue, getEntitiesWithValue } from '@latticexyz/recs';
 import { useEffect, useRef, useState } from 'react';
@@ -76,13 +76,13 @@ const Map = () => {
 
   const handleRegionClick = (regionId: number) => {
     setClickedRegion(regionId);
-    if (current_state == 1) {
+    if (current_state == Phase.DEPLOY) {
       setCurrentRegionSupplyId(regionId);
       const tile = getComponentValue(Tile, tileIds[regionId - 1]);
       if (tile.owner !== turn) return;
 
       setSupplyModalOpen(true);
-    } else if (current_state == 2) {
+    } else if (current_state == Phase.ATTACK) {
       const tile = getComponentValue(Tile, tileIds[regionId - 1]);
 
       if (tile.owner === turn) {
@@ -97,7 +97,7 @@ const Map = () => {
           alert('Can t interract with this tile');
         }
       }
-    } else if (current_state == 3) {
+    } else if (current_state == Phase.FORTIFY) {
       const tile = getComponentValue(Tile, tileIds[regionId - 1]);
       if (tile.owner === turn) {
         if (current_fortifier) {

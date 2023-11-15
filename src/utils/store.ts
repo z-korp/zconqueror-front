@@ -1,10 +1,17 @@
 import { create } from 'zustand';
 
+export enum Phase {
+  NOTHING,
+  DEPLOY,
+  ATTACK,
+  FORTIFY,
+}
+
 interface State {
   ip: number | undefined;
   set_ip: (ip: number) => void;
-  current_state: number;
-  set_current_state: (current_state: number) => void;
+  current_state: Phase;
+  set_current_state: (current_state: Phase) => void;
   current_fortifier: number | undefined;
   set_current_fortifier: (current_fortifier: number | undefined) => void;
   current_fortified: number | undefined;
@@ -18,8 +25,8 @@ interface State {
 export const useElementStore = create<State>((set) => ({
   ip: undefined,
   set_ip: (ip: number) => set(() => ({ ip })),
-  current_state: 1,
-  set_current_state: (current_state: number) => set(() => ({ current_state })),
+  current_state: Phase.DEPLOY,
+  set_current_state: (current_state: Phase) => set(() => ({ current_state })),
   current_fortifier: undefined,
   set_current_fortifier: (current_fortifier: number | undefined) => set(() => ({ current_fortifier })),
   current_fortified: undefined,

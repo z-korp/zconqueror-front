@@ -1,14 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import './App.css';
 import NewGame from './components/NewGame';
 import PlayPanel from './components/PlayPanel';
 import SidePlayerInfo from './components/SidePlayerInfo';
+import FortifyPanel from './components/map/FortifyPanel';
 import Map from './components/map/Map';
 import { TooltipProvider } from './components/ui/tooltip';
 import { useComponentStates } from './hooks/useComponentState';
 import useIP from './hooks/useIp';
-import { useElementStore } from './utils/store';
-import FortifyPanel from './components/map/FortifyPanel';
+import { Phase, useElementStore } from './utils/store';
 
 function App() {
   const { set_ip } = useElementStore((state) => state);
@@ -24,7 +24,7 @@ function App() {
 
   const { current_state } = useElementStore((state) => state);
 
-  const isFortifyPanelVisible = current_state === 3 || current_state === 2;
+  const isFortifyPanelVisible = current_state === Phase.FORTIFY || current_state === Phase.ATTACK;
   return (
     <TooltipProvider>
       <NewGame />
