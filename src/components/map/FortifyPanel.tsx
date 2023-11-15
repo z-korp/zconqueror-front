@@ -67,6 +67,11 @@ const FortifyPanel = () => {
     requestAnimationFrame(step);
   };
 
+  useEffect(() => {
+    // Reset the armyCount state to 0 when current_state changes
+    setArmyCount(0);
+  }, [current_state]);
+
   const sourceIconRef = useRef<HTMLDivElement>(null);
   const targetIconRef = useRef<HTMLDivElement>(null);
 
@@ -92,6 +97,9 @@ const FortifyPanel = () => {
       const attackerTile = getComponentValue(Tile, tileIds[current_attacker - 1]);
 
       setAttackerTile(attackerTile);
+      if (attackerTile && attackerTile.army) {
+        setArmyCount(attackerTile.army - 1);
+      }
     }
   }, [current_attacker, Tile, tileIds]);
 
@@ -99,6 +107,9 @@ const FortifyPanel = () => {
     if (current_fortifier !== undefined) {
       const sourceTileData = getComponentValue(Tile, tileIds[current_fortifier - 1]);
       setSourceTile(sourceTileData);
+      if (sourceTileData && sourceTileData.army) {
+        setArmyCount(sourceTileData.army - 1);
+      }
     } else {
       setSourceTile(null);
     }
