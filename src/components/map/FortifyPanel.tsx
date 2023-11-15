@@ -17,7 +17,7 @@ const FortifyPanel = () => {
 
   const {
     setup: {
-      systemCalls: { transfer, attack, defend },
+      systemCalls: { transfer, attack, defend, supply },
       components: { Tile, Player },
     },
     account: { account },
@@ -89,20 +89,14 @@ const FortifyPanel = () => {
 
   useEffect(() => {
     if (current_source !== null) {
-      const sourceTile = getComponentValue(Tile, tileIds[current_source - 1]);
-      setSourceTile(sourceTile);
-      if (sourceTile && sourceTile.army) {
-        setArmyCount(sourceTile.army - 1);
-      }
-    }
-  }, [current_source, Tile, tileIds]);
-
-  useEffect(() => {
-    if (current_source !== null) {
       const sourceTileData = getComponentValue(Tile, tileIds[current_source - 1]);
       setSourceTile(sourceTileData);
       if (sourceTileData && sourceTileData.army) {
-        setArmyCount(sourceTileData.army - 1);
+        if (current_state === Phase.DEPLOY) {
+          setArmyCount(player.supply);
+        } else {
+          setArmyCount(sourceTileData.army - 1);
+        }
       }
     } else {
       setSourceTile(null);
@@ -115,6 +109,20 @@ const FortifyPanel = () => {
       setTargetTile(null);
     }
   }, [current_source, current_target, Tile, tileIds]);
+
+  const handleSupply = () => {
+    console.log(player.supply, armyCount);
+    if (!ip) return;
+    if (current_source === null) return;
+    if (player && player.supply < armyCount) {
+      //todo put toast here
+      console.log('Not enough supply', player.supply, armyCount);
+      // alert('Not enough supply', player.supply);
+      return;
+    }
+    console.log('supply', player.supply, armyCount);
+    supply(account, ip.toString(), current_source, armyCount);
+  };
 
   const onMoveTroops = async () => {
     if (current_source === null || current_target === null) return;
@@ -136,7 +144,6 @@ const FortifyPanel = () => {
       alert('Not enough attack');
       return;
     }
-
     animateArrow();
 
     await attack(account, ip.toString(), current_source, current_target, armyCount);
@@ -153,6 +160,10 @@ const FortifyPanel = () => {
 
   const isAttackTurn = () => {
     return current_state === Phase.ATTACK;
+  };
+
+  const isFortifyTurn = () => {
+    return current_state === Phase.FORTIFY;
   };
 
   return (
@@ -187,7 +198,7 @@ const FortifyPanel = () => {
           </button>
           {arrowPosition.visible && <Arrow position={arrowPosition} />}
         </>
-      ) : (
+      ) : isFortifyTurn() ? (
         <>
           {/* Fortify UI elements here */}
           {/* <div className="flex items-center justify-between w-40 p-2 bg-white rounded"> */}
@@ -215,6 +226,25 @@ const FortifyPanel = () => {
           </div>
           <button onClick={onMoveTroops} className="w-32 py-2 mt-4 text-white bg-blue-500 rounded">
             Move Troops
+          </button>
+        </>
+      ) : (
+        <>
+          <div className="bg-white rounded-lg">
+            <SelectionPanel selectedRegion={current_source} onRemoveSelected={removeSelected} type={1} />
+            <div className="mt-2 mb-2 flex justify-center items-center">
+              <GiMountedKnight className="text-4xl" />
+            </div>
+          </div>
+          {/* Use Counter for armyCount */}
+          <Counter
+            count={armyCount}
+            onDecrement={decrement}
+            onIncrement={increment}
+            maxCount={sourceTile ? sourceTile.army - 1 : Infinity}
+          />
+          <button onClick={handleSupply} className="w-32 py-2 mt-4 text-white bg-blue-500 rounded">
+            Deploy troops
           </button>
         </>
       )}

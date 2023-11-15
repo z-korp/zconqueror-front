@@ -24,7 +24,8 @@ function App() {
 
   const { current_state } = useElementStore((state) => state);
 
-  const isFortifyPanelVisible = current_state === Phase.FORTIFY || current_state === Phase.ATTACK;
+  const isFortifyPanelVisible =
+    current_state === Phase.FORTIFY || current_state === Phase.ATTACK || current_state === Phase.DEPLOY;
   return (
     <TooltipProvider>
       <NewGame />

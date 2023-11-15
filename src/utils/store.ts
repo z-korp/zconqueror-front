@@ -21,7 +21,7 @@ interface State {
 export const useElementStore = create<State>((set) => ({
   ip: undefined,
   set_ip: (ip: number) => set(() => ({ ip })),
-  current_state: Phase.DEPLOY,
+  current_state: Phase.NOTHING,
   set_current_state: (current_state: Phase) => set(() => ({ current_state })),
   current_source: null,
   set_current_source: (source: number | null) => set(() => ({ current_source: source })),

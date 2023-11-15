@@ -8,7 +8,6 @@ import carte from '../../../public/carte.png';
 import mapDataRaw from '../../assets/map/map.json';
 import mapDataNeighbour from '../../assets/map/mapData/v01.json';
 import Region from './Region';
-import SupplyModal from './SupplyModal';
 
 const mapData: MapData = mapDataRaw;
 
@@ -67,13 +66,20 @@ const Map = () => {
   });
 
   const handleRegionClick = (regionId: number) => {
-    setClickedRegion(regionId);
     if (current_state == Phase.DEPLOY) {
-      setCurrentRegionSupplyId(regionId);
       const tile = getComponentValue(Tile, tileIds[regionId - 1]);
-      if (tile.owner !== turn) return;
 
-      setSupplyModalOpen(true);
+      if (tile.owner !== turn) {
+        set_current_source(null);
+        return;
+      }
+      setClickedRegion(regionId);
+
+      set_current_source(regionId);
+
+      // setCurrentRegionSupplyId(regionId);
+
+      // setSupplyModalOpen(true);
     } else if (current_state == Phase.ATTACK) {
       const tile = getComponentValue(Tile, tileIds[regionId - 1]);
 
@@ -81,6 +87,7 @@ const Map = () => {
         //TODO HERE
 
         set_current_source(regionId);
+        setClickedRegion(regionId);
       } else {
         if (current_source && mapDataNeighbour.territories[current_source - 1].neighbors.includes(regionId - 1)) {
           set_current_target(regionId);
@@ -132,12 +139,12 @@ const Map = () => {
           </svg>
         </div>
       </div>
-      <SupplyModal
+      {/* <SupplyModal
         open={supplyModalOpen}
         player={player}
         onClose={setSupplyModalOpen}
         regionId={currentRegionSupplyId}
-      />
+      /> */}
     </>
   );
 };

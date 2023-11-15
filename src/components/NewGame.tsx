@@ -1,20 +1,13 @@
 import { useDojo } from '@/DojoContext';
-import { useElementStore } from '@/utils/store';
+import { Phase, useElementStore } from '@/utils/store';
 import { useState } from 'react';
 import { z } from 'zod';
 import NewGameForm, { FormSchema } from './NewGameForm';
 import { Button } from './ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from './ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
 
 const NewGame: React.FC = () => {
-  const { ip } = useElementStore((state) => state);
+  const { ip, set_current_state } = useElementStore((state) => state);
 
   const {
     setup: {
@@ -26,13 +19,13 @@ const NewGame: React.FC = () => {
   const [createModalOpen, setCreateModalOpen] = useState(false);
 
   function handleFormSubmit(data: z.infer<typeof FormSchema>) {
-    console.log('Form data from child:', data);
+    // console.log('Form data from child:', data);
     // You now have access to the form data and can process it as needed
 
     if (!ip) return;
 
     create(account, ip.toString(), 123, data.username, data.numberOfPlayers);
-
+    set_current_state(Phase.DEPLOY);
     setCreateModalOpen(false);
   }
 
@@ -50,10 +43,7 @@ const NewGame: React.FC = () => {
         </DialogContent>
       </Dialog>
 
-      <Dialog
-        open={createModalOpen}
-        onOpenChange={(open) => setCreateModalOpen(open)}
-      >
+      <Dialog open={createModalOpen} onOpenChange={(open) => setCreateModalOpen(open)}>
         <DialogTrigger>
           <Button>Create a new game</Button>
         </DialogTrigger>
