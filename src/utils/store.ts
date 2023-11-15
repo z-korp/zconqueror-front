@@ -10,8 +10,8 @@ interface State {
   current_fortified: number | undefined;
   set_current_fortified: (current_fortified: number | undefined) => void;
   current_attacker: any;
-  set_current_attacker: (currentAttacker: number) => void;
-  set_current_defender: (defender: number) => void;
+  set_current_attacker: (currentAttacker: number | null) => void;
+  set_current_defender: (defender: number | null) => void;
   current_defender: any;
 }
 
@@ -25,7 +25,7 @@ export const useElementStore = create<State>((set) => ({
   current_fortified: undefined,
   set_current_fortified: (current_fortified: number | undefined) => set(() => ({ current_fortified })),
   current_attacker: null,
-  set_current_attacker: (current_attacker: number) => set(() => ({ current_attacker })),
+  set_current_attacker: (current_attacker: number | null) => set(() => ({ current_attacker })),
   current_defender: null,
-  set_current_defender: (defender: number) => set(() => ({ current_defender: defender })),
+  set_current_defender: (defender: number | null) => set(() => ({ current_defender: defender })),
 }));

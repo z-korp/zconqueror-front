@@ -8,6 +8,7 @@ import Counter from '../panel/Counter';
 import { useComponentValue } from '@dojoengine/react';
 import { GiMountedKnight } from 'react-icons/gi';
 import Arrow from './Arrow';
+import { set } from 'zod';
 
 const FortifyPanel = () => {
   const [armyCount, setArmyCount] = useState(0);
@@ -17,7 +18,9 @@ const FortifyPanel = () => {
     current_fortified,
     set_current_fortifier,
     current_attacker,
+    set_current_attacker,
     current_defender,
+    set_current_defender,
     current_state,
   } = useElementStore((state) => state);
 
@@ -70,6 +73,10 @@ const FortifyPanel = () => {
   useEffect(() => {
     // Reset the armyCount state to 0 when current_state changes
     setArmyCount(0);
+    set_current_attacker(null);
+    set_current_defender(null);
+    set_current_fortified(undefined);
+    set_current_fortifier(undefined);
   }, [current_state]);
 
   const sourceIconRef = useRef<HTMLDivElement>(null);
