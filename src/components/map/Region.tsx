@@ -3,6 +3,7 @@ import { useComponentStates } from '@/hooks/useComponentState';
 import { colorPlayer } from '@/utils/colors';
 import { getNeighbors } from '@/utils/map';
 import { Phase, useElementStore } from '@/utils/store';
+import { isTest } from '@/utils/test';
 import { useComponentValue } from '@dojoengine/react';
 import React, { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
@@ -100,7 +101,8 @@ const Region: React.FC<RegionProps> = ({
           containerRef.current // render the button directly in the body
         )}
 
-      {position &&
+      {isTest &&
+        position &&
         troups !== undefined &&
         containerRef &&
         containerRef.current &&
