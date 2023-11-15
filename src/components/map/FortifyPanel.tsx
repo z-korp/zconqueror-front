@@ -9,15 +9,9 @@ import SelectionPanel from '../panel/SelectionPanel';
 
 const FortifyPanel = () => {
   const [armyCount, setArmyCount] = useState(0);
-  const {
-    current_fortifier,
-    set_current_fortified,
-    current_fortified,
-    set_current_fortifier,
-    current_attacker,
-    current_defender,
-    current_state,
-  } = useElementStore((state) => state);
+  const { current_source, set_current_target, current_target, set_current_source, current_state } = useElementStore(
+    (state) => state
+  );
 
   const {
     setup: {
@@ -32,11 +26,10 @@ const FortifyPanel = () => {
 
   const { ip } = useElementStore((state) => state);
   const [sourceTile, setSourceTile] = useState<any | null>(null);
-  const [attackerTile, setAttackerTile] = useState<any | null>(null);
   const [targetTile, setTargetTile] = useState<any | null>(null);
 
   const increment = () => {
-    if (attackerTile && armyCount < attackerTile.army - 1) {
+    if (sourceTile && armyCount < sourceTile.army - 1) {
       setArmyCount(armyCount + 1);
     }
     if (sourceTile && armyCount < sourceTile.army - 1) {
@@ -53,60 +46,59 @@ const FortifyPanel = () => {
   const { tileIds } = useComponentStates();
 
   useEffect(() => {
-    if (current_attacker !== undefined) {
-      const attackerTile = getComponentValue(Tile, tileIds[current_attacker - 1]);
-
-      setAttackerTile(attackerTile);
+    if (current_source !== undefined) {
+      const sourceTile = getComponentValue(Tile, tileIds[current_source - 1]);
+      setSourceTile(sourceTile);
     }
-  }, [current_attacker, Tile, tileIds]);
+  }, [current_source, Tile, tileIds]);
 
   useEffect(() => {
-    if (current_fortifier !== undefined) {
-      const sourceTileData = getComponentValue(Tile, tileIds[current_fortifier - 1]);
+    if (current_source !== undefined) {
+      const sourceTileData = getComponentValue(Tile, tileIds[current_source - 1]);
       setSourceTile(sourceTileData);
     } else {
       setSourceTile(null);
     }
 
-    if (current_fortified !== undefined) {
-      const targetTileData = getComponentValue(Tile, tileIds[current_fortified - 1]);
+    if (current_target !== undefined) {
+      const targetTileData = getComponentValue(Tile, tileIds[current_target - 1]);
       setTargetTile(targetTileData);
     } else {
       setTargetTile(null);
     }
-  }, [current_fortifier, current_fortified, Tile, tileIds]);
+  }, [current_source, current_target, Tile, tileIds]);
 
   const onMoveTroops = async () => {
-    if (current_fortifier === undefined || current_fortified === undefined) return;
+    if (current_source === undefined || current_target === undefined) return;
 
     if (!ip) return;
 
-    await transfer(account, ip.toString(), current_fortifier, current_fortified, armyCount);
+    await transfer(account, ip.toString(), current_source, current_target, armyCount);
   };
 
   const onAttack = async () => {
     // Implement attack logic here
-    if (current_attacker === undefined || current_defender === undefined) return;
+    if (current_source === undefined || current_target === undefined) return;
 
     if (!ip) return;
 
-    // todo adapt to compare to attacker.supply
+    // todo adapt to compare to source.supply
     if (player && player.attack < armyCount) {
       //todo put toast here
       alert('Not enough attack');
       return;
     }
 
-    await attack(account, ip.toString(), current_attacker, current_defender, armyCount);
-    defend(account, ip.toString(), current_attacker, current_defender);
+    await attack(account, ip.toString(), current_source, current_target, armyCount);
+    defend(account, ip.toString(), current_source, current_target);
     // TODO: Call the attack function from your game logic or smart contract
   };
 
   const removeSelected = (type: number): void => {
     if (type === 1) {
-      set_current_fortifier(undefined);
+      set_current_source(null);
     } else if (type === 2) {
-      set_current_fortified(undefined);
+      set_current_target(null);
     }
   };
 
@@ -118,7 +110,7 @@ const FortifyPanel = () => {
     <div className="flex flex-col items-center justify-center p-4 bg-gray-200 rounded-lg shadow-md">
       {isAttackTurn() ? (
         <>
-          <SelectionPanel selectedRegion={current_attacker} onRemoveSelected={removeSelected} type={1} />
+          <SelectionPanel selectedRegion={current_source} onRemoveSelected={removeSelected} type={1} />
 
           <Counter
             count={armyCount}
@@ -127,7 +119,7 @@ const FortifyPanel = () => {
             maxCount={sourceTile ? sourceTile.army - 1 : Infinity}
           />
 
-          <SelectionPanel selectedRegion={current_defender} onRemoveSelected={removeSelected} type={2} />
+          <SelectionPanel selectedRegion={current_target} onRemoveSelected={removeSelected} type={2} />
 
           <button onClick={onAttack} className="w-32 py-2 mt-4 text-white bg-red-500 rounded">
             Attack
@@ -137,7 +129,7 @@ const FortifyPanel = () => {
         <>
           {/* Fortify UI elements here */}
           {/* <div className="flex items-center justify-between w-40 p-2 bg-white rounded"> */}
-          <SelectionPanel selectedRegion={current_fortifier} onRemoveSelected={removeSelected} type={1} />
+          <SelectionPanel selectedRegion={current_source} onRemoveSelected={removeSelected} type={1} />
 
           {/* Use Counter for armyCount */}
           <Counter
@@ -147,8 +139,8 @@ const FortifyPanel = () => {
             maxCount={sourceTile ? sourceTile.army - 1 : Infinity}
           />
 
-          {/* Use SelectionPanel for current_fortified */}
-          <SelectionPanel selectedRegion={current_fortified} onRemoveSelected={removeSelected} type={2} />
+          {/* Use SelectionPanel for current_target */}
+          <SelectionPanel selectedRegion={current_target} onRemoveSelected={removeSelected} type={2} />
           {/* </div> */}
 
           <button onClick={onMoveTroops} className="w-32 py-2 mt-4 text-white bg-blue-500 rounded">

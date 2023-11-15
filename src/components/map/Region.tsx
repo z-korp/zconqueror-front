@@ -34,7 +34,8 @@ const Region: React.FC<RegionProps> = ({
     },
     account: { account },
   } = useDojo();
-  const { ip } = useElementStore((state) => state);
+  const { ip, current_state } = useElementStore((state) => state);
+
   const { tileIds, currentPlayerId } = useComponentStates();
 
   const tile = useComponentValue(Tile, tileIds[id - 1]);

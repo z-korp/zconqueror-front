@@ -31,17 +31,9 @@ const Map = () => {
   } = useDojo();
 
   const { tileIds, turn } = useComponentStates();
-  const {
-    current_state,
-    set_current_fortified,
-    set_current_fortifier,
-    current_fortified,
-    current_fortifier,
-    current_attacker,
-    current_defender,
-    set_current_attacker,
-    set_current_defender,
-  } = useElementStore((state) => state);
+  const { current_state, current_source, set_current_source, current_target, set_current_target } = useElementStore(
+    (state) => state
+  );
   const [clickedRegion, setClickedRegion] = useState<number | null>(null);
 
   const [supplyModalOpen, setSupplyModalOpen] = useState(false);
@@ -88,10 +80,10 @@ const Map = () => {
       if (tile.owner === turn) {
         //TODO HERE
 
-        set_current_attacker(regionId);
+        set_current_source(regionId);
       } else {
-        if (current_attacker && mapDataNeighbour.territories[current_attacker - 1].neighbors.includes(regionId - 1)) {
-          set_current_defender(regionId);
+        if (current_source && mapDataNeighbour.territories[current_source - 1].neighbors.includes(regionId - 1)) {
+          set_current_target(regionId);
           setAttackModalOpen(true);
         } else {
           alert('Can t interract with this tile');
@@ -100,10 +92,10 @@ const Map = () => {
     } else if (current_state == Phase.FORTIFY) {
       const tile = getComponentValue(Tile, tileIds[regionId - 1]);
       if (tile.owner === turn) {
-        if (current_fortifier) {
-          set_current_fortified(regionId);
+        if (current_source) {
+          set_current_target(regionId);
         } else {
-          set_current_fortifier(regionId);
+          set_current_source(regionId);
         }
       }
     }
