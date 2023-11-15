@@ -4,7 +4,6 @@ import { useComponentValue } from '@dojoengine/react';
 import { EntityIndex, getComponentValue } from '@latticexyz/recs';
 import { useEffect, useState } from 'react';
 import { useDojo } from '../DojoContext';
-import { set } from 'zod';
 
 export const useComponentStates = () => {
   const {
@@ -47,13 +46,15 @@ export const useComponentStates = () => {
 
       const tileArray = [];
       const tileIdsArray = [];
-      const NUMBER_TILES = 5;
+      const NUMBER_TILES = 50;
       for (let i = 1; i < NUMBER_TILES + 1; i++) {
         const tileId = getEntityIdFromKeys([BigInt(game?.id), BigInt(i)]);
         tileIdsArray.push(tileId);
         const tile = getComponentValue(Tile, tileId);
         tileArray.push(tile);
       }
+      console.log('tileArray', tileArray);
+      console.log('tileIdsArray', tileIdsArray);
       setTiles(tileArray);
       setTileIds(tileIdsArray);
     }

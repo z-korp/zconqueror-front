@@ -5,9 +5,8 @@ import { useComponentValue } from '@dojoengine/react';
 import { getComponentValue, getEntitiesWithValue } from '@latticexyz/recs';
 import { useEffect, useRef, useState } from 'react';
 import carte from '../../../public/carte.png';
-import mapDataRaw from '../../assets/map/map-test.json';
-import mapDataNeighbour from '../../assets/map/mapData/v00.json';
-import AttackModal from './AttackModal';
+import mapDataRaw from '../../assets/map/map.json';
+import mapDataNeighbour from '../../assets/map/mapData/v01.json';
 import Region from './Region';
 import SupplyModal from './SupplyModal';
 
