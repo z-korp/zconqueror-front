@@ -17,29 +17,18 @@ interface RegionProps {
   troups?: number;
   containerRef?: React.MutableRefObject<null>;
   onRegionClick: () => void;
-  isSelected: boolean; // Ajout de cette propriété
 }
 
-const Region: React.FC<RegionProps> = ({
-  d,
-  fillOpacity,
-  id,
-  region,
-  containerRef,
-  onRegionClick,
-  isSelected,
-}: RegionProps) => {
+const Region: React.FC<RegionProps> = ({ d, id, region, containerRef, onRegionClick }: RegionProps) => {
   const {
     setup: {
-      components: { Tile, Player },
-      systemCalls: { supply },
+      components: { Tile },
     },
-    account: { account },
   } = useDojo();
-  const { ip, current_state, current_source, current_target } = useElementStore((state) => state);
+  const { current_state, current_source, current_target } = useElementStore((state) => state);
 
   const [isHilighted, setIsHighlighted] = useState(false);
-  const { tileIds, currentPlayerId } = useComponentStates();
+  const { tileIds } = useComponentStates();
 
   const tile = useComponentValue(Tile, tileIds[id - 1]);
 
@@ -48,9 +37,6 @@ const Region: React.FC<RegionProps> = ({
 
   const [position, setPosition] = useState<{ x: number; y: number }>();
   const pathRef = useRef<SVGPathElement>(null);
-
-  const [modalOpen, setModalOpen] = useState(true);
-  const strokeColor = isSelected ? color : 'black'; // Remplacez avec les couleurs désirées
 
   useEffect(() => {
     const path = pathRef.current;
@@ -80,17 +66,44 @@ const Region: React.FC<RegionProps> = ({
   }, [region]);
 
   useEffect(() => {
-    if (current_source && current_target === null && current_source !== id && current_state === Phase.ATTACK) {
-      const neighbors = getNeighbors(current_source);
-      if (neighbors.includes(id + 1)) setIsHighlighted(true);
-      else setIsHighlighted(false);
-    } else {
-      setIsHighlighted(false);
+    if (current_state === Phase.DEPLOY) {
+      if (current_source === id) {
+        setIsHighlighted(true);
+      } else {
+        setIsHighlighted(false);
+      }
+    } else if (current_state === Phase.ATTACK || current_state === Phase.FORTIFY) {
+      if (current_source && current_target === null && current_source !== id) {
+        const neighbors = getNeighbors(current_source);
+
+        if (neighbors.includes(id)) setIsHighlighted(true);
+        else setIsHighlighted(false);
+      } else if (current_source && current_target && (current_target === id || current_source === id)) {
+        setIsHighlighted(true);
+      } else {
+        setIsHighlighted(false);
+      }
     }
   }, [current_source, current_state, current_target, id]);
 
   return (
     <>
+      {isTest &&
+        position &&
+        troups !== undefined &&
+        containerRef &&
+        containerRef.current &&
+        ReactDOM.createPortal(
+          <TroopsMarker
+            position={{ x: position.x, y: position.y }}
+            handlePathClick={onRegionClick}
+            troups={id}
+            color={'pink'}
+          />,
+
+          containerRef.current // render the button directly in the body
+        )}
+
       {position &&
         troups !== undefined &&
         containerRef &&
@@ -101,29 +114,13 @@ const Region: React.FC<RegionProps> = ({
           containerRef.current // render the button directly in the body
         )}
 
-      {isTest &&
-        position &&
-        troups !== undefined &&
-        containerRef &&
-        containerRef.current &&
-        ReactDOM.createPortal(
-          <TroopsMarker
-            position={{ x: position.x + 20, y: position.y }}
-            handlePathClick={onRegionClick}
-            troups={id}
-            color={'pink'}
-          />,
-
-          containerRef.current // render the button directly in the body
-        )}
-
       <path
         ref={pathRef}
         d={d}
         fill={color}
-        fillOpacity={fillOpacity}
-        stroke={isHilighted ? 'yellow' : strokeColor} // Utilisez strokeColor pour la couleur du contour
-        strokeWidth="10" // adjust this value for the desired thickness
+        fillOpacity={isHilighted ? 0.7 : 0.4}
+        stroke={isHilighted ? 'yellow' : 'black'}
+        strokeWidth="10"
         onClick={onRegionClick}
       />
     </>

@@ -200,28 +200,30 @@ const FortifyPanel = () => {
         )
       ) : isFortifyTurn() ? (
         <>
-          {/* Fortify UI elements here */}
-          {/* <div className="flex items-center justify-between w-40 p-2 bg-white rounded"> */}
-
-          <SelectionPanel title="Origin" selectedRegion={current_source} onRemoveSelected={() => removeSelected(1)} />
-
-          {/* Use Counter for armyCount */}
-          <Counter
-            count={armyCount}
-            onDecrement={decrement}
-            onIncrement={increment}
-            maxCount={sourceTile ? sourceTile.army - 1 : Infinity}
-          />
-
-          {/* Use SelectionPanel for current_fortified */}
-          <SelectionPanel
-            title="DestinationBot_"
-            selectedRegion={current_target}
-            onRemoveSelected={() => removeSelected(2)}
-          />
-          <button onClick={onMoveTroops} className="w-full py-2 mt-4 text-white bg-blue-500 rounded hover:bg-blue-600">
-            Move Troops
-          </button>
+          {current_source && (
+            <SelectionPanel title="Origin" selectedRegion={current_source} onRemoveSelected={() => removeSelected(1)} />
+          )}
+          {current_target && (
+            <>
+              <Counter
+                count={armyCount}
+                onDecrement={decrement}
+                onIncrement={increment}
+                maxCount={sourceTile ? sourceTile.army - 1 : Infinity}
+              />
+              <SelectionPanel
+                title="Destination"
+                selectedRegion={current_target}
+                onRemoveSelected={() => removeSelected(2)}
+              />
+              <button
+                onClick={onMoveTroops}
+                className="w-full py-2 mt-4 text-white bg-blue-500 rounded hover:bg-blue-600"
+              >
+                Move Troops
+              </button>
+            </>
+          )}
         </>
       ) : (
         <>

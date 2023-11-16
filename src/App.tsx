@@ -12,7 +12,7 @@ import { Phase, useElementStore } from './utils/store';
 
 function App() {
   const { set_ip } = useElementStore((state) => state);
-  const { playerIds, players } = useComponentStates();
+  const { playerIds } = useComponentStates();
 
   const { ip, loading } = useIP();
   useEffect(() => {
@@ -26,6 +26,7 @@ function App() {
 
   const isFortifyPanelVisible =
     current_state === Phase.FORTIFY || current_state === Phase.ATTACK || current_state === Phase.DEPLOY;
+
   return (
     <TooltipProvider>
       <NewGame />
