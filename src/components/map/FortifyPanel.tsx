@@ -3,11 +3,9 @@ import { useComponentStates } from '@/hooks/useComponentState';
 import { Phase, useElementStore } from '@/utils/store';
 import { useComponentValue } from '@dojoengine/react';
 import { getComponentValue } from '@latticexyz/recs';
-import { useEffect, useRef, useState } from 'react';
-import { GiMountedKnight } from 'react-icons/gi';
+import { useEffect, useState } from 'react';
 import Counter from '../panel/Counter';
 import SelectionPanel from '../panel/SelectionPanel';
-import Arrow from './Arrow';
 
 const FortifyPanel = () => {
   const [armyCount, setArmyCount] = useState(0);
@@ -67,15 +65,15 @@ const FortifyPanel = () => {
     set_current_target(null);
   }, [current_state]);
 
-  const sourceIconRef = useRef<HTMLDivElement>(null);
-  const targetIconRef = useRef<HTMLDivElement>(null);
-
   const increment = () => {
-    if (sourceTile && armyCount < sourceTile.army - 1) {
-      setArmyCount(armyCount + 1);
-    }
-    if (sourceTile && armyCount < sourceTile.army - 1) {
-      setArmyCount(armyCount + 1);
+    if (current_state === Phase.DEPLOY) {
+      if (armyCount <= player.supply) {
+        setArmyCount(armyCount + 1);
+      }
+    } else {
+      if (sourceTile && armyCount < sourceTile.army - 1) {
+        setArmyCount(armyCount + 1);
+      }
     }
   };
 
@@ -122,6 +120,7 @@ const FortifyPanel = () => {
     }
     console.log('supply', player.supply, armyCount);
     supply(account, ip.toString(), current_source, armyCount);
+    setArmyCount(player.supply - armyCount);
   };
 
   const onMoveTroops = async () => {
@@ -146,6 +145,7 @@ const FortifyPanel = () => {
     }
     animateArrow();
 
+    console.log('attack', current_source, current_target, armyCount);
     await attack(account, ip.toString(), current_source, current_target, armyCount);
     defend(account, ip.toString(), current_source, current_target);
   };
@@ -153,6 +153,7 @@ const FortifyPanel = () => {
   const removeSelected = (type: number): void => {
     if (type === 1) {
       set_current_source(null);
+      set_current_target(null);
     } else if (type === 2) {
       set_current_target(null);
     }
@@ -167,48 +168,43 @@ const FortifyPanel = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center p-4 bg-gray-200 rounded-lg shadow-md">
+    <div className="flex flex-col items-center justify-center p-4">
       {isAttackTurn() ? (
-        <>
-          <div className="bg-white rounded-lg shadow-xl">
-            <SelectionPanel selectedRegion={current_source} onRemoveSelected={removeSelected} type={1} />
-            <div className="mt-2 mb-2 flex justify-center items-center">
-              <div ref={sourceIconRef} className="icon">
-                <GiMountedKnight className="text-4xl " />
-              </div>
-            </div>
-          </div>
+        current_source && (
+          <>
+            <SelectionPanel
+              title={current_state === Phase.ATTACK ? 'Attacker' : 'Fortifier'}
+              selectedRegion={current_source}
+              onRemoveSelected={() => removeSelected(1)}
+            />
+            {current_target && (
+              <>
+                <Counter
+                  count={armyCount}
+                  onDecrement={decrement}
+                  onIncrement={increment}
+                  maxCount={sourceTile ? sourceTile.army - 1 : Infinity}
+                />
 
-          <Counter
-            count={armyCount}
-            onDecrement={decrement}
-            onIncrement={increment}
-            maxCount={sourceTile ? sourceTile.army - 1 : Infinity}
-          />
-
-          <div className="bg-white rounded-lg shadow-xl">
-            <SelectionPanel selectedRegion={current_target} onRemoveSelected={removeSelected} type={2} />
-            <div className="mt-2 mb-2 flex justify-center items-center">
-              <div ref={sourceIconRef} className="icon">
-                <GiMountedKnight className="text-4xl" />
-              </div>
-            </div>
-          </div>
-
-          <button onClick={onAttack} className="w-full py-2 mt-4 text-white bg-red-500 rounded hover:bg-red-600">
-            Attack
-          </button>
-        </>
+                <SelectionPanel
+                  title={current_state === Phase.ATTACK ? 'Defender' : 'Fortified'}
+                  selectedRegion={current_target}
+                  onRemoveSelected={() => removeSelected(2)}
+                />
+                <button onClick={onAttack} className="w-full py-2 mt-4 text-white bg-red-500 rounded hover:bg-red-600">
+                  Attack
+                </button>
+              </>
+            )}
+          </>
+        )
       ) : isFortifyTurn() ? (
         <>
           {/* Fortify UI elements here */}
           {/* <div className="flex items-center justify-between w-40 p-2 bg-white rounded"> */}
-          <div className="bg-white rounded-lg shadow-xl">
-            <SelectionPanel selectedRegion={current_source} onRemoveSelected={removeSelected} type={1} />
-            <div className="mt-2 mb-2 flex justify-center items-center">
-              <GiMountedKnight className="text-4xl" />
-            </div>
-          </div>
+
+          <SelectionPanel title="Origin" selectedRegion={current_source} onRemoveSelected={() => removeSelected(1)} />
+
           {/* Use Counter for armyCount */}
           <Counter
             count={armyCount}
@@ -218,35 +214,38 @@ const FortifyPanel = () => {
           />
 
           {/* Use SelectionPanel for current_fortified */}
-          <div className="bg-white rounded-lg">
-            <SelectionPanel selectedRegion={current_target} onRemoveSelected={removeSelected} type={2} />
-            {/* </div> */}
-            <div className="mt-2 mb-2 flex justify-center items-center">
-              <GiMountedKnight className="text-4xl" />
-            </div>
-          </div>
+          <SelectionPanel
+            title="DestinationBot_"
+            selectedRegion={current_target}
+            onRemoveSelected={() => removeSelected(2)}
+          />
           <button onClick={onMoveTroops} className="w-full py-2 mt-4 text-white bg-blue-500 rounded hover:bg-blue-600">
             Move Troops
           </button>
         </>
       ) : (
         <>
-          <div className="bg-white rounded-lg shadow-xl">
-            <SelectionPanel selectedRegion={current_source} onRemoveSelected={removeSelected} type={1} />
-            <div className="mt-2 mb-2 flex justify-center items-center">
-              <GiMountedKnight className="text-4xl" />
-            </div>
-          </div>
-          {/* Use Counter for armyCount */}
-          <Counter
-            count={armyCount}
-            onDecrement={decrement}
-            onIncrement={increment}
-            maxCount={sourceTile ? sourceTile.army - 1 : Infinity}
-          />
-          <button onClick={handleSupply} className="w-32 py-2 mt-4 text-white bg-blue-500 rounded hover:bg-blue-600">
-            Deploy troops
-          </button>
+          {current_source && (
+            <>
+              <SelectionPanel
+                title="Territory"
+                selectedRegion={current_source}
+                onRemoveSelected={() => removeSelected(1)}
+              />
+              <Counter
+                count={armyCount}
+                onDecrement={decrement}
+                onIncrement={increment}
+                maxCount={player ? player.supply : Infinity}
+              />
+              <button
+                onClick={handleSupply}
+                className="w-32 py-2 mt-4 text-white bg-blue-500 rounded hover:bg-blue-600"
+              >
+                Deploy troops
+              </button>
+            </>
+          )}
         </>
       )}
     </div>

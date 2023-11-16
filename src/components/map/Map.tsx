@@ -84,14 +84,14 @@ const Map = () => {
       const tile = getComponentValue(Tile, tileIds[regionId - 1]);
 
       if (tile.owner === turn) {
-        //TODO HERE
-
         set_current_source(regionId);
+        set_current_target(null);
         setClickedRegion(regionId);
       } else {
-        if (current_source && mapDataNeighbour.territories[current_source - 1].neighbors.includes(regionId - 1)) {
+        //console.log(current_source);
+        //if (current_source) console.log(mapDataNeighbour.territories[current_source]);
+        if (current_source && mapDataNeighbour.territories[current_source].neighbors.includes(regionId)) {
           set_current_target(regionId);
-          setAttackModalOpen(true);
         } else {
           alert('Can t interract with this tile');
         }
@@ -101,6 +101,7 @@ const Map = () => {
       if (tile.owner === turn) {
         if (current_source) {
           set_current_target(regionId);
+          set_current_target(null);
         } else {
           set_current_source(regionId);
         }
@@ -130,7 +131,7 @@ const Map = () => {
                     onRegionClick={() => handleRegionClick(item.id)}
                     isSelected={item.id === clickedRegion}
                     fillOpacity={
-                      item.id === clickedRegion ? 0.5 : 0.2 // Change opacity if clicked
+                      item.id === clickedRegion ? 0.7 : 0.4 // Change opacity if clicked
                     }
                   />
                 ))}
