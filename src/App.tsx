@@ -9,6 +9,7 @@ import { TooltipProvider } from './components/ui/tooltip';
 import { useComponentStates } from './hooks/useComponentState';
 import useIP from './hooks/useIp';
 import { Phase, useElementStore } from './utils/store';
+import Burner from './components/Burner';
 
 function App() {
   const { set_ip } = useElementStore((state) => state);
@@ -29,6 +30,7 @@ function App() {
   return (
     <TooltipProvider>
       <NewGame />
+      <Burner />
       <div className="flex">
         <div className="w-1/6 mr-4">{isFortifyPanelVisible && <FortifyPanel />}</div>
         <div className="w-5/6 pr-8">

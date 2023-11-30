@@ -16,9 +16,9 @@ export function createSystemCalls(
     try {
       const calls: Call[] = [
         {
-          contractAddress: getContractByName(manifest, 'actions') || '',
+          contractAddress: getContractByName(manifest, 'host') || '',
           entrypoint: 'create',
-          calldata: [import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, account, seed, name, playerCount],
+          calldata: [import.meta.env.VITE_PUBLIC_WORLD_HOST, account, seed, name, playerCount],
         },
       ];
 
@@ -43,6 +43,33 @@ export function createSystemCalls(
     }
   };
 
+  const join = async (signer: Account, account: string, seed: number) => {
+    try {
+      const calls: Call[] = [
+        {
+          contractAddress: getContractByName(manifest, 'host') || '',
+          entrypoint: 'join',
+          calldata: [import.meta.env.VITE_PUBLIC_WORLD_HOST, account, seed],
+        },
+      ];
+      const tx = await execute(signer, calls);
+      console.log(tx);
+      const receipt = (await signer.waitForTransaction(tx.transaction_hash, {
+        retryInterval: 100,
+      })) as InvokeTransactionReceiptResponse;
+      console.log(receipt.events);
+      const events = receipt.events;
+      if (events) {
+        const eventsTransformed = await setComponentsFromEvents(contractComponents, events);
+        await executeEvents(eventsTransformed);
+      }
+    } catch (e) {
+      console.log(e);
+    } finally {
+      console.log('');
+    }
+  };
+
   const attack = async (
     signer: Account,
     account: string,
@@ -53,9 +80,9 @@ export function createSystemCalls(
     try {
       const calls: Call[] = [
         {
-          contractAddress: getContractByName(manifest, 'actions') || '',
+          contractAddress: getContractByName(manifest, 'play') || '',
           entrypoint: 'attack',
-          calldata: [import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, account, attacker_index, defender_index, dispatched],
+          calldata: [import.meta.env.VITE_PUBLIC_WORLD_PLAY, account, attacker_index, defender_index, dispatched],
         },
       ];
 
@@ -84,9 +111,9 @@ export function createSystemCalls(
     try {
       const calls: Call[] = [
         {
-          contractAddress: getContractByName(manifest, 'actions') || '',
+          contractAddress: getContractByName(manifest, 'play') || '',
           entrypoint: 'defend',
-          calldata: [import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, account, attacker_index, defender_index],
+          calldata: [import.meta.env.VITE_PUBLIC_WORLD_PLAY, account, attacker_index, defender_index],
         },
       ];
 
@@ -115,9 +142,9 @@ export function createSystemCalls(
     try {
       const calls: Call[] = [
         {
-          contractAddress: getContractByName(manifest, 'actions') || '',
+          contractAddress: getContractByName(manifest, 'play') || '',
           entrypoint: 'discard',
-          calldata: [import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, account, card_one, card_two, card_three],
+          calldata: [import.meta.env.VITE_PUBLIC_WORLD_PLAY, account, card_one, card_two, card_three],
         },
       ];
 
@@ -146,9 +173,9 @@ export function createSystemCalls(
     try {
       const calls: Call[] = [
         {
-          contractAddress: getContractByName(manifest, 'actions') || '',
+          contractAddress: getContractByName(manifest, 'play') || '',
           entrypoint: 'finish',
-          calldata: [import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, account],
+          calldata: [import.meta.env.VITE_PUBLIC_WORLD_PLAY, account],
         },
       ];
 
@@ -183,9 +210,9 @@ export function createSystemCalls(
     try {
       const calls: Call[] = [
         {
-          contractAddress: getContractByName(manifest, 'actions') || '',
+          contractAddress: getContractByName(manifest, 'play') || '',
           entrypoint: 'transfer',
-          calldata: [import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, account, source_index, target_index, army],
+          calldata: [import.meta.env.VITE_PUBLIC_WORLD_PLAY, account, source_index, target_index, army],
         },
       ];
 
@@ -213,9 +240,9 @@ export function createSystemCalls(
   const supply = async (signer: Account, account: string, tile_index: number, supply: number) => {
     try {
       const call: Call = {
-        contractAddress: getContractByName(manifest, 'actions') || '',
+        contractAddress: getContractByName(manifest, 'play') || '',
         entrypoint: 'supply',
-        calldata: [import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, account, tile_index, supply],
+        calldata: [import.meta.env.VITE_PUBLIC_WORLD_PLAY, account, tile_index, supply],
       };
 
       const tx = await execute(signer, call);
@@ -240,6 +267,7 @@ export function createSystemCalls(
 
   return {
     create,
+    join,
     attack,
     defend,
     discard,
@@ -248,6 +276,7 @@ export function createSystemCalls(
     supply,
   };
 }
+101211;
 
 function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
