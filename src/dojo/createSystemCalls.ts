@@ -21,9 +21,9 @@ export function createSystemCalls(
           calldata: [import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, playerCount, name],
         },
       ];
-
+      console.log('CREATE SENT');
       const tx = await execute(signer, calls);
-
+      console.log('CREATE EXECUTED');
       console.log(tx);
       const receipt = (await signer.waitForTransaction(tx.transaction_hash, {
         retryInterval: 100,
@@ -34,6 +34,8 @@ export function createSystemCalls(
 
       if (events) {
         const eventsTransformed = await setComponentsFromEvents(contractComponents, events);
+        console.log('EVENTS TRANSFORMED');
+        console.log(eventsTransformed);
         await executeEvents(eventsTransformed);
       }
     } catch (e) {

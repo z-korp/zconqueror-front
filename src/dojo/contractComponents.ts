@@ -10,9 +10,11 @@ export function defineContractComponents(world: World) {
         world,
         {
           id: RecsType.Number,
-          over: RecsType.Number,
+          host: RecsType.ContractAddress,
+          over: RecsType.Boolean,
           seed: RecsType.Number, // felt252
           player_count: RecsType.Number,
+          slots: RecsType.Number,
           nonce: RecsType.Number,
         },
         {
@@ -27,10 +29,12 @@ export function defineContractComponents(world: World) {
       return defineComponent(
         world,
         {
-          address: RecsType.Number, // ContractAddress
-          name: RecsType.String,
+          game_id: RecsType.Number,
+          index: RecsType.Number,
+          address: RecsType.ContractAddress,
+          name: RecsType.Number, // felt252
           supply: RecsType.Number,
-          card: RecsType.Number,
+          cards: RecsType.BigNumber,
           conqueror: RecsType.Boolean,
         },
         {
@@ -45,12 +49,14 @@ export function defineContractComponents(world: World) {
       return defineComponent(
         world,
         {
+          game_id: RecsType.Number,
+          id: RecsType.Number,
           army: RecsType.Number,
           owner: RecsType.Number,
           dispatched: RecsType.Number,
           to: RecsType.Number,
           from: RecsType.Number,
-          order: RecsType.Number, // felt252
+          order: RecsType.Number,
         },
         {
           metadata: {
