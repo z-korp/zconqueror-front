@@ -1,8 +1,8 @@
 {
   "world": {
     "name": "world",
-    "address": "0x3a8d8fd3b9a658d9ee7405d474d6b3f707cafad04dadd6eedf44f9836efb5d7",
-    "class_hash": "0xb3e374b8087dca92601afbb9881fed855ac0d568e3bf878a876fca5ffcb479",
+    "address": "0x45913f69140d1fb00db13514f06cd0503838a75c076637086a25d385e732cbb",
+    "class_hash": "0x99b08b2ff33750916e36b5e241b5d4a63e8d48862bf90a68fec2ff58a8de6",
     "abi": [
       {
         "type": "impl",
@@ -467,6 +467,29 @@
         ]
       },
       {
+        "type": "impl",
+        "name": "UpgradeableWorld",
+        "interface_name": "dojo::world::IUpgradeableWorld"
+      },
+      {
+        "type": "interface",
+        "name": "dojo::world::IUpgradeableWorld",
+        "items": [
+          {
+            "type": "function",
+            "name": "upgrade",
+            "inputs": [
+              {
+                "name": "new_class_hash",
+                "type": "core::starknet::class_hash::ClassHash"
+              }
+            ],
+            "outputs": [],
+            "state_mutability": "external"
+          }
+        ]
+      },
+      {
         "type": "constructor",
         "name": "constructor",
         "inputs": [
@@ -532,6 +555,18 @@
           {
             "name": "address",
             "type": "core::starknet::contract_address::ContractAddress",
+            "kind": "data"
+          }
+        ]
+      },
+      {
+        "type": "event",
+        "name": "dojo::world::world::WorldUpgraded",
+        "kind": "struct",
+        "members": [
+          {
+            "name": "class_hash",
+            "type": "core::starknet::class_hash::ClassHash",
             "kind": "data"
           }
         ]
@@ -698,6 +733,11 @@
           {
             "name": "ContractUpgraded",
             "type": "dojo::world::world::ContractUpgraded",
+            "kind": "nested"
+          },
+          {
+            "name": "WorldUpgraded",
+            "type": "dojo::world::world::WorldUpgraded",
             "kind": "nested"
           },
           {
@@ -908,7 +948,7 @@
   "contracts": [
     {
       "name": "host",
-      "address": "0x5b74e40b08ea01867d27c6867669fb26369b24c6f5a2f149adb5882ce29f823",
+      "address": "0x9e296cd237ed0ed2f9d65950c6c708c10c4620fdbd76b1a3c1e014a07391f3",
       "class_hash": "0x19803f19aa2e414597f3c2a52f58445e64e47207ea615e0fabb2d5d91d97243",
       "abi": [
         {
@@ -1021,7 +1061,7 @@
     },
     {
       "name": "play",
-      "address": "0x17caa8991b6eee9251a2d6347205cec5260402a5b66df5a1035aef77c71c103",
+      "address": "0x361fc51ac38dde141e478a0f2dde0f5a29797b0e1a3fae9ee3dce9fc681b8a8",
       "class_hash": "0xabce9cd973162dda7740b5019b74041b6ea6eb67670111db63292550c2446a",
       "abi": [
         {

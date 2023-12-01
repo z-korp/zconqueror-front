@@ -18,7 +18,7 @@ export function createSystemCalls(
         {
           contractAddress: getContractByName(manifest, 'host') || '',
           entrypoint: 'create',
-          calldata: [import.meta.env.VITE_PUBLIC_WORLD_HOST, playerCount, name],
+          calldata: [import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, playerCount, name],
         },
       ];
 
@@ -49,7 +49,7 @@ export function createSystemCalls(
         {
           contractAddress: getContractByName(manifest, 'host') || '',
           entrypoint: 'join',
-          calldata: [import.meta.env.VITE_PUBLIC_WORLD_HOST, account, seed],
+          calldata: [import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, account, seed],
         },
       ];
       const tx = await execute(signer, calls);
@@ -82,7 +82,7 @@ export function createSystemCalls(
         {
           contractAddress: getContractByName(manifest, 'play') || '',
           entrypoint: 'attack',
-          calldata: [import.meta.env.VITE_PUBLIC_WORLD_PLAY, account, attacker_index, defender_index, dispatched],
+          calldata: [import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, account, attacker_index, defender_index, dispatched],
         },
       ];
 
@@ -113,7 +113,7 @@ export function createSystemCalls(
         {
           contractAddress: getContractByName(manifest, 'play') || '',
           entrypoint: 'defend',
-          calldata: [import.meta.env.VITE_PUBLIC_WORLD_PLAY, account, attacker_index, defender_index],
+          calldata: [import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, account, attacker_index, defender_index],
         },
       ];
 
@@ -144,7 +144,7 @@ export function createSystemCalls(
         {
           contractAddress: getContractByName(manifest, 'play') || '',
           entrypoint: 'discard',
-          calldata: [import.meta.env.VITE_PUBLIC_WORLD_PLAY, account, card_one, card_two, card_three],
+          calldata: [import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, account, card_one, card_two, card_three],
         },
       ];
 
@@ -175,7 +175,7 @@ export function createSystemCalls(
         {
           contractAddress: getContractByName(manifest, 'play') || '',
           entrypoint: 'finish',
-          calldata: [import.meta.env.VITE_PUBLIC_WORLD_PLAY, account],
+          calldata: [import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, account],
         },
       ];
 
@@ -212,7 +212,7 @@ export function createSystemCalls(
         {
           contractAddress: getContractByName(manifest, 'play') || '',
           entrypoint: 'transfer',
-          calldata: [import.meta.env.VITE_PUBLIC_WORLD_PLAY, account, source_index, target_index, army],
+          calldata: [import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, account, source_index, target_index, army],
         },
       ];
 
@@ -242,7 +242,7 @@ export function createSystemCalls(
       const call: Call = {
         contractAddress: getContractByName(manifest, 'play') || '',
         entrypoint: 'supply',
-        calldata: [import.meta.env.VITE_PUBLIC_WORLD_PLAY, account, tile_index, supply],
+        calldata: [import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, account, tile_index, supply],
       };
 
       const tx = await execute(signer, call);
