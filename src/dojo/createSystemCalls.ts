@@ -18,7 +18,7 @@ export function createSystemCalls(
         {
           contractAddress: getContractByName(manifest, 'host') || '',
           entrypoint: 'create',
-          calldata: [import.meta.env.VITE_PUBLIC_WORLD_HOST, account, seed, name, playerCount],
+          calldata: [import.meta.env.VITE_PUBLIC_WORLD_HOST, playerCount, name],
         },
       ];
 
