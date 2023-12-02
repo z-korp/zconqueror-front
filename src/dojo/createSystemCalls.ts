@@ -12,7 +12,7 @@ export function createSystemCalls(
   { Game, Player, Tile }: ClientComponents
 ) {
   //account: felt252, seed: felt252, name: felt252, player_count: u8
-  const create = async (signer: Account, account: string, seed: number, name: string, playerCount: number) => {
+  const create = async (signer: Account, name: string, playerCount: number) => {
     try {
       const calls: Call[] = [
         {
@@ -21,10 +21,8 @@ export function createSystemCalls(
           calldata: [import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, playerCount, name],
         },
       ];
-      console.log('CREATE SENT');
       const tx = await execute(signer, calls);
-      console.log('CREATE EXECUTED');
-      console.log(tx);
+
       const receipt = (await signer.waitForTransaction(tx.transaction_hash, {
         retryInterval: 100,
       })) as InvokeTransactionReceiptResponse;
@@ -34,8 +32,6 @@ export function createSystemCalls(
 
       if (events) {
         const eventsTransformed = await setComponentsFromEvents(contractComponents, events);
-        console.log('EVENTS TRANSFORMED');
-        console.log(eventsTransformed);
         await executeEvents(eventsTransformed);
       }
     } catch (e) {
@@ -492,4 +488,10 @@ export async function setComponentsFromEvents(components: Components, events: Ev
   }
 
   return transformedEvents;
+}
+
+export function getEvents(receipt: any): any[] {
+  return receipt.events.filter((event: any) => {
+    return event.keys.length === 1 && event.keys[0] === import.meta.env.VITE_EVENT_KEY;
+  });
 }

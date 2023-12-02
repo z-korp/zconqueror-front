@@ -23,7 +23,6 @@ const NewGame: React.FC = () => {
     // You now have access to the form data and can process it as needed
 
     if (!ip) return;
-
     create(account, ip.toString(), 123, data.username, data.numberOfPlayers);
     set_current_state(Phase.DEPLOY);
     setCreateModalOpen(false);
