@@ -13,7 +13,7 @@ import Burner from './components/Burner';
 
 function App() {
   const { set_ip } = useElementStore((state) => state);
-  const { playerIds, players } = useComponentStates();
+  const { playerIds, players, game } = useComponentStates();
 
   const { ip, loading } = useIP();
   useEffect(() => {
@@ -22,6 +22,13 @@ function App() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ip, loading]);
+
+  useEffect(() => {
+    console.log('CHANGE COMPOMENT');
+    console.log(players);
+    console.log(game);
+    console.log(playerIds);
+  }, [players, playerIds]);
 
   const { current_state } = useElementStore((state) => state);
 

@@ -7,7 +7,7 @@ import { Button } from './ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
 
 const NewGame: React.FC = () => {
-  const { ip, set_current_state } = useElementStore((state) => state);
+  const { ip, set_current_state, set_game_id } = useElementStore((state) => state);
 
   const {
     setup: {
@@ -18,12 +18,14 @@ const NewGame: React.FC = () => {
 
   const [createModalOpen, setCreateModalOpen] = useState(false);
 
-  function handleFormSubmit(data: z.infer<typeof FormSchema>) {
+  async function handleFormSubmit(data: z.infer<typeof FormSchema>) {
     // console.log('Form data from child:', data);
     // You now have access to the form data and can process it as needed
 
     if (!ip) return;
-    create(account, ip.toString(), 123, data.username, data.numberOfPlayers);
+    console.log('DATA', data);
+    const gameId = await create(account, data.username, data.numberOfPlayers);
+    set_game_id(gameId);
     set_current_state(Phase.DEPLOY);
     setCreateModalOpen(false);
   }

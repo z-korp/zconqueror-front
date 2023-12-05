@@ -29,14 +29,6 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
   const { turn } = useComponentStates();
   const player = useComponentValue(Player, entityId);
 
-  /*useEffect(() => {
-    console.log(player);
-    if (index === turn && current_state === 1 && player && player.supply === 0) {
-      handleNextPhaseClick();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [player]);*/
-
   if (player === undefined) return null;
   if (index !== turn) return null;
 

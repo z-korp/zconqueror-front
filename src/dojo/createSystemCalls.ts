@@ -6,13 +6,16 @@ import { ClientComponents } from './createClientComponents';
 import manifest from './manifest.json';
 import { SetupNetworkResult } from './setupNetwork';
 export type SystemCalls = ReturnType<typeof createSystemCalls>;
+// import { useElementStore } from '@/utils/store';
 
 export function createSystemCalls(
   { execute, contractComponents }: SetupNetworkResult,
   { Game, Player, Tile }: ClientComponents
 ) {
   //account: felt252, seed: felt252, name: felt252, player_count: u8
-  const create = async (signer: Account, name: string, playerCount: number) => {
+  const create = async (signer: Account, name: string, playerCount: number): Promise<number> => {
+    // const { set_game_id } = useElementStore((state) => state);
+    let gameId = 0;
     try {
       const calls: Call[] = [
         {
@@ -33,12 +36,17 @@ export function createSystemCalls(
       if (events) {
         const eventsTransformed = await setComponentsFromEvents(contractComponents, events);
         await executeEvents(eventsTransformed);
+        eventsTransformed.forEach((event) => {
+          if (event.type === 'Game') {
+            console.log('GAME', event);
+            gameId = event.entityIndex;
+          }
+        });
       }
     } catch (e) {
-      console.log(e);
-    } finally {
-      console.log('');
+      console.log('ERROR', e);
     }
+    return gameId;
   };
 
   const join = async (signer: Account, account: string, seed: number) => {
@@ -274,7 +282,6 @@ export function createSystemCalls(
     supply,
   };
 }
-101211;
 
 function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -284,12 +291,10 @@ export async function executeEvents(events: TransformedEvent[]) {
   for (const e of events) {
     setComponent(e.component, e.entityIndex, e.componentValues);
     if (e.type === 'Game') {
-      //await sleep(1000);
+      await sleep(1000);
     }
   }
-  /*const gameEvents = events.filter(
-    (e): e is GameEvent & ComponentData => e.type === 'Game'
-  );
+  const gameEvents = events.filter((e): e is GameEvent & ComponentData => e.type === 'Game');
   // console.log('gameEvents', gameEvents);
   for (const e of gameEvents) {
     setComponent(e.component, e.entityIndex, e.componentValues);
@@ -298,22 +303,18 @@ export async function executeEvents(events: TransformedEvent[]) {
     }
   }
 
-  const tileEvents = events.filter(
-    (e): e is TileEvent & ComponentData => e.type === 'Tile'
-  );
+  const tileEvents = events.filter((e): e is TileEvent & ComponentData => e.type === 'Tile');
   // console.log('tileEvents', tileEvents);
   for (const e of tileEvents) {
     setComponent(e.component, e.entityIndex, e.componentValues);
   }
 
-  const playerEvents = events.filter(
-    (e): e is PlayerEvent & ComponentData => e.type === 'Player'
-  );
-  // console.log('playerEvents', playerEvents);
+  const playerEvents = events.filter((e): e is PlayerEvent & ComponentData => e.type === 'Player');
+  console.log('playerEvents', playerEvents);
   for (const e of playerEvents) {
     //console.log(e._type);
     setComponent(e.component, e.entityIndex, e.componentValues);
-  }*/
+  }
 }
 
 function hexToAscii(hex: string) {
