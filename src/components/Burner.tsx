@@ -2,13 +2,16 @@
 import React, { useEffect, useState } from "react";
 import { useDojo } from "@/DojoContext";
 import { Button } from "./ui/button";
+import { useElementStore } from "@/utils/store";
 
 const Burner: React.FC = () => {
 	const {
 		account: { create, list, select, account, isDeploying },
 	} = useDojo();
 
-	const [selectedWallet, setSelectedWallet] = useState<string | null>(null);
+	const { current_address, set_current_address } = useElementStore(
+		(state) => state
+	);
 
 	useEffect(() => {
 		console.log("isDeploying", isDeploying);
@@ -24,8 +27,8 @@ const Burner: React.FC = () => {
 	};
 
 	const handleSelectWallet = (walletAddress: string) => {
-		setSelectedWallet(walletAddress);
-		select(walletAddress);
+		set_current_address(walletAddress);
+		current_address && select(current_address);
 	};
 
 	return (
@@ -37,7 +40,7 @@ const Burner: React.FC = () => {
 						<li key={wallet.address}>
 							<button
 								className={`${
-									selectedWallet === wallet.address
+									current_address === wallet.address
 										? "bg-green-500"
 										: "bg-gray-300"
 								} hover:bg-green-700 text-white font-bold py-2 px-4 rounded min-w-[670px]`}
