@@ -1,5 +1,5 @@
 import { getContractByName } from '@dojoengine/core';
-import { Component, Components, EntityIndex, Schema, Type, setComponent } from '@latticexyz/recs';
+import { Component, Components, EntityIndex, Schema, RecsType, setComponent, ComponentValue } from '@latticexyz/recs';
 import { poseidonHashMany } from 'micro-starknet';
 import { Account, Call, Event, InvokeTransactionReceiptResponse, shortString } from 'starknet';
 import { ClientComponents } from './createClientComponents';
@@ -35,13 +35,13 @@ export function createSystemCalls(
 
       if (events) {
         const eventsTransformed = await setComponentsFromEvents(contractComponents, events);
-        await executeEvents(eventsTransformed);
-        eventsTransformed.forEach((event) => {
-          if (event.type === 'Game') {
-            console.log('GAME', event);
-            gameId = event.entityIndex;
-          }
-        });
+        // await executeEvents(eventsTransformed);
+        // eventsTransformed.forEach((event) => {
+        //   if (event.type === 'Game') {
+        //     console.log('GAME', event);
+        //     gameId = event.entityIndex;
+        //   }
+        // });
       }
     } catch (e) {
       console.log('ERROR', e);
@@ -67,7 +67,7 @@ export function createSystemCalls(
       const events = receipt.events;
       if (events) {
         const eventsTransformed = await setComponentsFromEvents(contractComponents, events);
-        await executeEvents(eventsTransformed);
+        // await executeEvents(eventsTransformed);
       }
     } catch (e) {
       console.log(e);
@@ -104,7 +104,7 @@ export function createSystemCalls(
 
       if (events) {
         const eventsTransformed = await setComponentsFromEvents(contractComponents, events);
-        await executeEvents(eventsTransformed);
+        // await executeEvents(eventsTransformed);
       }
     } catch (e) {
       console.log(e);
@@ -135,7 +135,7 @@ export function createSystemCalls(
 
       if (events) {
         const eventsTransformed = await setComponentsFromEvents(contractComponents, events);
-        await executeEvents(eventsTransformed);
+        // await executeEvents(eventsTransformed);
       }
     } catch (e) {
       console.log(e);
@@ -166,7 +166,7 @@ export function createSystemCalls(
 
       if (events) {
         const eventsTransformed = await setComponentsFromEvents(contractComponents, events);
-        await executeEvents(eventsTransformed);
+        // await executeEvents(eventsTransformed);
       }
     } catch (e) {
       console.log(e);
@@ -197,7 +197,7 @@ export function createSystemCalls(
 
       if (events) {
         const eventsTransformed = await setComponentsFromEvents(contractComponents, events);
-        await executeEvents(eventsTransformed);
+        // await executeEvents(eventsTransformed);
       }
     } catch (e) {
       console.log(e);
@@ -234,7 +234,7 @@ export function createSystemCalls(
 
       if (events) {
         const eventsTransformed = await setComponentsFromEvents(contractComponents, events);
-        await executeEvents(eventsTransformed);
+        // await executeEvents(eventsTransformed);
       }
     } catch (e) {
       console.log(e);
@@ -262,7 +262,7 @@ export function createSystemCalls(
 
       if (events) {
         const eventsTransformed = await setComponentsFromEvents(contractComponents, events);
-        await executeEvents(eventsTransformed);
+        // await executeEvents(eventsTransformed);
       }
     } catch (e) {
       console.log(e);
@@ -434,65 +434,109 @@ type ComponentData = {
 
 type TransformedEvent = GameEvent | TileEvent | PlayerEvent;
 
-export async function setComponentsFromEvents(components: Components, events: Event[]): Promise<TransformedEvent[]> {
-  const transformedEvents = [];
+// export async function setComponentsFromEvents(components: Components, events: Event[]): Promise<TransformedEvent[]> {
+//   const transformedEvents = [];
 
-  for (const event of events) {
-    const componentName = hexToAscii(event.data[0]);
-    const keysNumber = parseInt(event.data[1]);
-    const keys = event.data.slice(2, 2 + keysNumber).map((key) => BigInt(key));
-    let index = 2 + keysNumber + 1;
-    const numberOfValues = parseInt(event.data[index++]);
-    const values = event.data.slice(index, index + numberOfValues);
+//   for (const event of events) {
+//     const componentName = hexToAscii(event.data[0]);
+//     const keysNumber = parseInt(event.data[1]);
+//     const keys = event.data.slice(2, 2 + keysNumber).map((key) => BigInt(key));
+//     let index = 2 + keysNumber + 1;
+//     const numberOfValues = parseInt(event.data[index++]);
+//     const values = event.data.slice(index, index + numberOfValues);
 
-    // Component
-    const component = components[componentName];
-    const componentValues = Object.keys(component.schema).reduce<{
-      [key: string]: string | number;
-    }>((acc, key, index) => {
-      const value = values[index];
-      acc[key] = component.schema[key] === Type.String ? shortString.decodeShortString(value) : Number(value);
-      return acc;
-    }, {});
-    const entity = getEntityIdFromKeys(keys);
+//     // Component
+//     const component = components[componentName];
+//     const componentValues = Object.keys(component.schema).reduce<{
+//       [key: string]: string | number;
+//     }>((acc, key, index) => {
+//       const value = values[index];
+//       acc[key] = component.schema[key] === Type.String ? shortString.decodeShortString(value) : Number(value);
+//       return acc;
+//     }, {});
+//     const entity = getEntityIdFromKeys(keys);
 
-    const baseEventData = {
-      component,
-      componentValues,
-      entityIndex: entity,
-    };
+//     const baseEventData = {
+//       component,
+//       componentValues,
+//       entityIndex: entity,
+//     };
 
-    switch (componentName) {
-      case 'Game':
-        transformedEvents.push({
-          ...handleGameEvent(keys, values),
-          ...baseEventData,
-        });
-        break;
-      case 'Tile':
-        transformedEvents.push({
-          ...handleTileEvent(keys, values),
-          ...baseEventData,
-        });
-        break;
-      case 'Player':
-        transformedEvents.push({
-          ...handlePlayerEvent(keys, values),
-          ...baseEventData,
-        });
-        break;
-      default:
-        console.log('componentName', componentName);
-        console.log('keys', keys);
-        console.log('values', values);
-    }
-  }
+//     switch (componentName) {
+//       case 'Game':
+//         transformedEvents.push({
+//           ...handleGameEvent(keys, values),
+//           ...baseEventData,
+//         });
+//         break;
+//       case 'Tile':
+//         transformedEvents.push({
+//           ...handleTileEvent(keys, values),
+//           ...baseEventData,
+//         });
+//         break;
+//       case 'Player':
+//         transformedEvents.push({
+//           ...handlePlayerEvent(keys, values),
+//           ...baseEventData,
+//         });
+//         break;
+//       default:
+//         console.log('componentName', componentName);
+//         console.log('keys', keys);
+//         console.log('values', values);
+//     }
+//   }
 
-  return transformedEvents;
+//   return transformedEvents;
+// }
+export function setComponentsFromEvents(components: Components, events: Event[]) {
+  events.forEach((event) => setComponentFromEvent(components, event.data));
 }
 
-export function getEvents(receipt: any): any[] {
-  return receipt.events.filter((event: any) => {
-    return event.keys.length === 1 && event.keys[0] === import.meta.env.VITE_EVENT_KEY;
-  });
+export function setComponentFromEvent(components: Components, eventData: string[]) {
+  // retrieve the component name
+  const componentName = hexToAscii(eventData[0]);
+
+  // retrieve the component from name
+  const component = components[componentName];
+
+  // get keys
+  const keysNumber = parseInt(eventData[1]);
+  let index = 2 + keysNumber + 1;
+
+  const keys = eventData.slice(2, 2 + keysNumber).map((key) => BigInt(key));
+
+  // get entityIndex from keys
+  const entityIndex = getEntityIdFromKeys(keys);
+
+  // get values
+  let numberOfValues = parseInt(eventData[index++]);
+
+  // get values
+  const valuesFromEventData = eventData.slice(index, index + numberOfValues);
+
+  // get component files
+  let componentFields = Object.keys(component.schema);
+
+  // Add keys to values if there are extra fields in the component schema (in case we want to add keys to the field values)
+  const values =
+    valuesFromEventData.length < componentFields.length ? [...keys, ...valuesFromEventData] : valuesFromEventData;
+
+  // create component object from values with schema
+  const componentValues = componentFields.reduce((acc: Schema, key, index) => {
+    const value = values[index];
+    // @ts-ignore
+    console.log('key', key);
+    if (key === 'address') {
+      acc[key] = value;
+    } else if (key === 'name') {
+      acc[key] = shortString.decodeShortString(value.toString());
+    } else {
+      acc[key] = Number(value);
+    }
+    return acc;
+  }, {});
+
+  setComponent(component, entityIndex, componentValues);
 }

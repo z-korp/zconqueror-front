@@ -15,7 +15,7 @@
     "@dojoengine/core": "0.1.30",
     "@dojoengine/create-burner": "0.1.29",
     "@dojoengine/react": "0.0.3",
-    "@dojoengine/utils": "0.1.2",
+    "@dojoengine/utils": "^0.1.56",
     "@hookform/resolvers": "^3.3.1",
     "@latticexyz/react": "^2.0.0-next.9",
     "@latticexyz/recs": "^2.0.0-next.9",

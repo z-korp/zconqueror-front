@@ -7,7 +7,7 @@ import { Button } from './ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
 
 const NewGame: React.FC = () => {
-  const { ip, set_current_state, set_game_id } = useElementStore((state) => state);
+  const { ip, set_current_state } = useElementStore((state) => state);
 
   const {
     setup: {
@@ -24,8 +24,7 @@ const NewGame: React.FC = () => {
 
     if (!ip) return;
     console.log('DATA', data);
-    const gameId = await create(account, data.username, data.numberOfPlayers);
-    set_game_id(gameId);
+    create(account, data.username, data.numberOfPlayers);
     set_current_state(Phase.DEPLOY);
     setCreateModalOpen(false);
   }

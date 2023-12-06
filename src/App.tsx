@@ -10,11 +10,20 @@ import { useComponentStates } from './hooks/useComponentState';
 import useIP from './hooks/useIp';
 import { Phase, useElementStore } from './utils/store';
 import Burner from './components/Burner';
+import { useComponentValue } from '@dojoengine/react';
+import { useDojo } from './DojoContext';
+import { getEntityIdFromKeys } from '@dojoengine/utils';
 
 function App() {
   const { set_ip } = useElementStore((state) => state);
+  const {
+    setup: {
+      components: { Player },
+      systemCalls: { finish },
+    },
+    account: { account },
+  } = useDojo();
   const { playerIds, players, game } = useComponentStates();
-
   const { ip, loading } = useIP();
   useEffect(() => {
     if (!loading && ip) {
@@ -23,15 +32,10 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ip, loading]);
 
-  useEffect(() => {
-    console.log('CHANGE COMPOMENT');
-    console.log(players);
-    console.log(game);
-    console.log(playerIds);
-  }, [players, playerIds]);
-
   const { current_state } = useElementStore((state) => state);
-
+  useEffect(() => {
+    console.log('PLAYERS', players);
+  }, [players]);
   const isFortifyPanelVisible =
     current_state === Phase.FORTIFY || current_state === Phase.ATTACK || current_state === Phase.DEPLOY;
   return (

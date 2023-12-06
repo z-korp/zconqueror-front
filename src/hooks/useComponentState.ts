@@ -27,6 +27,8 @@ export const useComponentStates = () => {
   const [tileIds, setTileIds] = useState<number[]>([]);
 
   useEffect(() => {
+    console.log('SET GAME');
+    console.log(game);
     if (game) {
       const playerArray = [];
       const playerIdsArray = [];
