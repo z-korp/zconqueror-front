@@ -6,15 +6,17 @@ import { ClientComponents } from './createClientComponents';
 import manifest from './manifest.json';
 import { SetupNetworkResult } from './setupNetwork';
 export type SystemCalls = ReturnType<typeof createSystemCalls>;
-// import { useElementStore } from '@/utils/store';
-
 export function createSystemCalls(
   { execute, contractComponents }: SetupNetworkResult,
   { Game, Player, Tile }: ClientComponents
 ) {
   //account: felt252, seed: felt252, name: felt252, player_count: u8
-  const create = async (signer: Account, name: string, playerCount: number): Promise<number> => {
-    // const { set_game_id } = useElementStore((state) => state);
+  const create = async (
+    signer: Account,
+    name: string,
+    playerCount: number,
+    onGameCreated: (gameId: number) => void
+  ): Promise<number> => {
     let gameId = 0;
     try {
       const calls: Call[] = [
@@ -34,7 +36,7 @@ export function createSystemCalls(
       const events = receipt.events;
 
       if (events) {
-        const eventsTransformed = await setComponentsFromEvents(contractComponents, events);
+        await setComponentsFromEvents(contractComponents, events, onGameCreated);
         // await executeEvents(eventsTransformed);
         // eventsTransformed.forEach((event) => {
         //   if (event.type === 'Game') {
@@ -490,11 +492,19 @@ type TransformedEvent = GameEvent | TileEvent | PlayerEvent;
 
 //   return transformedEvents;
 // }
-export function setComponentsFromEvents(components: Components, events: Event[]) {
-  events.forEach((event) => setComponentFromEvent(components, event.data));
+export function setComponentsFromEvents(
+  components: Components,
+  events: Event[],
+  onGameCreated?: (gameId: number) => void
+) {
+  events.forEach((event) => setComponentFromEvent(components, event.data, onGameCreated));
 }
 
-export function setComponentFromEvent(components: Components, eventData: string[]) {
+export function setComponentFromEvent(
+  components: Components,
+  eventData: string[],
+  onGameCreated?: (gameId: number) => void
+) {
   // retrieve the component name
   const componentName = hexToAscii(eventData[0]);
 
@@ -527,7 +537,6 @@ export function setComponentFromEvent(components: Components, eventData: string[
   const componentValues = componentFields.reduce((acc: Schema, key, index) => {
     const value = values[index];
     // @ts-ignore
-    console.log('key', key);
     if (key === 'address') {
       acc[key] = value;
     } else if (key === 'name') {
@@ -538,5 +547,10 @@ export function setComponentFromEvent(components: Components, eventData: string[
     return acc;
   }, {});
 
+  if (component.metadata.name === 'Game') {
+    if (onGameCreated) {
+      onGameCreated(componentValues.id);
+    }
+  }
   setComponent(component, entityIndex, componentValues);
 }
