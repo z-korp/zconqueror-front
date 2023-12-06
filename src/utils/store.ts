@@ -8,8 +8,6 @@ export enum Phase {
 }
 
 interface State {
-  ip: number | undefined;
-  set_ip: (ip: number) => void;
   game_id: number | undefined;
   set_game_id: (game_id: number) => void;
   current_state: Phase;
@@ -23,8 +21,6 @@ interface State {
 }
 
 export const useElementStore = create<State>((set) => ({
-  ip: undefined,
-  set_ip: (ip: number) => set(() => ({ ip })),
   game_id: undefined,
   set_game_id: (game_id: number) => set(() => ({ game_id })),
   current_state: Phase.NOTHING,

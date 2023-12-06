@@ -6,19 +6,20 @@ import { useElementStore } from '@/utils/store';
 
 const Burner: React.FC = () => {
   const {
-    account: { create, list, select, account, isDeploying },
+    account: { create, list, select, isDeploying },
   } = useDojo();
 
   const { current_address, set_current_address } = useElementStore((state) => state);
 
   const handleCreate = () => {
-    console.log('create');
     create();
   };
 
   const handleSelectWallet = (walletAddress: string) => {
+    console.log('select', walletAddress);
     set_current_address(walletAddress);
     current_address && select(current_address);
+    select(walletAddress);
   };
 
   return (

@@ -22,7 +22,7 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
     },
     account: { account },
   } = useDojo();
-  const { ip } = useElementStore((state) => state);
+  const { current_address } = useElementStore((state) => state);
 
   const { current_state, set_current_state } = useElementStore((state) => state);
 
@@ -48,12 +48,12 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
   };
 
   const handleNextPhaseClick = () => {
-    if (!ip) return;
+    if (!current_address) return;
     if (current_state < 3) {
-      finish(account, ip.toString());
+      finish(account, current_address);
       set_current_state(current_state + 1);
     } else {
-      finish(account, ip.toString());
+      finish(account, current_address);
       set_current_state(Phase.DEPLOY);
     }
   };

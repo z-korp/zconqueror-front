@@ -36,7 +36,7 @@ const Region: React.FC<RegionProps> = ({
     },
     account: { account },
   } = useDojo();
-  const { ip, current_state, current_source, current_target } = useElementStore((state) => state);
+  const { current_state, current_source, current_target } = useElementStore((state) => state);
 
   const [isHilighted, setIsHighlighted] = useState(false);
   const { tileIds, currentPlayerId } = useComponentStates();

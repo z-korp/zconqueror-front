@@ -11,7 +11,6 @@ export function createSystemCalls(
   { execute, contractComponents }: SetupNetworkResult,
   { Game, Player, Tile }: ClientComponents
 ) {
-  //account: felt252, seed: felt252, name: felt252, player_count: u8
   const create = async (
     signer: Account,
     name: string,

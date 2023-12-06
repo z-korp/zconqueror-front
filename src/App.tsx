@@ -7,12 +7,9 @@ import FortifyPanel from './components/map/FortifyPanel';
 import Map from './components/map/Map';
 import { TooltipProvider } from './components/ui/tooltip';
 import { useComponentStates } from './hooks/useComponentState';
-import useIP from './hooks/useIp';
 import { Phase, useElementStore } from './utils/store';
 import Burner from './components/Burner';
-import { useComponentValue } from '@dojoengine/react';
 import { useDojo } from './DojoContext';
-import { getEntityIdFromKeys } from '@dojoengine/utils';
 
 function App() {
   const { set_ip } = useElementStore((state) => state);
@@ -24,13 +21,6 @@ function App() {
     account: { account },
   } = useDojo();
   const { playerIds, players, game } = useComponentStates();
-  const { ip, loading } = useIP();
-  useEffect(() => {
-    if (!loading && ip) {
-      set_ip(ip);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ip, loading]);
 
   const { current_state } = useElementStore((state) => state);
   useEffect(() => {

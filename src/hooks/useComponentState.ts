@@ -12,7 +12,7 @@ export const useComponentStates = () => {
     },
   } = useDojo();
 
-  const { ip, game_id } = useElementStore((state) => state);
+  const { game_id } = useElementStore((state) => state);
 
   const [turn, setTurn] = useState<number>(0);
 
@@ -27,18 +27,14 @@ export const useComponentStates = () => {
   const [tileIds, setTileIds] = useState<number[]>([]);
 
   useEffect(() => {
-    console.log('SET GAME');
-    console.log(game);
     if (game) {
       const playerArray = [];
       const playerIdsArray = [];
       for (let i = 0; i < game?.player_count; i++) {
         const playerId = getEntityIdFromKeys([BigInt(entityId), BigInt(i)]);
-        console.log('entityId ID', entityId);
         playerIdsArray.push(playerId);
         const player = getComponentValue(Player, playerId);
         if (player !== undefined) {
-          console.log('PLAYER', player);
           playerArray.push(player);
           if (player.address === import.meta.env.VITE_PUBLIC_MASTER_ADDRESS) {
             setPlayer(player);

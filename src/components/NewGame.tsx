@@ -6,15 +6,16 @@ import NewGameForm, { createFormSchema } from './NewGameForm';
 import { Button } from './ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
 import JoinGameForm, { joinFormSchema } from './JoinGameForm';
+import { Account, Provider, ProviderOptions } from 'starknet';
 
 const NewGame: React.FC = () => {
-  const { set_current_state, set_game_id } = useElementStore((state) => state);
+  const { set_current_state, set_game_id, current_address } = useElementStore((state) => state);
 
   const {
     setup: {
       systemCalls: { create, join },
     },
-    account: { account },
+    account: { account, list },
   } = useDojo();
 
   const [createModalOpen, setCreateModalOpen] = useState(false);
