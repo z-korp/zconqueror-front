@@ -5,6 +5,7 @@ import { Account, Call, Event, InvokeTransactionReceiptResponse, shortString } f
 import { ClientComponents } from './createClientComponents';
 import manifest from './manifest.json';
 import { SetupNetworkResult } from './setupNetwork';
+
 export type SystemCalls = ReturnType<typeof createSystemCalls>;
 export function createSystemCalls(
   { execute, contractComponents }: SetupNetworkResult,
@@ -51,13 +52,18 @@ export function createSystemCalls(
     return gameId;
   };
 
-  const join = async (signer: Account, account: string, seed: number) => {
+  const join = async (
+    signer: Account,
+    game_id: number,
+    player_name: string,
+    onGameCreated: (gameId: number) => void
+  ) => {
     try {
       const calls: Call[] = [
         {
           contractAddress: getContractByName(manifest, 'host') || '',
           entrypoint: 'join',
-          calldata: [import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, account, seed],
+          calldata: [import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, game_id, player_name],
         },
       ];
       const tx = await execute(signer, calls);
@@ -68,7 +74,7 @@ export function createSystemCalls(
       console.log(receipt.events);
       const events = receipt.events;
       if (events) {
-        const eventsTransformed = await setComponentsFromEvents(contractComponents, events);
+        const eventsTransformed = await setComponentsFromEvents(contractComponents, events, onGameCreated);
         // await executeEvents(eventsTransformed);
       }
     } catch (e) {
