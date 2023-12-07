@@ -58,6 +58,8 @@ export function createSystemCalls(
     onGameCreated: (gameId: number) => void
   ) => {
     try {
+      console.log('JOIN');
+      console.log(game_id, player_name);
       const calls: Call[] = [
         {
           contractAddress: getContractByName(manifest, 'host') || '',
@@ -552,6 +554,24 @@ export function setComponentFromEvent(
     return acc;
   }, {});
 
+  switch (componentName) {
+    case 'Game':
+      const stringArray: string[] = values.map((value) => value.toString());
+      handleGameEvent(keys, stringArray);
+      break;
+    case 'Tile':
+      const stringArrayTile: string[] = values.map((value) => value.toString());
+      handleTileEvent(keys, stringArrayTile);
+      break;
+    case 'Player':
+      const stringArrayPlayer: string[] = values.map((value) => value.toString());
+      handlePlayerEvent(keys, stringArrayPlayer);
+      break;
+    default:
+      console.log('componentName', componentName);
+      console.log('keys', keys);
+      console.log('values', values);
+  }
   if (component.metadata.name === 'Game') {
     if (onGameCreated) {
       onGameCreated(componentValues.id);
