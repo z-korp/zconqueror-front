@@ -125,16 +125,16 @@ const FortifyPanel = () => {
   const onMoveTroops = async () => {
     if (current_source === null || current_target === null) return;
 
-    if (!current_address) return;
+    if (!game_id) return;
     animateArrow();
-    await transfer(account, current_address, current_source, current_target, armyCount);
+    await transfer(account, game_id, current_source, current_target, armyCount);
   };
 
   const onAttack = async () => {
     // Implement attack logic here
     if (current_source === null || current_target === null) return;
 
-    if (!current_address) return;
+    if (!game_id) return;
 
     // todo adapt to compare to source.supply
     if (player && player.attack < armyCount) {
@@ -145,8 +145,8 @@ const FortifyPanel = () => {
     animateArrow();
 
     console.log('attack', current_source, current_target, armyCount);
-    await attack(account, current_address, current_source, current_target, armyCount);
-    defend(account, current_address, current_source, current_target);
+    await attack(account, game_id, current_source, current_target, armyCount);
+    defend(account, game_id, current_source, current_target);
   };
 
   const removeSelected = (type: number): void => {

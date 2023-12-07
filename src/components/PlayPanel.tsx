@@ -21,7 +21,7 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
     },
     account: { account },
   } = useDojo();
-  const { current_address } = useElementStore((state) => state);
+  const { current_address, game_id } = useElementStore((state) => state);
 
   const { current_state, set_current_state } = useElementStore((state) => state);
 
@@ -47,12 +47,12 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
   };
 
   const handleNextPhaseClick = () => {
-    if (!current_address) return;
+    if (!game_id) return;
     if (current_state < 3) {
-      finish(account, current_address);
+      finish(account, game_id);
       set_current_state(current_state + 1);
     } else {
-      finish(account, current_address);
+      finish(account, game_id);
       set_current_state(Phase.DEPLOY);
     }
   };
