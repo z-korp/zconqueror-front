@@ -1,11 +1,7 @@
 import { useDojo } from '@/DojoContext';
 import { colorClasses, colorPlayer } from '@/utils/colors';
 import { useComponentValue } from '@dojoengine/react';
-import {
-  EntityIndex,
-  getComponentValue,
-  getEntitiesWithValue,
-} from '@latticexyz/recs';
+import { EntityIndex, getComponentValue, getEntitiesWithValue } from '@latticexyz/recs';
 import { GiFrance, GiSwordsEmblem } from 'react-icons/gi';
 import { avatars } from '../utils/pfps';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
@@ -30,7 +26,6 @@ const SidePlayerInfo: React.FC<SidePlayerInfoProps> = ({ index, entityId }) => {
   const { name: rawName, cards } = player;
   const name = Number(rawName) < 10 ? `Bot_${rawName}` : `${rawName}`;
   const color = colorPlayer[index + 1];
-  0;
   const image = avatars[index + 1];
   const territories = [...tiles].length;
   const troops = [...tiles]
@@ -57,8 +52,7 @@ const SidePlayerInfo: React.FC<SidePlayerInfoProps> = ({ index, entityId }) => {
           <Tooltip>
             <TooltipTrigger>
               <div className="flex gap-2 items-center ">
-                <GiFrance />{' '}
-                <p className="font-space-mono w-5">{territories}</p>
+                <GiFrance /> <p className="font-space-mono w-5">{territories}</p>
               </div>
             </TooltipTrigger>
             <TooltipContent>Territories</TooltipContent>

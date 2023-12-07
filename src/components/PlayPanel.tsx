@@ -70,7 +70,6 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
       </div>
 
       <div className="flex-1 flex flex-col justify-center items-center space-y-4  ">
-        {/* Three bars & text */}
         <div className="text-center">
           <div className="mb-2">{textFromState(current_state)}</div>
           <div className="flex flex-row">
