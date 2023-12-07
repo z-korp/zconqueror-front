@@ -1,13 +1,12 @@
 import { useDojo } from '@/DojoContext';
 import { useComponentStates } from '@/hooks/useComponentState';
-import { color100, colorClasses, colorPlayer } from '@/utils/colors';
+import { colorClasses, colorPlayer } from '@/utils/colors';
 import { useComponentValue } from '@dojoengine/react';
 import { EntityIndex } from '@latticexyz/recs';
-import { GiAxeSword, GiBattleGear, GiCrenulatedShield } from 'react-icons/gi';
+import { GiBattleGear } from 'react-icons/gi';
+import { FaChevronRight } from 'react-icons/fa6';
 import { avatars } from '../utils/pfps';
 import { Phase, useElementStore } from '../utils/store';
-import { Button } from './ui/button';
-import { Card } from './ui/card';
 
 interface PlayPanelProps {
   index: number;
@@ -58,63 +57,67 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
     }
   };
 
-  const buttonText = current_state === Phase.FORTIFY ? 'End turn' : 'Next Phase';
-
   return (
-    <Card className={`flex flex-row items-center p-4 mt-4 gap-6 ${color100[color]}`}>
-      <div className="flex flex-col">
-        <Card className={`w-20 h-20 rounded-full border flex items-center justify-center ${colorClasses[color]}`}>
+    <div className="h-[100px] max-w-[400px] rounded-md w-full bg-black bg-opacity-30 backdrop-blur-md">
+      <div className="relative w-full h-full">
+        <div className="absolute h-[120px] w-[120px] rounded-full bg-red-400 -left-[25px] -top-[25px] z-10">
           <img src={image} alt={'player'} className="rounded-full" />
-        </Card>
-        <div>{name}</div>
-      </div>
-
-      <div className="flex-1 flex flex-col justify-center items-center space-y-4  ">
-        <div className="text-center">
-          <div className="mb-2">{textFromState(current_state)}</div>
-          <div className="flex flex-row">
-            <div
-              className={`h-2 w-16 rounded-full ${
-                current_state === Phase.DEPLOY ? colorClasses[color] : 'bg-gray-500'
-              }`}
-            ></div>
-            <div
-              className={`h-2 w-16 mx-2 rounded-full ${
-                current_state === Phase.ATTACK ? colorClasses[color] : 'bg-gray-500'
-              }`}
-            ></div>
-            <div
-              className={`h-2 w-16 rounded-full ${
-                current_state === Phase.FORTIFY ? colorClasses[color] : 'bg-gray-500'
-              }`}
-            ></div>
-          </div>
         </div>
 
-        {/* Next phase button */}
-
-        <Button
-          className={'bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600'}
-          disabled={supply !== 0}
-          onClick={handleNextPhaseClick}
+        <div className="flex flex-row justify-center mt-1">
+          <div
+            className={`h-2 w-16 rounded-full ${current_state === Phase.DEPLOY ? colorClasses[color] : 'bg-gray-500'}`}
+          ></div>
+          <div
+            className={`h-2 w-16 mx-2 rounded-full ${
+              current_state === Phase.ATTACK ? colorClasses[color] : 'bg-gray-500'
+            }`}
+          ></div>
+          <div
+            className={`h-2 w-16 rounded-full ${current_state === Phase.FORTIFY ? colorClasses[color] : 'bg-gray-500'}`}
+          ></div>
+        </div>
+        <div className="flex h-[60px] items-center justify-center">
+          <span className="text-white text-2xl uppercase font-bold drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">
+            {textFromState(current_state)}
+          </span>
+        </div>
+        <div
+          className={`absolute flex justify-center h-[120px] w-[120px] rounded-full -right-[25px] -top-[25px] z-10 bg-red-500 border-8 border-red-600`}
         >
-          {buttonText}
-        </Button>
-      </div>
+          {current_state === Phase.DEPLOY && supply > 0 && (
+            <div className="flex flex-row gap-1 items-center text-4xl text-white drop-shadow-[0_6.2px_8.2px_rgba(0,0,0,0.8)]">
+              <p className="font-space-mono">{supply}</p>
+              <GiBattleGear />
+            </div>
+          )}
 
-      <Card
-        className={`w-20 h-20 rounded-full border border-gray-300 flex items-center justify-center text-2xl font-bold ${colorClasses[color]}`}
-      >
-        {current_state === Phase.DEPLOY && (
-          <div className="flex flex-row gap-1 items-center">
-            <p className="font-space-mono">{supply}</p>
-            <GiBattleGear />
-          </div>
-        )}
-        {current_state === Phase.ATTACK && <GiAxeSword className="w-10 h-10" />}
-        {current_state === Phase.FORTIFY && <GiCrenulatedShield className="w-10 h-10" />}
-      </Card>
-    </Card>
+          {supply === 0 && (
+            <button
+              className="absolute top-1 flex justify-center items-center w-[80px] h-[80px] rounded-full active:translate-y-2  active:[box-shadow:0_0px_0_0_#15803d]
+							active:border-b-[0px]
+							transition-all duration-150 [box-shadow:0_8px_0_0_#15803d]
+							border-[1px] border-green-700 bg-green-600"
+              onClick={handleNextPhaseClick}
+            >
+              {current_state === Phase.FORTIFY ? (
+                <span className="text-white text-md uppercase font-bold drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">
+                  End Turn
+                </span>
+              ) : (
+                <FaChevronRight className="h-[50px] w-[50px] text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]" />
+              )}
+            </button>
+          )}
+        </div>
+
+        <div
+          className={`absolute flex justify-center items-center h-[50px] w-[426px] -left-[13px] -bottom-[25px] rounded-md drop-shadow-[0_6.2px_8.2px_rgba(0,0,0,0.8)]  ${colorClasses[color]}`}
+        >
+          <span className="text-white uppercase font-bold drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">{name}</span>
+        </div>
+      </div>
+    </div>
   );
 };
 
