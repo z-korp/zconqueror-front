@@ -7,26 +7,26 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
-export const createFormSchema = z.object({
+export const joinFormSchema = z.object({
   username: z.string().min(2, {
     message: 'Username must be at least 2 characters.',
   }),
-  numberOfPlayers: z.coerce.number().refine((value) => !isNaN(value) && value >= 1, {
+  game_id: z.coerce.number().refine((value) => !isNaN(value) && value >= 1, {
     message: 'Must be at least 1 player.',
   }),
 });
 
-interface NewGameFormProps {
-  onFormSubmit: (data: z.infer<typeof createFormSchema>) => void;
+interface JoinGameFormProps {
+  onFormSubmit: (data: z.infer<typeof joinFormSchema>) => void;
 }
 
-const NewGameForm: React.FC<NewGameFormProps> = ({ onFormSubmit }) => {
-  const form = useForm<z.infer<typeof createFormSchema>>({
+const JoinGameForm: React.FC<JoinGameFormProps> = ({ onFormSubmit }) => {
+  const form = useForm<z.infer<typeof joinFormSchema>>({
     defaultValues: {
       username: 'Matthias',
-      numberOfPlayers: 4,
+      game_id: 4,
     },
-    resolver: zodResolver(createFormSchema),
+    resolver: zodResolver(joinFormSchema),
     mode: 'onChange', // Add this line to enable form validation on change
   });
 
@@ -36,7 +36,7 @@ const NewGameForm: React.FC<NewGameFormProps> = ({ onFormSubmit }) => {
     setIsFormValid(form.formState.isValid);
   }, [form.formState.isValid]);
 
-  function onSubmit(data: z.infer<typeof createFormSchema>) {
+  function onSubmit(data: z.infer<typeof joinFormSchema>) {
     // Check if the form is valid
     if (!isFormValid) {
       // If the form is not valid, simply return without triggering the callback
@@ -73,10 +73,10 @@ const NewGameForm: React.FC<NewGameFormProps> = ({ onFormSubmit }) => {
         />
         <FormField
           control={form.control}
-          name="numberOfPlayers"
+          name="game_id"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Number of Players</FormLabel>
+              <FormLabel>Game id</FormLabel>
               <FormControl>
                 <Input type="number" {...field} />
               </FormControl>
@@ -90,4 +90,4 @@ const NewGameForm: React.FC<NewGameFormProps> = ({ onFormSubmit }) => {
   );
 };
 
-export default NewGameForm;
+export default JoinGameForm;

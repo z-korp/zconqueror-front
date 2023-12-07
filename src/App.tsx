@@ -7,20 +7,21 @@ import FortifyPanel from './components/map/FortifyPanel';
 import Map from './components/map/Map';
 import { TooltipProvider } from './components/ui/tooltip';
 import { useComponentStates } from './hooks/useComponentState';
-import useIP from './hooks/useIp';
 import { Phase, useElementStore } from './utils/store';
+import Burner from './components/Burner';
+import { useDojo } from './DojoContext';
 
 function App() {
   const { set_ip } = useElementStore((state) => state);
-  const { playerIds } = useComponentStates();
+  const {
+    setup: {
+      components: { Player },
+      systemCalls: { finish },
+    },
+    account: { account },
+  } = useDojo();
+  const { playerIds, players, game } = useComponentStates();
 
-  const { ip, loading } = useIP();
-  useEffect(() => {
-    if (!loading && ip) {
-      set_ip(ip);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ip, loading]);
 
   const { current_state } = useElementStore((state) => state);
 
@@ -30,6 +31,7 @@ function App() {
   return (
     <TooltipProvider>
       <NewGame />
+      <Burner />
       <div className="flex">
         <div className="w-1/6 mr-4">{isFortifyPanelVisible && <FortifyPanel />}</div>
         <div className="w-5/6 pr-8">

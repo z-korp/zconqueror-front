@@ -2,43 +2,52 @@ import { useDojo } from '@/DojoContext';
 import { Phase, useElementStore } from '@/utils/store';
 import { useState } from 'react';
 import { z } from 'zod';
-import NewGameForm, { FormSchema } from './NewGameForm';
+import NewGameForm, { createFormSchema } from './NewGameForm';
 import { Button } from './ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
+import JoinGameForm, { joinFormSchema } from './JoinGameForm';
+import { Account, Provider, ProviderOptions } from 'starknet';
 
 const NewGame: React.FC = () => {
-  const { ip, set_current_state } = useElementStore((state) => state);
+  const { set_current_state, set_game_id, current_address } = useElementStore((state) => state);
 
   const {
     setup: {
-      systemCalls: { create },
+      systemCalls: { create, join },
     },
-    account: { account },
+    account: { account, list },
   } = useDojo();
 
   const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [joinModalOpen, setJoinModalOpen] = useState(false);
 
-  function handleFormSubmit(data: z.infer<typeof FormSchema>) {
-    // console.log('Form data from child:', data);
-    // You now have access to the form data and can process it as needed
-
-    if (!ip) return;
-
-    create(account, ip.toString(), 123, data.username, data.numberOfPlayers);
+  const setGameIdCallback = (gameId: number) => {
+    set_game_id(gameId);
+  };
+  async function handleCreateFormSubmit(data: z.infer<typeof createFormSchema>) {
+    create(account, data.username, data.numberOfPlayers, setGameIdCallback);
     set_current_state(Phase.DEPLOY);
     setCreateModalOpen(false);
   }
 
+  async function handleJoinFormSubmit(data: z.infer<typeof joinFormSchema>) {
+    join(account, data.game_id, data.username, setGameIdCallback);
+    set_current_state(Phase.DEPLOY);
+    setJoinModalOpen(false);
+  }
+
   return (
     <div className="flex gap-3 mb-4">
-      <Dialog>
+      <Dialog open={joinModalOpen} onOpenChange={(open) => setJoinModalOpen(open)}>
         <DialogTrigger>
           <Button>Join a game</Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Join a game</DialogTitle>
-            <DialogDescription></DialogDescription>
+            <DialogDescription>
+              <JoinGameForm onFormSubmit={handleJoinFormSubmit}></JoinGameForm>
+            </DialogDescription>
           </DialogHeader>
         </DialogContent>
       </Dialog>
@@ -51,7 +60,7 @@ const NewGame: React.FC = () => {
           <DialogHeader>
             <DialogTitle>Create a new game</DialogTitle>
             <DialogDescription>
-              <NewGameForm onFormSubmit={handleFormSubmit} />
+              <NewGameForm onFormSubmit={handleCreateFormSubmit} />
             </DialogDescription>
           </DialogHeader>
         </DialogContent>

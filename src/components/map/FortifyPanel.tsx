@@ -24,7 +24,7 @@ const FortifyPanel = () => {
   const { currentPlayerId } = useComponentStates();
   const player = useComponentValue(Player, currentPlayerId);
 
-  const { ip } = useElementStore((state) => state);
+  const { current_address } = useElementStore((state) => state);
   const [sourceTile, setSourceTile] = useState<any | null>(null);
   const [targetTile, setTargetTile] = useState<any | null>(null);
 
@@ -110,7 +110,7 @@ const FortifyPanel = () => {
 
   const handleSupply = () => {
     console.log(player.supply, armyCount);
-    if (!ip) return;
+    if (!current_address) return;
     if (current_source === null) return;
     if (player && player.supply < armyCount) {
       //todo put toast here
@@ -119,23 +119,23 @@ const FortifyPanel = () => {
       return;
     }
     console.log('supply', player.supply, armyCount);
-    supply(account, ip.toString(), current_source, armyCount);
+    supply(account, current_address, current_source, armyCount);
     setArmyCount(player.supply - armyCount);
   };
 
   const onMoveTroops = async () => {
     if (current_source === null || current_target === null) return;
 
-    if (!ip) return;
+    if (!current_address) return;
     animateArrow();
-    await transfer(account, ip.toString(), current_source, current_target, armyCount);
+    await transfer(account, current_address, current_source, current_target, armyCount);
   };
 
   const onAttack = async () => {
     // Implement attack logic here
     if (current_source === null || current_target === null) return;
 
-    if (!ip) return;
+    if (!current_address) return;
 
     // todo adapt to compare to source.supply
     if (player && player.attack < armyCount) {
@@ -146,8 +146,8 @@ const FortifyPanel = () => {
     animateArrow();
 
     console.log('attack', current_source, current_target, armyCount);
-    await attack(account, ip.toString(), current_source, current_target, armyCount);
-    defend(account, ip.toString(), current_source, current_target);
+    await attack(account, current_address, current_source, current_target, armyCount);
+    defend(account, current_address, current_source, current_target);
   };
 
   const removeSelected = (type: number): void => {

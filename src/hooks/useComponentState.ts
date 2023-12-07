@@ -12,11 +12,11 @@ export const useComponentStates = () => {
     },
   } = useDojo();
 
-  const { ip } = useElementStore((state) => state);
+  const { game_id } = useElementStore((state) => state);
 
   const [turn, setTurn] = useState<number>(0);
 
-  const entityId = ip as EntityIndex;
+  const entityId = game_id as EntityIndex;
 
   const game = useComponentValue(Game, entityId);
 
@@ -31,7 +31,7 @@ export const useComponentStates = () => {
       const playerArray = [];
       const playerIdsArray = [];
       for (let i = 0; i < game?.player_count; i++) {
-        const playerId = getEntityIdFromKeys([BigInt(game?.id), BigInt(i)]);
+        const playerId = getEntityIdFromKeys([BigInt(entityId), BigInt(i)]);
         playerIdsArray.push(playerId);
         const player = getComponentValue(Player, playerId);
         if (player !== undefined) {
