@@ -9,9 +9,8 @@ import SelectionPanel from '../panel/SelectionPanel';
 
 const FortifyPanel = () => {
   const [armyCount, setArmyCount] = useState(0);
-  const { current_source, set_current_source, current_target, set_current_target, current_state } = useElementStore(
-    (state) => state
-  );
+  const { current_source, set_current_source, current_target, set_current_target, current_state, game_id } =
+    useElementStore((state) => state);
 
   const {
     setup: {
@@ -110,7 +109,7 @@ const FortifyPanel = () => {
 
   const handleSupply = () => {
     console.log(player.supply, armyCount);
-    if (!current_address) return;
+    if (!game_id) return;
     if (current_source === null) return;
     if (player && player.supply < armyCount) {
       //todo put toast here
@@ -118,8 +117,8 @@ const FortifyPanel = () => {
       // alert('Not enough supply', player.supply);
       return;
     }
-    console.log('supply', player.supply, armyCount);
-    supply(account, current_address, current_source, armyCount);
+    console.log('supply', game_id, current_source, player.supply, armyCount);
+    supply(account, game_id, current_source, armyCount);
     setArmyCount(player.supply - armyCount);
   };
 

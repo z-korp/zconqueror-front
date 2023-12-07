@@ -277,12 +277,12 @@ export function createSystemCalls(
     }
   };
 
-  const supply = async (signer: Account, account: string, tile_index: number, supply: number) => {
+  const supply = async (signer: Account, game_id: number, tile_index: number, supply: number) => {
     try {
       const call: Call = {
         contractAddress: getContractByName(manifest, 'play') || '',
         entrypoint: 'supply',
-        calldata: [import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, account, tile_index, supply],
+        calldata: [import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, game_id, tile_index, supply],
       };
 
       const tx = await execute(signer, call);
