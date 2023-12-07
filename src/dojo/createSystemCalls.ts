@@ -1,7 +1,7 @@
 import { getContractByName } from '@dojoengine/core';
 import { Component, Components, EntityIndex, Schema, RecsType, setComponent, ComponentValue } from '@latticexyz/recs';
 import { poseidonHashMany } from 'micro-starknet';
-import { Account, Call, Event, InvokeTransactionReceiptResponse, shortString } from 'starknet';
+import { Account, Call, Event, InvokeTransactionReceiptResponse, events, shortString } from 'starknet';
 import { ClientComponents } from './createClientComponents';
 import manifest from './manifest.json';
 import { SetupNetworkResult } from './setupNetwork';
@@ -82,6 +82,31 @@ export function createSystemCalls(
       console.log(e);
     } finally {
       console.log('');
+    }
+  };
+
+  const start = async (signer: Account, game_id: number) => {
+    try {
+      const calls: Call[] = [
+        {
+          contractAddress: getContractByName(manifest, 'host') || '',
+          entrypoint: 'start',
+          calldata: [import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, game_id],
+        },
+      ];
+
+      const tx = await execute(signer, calls);
+      console.log(tx);
+      const receipt = (await signer.waitForTransaction(tx.transaction_hash, {
+        retryInterval: 100,
+      })) as InvokeTransactionReceiptResponse;
+      const events = receipt.events;
+
+      if (events) {
+        const eventsTransformed = await setComponentsFromEvents(contractComponents, events);
+      }
+    } catch (e) {
+      console.log(e);
     }
   };
 
@@ -283,6 +308,7 @@ export function createSystemCalls(
   return {
     create,
     join,
+    start,
     attack,
     defend,
     discard,
