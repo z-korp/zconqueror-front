@@ -5,6 +5,7 @@ import { EntityIndex, getComponentValue, getEntitiesWithValue } from '@latticexy
 import { GiFrance, GiSwordsEmblem } from 'react-icons/gi';
 import { avatars } from '../utils/pfps';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
+import { unpackU128toU8Array } from '@/utils/unpack';
 
 interface SidePlayerInfoProps {
   index: number;
@@ -33,6 +34,15 @@ const SidePlayerInfo: React.FC<SidePlayerInfoProps> = ({ index, entityId }) => {
     .map((e) => getComponentValue(Tile, e))
     .map((obj) => obj.army)
     .reduce((acc, curr) => acc + curr, 0);
+
+  const cardsArray = unpackU128toU8Array(cards).filter((e) => e !== 0);
+
+  // try {
+  //   let result = unpackU128toU8Array(cards);
+  //   console.log(`Result of unpackU128toU8Array for cards ${cards}:`, result);
+  // } catch (error) {
+  //   console.error('Error unpacking cards:', error);
+  // }
 
   return (
     <div
@@ -64,7 +74,7 @@ const SidePlayerInfo: React.FC<SidePlayerInfoProps> = ({ index, entityId }) => {
       <div className="absolute h-[110px] w-[110px] left-[100px] -top-[5px] rounded-full bg-red-400 z-10">
         <img src={image} alt={'player'} className="rounded-full" />
         <div className="absolute top-1 left-0 border border-slate-700 transform -translate-y-1/2 -rotate-12 bg-white text-black px-2 py-1 rounded">
-          {cards ? cards : 0}
+          {cardsArray ? cardsArray.length : 0}
         </div>
       </div>
       <div
