@@ -5,7 +5,7 @@ import { EntityIndex, getComponentValue, getEntitiesWithValue } from '@latticexy
 import { GiFrance, GiSwordsEmblem } from 'react-icons/gi';
 import { avatars } from '../utils/pfps';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
-import { unpackU128toU8Array } from '@/utils/unpack';
+import { unpackU128toNumberArray } from '@/utils/unpack';
 
 interface SidePlayerInfoProps {
   index: number;
@@ -35,14 +35,7 @@ const SidePlayerInfo: React.FC<SidePlayerInfoProps> = ({ index, entityId }) => {
     .map((obj) => obj.army)
     .reduce((acc, curr) => acc + curr, 0);
 
-  const cardsArray = unpackU128toU8Array(cards).filter((e) => e !== 0);
-
-  // try {
-  //   let result = unpackU128toU8Array(cards);
-  //   console.log(`Result of unpackU128toU8Array for cards ${cards}:`, result);
-  // } catch (error) {
-  //   console.error('Error unpacking cards:', error);
-  // }
+  const cardsArray = unpackU128toNumberArray(cards).filter((e: any) => e !== 0);
 
   return (
     <div
