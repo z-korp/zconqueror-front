@@ -21,7 +21,7 @@ export function createSystemCalls(
     try {
       const calls: Call[] = [
         {
-          contractAddress: getContractByName(manifest, 'host') || '',
+          contractAddress: getContractByName(manifest, 'zconqueror::systems::host::host') || '',
           entrypoint: 'create',
           calldata: [import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, playerCount, name],
         },
@@ -62,7 +62,7 @@ export function createSystemCalls(
       console.log(game_id, player_name);
       const calls: Call[] = [
         {
-          contractAddress: getContractByName(manifest, 'host') || '',
+          contractAddress: getContractByName(manifest, 'zconqueror::systems::host::host') || '',
           entrypoint: 'join',
           calldata: [import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, game_id, player_name],
         },
@@ -89,7 +89,7 @@ export function createSystemCalls(
     try {
       const calls: Call[] = [
         {
-          contractAddress: getContractByName(manifest, 'host') || '',
+          contractAddress: getContractByName(manifest, 'zconqueror::systems::host::host') || '',
           entrypoint: 'start',
           calldata: [import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, game_id],
         },
@@ -120,7 +120,7 @@ export function createSystemCalls(
     try {
       const calls: Call[] = [
         {
-          contractAddress: getContractByName(manifest, 'play') || '',
+          contractAddress: getContractByName(manifest, 'zconqueror::systems::play::play') || '',
           entrypoint: 'attack',
           calldata: [import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, game_id, attacker_index, defender_index, dispatched],
         },
@@ -151,7 +151,7 @@ export function createSystemCalls(
     try {
       const calls: Call[] = [
         {
-          contractAddress: getContractByName(manifest, 'play') || '',
+          contractAddress: getContractByName(manifest, 'zconqueror::systems::play::play') || '',
           entrypoint: 'defend',
           calldata: [import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, game_id, attacker_index, defender_index],
         },
@@ -182,7 +182,7 @@ export function createSystemCalls(
     try {
       const calls: Call[] = [
         {
-          contractAddress: getContractByName(manifest, 'play') || '',
+          contractAddress: getContractByName(manifest, 'zconqueror::systems::play::play') || '',
           entrypoint: 'discard',
           calldata: [import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, game_id, card_one, card_two, card_three],
         },
@@ -213,7 +213,7 @@ export function createSystemCalls(
     try {
       const calls: Call[] = [
         {
-          contractAddress: getContractByName(manifest, 'play') || '',
+          contractAddress: getContractByName(manifest, 'zconqueror::systems::play::play') || '',
           entrypoint: 'finish',
           calldata: [import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, game_id],
         },
@@ -250,7 +250,7 @@ export function createSystemCalls(
     try {
       const calls: Call[] = [
         {
-          contractAddress: getContractByName(manifest, 'play') || '',
+          contractAddress: getContractByName(manifest, 'zconqueror::systems::play::play') || '',
           entrypoint: 'transfer',
           calldata: [import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, game_id, source_index, target_index, army],
         },
@@ -280,7 +280,7 @@ export function createSystemCalls(
   const supply = async (signer: Account, game_id: number, tile_index: number, supply: number) => {
     try {
       const call: Call = {
-        contractAddress: getContractByName(manifest, 'play') || '',
+        contractAddress: getContractByName(manifest, 'zconqueror::systems::play::play') || '',
         entrypoint: 'supply',
         calldata: [import.meta.env.VITE_PUBLIC_WORLD_ADDRESS, game_id, tile_index, supply],
       };
