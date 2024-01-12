@@ -1,8 +1,8 @@
 {
   "world": {
-    "name": "world",
-    "address": "0x45913f69140d1fb00db13514f06cd0503838a75c076637086a25d385e732cbb",
-    "class_hash": "0x99b08b2ff33750916e36b5e241b5d4a63e8d48862bf90a68fec2ff58a8de6",
+    "name": "dojo::world::world",
+    "address": "0x3a0e782a770361f8119970bfc1cdd7cd91a387a918a537d2808329b8e85e929",
+    "class_hash": "0x5ac623f0c96059936bd2d0904bdd31799e430fe08a0caff7a5f497260b16497",
     "abi": [
       {
         "type": "impl",
@@ -783,9 +783,9 @@
     "computed": []
   },
   "executor": {
-    "name": "executor",
+    "name": "dojo::executor::executor",
     "address": null,
-    "class_hash": "0x54ee9d99457d82d53e21030920f7e6f43509b98ea62282b5c2520050264a28c",
+    "class_hash": "0x585507fa2818fe78e66da6ea4c5915376739f4abf509d41153f60a16cb1f68d",
     "abi": [
       {
         "type": "impl",
@@ -844,8 +844,8 @@
     "computed": []
   },
   "base": {
-    "name": "base",
-    "class_hash": "0x77638e9a645209ac1e32e143bfdbfe9caf723c4f7645fcf465c38967545ea2f",
+    "name": "dojo::base::base",
+    "class_hash": "0x6c458453d35753703ad25632deec20a29faf8531942ec109e6eb0650316a2bc",
     "abi": [
       {
         "type": "impl",
@@ -947,9 +947,9 @@
   },
   "contracts": [
     {
-      "name": "host",
-      "address": "0x9e296cd237ed0ed2f9d65950c6c708c10c4620fdbd76b1a3c1e014a07391f3",
-      "class_hash": "0x19803f19aa2e414597f3c2a52f58445e64e47207ea615e0fabb2d5d91d97243",
+      "name": "zconqueror::systems::host::host",
+      "address": "0x55bac3cb43efa8a014bed327fdf470f528374f1e2208663bae331dbc2658da3",
+      "class_hash": "0x5f932813ffc41970bf8a98e10897305963aa6b61a4a7233f1e35ce3da14dff5",
       "abi": [
         {
           "type": "impl",
@@ -1060,9 +1060,9 @@
       "computed": []
     },
     {
-      "name": "play",
-      "address": "0x361fc51ac38dde141e478a0f2dde0f5a29797b0e1a3fae9ee3dce9fc681b8a8",
-      "class_hash": "0xabce9cd973162dda7740b5019b74041b6ea6eb67670111db63292550c2446a",
+      "name": "zconqueror::systems::play::play",
+      "address": "0x127f3efb89714e50194dab6d7a5875eb63ebee78e04adf36584b8748bf14ac7",
+      "class_hash": "0x45a153bbdec33552433644c44272c6e05d0e91232fe0c8a0431797653cb4bd3",
       "abi": [
         {
           "type": "impl",
@@ -1247,7 +1247,7 @@
   ],
   "models": [
     {
-      "name": "Game",
+      "name": "zconqueror::models::game::game",
       "members": [
         {
           "name": "id",
@@ -1285,7 +1285,7 @@
           "key": false
         }
       ],
-      "class_hash": "0x60aa5c155e0393f4b7e2fce33e18f2a4112774b3add84ac23bc59ea7fd5cc4",
+      "class_hash": "0x40cc61a4678ad9781daa9c3af8801940dab90095717a43b3ff3be0f1f89588f",
       "abi": [
         {
           "type": "function",
@@ -1449,7 +1449,7 @@
       ]
     },
     {
-      "name": "Player",
+      "name": "zconqueror::models::player::player",
       "members": [
         {
           "name": "game_id",
@@ -1487,7 +1487,7 @@
           "key": false
         }
       ],
-      "class_hash": "0x4889df6618f29d54bd256525a699f748c57cb8c50b77795a8b6a760bcf55448",
+      "class_hash": "0x40f35db0b6a0a9242c93179b6c3c19f5f07b7ce9f6f93e3ba49eb27b64730ef",
       "abi": [
         {
           "type": "function",
@@ -1651,7 +1651,7 @@
       ]
     },
     {
-      "name": "Tile",
+      "name": "zconqueror::models::tile::tile",
       "members": [
         {
           "name": "game_id",
@@ -1694,7 +1694,7 @@
           "key": false
         }
       ],
-      "class_hash": "0x623ac600d4dad820426612a5b1c3166421d951ec9c997f2b2df7c0c79d33792",
+      "class_hash": "0xb18fb651411130aa0e20e784760c784c554cdd7dd7051df82471f583dbe73b",
       "abi": [
         {
           "type": "function",
