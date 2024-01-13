@@ -1,10 +1,7 @@
-import { useDojo } from '@/DojoContext';
-import { useComponentStates } from '@/hooks/useComponentState';
 import { colorPlayer } from '@/utils/colors';
 import { getNeighbors } from '@/utils/map';
 import { Phase, useElementStore } from '@/utils/store';
 import { isTest } from '@/utils/test';
-import { useComponentValue } from '@dojoengine/react';
 import React, { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import TroopsMarker from './TroopMarker';
@@ -20,17 +17,12 @@ interface RegionProps {
 }
 
 const Region: React.FC<RegionProps> = ({ d, id, region, containerRef, onRegionClick }: RegionProps) => {
-  const {
-    setup: {
-      components: { Tile },
-    },
-  } = useDojo();
   const { current_state, current_source, current_target } = useElementStore((state) => state);
 
   const [isHilighted, setIsHighlighted] = useState(false);
-  const { tileIds } = useComponentStates();
+  // const { tileIds } = useComponentStates();
 
-  const tile = useComponentValue(Tile, tileIds[id - 1]);
+  const tile = undefined// useComponentValue(Tile, tileIds[id - 1]);
 
   const troups = tile ? tile.army : 0;
   const color = tile ? colorPlayer[tile.owner + 1 || 0] : 'white';

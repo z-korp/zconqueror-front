@@ -1,4 +1,3 @@
-import { useDojo } from '@/DojoContext';
 import { Phase, useElementStore } from '@/utils/store';
 import { useState } from 'react';
 import { set, z } from 'zod';
@@ -10,12 +9,12 @@ import JoinGameForm, { joinFormSchema } from './JoinGameForm';
 const NewGame: React.FC = () => {
   const { set_current_state, set_game_id, set_game_creator, game_creator } = useElementStore((state) => state);
 
-  const {
-    setup: {
-      systemCalls: { create, join, start },
-    },
-    account: { account, list },
-  } = useDojo();
+  // const {
+  //   setup: {
+  //     systemCalls: { create, join, start },
+  //   },
+  //   account: { account, list },
+  // } = useDojo();
 
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [joinModalOpen, setJoinModalOpen] = useState(false);
@@ -24,14 +23,14 @@ const NewGame: React.FC = () => {
     set_game_id(gameId);
   };
   async function handleCreateFormSubmit(data: z.infer<typeof createFormSchema>) {
-    create(account, data.username, data.numberOfPlayers, setGameIdCallback);
+    // create(account, data.username, data.numberOfPlayers, setGameIdCallback);
     set_game_creator(true);
     set_current_state(Phase.DEPLOY);
     setCreateModalOpen(false);
   }
 
   async function handleJoinFormSubmit(data: z.infer<typeof joinFormSchema>) {
-    join(account, data.game_id, data.username, setGameIdCallback);
+    // join(account, data.game_id, data.username, setGameIdCallback);
     set_current_state(Phase.DEPLOY);
     setJoinModalOpen(false);
   }
@@ -39,7 +38,7 @@ const NewGame: React.FC = () => {
   const handleStartGame = () => {
     const gameId = parseInt(gameIdInput, 10);
     if (!isNaN(gameId)) {
-      start(account, gameId);
+      // start(account, gameId);
       console.log('Starting game with ID:', gameId);
     }
   };

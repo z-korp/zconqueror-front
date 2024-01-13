@@ -1,8 +1,4 @@
-import { useDojo } from '@/DojoContext';
-import { useComponentStates } from '@/hooks/useComponentState';
 import { colorClasses, colorPlayer } from '@/utils/colors';
-import { useComponentValue } from '@dojoengine/react';
-import { EntityIndex } from '@latticexyz/recs';
 import { GiBattleGear } from 'react-icons/gi';
 import { FaChevronRight } from 'react-icons/fa6';
 import { avatars } from '../utils/pfps';
@@ -12,23 +8,16 @@ import { unpackU128toNumberArray } from '@/utils/unpack';
 
 interface PlayPanelProps {
   index: number;
-  entityId: EntityIndex;
+  entity: any;
 }
 
-const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
-  const {
-    setup: {
-      components: { Player },
-      systemCalls: { finish },
-    },
-    account: { account },
-  } = useDojo();
-  const { current_address, game_id } = useElementStore((state) => state);
+const PlayPanel = ({ index, entity }: PlayPanelProps) => {
+  const { game_id } = useElementStore((state) => state);
 
   const { current_state, set_current_state } = useElementStore((state) => state);
 
-  const { turn } = useComponentStates();
-  const player = useComponentValue(Player, entityId);
+  // const { turn } = useComponentStates();
+  const player = entity;
   const [cards, setCards] = useState<number[]>([]);
   const [conqueredThisTurn, setConqueredThisTurn] = useState(false);
   const [currentPlayer, setCurrentPlayer] = useState(player);

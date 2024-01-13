@@ -1,13 +1,12 @@
 // BurnerActions.tsx
 import React, { useEffect, useState } from 'react';
-import { useDojo } from '@/DojoContext';
 import { Button } from './ui/button';
 import { useElementStore } from '@/utils/store';
 
 const Burner: React.FC = () => {
-  const {
-    account: { create, list, select, isDeploying },
-  } = useDojo();
+  // const {
+  //   account: { create, list, select, isDeploying },
+  // } = useDojo();
 
   const { current_address, set_current_address } = useElementStore((state) => state);
 

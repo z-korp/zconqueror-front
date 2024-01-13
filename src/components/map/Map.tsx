@@ -1,5 +1,3 @@
-import { useDojo } from '@/DojoContext';
-import { useComponentStates } from '@/hooks/useComponentState';
 import { getNeighbors } from '@/utils/map';
 import { Phase, useElementStore } from '@/utils/store';
 import { getComponentValue } from '@latticexyz/recs';
@@ -22,17 +20,11 @@ interface MapData {
 const Map = () => {
   const containerRef = useRef(null);
 
-  const {
-    setup: {
-      components: { Tile },
-    },
-  } = useDojo();
-
-  const { tileIds, turn } = useComponentStates();
+  // const { tileIds, turn } = useComponentStates();
   const { current_state, current_source, set_current_source, set_current_target } = useElementStore((state) => state);
 
   const handleRegionClick = (regionId: number) => {
-    const tile = getComponentValue(Tile, tileIds[regionId - 1]);
+    const tile = undefined// getComponentValue(Tile, tileIds[regionId - 1]);
     if (current_state == Phase.DEPLOY) {
       if (tile.owner !== turn) {
         set_current_source(null);

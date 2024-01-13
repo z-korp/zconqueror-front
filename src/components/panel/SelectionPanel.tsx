@@ -1,7 +1,3 @@
-import { useDojo } from '@/DojoContext';
-import { useComponentStates } from '@/hooks/useComponentState';
-import { useElementStore } from '@/utils/store';
-import { useComponentValue } from '@dojoengine/react';
 import { GiSwordsEmblem } from 'react-icons/gi';
 
 // SelectionPanel.jsx
@@ -12,17 +8,8 @@ type SelectionPanelProps = {
 };
 
 const SelectionPanel = ({ selectedRegion, title, onRemoveSelected }: SelectionPanelProps) => {
-  const {
-    setup: {
-      components: { Tile },
-    },
-  } = useDojo();
 
-  const { current_state } = useElementStore((state) => state);
-
-  const { tileIds, currentPlayerId } = useComponentStates();
-
-  const tile = useComponentValue(Tile, selectedRegion ? tileIds[selectedRegion - 1] : null);
+  const tile = undefined//useComponentValue(Tile, selectedRegion ? tileIds[selectedRegion - 1] : null);
 
   const troups = tile ? tile.army : 0;
 

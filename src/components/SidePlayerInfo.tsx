@@ -1,7 +1,5 @@
-import { useDojo } from '@/DojoContext';
 import { colorClasses, colorPlayer } from '@/utils/colors';
-import { useComponentValue } from '@dojoengine/react';
-import { EntityIndex, getComponentValue, getEntitiesWithValue } from '@latticexyz/recs';
+import { getComponentValue, getEntitiesWithValue } from '@latticexyz/recs';
 import { GiFrance, GiSwordsEmblem } from 'react-icons/gi';
 import { avatars } from '../utils/pfps';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
@@ -9,31 +7,25 @@ import { unpackU128toNumberArray } from '@/utils/unpack';
 
 interface SidePlayerInfoProps {
   index: number;
-  entityId: EntityIndex;
+  entity: any;
 }
 
-const SidePlayerInfo: React.FC<SidePlayerInfoProps> = ({ index, entityId }) => {
-  const {
-    setup: {
-      components: { Player, Tile },
-    },
-  } = useDojo();
-
-  const player = useComponentValue(Player, entityId);
+const SidePlayerInfo: React.FC<SidePlayerInfoProps> = ({ index, entity }) => {
+  const player = entity
   if (player === undefined) return null;
 
-  const tiles = getEntitiesWithValue(Tile, { owner: index });
+  // const tiles = getEntitiesWithValue(Tile, { owner: index });
 
   const { name: rawName, cards } = player;
   const name = Number(rawName) < 10 ? `Bot_${rawName}` : `${rawName}`;
   const color = colorPlayer[index + 1];
   0;
   const image = avatars[index + 1];
-  const territories = [...tiles].length;
-  const troops = [...tiles]
-    .map((e) => getComponentValue(Tile, e))
-    .map((obj) => obj.army)
-    .reduce((acc, curr) => acc + curr, 0);
+  // const territories = [...tiles].length;
+  // const troops = [...tiles]
+  //   .map((e) => getComponentValue(Tile, e))
+  //   .map((obj) => obj.army)
+  //   .reduce((acc, curr) => acc + curr, 0);
 
   const cardsArray = unpackU128toNumberArray(cards).filter((e: any) => e !== 0);
 
@@ -57,7 +49,7 @@ const SidePlayerInfo: React.FC<SidePlayerInfoProps> = ({ index, entityId }) => {
           <TooltipTrigger>
             <div className="flex gap-2 items-center text-white text-2xl">
               <GiFrance />
-              <p className="font-space-mono w-5">{territories}</p>
+              {/* <p className="font-space-mono w-5">{territories}</p> */}
             </div>
           </TooltipTrigger>
           <TooltipContent>Territories</TooltipContent>

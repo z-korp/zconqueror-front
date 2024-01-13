@@ -1,7 +1,4 @@
-import { useDojo } from '@/DojoContext';
-import { useComponentStates } from '@/hooks/useComponentState';
 import { Phase, useElementStore } from '@/utils/store';
-import { useComponentValue } from '@dojoengine/react';
 import { getComponentValue } from '@latticexyz/recs';
 import { useEffect, useState } from 'react';
 import Counter from '../panel/Counter';
@@ -12,16 +9,7 @@ const FortifyPanel = () => {
   const { current_source, set_current_source, current_target, set_current_target, current_state, game_id } =
     useElementStore((state) => state);
 
-  const {
-    setup: {
-      systemCalls: { transfer, attack, defend, supply },
-      components: { Tile, Player },
-    },
-    account: { account },
-  } = useDojo();
-
-  const { currentPlayerId } = useComponentStates();
-  const player = useComponentValue(Player, currentPlayerId);
+  // const player = useComponentValue(Player, currentPlayerId);
 
   const { current_address } = useElementStore((state) => state);
   const [sourceTile, setSourceTile] = useState<any | null>(null);
@@ -66,9 +54,9 @@ const FortifyPanel = () => {
 
   const increment = () => {
     if (current_state === Phase.DEPLOY) {
-      if (armyCount <= player.supply) {
-        setArmyCount(armyCount + 1);
-      }
+      // if (armyCount <= player.supply) {
+      //   setArmyCount(armyCount + 1);
+      // }
     } else {
       if (sourceTile && armyCount < sourceTile.army - 1) {
         setArmyCount(armyCount + 1);
@@ -82,19 +70,19 @@ const FortifyPanel = () => {
     }
   };
 
-  const { tileIds } = useComponentStates();
+  // const { tileIds } = useComponentStates();
 
   useEffect(() => {
     if (current_source !== null) {
-      const sourceTileData = getComponentValue(Tile, tileIds[current_source - 1]);
-      setSourceTile(sourceTileData);
-      if (sourceTileData && sourceTileData.army) {
-        if (current_state === Phase.DEPLOY) {
-          setArmyCount(player.supply);
-        } else {
-          setArmyCount(sourceTileData.army - 1);
-        }
-      }
+      // const sourceTileData = getComponentValue(Tile, tileIds[current_source - 1]);
+      // setSourceTile(sourceTileData);
+      // if (sourceTileData && sourceTileData.army) {
+      //   if (current_state === Phase.DEPLOY) {
+      //     setArmyCount(player.supply);
+      //   } else {
+      //     setArmyCount(sourceTileData.army - 1);
+      //   }
+      // }
     } else {
       setSourceTile(null);
     }
@@ -107,47 +95,47 @@ const FortifyPanel = () => {
     }
   }, [current_source, current_target, Tile, tileIds]);
 
-  const handleSupply = () => {
-    console.log(player.supply, armyCount);
-    if (!game_id) return;
-    if (current_source === null) return;
-    if (player && player.supply < armyCount) {
-      //todo put toast here
-      console.log('Not enough supply', player.supply, armyCount);
-      // alert('Not enough supply', player.supply);
-      return;
-    }
-    console.log('supply', game_id, current_source, player.supply, armyCount);
-    supply(account, game_id, current_source, armyCount);
-    setArmyCount(player.supply - armyCount);
-  };
+  // const handleSupply = () => {
+  //   console.log(player.supply, armyCount);
+  //   if (!game_id) return;
+  //   if (current_source === null) return;
+  //   if (player && player.supply < armyCount) {
+  //     //todo put toast here
+  //     console.log('Not enough supply', player.supply, armyCount);
+  //     // alert('Not enough supply', player.supply);
+  //     return;
+  //   }
+  //   console.log('supply', game_id, current_source, player.supply, armyCount);
+  //   supply(account, game_id, current_source, armyCount);
+  //   setArmyCount(player.supply - armyCount);
+  // };
 
-  const onMoveTroops = async () => {
-    if (current_source === null || current_target === null) return;
+  // const onMoveTroops = async () => {
+  //   if (current_source === null || current_target === null) return;
 
-    if (!game_id) return;
-    animateArrow();
-    await transfer(account, game_id, current_source, current_target, armyCount);
-  };
+  //   if (!game_id) return;
+  //   animateArrow();
+  //   await transfer(account, game_id, current_source, current_target, armyCount);
+  // };
 
-  const onAttack = async () => {
-    // Implement attack logic here
-    if (current_source === null || current_target === null) return;
+  // const onAttack = async () => {
+  //   // Implement attack logic here
+  //   if (current_source === null || current_target === null) return;
 
-    if (!game_id) return;
+  //   if (!game_id) return;
 
-    // todo adapt to compare to source.supply
-    if (player && player.attack < armyCount) {
-      //todo put toast here
-      alert('Not enough attack');
-      return;
-    }
-    animateArrow();
+  //   // todo adapt to compare to source.supply
+  //   if (player && player.attack < armyCount) {
+  //     //todo put toast here
+  //     alert('Not enough attack');
+  //     return;
+  //   }
+  //   animateArrow();
 
-    console.log('attack', current_source, current_target, armyCount);
-    await attack(account, game_id, current_source, current_target, armyCount);
-    defend(account, game_id, current_source, current_target);
-  };
+  //   console.log('attack', current_source, current_target, armyCount);
+  //   await attack(account, game_id, current_source, current_target, armyCount);
+  //   defend(account, game_id, current_source, current_target);
+  // };
 
   const removeSelected = (type: number): void => {
     if (type === 1) {
