@@ -13,6 +13,7 @@ import {
   DialogTrigger,
 } from "./ui/dialog";
 import JoinGameForm, { joinFormSchema } from "./JoinGameForm";
+import { SidePanel } from "./DebugPanel";
 
 const NewGame: React.FC = () => {
   const { set_current_state, set_game_id, set_game_creator, game_creator } =
@@ -56,6 +57,7 @@ const NewGame: React.FC = () => {
 
   return (
     <div className="flex gap-3 mb-4">
+      <SidePanel />
       <Dialog
         open={joinModalOpen}
         onOpenChange={(open) => setJoinModalOpen(open)}
@@ -66,7 +68,7 @@ const NewGame: React.FC = () => {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Join a game</DialogTitle>
-            <DialogDescription>
+            <DialogDescription asChild={true}>
               <JoinGameForm onFormSubmit={handleJoinFormSubmit}></JoinGameForm>
             </DialogDescription>
           </DialogHeader>
@@ -83,7 +85,7 @@ const NewGame: React.FC = () => {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Create a new game</DialogTitle>
-            <DialogDescription>
+            <DialogDescription asChild={true}>
               <NewGameForm onFormSubmit={handleCreateFormSubmit} />
             </DialogDescription>
           </DialogHeader>
@@ -92,6 +94,7 @@ const NewGame: React.FC = () => {
       {game_creator && (
         <>
           <input
+            id="inputGameId"
             type="text"
             value={gameIdInput}
             onChange={(e) => setGameIdInput(e.target.value)}

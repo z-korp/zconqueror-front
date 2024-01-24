@@ -23,8 +23,8 @@ interface NewGameFormProps {
 const NewGameForm: React.FC<NewGameFormProps> = ({ onFormSubmit }) => {
   const form = useForm<z.infer<typeof createFormSchema>>({
     defaultValues: {
-      username: 'Matthias',
-      numberOfPlayers: 4,
+      username: 'Player 1',
+      numberOfPlayers: 2,
     },
     resolver: zodResolver(createFormSchema),
     mode: 'onChange', // Add this line to enable form validation on change

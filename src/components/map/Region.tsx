@@ -8,6 +8,7 @@ import { useComponentValue } from '@dojoengine/react';
 import React, { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import TroopsMarker from './TroopMarker';
+import carte from '../../../public/texture1.png';
 
 interface RegionProps {
   d: string;
@@ -16,10 +17,11 @@ interface RegionProps {
   region: string;
   troups?: number;
   containerRef?: React.MutableRefObject<null>;
+  playerTurn: number;
   onRegionClick: () => void;
 }
 
-const Region: React.FC<RegionProps> = ({ d, id, region, containerRef, onRegionClick }: RegionProps) => {
+const Region: React.FC<RegionProps> = ({ d, id, region, containerRef, onRegionClick, playerTurn }: RegionProps) => {
   const {
     setup: {
       components: { Tile },
@@ -109,17 +111,40 @@ const Region: React.FC<RegionProps> = ({ d, id, region, containerRef, onRegionCl
         containerRef &&
         containerRef.current &&
         ReactDOM.createPortal(
-          <TroopsMarker position={position} handlePathClick={onRegionClick} troups={troups} color={color} />,
+          <TroopsMarker
+            position={position}
+            handlePathClick={onRegionClick}
+            troups={troups}
+            color={color}
+            tile={tile}
+            playerTurn={playerTurn}
+          />,
 
           containerRef.current // render the button directly in the body
         )}
-
+      <defs>
+        <pattern id="texture" patternUnits="userSpaceOnUse" width="900" height="647">
+          <image href={carte} x="0" y="0" width="900" height="647" />
+        </pattern>
+        <mask id="pathMask">
+          <path d={d} fill="blue" stroke="black" strokeWidth="10" />
+        </mask>
+      </defs>
+      <path
+        ref={pathRef}
+        d={d}
+        fill={`url(#texture)`}
+        fillOpacity={1.0}
+        stroke={isHilighted ? 'black' : 'gray'}
+        strokeWidth="10"
+        onClick={onRegionClick}
+      />
       <path
         ref={pathRef}
         d={d}
         fill={color}
-        fillOpacity={isHilighted ? 0.7 : 0.4}
-        stroke={isHilighted ? 'yellow' : 'black'}
+        fillOpacity={isHilighted ? 0.9 : 0.6}
+        stroke={isHilighted ? 'black' : 'gray'}
         strokeWidth="10"
         onClick={onRegionClick}
       />

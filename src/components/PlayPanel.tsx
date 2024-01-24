@@ -9,6 +9,7 @@ import { avatars } from '../utils/pfps';
 import { Phase, useElementStore } from '../utils/store';
 import { useEffect, useState } from 'react';
 import { unpackU128toNumberArray } from '@/utils/unpack';
+import { Card, CardTitle } from './ui/card';
 
 interface PlayPanelProps {
   index: number;
@@ -114,6 +115,14 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
           <div className="p-8 bg-white rounded shadow-lg text-center">
             <p>Votre message ici</p>
             <h2>Cartes</h2>
+            <Card>
+              {/* Contenu de la carte */}
+              <p>Ceci est le contenu de ma carte</p>
+
+              {/* Ajouter d'autres éléments comme titre, image, etc */}
+              <CardTitle>Titre de la carte</CardTitle>
+              <img src="image.png" />
+            </Card>
             <ul>{cards && cards.map((card, index) => <li key={index}> Test: {card}</li>)}</ul>
             <button onClick={closePopup}>Fermer</button>
           </div>
