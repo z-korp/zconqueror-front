@@ -27,7 +27,11 @@ const FortifyPanel = () => {
   const [sourceTile, setSourceTile] = useState<any | null>(null);
   const [targetTile, setTargetTile] = useState<any | null>(null);
 
-  const [arrowPosition, setArrowPosition] = useState({ x: 0, y: 0, visible: false });
+  const [arrowPosition, setArrowPosition] = useState({
+    x: 0,
+    y: 0,
+    visible: false,
+  });
 
   // Example positions, you'll need to calculate these based on your game's grid
   const attackerPosition = { x: 125, y: 150 }; // Replace with actual position
@@ -109,15 +113,14 @@ const FortifyPanel = () => {
 
   const handleSupply = () => {
     console.log(player.supply, armyCount);
-    if (!game_id) return;
-    if (current_source === null) return;
+    if (!game_id) return console.log('We return', game_id);
+    if (current_source === null) return console.log('We return from source', current_source);
     if (player && player.supply < armyCount) {
       //todo put toast here
       console.log('Not enough supply', player.supply, armyCount);
       // alert('Not enough supply', player.supply);
       return;
     }
-    console.log('supply', game_id, current_source, player.supply, armyCount);
     supply(account, game_id, current_source, armyCount);
     setArmyCount(player.supply - armyCount);
   };
@@ -136,6 +139,7 @@ const FortifyPanel = () => {
 
     if (!game_id) return;
 
+    console.log('attack source, target, count', account, game_id);
     // todo adapt to compare to source.supply
     if (player && player.attack < armyCount) {
       //todo put toast here
@@ -167,7 +171,7 @@ const FortifyPanel = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center p-4">
+    <div className={`flex flex-col items-center justify-center p-4`}>
       {isAttackTurn() ? (
         current_source && (
           <>

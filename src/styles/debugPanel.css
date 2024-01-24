@@ -1,0 +1,25 @@
+.side-panel {
+  position: fixed;
+  left: -700px;
+  width: 700px;
+  transition: left 0.3s;
+  background-color: #b2b2b2;
+  height: 100vh;
+  z-index: 10;
+  top: 50%; /* positionne le panel au milieu verticalement */
+  transform: translateY(-35%);
+  border-radius: 0 5%;
+  padding: 1em;
+  border-top: 0.5em solid #dc2625;
+  border-right: 0.5em solid #dc2625;
+}
+
+.side-panel.open {
+  left: 0;
+  z-index: 10;
+}
+
+.side-panel-element {
+  text-align: right;
+  padding-left: 1em;
+}

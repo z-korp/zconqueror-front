@@ -1,14 +1,23 @@
-import { useDojo } from '@/DojoContext';
-import { Phase, useElementStore } from '@/utils/store';
-import { useState } from 'react';
-import { set, z } from 'zod';
-import NewGameForm, { createFormSchema } from './NewGameForm';
-import { Button } from './ui/button';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
-import JoinGameForm, { joinFormSchema } from './JoinGameForm';
+import { useDojo } from "@/DojoContext";
+import { Phase, useElementStore } from "@/utils/store";
+import { useState } from "react";
+import { set, z } from "zod";
+import NewGameForm, { createFormSchema } from "./NewGameForm";
+import { Button } from "./ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
+import JoinGameForm, { joinFormSchema } from "./JoinGameForm";
+import { SidePanel } from "./DebugPanel";
 
 const NewGame: React.FC = () => {
-  const { set_current_state, set_game_id, set_game_creator, game_creator } = useElementStore((state) => state);
+  const { set_current_state, set_game_id, set_game_creator, game_creator } =
+    useElementStore((state) => state);
 
   const {
     setup: {
@@ -19,11 +28,13 @@ const NewGame: React.FC = () => {
 
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [joinModalOpen, setJoinModalOpen] = useState(false);
-  const [gameIdInput, setGameIdInput] = useState('');
+  const [gameIdInput, setGameIdInput] = useState("");
   const setGameIdCallback = (gameId: number) => {
     set_game_id(gameId);
   };
-  async function handleCreateFormSubmit(data: z.infer<typeof createFormSchema>) {
+  async function handleCreateFormSubmit(
+    data: z.infer<typeof createFormSchema>
+  ) {
     create(account, data.username, data.numberOfPlayers, setGameIdCallback);
     set_game_creator(true);
     set_current_state(Phase.DEPLOY);
@@ -40,34 +51,41 @@ const NewGame: React.FC = () => {
     const gameId = parseInt(gameIdInput, 10);
     if (!isNaN(gameId)) {
       start(account, gameId);
-      console.log('Starting game with ID:', gameId);
+      console.log("Starting game with ID:", gameId);
     }
   };
 
   return (
     <div className="flex gap-3 mb-4">
-      <Dialog open={joinModalOpen} onOpenChange={(open) => setJoinModalOpen(open)}>
-        <DialogTrigger>
+      <SidePanel />
+      <Dialog
+        open={joinModalOpen}
+        onOpenChange={(open) => setJoinModalOpen(open)}
+      >
+        <DialogTrigger asChild={true}>
           <Button>Join a game</Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Join a game</DialogTitle>
-            <DialogDescription>
+            <DialogDescription asChild={true}>
               <JoinGameForm onFormSubmit={handleJoinFormSubmit}></JoinGameForm>
             </DialogDescription>
           </DialogHeader>
         </DialogContent>
       </Dialog>
 
-      <Dialog open={createModalOpen} onOpenChange={(open) => setCreateModalOpen(open)}>
-        <DialogTrigger>
+      <Dialog
+        open={createModalOpen}
+        onOpenChange={(open) => setCreateModalOpen(open)}
+      >
+        <DialogTrigger asChild={true}>
           <Button>Create a new game</Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Create a new game</DialogTitle>
-            <DialogDescription>
+            <DialogDescription asChild={true}>
               <NewGameForm onFormSubmit={handleCreateFormSubmit} />
             </DialogDescription>
           </DialogHeader>
@@ -76,6 +94,7 @@ const NewGame: React.FC = () => {
       {game_creator && (
         <>
           <input
+            id="inputGameId"
             type="text"
             value={gameIdInput}
             onChange={(e) => setGameIdInput(e.target.value)}

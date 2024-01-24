@@ -3,8 +3,8 @@ import { useComponentStates } from '@/hooks/useComponentState';
 import { getNeighbors } from '@/utils/map';
 import { Phase, useElementStore } from '@/utils/store';
 import { getComponentValue } from '@latticexyz/recs';
-import { useRef } from 'react';
-import carte from '../../../public/carte.png';
+import { Fragment, useRef } from 'react';
+import carte from '../../../public/map_sea3D.png';
 import mapDataRaw from '../../assets/map/map.json';
 import Region from './Region';
 
@@ -40,16 +40,19 @@ const Map = () => {
       }
       set_current_source(regionId);
     } else if (current_state == Phase.ATTACK) {
-      if (tile.owner === turn) {
-        set_current_source(regionId);
-        set_current_target(null);
-      } else {
-        //console.log(current_source);
-        if (current_source && getNeighbors(current_source).includes(regionId)) {
-          set_current_target(regionId);
+      if (tile !== undefined) {
+        if (tile.owner === turn) {
+          set_current_source(regionId);
+          set_current_target(null);
         } else {
-          console.log('Can t interract with this tile');
+          if (current_source && getNeighbors(current_source).includes(regionId)) {
+            set_current_target(regionId);
+          } else {
+            console.log('Can t interract with this tile');
+          }
         }
+      } else {
+        console.log('Can t interract with this tile');
       }
     } else if (current_state == Phase.FORTIFY) {
       // if clicked tile is owned by the player
@@ -68,17 +71,21 @@ const Map = () => {
   return (
     <>
       <div className="relative w-full h-[500px]" ref={containerRef}>
-        <img src={carte} alt="Carte" className="w-full h-full absolute top-0 left-0" />
         <div className="w-full h-full absolute top-0 left-0">
           <svg
             viewBox="0 0 3669 1932" // Ajustez cette valeur en fonction de vos coordonnées
             preserveAspectRatio="none"
-            className="w-full h-full absolute top-0 left-0"
+            className="w-full h-full absolute top-0 left-0 fill-cyan-500"
+            width={'100%'}
+            height={'100%'}
           >
+            <image href={carte} width="100%" height="100%" />
+
             {Object.keys(mapData).map((region) => (
-              <>
+              <Fragment key={region}>
                 {mapData[region].map((item) => (
                   <Region
+                    playerTurn={turn}
                     key={item.id}
                     id={item.id}
                     region={region}
@@ -87,7 +94,7 @@ const Map = () => {
                     onRegionClick={() => handleRegionClick(item.id)}
                   />
                 ))}
-              </>
+              </Fragment>
             ))}
           </svg>
         </div>

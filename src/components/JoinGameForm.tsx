@@ -11,8 +11,8 @@ export const joinFormSchema = z.object({
   username: z.string().min(2, {
     message: 'Username must be at least 2 characters.',
   }),
-  game_id: z.coerce.number().refine((value) => !isNaN(value) && value >= 1, {
-    message: 'Must be at least 1 player.',
+  game_id: z.coerce.number().refine((value) => !isNaN(value) && value >= 0, {
+    message: 'Game id cannot be negative',
   }),
 });
 
@@ -23,8 +23,8 @@ interface JoinGameFormProps {
 const JoinGameForm: React.FC<JoinGameFormProps> = ({ onFormSubmit }) => {
   const form = useForm<z.infer<typeof joinFormSchema>>({
     defaultValues: {
-      username: 'Matthias',
-      game_id: 4,
+      username: 'Player 2',
+      game_id: 0,
     },
     resolver: zodResolver(joinFormSchema),
     mode: 'onChange', // Add this line to enable form validation on change
