@@ -54,10 +54,9 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
     }
 
     const timer = setTimeout(() => {
-      console.log('change current turn');
       setCurrentTurn(turn);
       setCurrentPlayer(player);
-    }, 4000); // 15 secondes de délai
+    }, 4000);
 
     return () => clearTimeout(timer);
   }, [turn]);

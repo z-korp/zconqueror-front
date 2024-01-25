@@ -9,13 +9,6 @@ const Burner: React.FC = () => {
   const {
     account: { create, list, select, isDeploying },
   } = useDojo();
-  // const { create, list, select, isDeploying } = useBurnerManager({
-  //   BurnerManager: new BurnerManager({
-  //     masterAccount,
-  //     accountClassHash,
-  //     rpcProvider,
-  //   }),
-  // });
 
   const { current_address, set_current_address } = useElementStore((state) => state);
 
@@ -24,7 +17,6 @@ const Burner: React.FC = () => {
   };
 
   const handleSelectWallet = (walletAddress: string) => {
-    console.log('select', walletAddress);
     set_current_address(walletAddress);
     current_address && select(current_address);
     select(walletAddress);

@@ -3,8 +3,7 @@ import { DojoProvider } from '@dojoengine/core';
 
 export async function setupWorld(provider: DojoProvider) {
   function host() {
-    const contractName = 'host'; // Remplacez par le nom réel de votre contrat StarkNet
-    //const contractName = 'host'; // Remplacez par le nom réel de votre contrat StarkNet
+    const contractName = 'host';
     const create = async (account: Account, name: string, playerCount: number) => {
       try {
         return await provider.execute(account, contractName, 'create', [provider.getWorldAddress(), playerCount, name]);
@@ -40,7 +39,7 @@ export async function setupWorld(provider: DojoProvider) {
   }
 
   function play() {
-    const contractName = 'play'; // Remplacez par le nom réel de votre contrat StarkNet
+    const contractName = 'play';
 
     const attack = async (
       account: Account,
