@@ -32,6 +32,7 @@ function App() {
     });
   }, []);
 
+
   return (
     <TooltipProvider>
       <NewGame />

@@ -10,6 +10,8 @@ import { Phase, useElementStore } from '../utils/store';
 import { useEffect, useState } from 'react';
 import { unpackU128toNumberArray } from '@/utils/unpack';
 import { Card, CardTitle } from './ui/card';
+import RoundButton from './roundButton';
+import GameCard from './GameCard';
 
 interface PlayPanelProps {
   index: number;
@@ -32,9 +34,14 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
   const { turn } = useComponentStates();
   const player = useComponentValue(Player, entityId);
   const [cards, setCards] = useState<number[]>([]);
+  //TODO: modulo 3 pour determier le type de la carte
   const [conqueredThisTurn, setConqueredThisTurn] = useState(false);
   const [currentPlayer, setCurrentPlayer] = useState(player);
   const [currentTurn, setCurrentTurn] = useState(turn);
+  const [showCardsPopup, setShowCardsPopup] = useState(false);
+  const [showCardMenu, setShowCardMenu] = useState(false);
+  const [selectedCards, setSelectedCards] = useState<number[]>([]);
+
   useEffect(() => {
     if (player?.conqueror === 1) {
       console.log('YOU ARE THE CONQUEROR');
@@ -46,6 +53,11 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
     console.log('current Player card:', currentPlayer?.cards);
     console.log('player cards:', player?.cards);
     if (conqueredThisTurn) {
+      console.log(
+        'Cards outside state',
+        unpackU128toNumberArray(player.cards).filter((e: number) => e !== 0)
+      );
+
       setCards(unpackU128toNumberArray(player.cards).filter((e: number) => e !== 0));
       console.log('CARDS:', cards);
       console.log('CARDS ARRAY:', unpackU128toNumberArray(currentPlayer.cards));
@@ -60,8 +72,6 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
 
     return () => clearTimeout(timer);
   }, [turn]);
-
-  const [showCardsPopup, setShowCardsPopup] = useState(false);
 
   useEffect(() => {
     let timer: any;
@@ -108,23 +118,79 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
     setShowCardsPopup(false);
   };
 
+  const toggleCardMenu = () => {
+    setShowCardMenu(!showCardMenu);
+  };
+
+  const handleCardSelect = (cardNumber: number) => {
+    if (selectedCards.includes(cardNumber)) {
+      setSelectedCards(selectedCards.filter((c) => c !== cardNumber));
+    } else if (selectedCards.length < 3) {
+      setSelectedCards([...selectedCards, cardNumber]);
+    }
+  };
+
   return (
     <>
+      <div className="flex relative items-center">
+        <div
+          className="mx-10"
+          onClick={() => {
+            console.log('Circle clicked');
+            toggleCardMenu();
+          }}
+        >
+          <div className="relative flex justify-center items-center">
+            {/* Rotated square that will appear as a diamond shape */}
+            <div className="w-10 h-10 bg-gray-300 transform rotate-45 -z-10"></div>
+            {/* Circle with the dominant color of the PlayPanel */}
+            <div className="absolute w-10 h-10 rounded-full bg-red"> {cards.length}</div>
+          </div>
+        </div>
+      </div>
+      {showCardMenu && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+            {/* Selected cards or placeholders */}
+            <div className="flex justify-center space-x-4 mb-4">
+              {[1, 2, 3].map((index) =>
+                selectedCards.length >= index ? (
+                  <div key={index} onClick={() => handleCardSelect(selectedCards[index - 1])}>
+                    <GameCard cardNumber={selectedCards[index - 1]} />
+                  </div>
+                ) : (
+                  <div key={index} className="w-32 h-48 bg-gray-200 rounded-lg shadow-md"></div>
+                )
+              )}
+            </div>
+            {/* Card options */}
+            <div className="flex justify-center space-x-4">
+              {cards.map((cardNumber, index) => (
+                <div key={index} onClick={() => handleCardSelect(cardNumber)}>
+                  <GameCard cardNumber={cardNumber} />
+                </div>
+              ))}
+            </div>
+            <button onClick={toggleCardMenu} className="mt-4">
+              Close
+            </button>
+          </div>
+        </div>
+      )}
       {showCardsPopup && (
         <div className="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center z-50">
           <div className="p-8 bg-white rounded shadow-lg text-center">
-            <p>Votre message ici</p>
-            <h2>Cartes</h2>
-            <Card>
-              {/* Contenu de la carte */}
-              <p>Ceci est le contenu de ma carte</p>
-
-              {/* Ajouter d'autres éléments comme titre, image, etc */}
-              <CardTitle>Titre de la carte</CardTitle>
-              <img src="image.png" />
-            </Card>
-            <ul>{cards && cards.map((card, index) => <li key={index}> Test: {card}</li>)}</ul>
-            <button onClick={closePopup}>Fermer</button>
+            <p>You won this card:</p>
+            <div className="flex justify-center space-x-4 mb-4">
+              {cards.map((cardNumber, index) => (
+                <div key={index}>
+                  <GameCard cardNumber={cardNumber} />
+                </div>
+              ))}
+            </div>
+            <button onClick={closePopup} className="mt-4">
+              Fermer
+            </button>
           </div>
         </div>
       )}

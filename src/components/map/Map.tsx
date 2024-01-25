@@ -71,6 +71,7 @@ const Map = () => {
   return (
     <>
       <div className="relative w-full h-[500px]" ref={containerRef}>
+        {/* <img src={carte} alt="Carte" className="w-full h-full absolute top-0 left-0" /> */}
         <div className="w-full h-full absolute top-0 left-0">
           <svg
             viewBox="0 0 3669 1932" // Ajustez cette valeur en fonction de vos coordonnées
