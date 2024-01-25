@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react";
-import "./App.css";
-import NewGame from "./components/NewGame";
-import PlayPanel from "./components/PlayPanel";
-import SidePlayerInfo from "./components/SidePlayerInfo";
-import FortifyPanel from "./components/map/FortifyPanel";
-import Map from "./components/map/Map";
-import { TooltipProvider } from "./components/ui/tooltip";
-import { useComponentStates } from "./hooks/useComponentState";
-import { Phase, useElementStore } from "./utils/store";
-import { useDojo } from "./DojoContext";
+import { useEffect, useState } from 'react';
+import './App.css';
+import NewGame from './components/NewGame';
+import PlayPanel from './components/PlayPanel';
+import SidePlayerInfo from './components/SidePlayerInfo';
+import FortifyPanel from './components/map/FortifyPanel';
+import Map from './components/map/Map';
+import { TooltipProvider } from './components/ui/tooltip';
+import { useComponentStates } from './hooks/useComponentState';
+import { Phase, useElementStore } from './utils/store';
+import { useDojo } from './DojoContext';
 
 function App() {
   const { set_ip } = useElementStore((state) => state);
@@ -24,17 +24,13 @@ function App() {
   const { current_state } = useElementStore((state) => state);
 
   const isFortifyPanelVisible =
-    current_state === Phase.FORTIFY ||
-    current_state === Phase.ATTACK ||
-    current_state === Phase.DEPLOY;
+    current_state === Phase.FORTIFY || current_state === Phase.ATTACK || current_state === Phase.DEPLOY;
 
   return (
     <TooltipProvider>
       <NewGame />
       <div className="flex">
-        <div className="w-1/6 mr-4">
-          {isFortifyPanelVisible && <FortifyPanel />}
-        </div>
+        <div className="w-1/6 mr-4">{isFortifyPanelVisible && <FortifyPanel />}</div>
         <div className="w-5/6 pr-8">
           <Map />
         </div>
