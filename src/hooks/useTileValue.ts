@@ -10,7 +10,7 @@ export function useTileValues(open: boolean, source: number | null, target: numb
 
   const {
     setup: {
-      components: { Player, Tile },
+      clientComponents: { Player, Tile },
     },
   } = useDojo();
 

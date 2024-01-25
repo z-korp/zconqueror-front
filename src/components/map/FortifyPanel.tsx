@@ -14,8 +14,8 @@ const FortifyPanel = () => {
 
   const {
     setup: {
-      systemCalls: { transfer, attack, defend, supply },
-      components: { Tile, Player },
+      client: { play },
+      clientComponents: { Tile, Player },
     },
     account: { account },
   } = useDojo();
@@ -121,7 +121,7 @@ const FortifyPanel = () => {
       // alert('Not enough supply', player.supply);
       return;
     }
-    supply(account, game_id, current_source, armyCount);
+    play.supply(account, game_id, current_source, armyCount);
     setArmyCount(player.supply - armyCount);
   };
 
@@ -130,7 +130,7 @@ const FortifyPanel = () => {
 
     if (!game_id) return;
     animateArrow();
-    await transfer(account, game_id, current_source, current_target, armyCount);
+    await play.transfer(account, game_id, current_source, current_target, armyCount);
   };
 
   const onAttack = async () => {
@@ -149,8 +149,8 @@ const FortifyPanel = () => {
     animateArrow();
 
     console.log('attack', current_source, current_target, armyCount);
-    await attack(account, game_id, current_source, current_target, armyCount);
-    defend(account, game_id, current_source, current_target);
+    await play.attack(account, game_id, current_source, current_target, armyCount);
+    play.defend(account, game_id, current_source, current_target);
   };
 
   const removeSelected = (type: number): void => {

@@ -3,11 +3,19 @@ import React, { useEffect, useState } from 'react';
 import { useDojo } from '@/DojoContext';
 import { Button } from './ui/button';
 import { useElementStore } from '@/utils/store';
+import { useBurnerManager, BurnerManager } from '@dojoengine/create-burner';
 
 const Burner: React.FC = () => {
   const {
     account: { create, list, select, isDeploying },
   } = useDojo();
+  // const { create, list, select, isDeploying } = useBurnerManager({
+  //   BurnerManager: new BurnerManager({
+  //     masterAccount,
+  //     accountClassHash,
+  //     rpcProvider,
+  //   }),
+  // });
 
   const { current_address, set_current_address } = useElementStore((state) => state);
 

@@ -1,7 +1,7 @@
 import { createContext, ReactNode, useContext, useMemo } from 'react';
 import { SetupResult } from './dojo/setup';
 import { Account, RpcProvider } from 'starknet';
-import { useBurner } from '@dojoengine/create-burner';
+import { BurnerManager, useBurner, useBurnerManager } from '@dojoengine/create-burner';
 
 type Context = {
   setup: SetupResult;
@@ -52,9 +52,12 @@ export const DojoProvider = ({ children, value }: Props) => {
     [provider, masterAddress, privateKey]
   );
 
-  const { create, list, get, account, select, isDeploying, clear } = useBurner({
-    masterAccount: masterAccount,
-    accountClassHash: VITE_PUBLIC_ACCOUNT_CLASS_HASH!,
+  const { create, list, get, account, select, isDeploying, clear } = useBurnerManager({
+    burnerManager: new BurnerManager({
+      masterAccount,
+      accountClassHash: VITE_PUBLIC_ACCOUNT_CLASS_HASH!,
+      rpcProvider: provider,
+    }),
   });
 
   const selectedAccount = useMemo(() => {

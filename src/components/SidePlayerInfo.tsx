@@ -15,7 +15,7 @@ interface SidePlayerInfoProps {
 const SidePlayerInfo: React.FC<SidePlayerInfoProps> = ({ index, entityId }) => {
   const {
     setup: {
-      components: { Player, Tile },
+      clientComponents: { Player, Tile },
     },
   } = useDojo();
 

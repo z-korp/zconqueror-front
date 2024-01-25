@@ -24,7 +24,7 @@ interface RegionProps {
 const Region: React.FC<RegionProps> = ({ d, id, region, containerRef, onRegionClick, playerTurn }: RegionProps) => {
   const {
     setup: {
-      components: { Tile },
+      clientComponents: { Tile },
     },
   } = useDojo();
   const { current_state, current_source, current_target } = useElementStore((state) => state);

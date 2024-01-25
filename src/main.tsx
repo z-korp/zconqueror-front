@@ -4,13 +4,14 @@ import App from './App.tsx';
 import './index.css';
 import { setup } from './dojo/setup';
 import { DojoProvider } from './DojoContext';
+import { dojoConfig } from '../dojoConfig.ts';
 
 async function init() {
   const rootElement = document.getElementById('root');
   if (!rootElement) throw new Error('React root not found');
   const root = ReactDOM.createRoot(rootElement as HTMLElement);
 
-  const setupResult = await setup();
+  const setupResult = await setup(dojoConfig());
   root.render(
     <React.StrictMode>
       <DojoProvider value={setupResult}>

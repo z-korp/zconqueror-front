@@ -1,48 +1,40 @@
-import { useDojo } from "@/DojoContext";
-import { Phase, useElementStore } from "@/utils/store";
-import { useState } from "react";
-import { set, z } from "zod";
-import NewGameForm, { createFormSchema } from "./NewGameForm";
-import { Button } from "./ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "./ui/dialog";
-import JoinGameForm, { joinFormSchema } from "./JoinGameForm";
-import { SidePanel } from "./DebugPanel";
+import { useDojo } from '@/DojoContext';
+import { Phase, useElementStore } from '@/utils/store';
+import { useState } from 'react';
+import { set, z } from 'zod';
+import NewGameForm, { createFormSchema } from './NewGameForm';
+import { Button } from './ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
+import JoinGameForm, { joinFormSchema } from './JoinGameForm';
+import { SidePanel } from './DebugPanel';
+import { useEntityQuery } from '@dojoengine/react';
 
 const NewGame: React.FC = () => {
-  const { set_current_state, set_game_id, set_game_creator, game_creator } =
-    useElementStore((state) => state);
+  const { set_current_state, set_game_id, set_game_creator, game_creator } = useElementStore((state) => state);
 
   const {
     setup: {
-      systemCalls: { create, join, start },
+      client: { host },
     },
     account: { account, list },
   } = useDojo();
 
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [joinModalOpen, setJoinModalOpen] = useState(false);
-  const [gameIdInput, setGameIdInput] = useState("");
+  const [gameIdInput, setGameIdInput] = useState('');
+
   const setGameIdCallback = (gameId: number) => {
     set_game_id(gameId);
   };
-  async function handleCreateFormSubmit(
-    data: z.infer<typeof createFormSchema>
-  ) {
-    create(account, data.username, data.numberOfPlayers, setGameIdCallback);
+  async function handleCreateFormSubmit(data: z.infer<typeof createFormSchema>) {
+    host.create(account, data.username, data.numberOfPlayers);
     set_game_creator(true);
     set_current_state(Phase.DEPLOY);
     setCreateModalOpen(false);
   }
 
   async function handleJoinFormSubmit(data: z.infer<typeof joinFormSchema>) {
-    join(account, data.game_id, data.username, setGameIdCallback);
+    host.join(account, data.game_id, data.username);
     set_current_state(Phase.DEPLOY);
     setJoinModalOpen(false);
   }
@@ -50,18 +42,15 @@ const NewGame: React.FC = () => {
   const handleStartGame = () => {
     const gameId = parseInt(gameIdInput, 10);
     if (!isNaN(gameId)) {
-      start(account, gameId);
-      console.log("Starting game with ID:", gameId);
+      host.start(account, gameId);
+      console.log('Starting game with ID:', gameId);
     }
   };
 
   return (
     <div className="flex gap-3 mb-4">
       <SidePanel />
-      <Dialog
-        open={joinModalOpen}
-        onOpenChange={(open) => setJoinModalOpen(open)}
-      >
+      <Dialog open={joinModalOpen} onOpenChange={(open) => setJoinModalOpen(open)}>
         <DialogTrigger asChild={true}>
           <Button>Join a game</Button>
         </DialogTrigger>
@@ -75,10 +64,7 @@ const NewGame: React.FC = () => {
         </DialogContent>
       </Dialog>
 
-      <Dialog
-        open={createModalOpen}
-        onOpenChange={(open) => setCreateModalOpen(open)}
-      >
+      <Dialog open={createModalOpen} onOpenChange={(open) => setCreateModalOpen(open)}>
         <DialogTrigger asChild={true}>
           <Button>Create a new game</Button>
         </DialogTrigger>
