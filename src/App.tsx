@@ -9,20 +9,16 @@ import { TooltipProvider } from './components/ui/tooltip';
 import { useComponentStates } from './hooks/useComponentState';
 import { Phase, useElementStore } from './utils/store';
 import { useDojo } from './DojoContext';
-import { useEntityQuery } from '@dojoengine/react';
-import { Has, HasValue, defineSystem } from '@dojoengine/recs';
+import { Has, defineSystem } from '@dojoengine/recs';
 
 function App() {
-  const { set_ip } = useElementStore((state) => state);
   const {
     setup: {
-      clientComponents: { Player, Game },
-      client: { play },
+      clientComponents: { Game },
       world,
     },
-    account: { account },
   } = useDojo();
-  const { playerIds, players, game } = useComponentStates();
+  const { playerIds } = useComponentStates();
 
   const { current_state, set_game_id } = useElementStore((state) => state);
 
@@ -36,14 +32,6 @@ function App() {
     });
   }, []);
 
-  const squadsOnHex = useEntityQuery([
-    Has(Game),
-    HasValue(Game, {
-      over: false,
-    }),
-  ]);
-
-  console.log('SQuad', squadsOnHex);
 
   return (
     <TooltipProvider>
