@@ -1,27 +1,39 @@
-import { createClientComponents } from "./createClientComponents";
-import { createSystemCalls } from "./createSystemCalls";
-import { setupNetwork } from "./setupNetwork";
+import { getSyncEntities } from '@dojoengine/state';
+import * as torii from '@dojoengine/torii-client';
+import { createClientComponents } from './createClientComponents';
+//import { createSystemCalls } from './createSystemCalls';
+import { defineContractComponents } from './contractComponents';
+import { world } from './world';
+import { Config } from '../../DojoConfig';
+import { setupWorld } from './generated/generated';
+import { DojoProvider } from '@dojoengine/core';
 
 export type SetupResult = Awaited<ReturnType<typeof setup>>;
 
-/**
- * Sets up the necessary components and network utilities.
- *
- * @returns An object containing network configurations, client components, and system calls.
- */
-export async function setup() {
-    // Initialize the network configuration.
-    const network = await setupNetwork();
+export async function setup({ ...config }: Config) {
+  // torii client
+  const toriiClient = await torii.createClient([], {
+    rpcUrl: config.rpcUrl,
+    toriiUrl: config.toriiUrl,
+    worldAddress: config.manifest.world.address,
+  });
 
-    // Create client components based on the network setup.
-    const components = createClientComponents(network);
+  // create contract components
+  const contractComponents = defineContractComponents(world);
 
-    // Establish system calls using the network and components.
-    const systemCalls = createSystemCalls(network, components);
+  // create client components
+  const clientComponents = createClientComponents({ contractComponents });
 
-    return {
-        network,
-        components,
-        systemCalls,
-    };
+  // fetch all existing entities from torii
+  await getSyncEntities(toriiClient, contractComponents as any);
+
+  const client = await setupWorld(new DojoProvider(config.manifest, config.rpcUrl));
+
+  return {
+    client,
+    clientComponents,
+    contractComponents,
+    config,
+    world,
+  };
 }

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useDojo } from '@/DojoContext';
 import { Button } from './ui/button';
 import { useElementStore } from '@/utils/store';
+import { useBurnerManager, BurnerManager } from '@dojoengine/create-burner';
 
 const Burner: React.FC = () => {
   const {
@@ -16,7 +17,6 @@ const Burner: React.FC = () => {
   };
 
   const handleSelectWallet = (walletAddress: string) => {
-    console.log('select', walletAddress);
     set_current_address(walletAddress);
     current_address && select(current_address);
     select(walletAddress);

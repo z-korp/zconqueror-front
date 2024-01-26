@@ -14,8 +14,8 @@ const FortifyPanel = () => {
 
   const {
     setup: {
-      systemCalls: { transfer, attack, defend, supply },
-      components: { Tile, Player },
+      client: { play },
+      clientComponents: { Tile, Player },
     },
     account: { account },
   } = useDojo();
@@ -112,16 +112,15 @@ const FortifyPanel = () => {
   }, [current_source, current_target, Tile, tileIds]);
 
   const handleSupply = () => {
-    console.log(player.supply, armyCount);
-    if (!game_id) return console.log('We return', game_id);
-    if (current_source === null) return console.log('We return from source', current_source);
+    if (!game_id) return;
+    if (current_source === null) return;
     if (player && player.supply < armyCount) {
       //todo put toast here
       console.log('Not enough supply', player.supply, armyCount);
       // alert('Not enough supply', player.supply);
       return;
     }
-    supply(account, game_id, current_source, armyCount);
+    play.supply(account, game_id, current_source, armyCount);
     setArmyCount(player.supply - armyCount);
   };
 
@@ -130,7 +129,7 @@ const FortifyPanel = () => {
 
     if (!game_id) return;
     animateArrow();
-    await transfer(account, game_id, current_source, current_target, armyCount);
+    await play.transfer(account, game_id, current_source, current_target, armyCount);
   };
 
   const onAttack = async () => {
@@ -139,7 +138,6 @@ const FortifyPanel = () => {
 
     if (!game_id) return;
 
-    console.log('attack source, target, count', account, game_id);
     // todo adapt to compare to source.supply
     if (player && player.attack < armyCount) {
       //todo put toast here
@@ -148,9 +146,12 @@ const FortifyPanel = () => {
     }
     animateArrow();
 
-    console.log('attack', current_source, current_target, armyCount);
-    await attack(account, game_id, current_source, current_target, armyCount);
-    defend(account, game_id, current_source, current_target);
+    await play.attack(account, game_id, current_source, current_target, armyCount);
+
+    const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+    await sleep(100);
+
+    play.defend(account, game_id, current_source, current_target);
   };
 
   const removeSelected = (type: number): void => {

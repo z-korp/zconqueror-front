@@ -14,7 +14,7 @@ type SelectionPanelProps = {
 const SelectionPanel = ({ selectedRegion, title, onRemoveSelected }: SelectionPanelProps) => {
   const {
     setup: {
-      components: { Tile },
+      clientComponents: { Tile },
     },
   } = useDojo();
 

@@ -13,7 +13,6 @@ interface TroopsMarkerProps {
 
 const TroopsMarker: FC<TroopsMarkerProps> = ({ position, handlePathClick, troups, color, tile, playerTurn }) => {
   if (troups === 0) return null;
-  console.log('TroopsMarker', tile);
   return (
     <RoundButton
       color={color}

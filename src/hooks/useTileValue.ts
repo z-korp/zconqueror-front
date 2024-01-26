@@ -10,19 +10,17 @@ export function useTileValues(open: boolean, source: number | null, target: numb
 
   const {
     setup: {
-      components: { Player, Tile },
+      clientComponents: { Player, Tile },
     },
   } = useDojo();
 
   useEffect(() => {
     const tilesEntities = getComponentEntities(Tile);
-    console.log('tileEntities', tilesEntities);
     const tileRetrieved = [...tilesEntities].map((id) => getComponentValue(Tile, id)) as any[];
     setTileRetrieved(tileRetrieved);
   }, []);
 
   useEffect(() => {
-    console.log('SOURCE');
     console.log('tileEntities', tileRetrieved);
     console.log('target', target);
     console.log('source', source);

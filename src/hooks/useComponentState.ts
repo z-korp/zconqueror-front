@@ -1,14 +1,15 @@
-import { getEntityIdFromKeys } from '@/dojo/createSystemCalls';
+import { getEntityIdFromKeys } from '@dojoengine/utils';
 import { useElementStore } from '@/utils/store';
 import { useComponentValue } from '@dojoengine/react';
 import { EntityIndex, getComponentValue } from '@latticexyz/recs';
 import { useEffect, useState } from 'react';
 import { useDojo } from '../DojoContext';
+import { getComponentValueStrict } from '@dojoengine/recs';
 
 export const useComponentStates = () => {
   const {
     setup: {
-      components: { Game, Player, Tile },
+      clientComponents: { Game, Player, Tile },
     },
   } = useDojo();
 
@@ -16,7 +17,8 @@ export const useComponentStates = () => {
 
   const [turn, setTurn] = useState<number>(0);
 
-  const entityId = game_id as EntityIndex;
+  // TBD : modify game_id ternaire
+  const entityId = getEntityIdFromKeys([BigInt(game_id ? game_id : 0)]);
 
   const game = useComponentValue(Game, entityId);
 
@@ -31,7 +33,7 @@ export const useComponentStates = () => {
       const playerArray = [];
       const playerIdsArray = [];
       for (let i = 0; i < game?.player_count; i++) {
-        const playerId = getEntityIdFromKeys([BigInt(entityId), BigInt(i)]);
+        const playerId = getEntityIdFromKeys([BigInt(game?.id), BigInt(i)]);
         playerIdsArray.push(playerId);
         const player = getComponentValue(Player, playerId);
         if (player !== undefined) {

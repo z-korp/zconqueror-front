@@ -9,22 +9,29 @@ import { TooltipProvider } from './components/ui/tooltip';
 import { useComponentStates } from './hooks/useComponentState';
 import { Phase, useElementStore } from './utils/store';
 import { useDojo } from './DojoContext';
+import { Has, defineSystem } from '@dojoengine/recs';
 
 function App() {
-  const { set_ip } = useElementStore((state) => state);
   const {
     setup: {
-      components: { Player },
-      systemCalls: { finish },
+      clientComponents: { Game },
+      world,
     },
-    account: { account },
   } = useDojo();
-  const { playerIds, players, game } = useComponentStates();
+  const { playerIds } = useComponentStates();
 
-  const { current_state } = useElementStore((state) => state);
+  const { current_state, set_game_id } = useElementStore((state) => state);
 
   const isFortifyPanelVisible =
     current_state === Phase.FORTIFY || current_state === Phase.ATTACK || current_state === Phase.DEPLOY;
+
+  useEffect(() => {
+    defineSystem(world, [Has(Game)], function ({ value: [newValue] }: any) {
+      console.log(newValue);
+      set_game_id(newValue.id);
+    });
+  }, []);
+
 
   return (
     <TooltipProvider>

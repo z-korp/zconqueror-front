@@ -21,11 +21,12 @@ interface PlayPanelProps {
 const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
   const {
     setup: {
-      components: { Player },
-      systemCalls: { finish },
+      clientComponents: { Player },
+      client: { play },
     },
     account: { account },
   } = useDojo();
+
   const { current_address, game_id } = useElementStore((state) => state);
 
   const { current_state, set_current_state } = useElementStore((state) => state);
@@ -65,10 +66,9 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
     }
 
     const timer = setTimeout(() => {
-      console.log('change current turn');
       setCurrentTurn(turn);
       setCurrentPlayer(player);
-    }, 4000); // 15 secondes de délai
+    }, 4000);
 
     return () => clearTimeout(timer);
   }, [turn]);
@@ -105,10 +105,10 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
   const handleNextPhaseClick = () => {
     if (!game_id) return;
     if (current_state < 3) {
-      finish(account, game_id);
+      play.finish(account, game_id);
       set_current_state(current_state + 1);
     } else {
-      finish(account, game_id);
+      play.finish(account, game_id);
 
       set_current_state(Phase.DEPLOY);
     }

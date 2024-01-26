@@ -24,7 +24,7 @@ const Map = () => {
 
   const {
     setup: {
-      components: { Tile },
+      clientComponents: { Tile },
     },
   } = useDojo();
 
