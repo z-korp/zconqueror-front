@@ -3,7 +3,7 @@ import { DojoProvider } from '@dojoengine/core';
 
 export async function setupWorld(provider: DojoProvider) {
   function host() {
-    const contractName = 'host';
+    const contractName = 'zconqueror::systems::host::host';
     const create = async (account: Account, name: string, playerCount: number) => {
       try {
         return await provider.execute(account, contractName, 'create', [provider.getWorldAddress(), playerCount, name]);
@@ -39,7 +39,7 @@ export async function setupWorld(provider: DojoProvider) {
   }
 
   function play() {
-    const contractName = 'play';
+    const contractName = 'zconqueror::systems::play::play';
 
     const attack = async (
       account: Account,

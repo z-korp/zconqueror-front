@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { useDojo } from '@/DojoContext';
 import { Button } from './ui/button';
 import { useElementStore } from '@/utils/store';
-import { useBurnerManager, BurnerManager } from '@dojoengine/create-burner';
 
 const Burner: React.FC = () => {
   const {
