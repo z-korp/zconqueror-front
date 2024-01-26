@@ -12,7 +12,9 @@ export const unpackU128toNumberArray = (u128: number): number[] => {
   return numbers.slice(1);
 };
 
-export const feltArrayToString = (input: number): string => {
-  const test = BigInt(input);
-  return shortString.decodeShortString(test.toString());
+export const feltToStr = (felt: any): string => {
+  let hexString = felt.toString(16);
+  if (hexString.length % 2) hexString = '0' + hexString; // Ensure even length
+  const byteArray = new Uint8Array(hexString.match(/.{1,2}/g).map((byte: any) => parseInt(byte, 16)));
+  return new TextDecoder().decode(byteArray);
 };

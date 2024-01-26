@@ -8,7 +8,7 @@ import { FaChevronRight } from 'react-icons/fa6';
 import { avatars } from '../utils/pfps';
 import { Phase, useElementStore } from '../utils/store';
 import { useEffect, useState } from 'react';
-import { feltArrayToString, unpackU128toNumberArray } from '@/utils/unpack';
+import { feltToStr, unpackU128toNumberArray } from '@/utils/unpack';
 import { Card, CardTitle } from './ui/card';
 import RoundButton from './roundButton';
 import GameCard from './GameCard';
@@ -88,7 +88,7 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
 
   const { supply } = player;
   console.log(currentPlayer.name);
-  const name = feltArrayToString(currentPlayer.name);
+  const name = feltToStr(currentPlayer.name);
   const color = colorPlayer[index + 1];
   const image = avatars[index + 1];
 
