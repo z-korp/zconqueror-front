@@ -150,6 +150,10 @@ const FortifyPanel = () => {
 
     console.log('attack', current_source, current_target, armyCount);
     await play.attack(account, game_id, current_source, current_target, armyCount);
+
+    const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+    await sleep(100);
+
     play.defend(account, game_id, current_source, current_target);
   };
 
