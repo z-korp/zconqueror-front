@@ -1,3 +1,5 @@
+import { shortString } from 'starknet';
+
 export const unpackU128toNumberArray = (u128: number): number[] => {
   const bigIntValue = BigInt(u128); // Convertit le nombre en BigInt
   const numbers = []; // Utilise un tableau simple de nombres
@@ -8,4 +10,9 @@ export const unpackU128toNumberArray = (u128: number): number[] => {
   }
 
   return numbers.slice(1);
+};
+
+export const feltArrayToString = (input: number): string => {
+  const test = BigInt(input);
+  return shortString.decodeShortString(test.toString());
 };

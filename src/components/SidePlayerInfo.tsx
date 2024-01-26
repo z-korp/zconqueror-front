@@ -5,7 +5,8 @@ import { EntityIndex, getComponentValue, getEntitiesWithValue } from '@latticexy
 import { GiFrance, GiSwordsEmblem } from 'react-icons/gi';
 import { avatars } from '../utils/pfps';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
-import { unpackU128toNumberArray } from '@/utils/unpack';
+import { feltArrayToString, unpackU128toNumberArray } from '@/utils/unpack';
+import { shortString } from 'starknet';
 
 interface SidePlayerInfoProps {
   index: number;
@@ -25,7 +26,8 @@ const SidePlayerInfo: React.FC<SidePlayerInfoProps> = ({ index, entityId }) => {
   const tiles = getEntitiesWithValue(Tile, { owner: index });
 
   const { name: rawName, cards } = player;
-  const name = Number(rawName) < 10 ? `Bot_${rawName}` : `${rawName}`;
+
+  const name = feltArrayToString(player.name);
   const color = colorPlayer[index + 1];
   0;
   const image = avatars[index + 1];
