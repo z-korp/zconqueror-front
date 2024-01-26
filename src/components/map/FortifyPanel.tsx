@@ -112,7 +112,7 @@ const FortifyPanel = () => {
   }, [current_source, current_target, Tile, tileIds]);
 
   const handleSupply = () => {
-    if (!game_id) return;
+    if (game_id == null || game_id == undefined) return;
     if (current_source === null) return;
     if (player && player.supply < armyCount) {
       //todo put toast here
@@ -127,7 +127,7 @@ const FortifyPanel = () => {
   const onMoveTroops = async () => {
     if (current_source === null || current_target === null) return;
 
-    if (!game_id) return;
+    if (game_id == null || game_id == undefined) return;
     animateArrow();
     await play.transfer(account, game_id, current_source, current_target, armyCount);
   };
@@ -136,7 +136,7 @@ const FortifyPanel = () => {
     // Implement attack logic here
     if (current_source === null || current_target === null) return;
 
-    if (!game_id) return;
+    if (game_id == null || game_id == undefined) return;
 
     // todo adapt to compare to source.supply
     if (player && player.attack < armyCount) {

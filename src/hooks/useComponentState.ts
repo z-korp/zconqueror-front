@@ -1,10 +1,8 @@
 import { getEntityIdFromKeys } from '@dojoengine/utils';
 import { useElementStore } from '@/utils/store';
-import { useComponentValue } from '@dojoengine/react';
 import { EntityIndex, getComponentValue } from '@latticexyz/recs';
 import { useEffect, useState } from 'react';
 import { useDojo } from '../DojoContext';
-import { getComponentValueStrict } from '@dojoengine/recs';
 
 export const useComponentStates = () => {
   const {
@@ -17,16 +15,23 @@ export const useComponentStates = () => {
 
   const [turn, setTurn] = useState<number>(0);
 
-  // TBD : modify game_id ternaire
-  const entityId = getEntityIdFromKeys([BigInt(game_id ? game_id : 0)]);
-
-  const game = useComponentValue(Game, entityId);
-
   const [players, setPlayers] = useState<any[]>([]);
   const [playerIds, setPlayerIds] = useState<number[]>([]);
   const [player, setPlayer] = useState<any>(null);
   const [tiles, setTiles] = useState<any[]>([]);
   const [tileIds, setTileIds] = useState<number[]>([]);
+  const [entityId, setEntityId] = useState<EntityIndex | null>(null);
+  const [game, setGame] = useState<any>(null);
+
+  useEffect(() => {
+    if (game_id !== undefined && game_id !== null) {
+      setEntityId(getEntityIdFromKeys([BigInt(game_id)]));
+    }
+  }, [game_id]);
+
+  useEffect(() => {
+    setGame(getComponentValue(Game, entityId));
+  }, [entityId]);
 
   useEffect(() => {
     if (game) {

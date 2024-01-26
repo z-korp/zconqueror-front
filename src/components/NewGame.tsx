@@ -7,25 +7,21 @@ import { Button } from './ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
 import JoinGameForm, { joinFormSchema } from './JoinGameForm';
 import { SidePanel } from './DebugPanel';
-import { useEntityQuery } from '@dojoengine/react';
 
 const NewGame: React.FC = () => {
-  const { set_current_state, set_game_id, set_game_creator, game_creator } = useElementStore((state) => state);
+  const { set_current_state, set_game_creator, game_creator } = useElementStore((state) => state);
 
   const {
     setup: {
       client: { host },
     },
-    account: { account, list },
+    account: { account },
   } = useDojo();
 
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [joinModalOpen, setJoinModalOpen] = useState(false);
   const [gameIdInput, setGameIdInput] = useState('');
 
-  const setGameIdCallback = (gameId: number) => {
-    set_game_id(gameId);
-  };
   async function handleCreateFormSubmit(data: z.infer<typeof createFormSchema>) {
     host.create(account, data.username, data.numberOfPlayers);
     set_game_creator(true);

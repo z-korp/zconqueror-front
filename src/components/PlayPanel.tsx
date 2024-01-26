@@ -103,7 +103,7 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
   };
 
   const handleNextPhaseClick = () => {
-    if (!game_id) return;
+    if (game_id == null || game_id == undefined) return;
     if (current_state < 3) {
       play.finish(account, game_id);
       set_current_state(current_state + 1);
