@@ -128,7 +128,7 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
     console.log(selectedCards[0]);
     if (game_id !== undefined && game_id !== null) {
       play.discard(account, game_id, selectedCards[0], selectedCards[1], selectedCards[2]);
-      //todo remove cards used
+      setSelectedCards([]);
     }
   };
 
@@ -137,6 +137,17 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
       setSelectedCards(selectedCards.filter((c) => c !== cardNumber));
       setPendingCards([...pendingCards, cardNumber]);
     } else if (selectedCards.length < 3) {
+      //logique pour ne pas selectionner une 3 eme carte qui empeche le discard
+      if (selectedCards.length == 2) {
+        const card1 = (selectedCards[0] % 3) + 1;
+        const card2 = (selectedCards[1] % 3) + 1;
+        const card3 = (cardNumber % 3) + 1;
+        if (card1 == card2) {
+          if (card1 != card3) return;
+        } else {
+          if (card1 == card3 || card2 == card3) return;
+        }
+      }
       setSelectedCards([...selectedCards, cardNumber]);
       setPendingCards(pendingCards.filter((c) => c !== cardNumber));
     }
