@@ -87,7 +87,7 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
   if (index !== currentTurn) return null;
 
   const { supply } = player;
-  console.log(currentPlayer.name);
+
   const name = feltToStr(currentPlayer.name);
   const color = colorPlayer[index + 1];
   const image = avatars[index + 1];
