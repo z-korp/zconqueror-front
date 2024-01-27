@@ -34,6 +34,7 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
   const { turn } = useComponentStates();
   const player = useComponentValue(Player, entityId);
   const [cards, setCards] = useState<number[]>([]);
+  const [pendingCards, setPendingCards] = useState<number[]>([]);
   //TODO: modulo 3 pour determier le type de la carte
   const [conqueredThisTurn, setConqueredThisTurn] = useState(false);
   const [currentPlayer, setCurrentPlayer] = useState(player);
@@ -59,6 +60,7 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
       );
 
       setCards(unpackU128toNumberArray(player.cards).filter((e: number) => e !== 0));
+      setPendingCards(unpackU128toNumberArray(player.cards).filter((e: number) => e !== 0));
       console.log('CARDS:', cards);
       console.log('CARDS ARRAY:', unpackU128toNumberArray(currentPlayer.cards));
       setShowCardsPopup(true);
@@ -125,8 +127,10 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
   const handleCardSelect = (cardNumber: number) => {
     if (selectedCards.includes(cardNumber)) {
       setSelectedCards(selectedCards.filter((c) => c !== cardNumber));
+      setPendingCards([...pendingCards, cardNumber]);
     } else if (selectedCards.length < 3) {
       setSelectedCards([...selectedCards, cardNumber]);
+      setPendingCards(pendingCards.filter((c) => c !== cardNumber));
     }
   };
 
@@ -137,6 +141,8 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
           className="mx-10"
           onClick={() => {
             console.log('Circle clicked');
+            console.log('Cards:', cards);
+            console.log('Pending:', pendingCards);
             toggleCardMenu();
           }}
         >
@@ -149,8 +155,8 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
         </div>
       </div>
       {showCardMenu && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 ">
+          <div className="bg-white p-6 rounded-lg shadow-lg text-center h-2/3">
             {/* Selected cards or placeholders */}
             <div className="flex justify-center space-x-4 mb-4">
               {[1, 2, 3].map((index) =>
@@ -165,7 +171,7 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
             </div>
             {/* Card options */}
             <div className="flex justify-center space-x-4">
-              {cards.map((cardNumber, index) => (
+              {pendingCards.map((cardNumber, index) => (
                 <div key={index} onClick={() => handleCardSelect(cardNumber)}>
                   <GameCard cardNumber={cardNumber} />
                 </div>
