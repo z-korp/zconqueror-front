@@ -1,7 +1,7 @@
 import { useDojo } from '@/DojoContext';
 import { Phase, useElementStore } from '@/utils/store';
 import { useState } from 'react';
-import { set, z } from 'zod';
+import { z } from 'zod';
 import NewGameForm, { createFormSchema } from './NewGameForm';
 import { Button } from './ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
