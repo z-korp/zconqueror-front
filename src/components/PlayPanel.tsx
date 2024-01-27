@@ -182,14 +182,10 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
           <div className="p-8 bg-white rounded shadow-lg text-center">
             <p>You won this card:</p>
             <div className="flex justify-center space-x-4 mb-4">
-              {cards.map((cardNumber, index) => (
-                <div key={index}>
-                  <GameCard cardNumber={cardNumber} />
-                </div>
-              ))}
+              {cards.length > 0 && <GameCard cardNumber={cards[cards.length - 1]} />}
             </div>
             <button onClick={closePopup} className="mt-4">
-              Fermer
+              Close
             </button>
           </div>
         </div>

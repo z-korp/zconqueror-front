@@ -3,13 +3,12 @@ import cavalry from '../assets/cardassets/cavalry.png'; // Replace with the actu
 import artilery from '../assets/cardassets/artillery.png'; // Replace with the actual path to your image
 
 const cardImages: { [key: number]: string } = {
-  1: infantry,
-  2: cavalry,
-  3: artilery,
+  0: infantry,
+  1: cavalry,
+  2: artilery,
 };
 
 const GameCard = ({ cardNumber }: { cardNumber: number }) => {
-  // Determine which image to use based on the cardNumber
   const cardImage = cardImages[cardNumber % 3];
 
   return (
