@@ -124,6 +124,14 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
     setShowCardMenu(!showCardMenu);
   };
 
+  const discardCards = () => {
+    console.log(selectedCards[0]);
+    if (game_id !== undefined && game_id !== null) {
+      play.discard(account, game_id, selectedCards[0], selectedCards[1], selectedCards[2]);
+      //todo remove cards used
+    }
+  };
+
   const handleCardSelect = (cardNumber: number) => {
     if (selectedCards.includes(cardNumber)) {
       setSelectedCards(selectedCards.filter((c) => c !== cardNumber));
@@ -177,7 +185,14 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
                 </div>
               ))}
             </div>
-            <button onClick={toggleCardMenu} className="mt-4">
+            <button
+              onClick={discardCards}
+              className="w-32 py-2 m-4 text-white bg-blue-500 rounded hover:bg-blue-600"
+              disabled={current_state !== Phase.DEPLOY || selectedCards.length !== 3}
+            >
+              Exchange
+            </button>
+            <button onClick={toggleCardMenu} className="w-32 py-2 m-4 text-white bg-blue-500 rounded hover:bg-blue-600">
               Close
             </button>
           </div>
