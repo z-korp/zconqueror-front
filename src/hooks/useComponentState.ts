@@ -11,7 +11,7 @@ export const useComponentStates = () => {
     },
   } = useDojo();
 
-  const { game_id } = useElementStore((state) => state);
+  const { game } = useElementStore((state) => state);
 
   const [turn, setTurn] = useState<number>(0);
 
@@ -20,18 +20,6 @@ export const useComponentStates = () => {
   const [player, setPlayer] = useState<any>(null);
   const [tiles, setTiles] = useState<any[]>([]);
   const [tileIds, setTileIds] = useState<number[]>([]);
-  const [entityId, setEntityId] = useState<EntityIndex | null>(null);
-  const [game, setGame] = useState<any>(null);
-
-  useEffect(() => {
-    if (game_id !== undefined && game_id !== null) {
-      setEntityId(getEntityIdFromKeys([BigInt(game_id)]));
-    }
-  }, [game_id]);
-
-  useEffect(() => {
-    setGame(getComponentValue(Game, entityId));
-  }, [entityId]);
 
   useEffect(() => {
     if (game) {
@@ -67,8 +55,10 @@ export const useComponentStates = () => {
   }, [game]);
 
   useEffect(() => {
-    if (game && game.nonce !== undefined && Math.floor(game.nonce / 3) % game.player_count !== turn) {
-      setTurn(Math.floor(game.nonce / 3) % game.player_count);
+    if (game && game.nonce != null) {
+      if (game && game.nonce !== undefined && Math.floor(game.nonce / 3) % game.player_count !== turn) {
+        setTurn(Math.floor(game.nonce / 3) % game.player_count);
+      }
     }
   }, [game]);
 

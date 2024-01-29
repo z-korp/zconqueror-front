@@ -34,7 +34,7 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
   const { turn } = useComponentStates();
   const player = useComponentValue(Player, entityId);
   const [cards, setCards] = useState<number[]>([]);
-  //TODO: modulo 3 pour determier le type de la carte
+  const [pendingCards, setPendingCards] = useState<number[]>([]);
   const [conqueredThisTurn, setConqueredThisTurn] = useState(false);
   const [currentPlayer, setCurrentPlayer] = useState(player);
   const [currentTurn, setCurrentTurn] = useState(turn);
@@ -44,23 +44,14 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
 
   useEffect(() => {
     if (player?.conqueror === 1) {
-      console.log('YOU ARE THE CONQUEROR');
       setConqueredThisTurn(true);
     }
   }, [player?.conqueror]);
 
   useEffect(() => {
-    console.log('current Player card:', currentPlayer?.cards);
-    console.log('player cards:', player?.cards);
     if (conqueredThisTurn) {
-      console.log(
-        'Cards outside state',
-        unpackU128toNumberArray(player.cards).filter((e: number) => e !== 0)
-      );
-
       setCards(unpackU128toNumberArray(player.cards).filter((e: number) => e !== 0));
-      console.log('CARDS:', cards);
-      console.log('CARDS ARRAY:', unpackU128toNumberArray(currentPlayer.cards));
+      setPendingCards(unpackU128toNumberArray(player.cards).filter((e: number) => e !== 0));
       setShowCardsPopup(true);
       setConqueredThisTurn(false);
     }
@@ -87,7 +78,7 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
   if (index !== currentTurn) return null;
 
   const { supply } = player;
-  console.log(currentPlayer.name);
+
   const name = feltToStr(currentPlayer.name);
   const color = colorPlayer[index + 1];
   const image = avatars[index + 1];
@@ -122,11 +113,32 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
     setShowCardMenu(!showCardMenu);
   };
 
+  const discardCards = () => {
+    console.log(selectedCards[0]);
+    if (game_id !== undefined && game_id !== null) {
+      play.discard(account, game_id, selectedCards[0], selectedCards[1], selectedCards[2]);
+      setSelectedCards([]);
+    }
+  };
+
   const handleCardSelect = (cardNumber: number) => {
     if (selectedCards.includes(cardNumber)) {
       setSelectedCards(selectedCards.filter((c) => c !== cardNumber));
+      setPendingCards([...pendingCards, cardNumber]);
     } else if (selectedCards.length < 3) {
+      //logique pour ne pas selectionner une 3 eme carte qui empeche le discard
+      if (selectedCards.length == 2) {
+        const card1 = (selectedCards[0] % 3) + 1;
+        const card2 = (selectedCards[1] % 3) + 1;
+        const card3 = (cardNumber % 3) + 1;
+        if (card1 == card2) {
+          if (card1 != card3) return;
+        } else {
+          if (card1 == card3 || card2 == card3) return;
+        }
+      }
       setSelectedCards([...selectedCards, cardNumber]);
+      setPendingCards(pendingCards.filter((c) => c !== cardNumber));
     }
   };
 
@@ -137,6 +149,8 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
           className="mx-10"
           onClick={() => {
             console.log('Circle clicked');
+            console.log('Cards:', cards);
+            console.log('Pending:', pendingCards);
             toggleCardMenu();
           }}
         >
@@ -149,8 +163,8 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
         </div>
       </div>
       {showCardMenu && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 ">
+          <div className="bg-white p-6 rounded-lg shadow-lg text-center h-2/3">
             {/* Selected cards or placeholders */}
             <div className="flex justify-center space-x-4 mb-4">
               {[1, 2, 3].map((index) =>
@@ -165,13 +179,20 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
             </div>
             {/* Card options */}
             <div className="flex justify-center space-x-4">
-              {cards.map((cardNumber, index) => (
+              {pendingCards.map((cardNumber, index) => (
                 <div key={index} onClick={() => handleCardSelect(cardNumber)}>
                   <GameCard cardNumber={cardNumber} />
                 </div>
               ))}
             </div>
-            <button onClick={toggleCardMenu} className="mt-4">
+            <button
+              onClick={discardCards}
+              className="w-32 py-2 m-4 text-white bg-blue-500 rounded hover:bg-blue-600"
+              disabled={current_state !== Phase.DEPLOY || selectedCards.length !== 3}
+            >
+              Exchange
+            </button>
+            <button onClick={toggleCardMenu} className="w-32 py-2 m-4 text-white bg-blue-500 rounded hover:bg-blue-600">
               Close
             </button>
           </div>
@@ -182,14 +203,10 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
           <div className="p-8 bg-white rounded shadow-lg text-center">
             <p>You won this card:</p>
             <div className="flex justify-center space-x-4 mb-4">
-              {cards.map((cardNumber, index) => (
-                <div key={index}>
-                  <GameCard cardNumber={cardNumber} />
-                </div>
-              ))}
+              {cards.length > 0 && <GameCard cardNumber={cards[cards.length - 1]} />}
             </div>
             <button onClick={closePopup} className="mt-4">
-              Fermer
+              Close
             </button>
           </div>
         </div>
