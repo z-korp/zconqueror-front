@@ -27,7 +27,7 @@ const SelectionPanel = ({ selectedRegion, title, onRemoveSelected }: SelectionPa
   const troups = tile ? tile.army : 0;
 
   return (
-    <div className="flex flex-col items-center justify-center w-40 p-2 bg-white rounded-lg shadow-md border border-gray-300 relative">
+    <div className="flex flex-col items-center justify-center w-40 p-2 bg-white rounded-lg drop-shadow-lg relative border-2 border-white">
       <span>{title}</span>
       <button
         onClick={onRemoveSelected}
@@ -37,8 +37,8 @@ const SelectionPanel = ({ selectedRegion, title, onRemoveSelected }: SelectionPa
       </button>
       <div className="mt-2 mb-2 flex justify-center items-center">
         <div className="flex gap-2 items-center ">
-          <GiSwordsEmblem />
-          <p className="font-space-mono w-5">{troups}</p>
+          <GiSwordsEmblem className="text-xl" />
+          <p className="font-space-mono text-xl w-5">{troups}</p>
         </div>
       </div>
     </div>

@@ -85,6 +85,7 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
 
   if (player === undefined) return null;
   if (index !== currentTurn) return null;
+  if (currentPlayer === undefined) return null;
 
   const { name: rawName } = currentPlayer;
   const { supply } = player;
@@ -132,129 +133,137 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
 
   return (
     <>
-      <div className="flex relative items-center">
-        <div
-          className="mx-10"
-          onClick={() => {
-            console.log('Circle clicked');
-            toggleCardMenu();
-          }}
-        >
-          <div className="relative flex justify-center items-center">
-            {/* Rotated square that will appear as a diamond shape */}
-            <div className="w-10 h-10 bg-gray-300 transform rotate-45 -z-10"></div>
-            {/* Circle with the dominant color of the PlayPanel */}
-            <div className="absolute w-10 h-10 rounded-full bg-red"> {cards.length}</div>
+      <div className="fixed bottom-14 left-0 right-0 flex justify-center items-end p-4 pointer-events-none">
+        {/* Section du panneau de jeu */}
+        <div className="flex relative items-center">
+          <div
+            className="mx-10 pointer-events-auto"
+            onClick={() => {
+              console.log('Circle clicked');
+              toggleCardMenu();
+            }}
+          >
+            <button className="w-[58px] h-[75px] relative flex justify-center items-center bg-black bg-opacity-30 backdrop-blur-md rounded-lg border-2 border-primary drop-shadow-lg hover:transform hover:-translate-y-1 transition-transform ease-in-out ">
+              <div className="w-7 h-9 absolute top-4 left-4 border border-slate-700 drop-shadow-lg transform -rotate-12 bg-white text-black px-2 py-1 rounded"></div>
+              <div className="w-7 h-9 absolute top-5 left-3 border border-slate-700 drop-shadow-lg transform -rotate-12 bg-white text-black px-2 py-1 rounded">
+                {cards.length}
+              </div>
+            </button>
           </div>
         </div>
-      </div>
-      {showCardMenu && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-            {/* Selected cards or placeholders */}
-            <div className="flex justify-center space-x-4 mb-4">
-              {[1, 2, 3].map((index) =>
-                selectedCards.length >= index ? (
-                  <div key={index} onClick={() => handleCardSelect(selectedCards[index - 1])}>
-                    <GameCard cardNumber={selectedCards[index - 1]} />
+        {/* Menu des cartes */}
+        {showCardMenu && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg text-center pointer-events-auto">
+              {/* Cartes sélectionnées */}
+              <div className="flex justify-center space-x-4 mb-4">
+                {[1, 2, 3].map((index) =>
+                  selectedCards.length >= index ? (
+                    <div key={index} onClick={() => handleCardSelect(selectedCards[index - 1])}>
+                      <GameCard cardNumber={selectedCards[index - 1]} />
+                    </div>
+                  ) : (
+                    <div key={index} className="w-32 h-48 bg-gray-200 rounded-lg shadow-md"></div>
+                  )
+                )}
+              </div>
+              {/* Options de carte */}
+              <div className="flex justify-center space-x-4">
+                {cards.map((cardNumber, index) => (
+                  <div key={index} onClick={() => handleCardSelect(cardNumber)}>
+                    <GameCard cardNumber={cardNumber} />
                   </div>
-                ) : (
-                  <div key={index} className="w-32 h-48 bg-gray-200 rounded-lg shadow-md"></div>
-                )
+                ))}
+              </div>
+              <button onClick={toggleCardMenu} className="mt-4">
+                Fermer
+              </button>
+            </div>
+          </div>
+        )}
+        {/* Popup de cartes gagnées */}
+        {showCardsPopup && (
+          <div className="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center z-50">
+            <div className="p-8 bg-white rounded shadow-lg text-center">
+              <p>You won this card:</p>
+              <div className="flex justify-center space-x-4 mb-4">
+                {cards.map((cardNumber, index) => (
+                  <div key={index}>
+                    <GameCard cardNumber={cardNumber} />
+                  </div>
+                ))}
+              </div>
+              <button onClick={closePopup} className="mt-4">
+                Fermer
+              </button>
+            </div>
+          </div>
+        )}
+        {/* Barre d'état du joueur */}
+        <div className="h-[100px] max-w-[400px] rounded-md w-full bg-black bg-opacity-30 backdrop-blur-md">
+          <div className="relative w-full h-full">
+            {/* Image du joueur */}
+            <div className="absolute h-[120px] w-[120px] rounded-full bg-red-400 -left-[25px] -top-[25px] z-10">
+              <img src={image} alt={'player'} className="rounded-full" />
+            </div>
+            {/* Barre d'état */}
+            <div className="flex flex-row justify-center mt-1">
+              <div
+                className={`h-2 w-16 rounded-full ${
+                  current_state === Phase.DEPLOY ? colorClasses[color] : 'bg-gray-500'
+                }`}
+              ></div>
+              <div
+                className={`h-2 w-16 mx-2 rounded-full ${
+                  current_state === Phase.ATTACK ? colorClasses[color] : 'bg-gray-500'
+                }`}
+              ></div>
+              <div
+                className={`h-2 w-16 rounded-full ${
+                  current_state === Phase.FORTIFY ? colorClasses[color] : 'bg-gray-500'
+                }`}
+              ></div>
+            </div>
+            {/* Texte d'état */}
+            <div className="flex h-[60px] items-center justify-center">
+              <span className="text-white text-2xl uppercase font-bold drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">
+                {textFromState(current_state)}
+              </span>
+            </div>
+            {/* Bouton "Next Phase" */}
+            <div
+              className={`absolute flex justify-center h-[120px] w-[120px] rounded-full -right-[25px] -top-[25px] z-10 bg-red-500 border-8 border-red-600 pointer-events-auto`}
+            >
+              {current_state === Phase.DEPLOY && supply > 0 && (
+                <div className="flex flex-row gap-1 items-center text-4xl text-white drop-shadow-[0_6.2px_8.2px_rgba(0,0,0,0.8)]">
+                  <p className="font-space-mono">{supply}</p>
+                  <GiBattleGear />
+                </div>
+              )}
+              {supply === 0 && (
+                <button
+                  className="absolute top-1 flex justify-center items-center w-[80px] h-[80px] rounded-full active:translate-y-2  active:[box-shadow:0_0px_0_0_#15803d]
+                active:border-b-[0px]
+                transition-all duration-150 [box-shadow:0_8px_0_0_#15803d]
+                border-[1px] border-green-700 bg-green-600 hover:transform hover:-translate-y-1 transition-transform ease-in-out"
+                  onClick={handleNextPhaseClick}
+                >
+                  {current_state === Phase.FORTIFY ? (
+                    <span className="text-white text-md uppercase font-bold drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">
+                      End Turn
+                    </span>
+                  ) : (
+                    <FaChevronRight className="h-[50px] w-[50px] text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]" />
+                  )}
+                </button>
               )}
             </div>
-            {/* Card options */}
-            <div className="flex justify-center space-x-4">
-              {cards.map((cardNumber, index) => (
-                <div key={index} onClick={() => handleCardSelect(cardNumber)}>
-                  <GameCard cardNumber={cardNumber} />
-                </div>
-              ))}
+            {/* Nom du joueur */}
+            <div
+              className={`absolute flex justify-center items-center h-[50px] w-[426px] -left-[13px] -bottom-[25px] rounded-md drop-shadow-[0_6.2px_8.2px_rgba(0,0,0,0.8)]  ${colorClasses[color]}`}
+            >
+              <span className="text-white uppercase font-bold drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">{name}</span>
             </div>
-            <button onClick={toggleCardMenu} className="mt-4">
-              Close
-            </button>
-          </div>
-        </div>
-      )}
-      {showCardsPopup && (
-        <div className="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center z-50">
-          <div className="p-8 bg-white rounded shadow-lg text-center">
-            <p>You won this card:</p>
-            <div className="flex justify-center space-x-4 mb-4">
-              {cards.map((cardNumber, index) => (
-                <div key={index}>
-                  <GameCard cardNumber={cardNumber} />
-                </div>
-              ))}
-            </div>
-            <button onClick={closePopup} className="mt-4">
-              Fermer
-            </button>
-          </div>
-        </div>
-      )}
-      <div className="h-[100px] max-w-[400px] rounded-md w-full bg-black bg-opacity-30 backdrop-blur-md">
-        <div className="relative w-full h-full">
-          <div className="absolute h-[120px] w-[120px] rounded-full bg-red-400 -left-[25px] -top-[25px] z-10">
-            <img src={image} alt={'player'} className="rounded-full" />
-          </div>
-
-          <div className="flex flex-row justify-center mt-1">
-            <div
-              className={`h-2 w-16 rounded-full ${
-                current_state === Phase.DEPLOY ? colorClasses[color] : 'bg-gray-500'
-              }`}
-            ></div>
-            <div
-              className={`h-2 w-16 mx-2 rounded-full ${
-                current_state === Phase.ATTACK ? colorClasses[color] : 'bg-gray-500'
-              }`}
-            ></div>
-            <div
-              className={`h-2 w-16 rounded-full ${
-                current_state === Phase.FORTIFY ? colorClasses[color] : 'bg-gray-500'
-              }`}
-            ></div>
-          </div>
-          <div className="flex h-[60px] items-center justify-center">
-            <span className="text-white text-2xl uppercase font-bold drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">
-              {textFromState(current_state)}
-            </span>
-          </div>
-          <div
-            className={`absolute flex justify-center h-[120px] w-[120px] rounded-full -right-[25px] -top-[25px] z-10 bg-red-500 border-8 border-red-600`}
-          >
-            {current_state === Phase.DEPLOY && supply > 0 && (
-              <div className="flex flex-row gap-1 items-center text-4xl text-white drop-shadow-[0_6.2px_8.2px_rgba(0,0,0,0.8)]">
-                <p className="font-space-mono">{supply}</p>
-                <GiBattleGear />
-              </div>
-            )}
-
-            {supply === 0 && (
-              <button
-                className="absolute top-1 flex justify-center items-center w-[80px] h-[80px] rounded-full active:translate-y-2  active:[box-shadow:0_0px_0_0_#15803d]
-							active:border-b-[0px]
-							transition-all duration-150 [box-shadow:0_8px_0_0_#15803d]
-							border-[1px] border-green-700 bg-green-600"
-                onClick={handleNextPhaseClick}
-              >
-                {current_state === Phase.FORTIFY ? (
-                  <span className="text-white text-md uppercase font-bold drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">
-                    End Turn
-                  </span>
-                ) : (
-                  <FaChevronRight className="h-[50px] w-[50px] text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]" />
-                )}
-              </button>
-            )}
-          </div>
-
-          <div
-            className={`absolute flex justify-center items-center h-[50px] w-[426px] -left-[13px] -bottom-[25px] rounded-md drop-shadow-[0_6.2px_8.2px_rgba(0,0,0,0.8)]  ${colorClasses[color]}`}
-          >
-            <span className="text-white uppercase font-bold drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">{name}</span>
           </div>
         </div>
       </div>

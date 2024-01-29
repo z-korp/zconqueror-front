@@ -48,11 +48,11 @@ const NewGame: React.FC = () => {
   };
 
   return (
-    <div className="flex gap-3 mb-4">
+    <div className="flex gap-3 mb-4 absolute top-4 z-10">
       <SidePanel />
       <Dialog open={joinModalOpen} onOpenChange={(open) => setJoinModalOpen(open)}>
         <DialogTrigger asChild={true}>
-          <Button>Join a game</Button>
+          <Button className="drop-shadow-lg">Join a game</Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
@@ -66,7 +66,7 @@ const NewGame: React.FC = () => {
 
       <Dialog open={createModalOpen} onOpenChange={(open) => setCreateModalOpen(open)}>
         <DialogTrigger asChild={true}>
-          <Button>Create a new game</Button>
+          <Button className="drop-shadow-lg">Create a new game</Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
@@ -84,9 +84,12 @@ const NewGame: React.FC = () => {
             type="text"
             value={gameIdInput}
             onChange={(e) => setGameIdInput(e.target.value)}
-            placeholder="Enter Game ID"
+            placeholder=" Enter Game ID"
+            className="pl-1 rounded-lg border-2 border-primary bg-black bg-opacity-30 backdrop-blur-md drop-shadow-lg"
           />
-          <Button onClick={handleStartGame}>Start the game</Button>
+          <Button className="drop-shadow-lg" onClick={handleStartGame}>
+            Start the game
+          </Button>
         </>
       )}
     </div>
