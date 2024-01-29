@@ -35,7 +35,6 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
   const player = useComponentValue(Player, entityId);
   const [cards, setCards] = useState<number[]>([]);
   const [pendingCards, setPendingCards] = useState<number[]>([]);
-  //TODO: modulo 3 pour determier le type de la carte
   const [conqueredThisTurn, setConqueredThisTurn] = useState(false);
   const [currentPlayer, setCurrentPlayer] = useState(player);
   const [currentTurn, setCurrentTurn] = useState(turn);
@@ -45,24 +44,14 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
 
   useEffect(() => {
     if (player?.conqueror === 1) {
-      console.log('YOU ARE THE CONQUEROR');
       setConqueredThisTurn(true);
     }
   }, [player?.conqueror]);
 
   useEffect(() => {
-    console.log('current Player card:', currentPlayer?.cards);
-    console.log('player cards:', player?.cards);
     if (conqueredThisTurn) {
-      console.log(
-        'Cards outside state',
-        unpackU128toNumberArray(player.cards).filter((e: number) => e !== 0)
-      );
-
       setCards(unpackU128toNumberArray(player.cards).filter((e: number) => e !== 0));
       setPendingCards(unpackU128toNumberArray(player.cards).filter((e: number) => e !== 0));
-      console.log('CARDS:', cards);
-      console.log('CARDS ARRAY:', unpackU128toNumberArray(currentPlayer.cards));
       setShowCardsPopup(true);
       setConqueredThisTurn(false);
     }
