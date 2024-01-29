@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.shadow-outline {
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
