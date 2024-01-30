@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-import RoundButton from '../roundButton';
+import RoundButton from '../RoundButton';
 import '../../styles/Button.css';
 import { set } from 'zod';
 
