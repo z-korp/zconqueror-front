@@ -229,6 +229,9 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
                 Close
               </button>
             </div>
+            <button onClick={closePopup} className="mt-4">
+              Close
+            </button>
           </div>
         )}
         {/* Barre d'état du joueur */}
