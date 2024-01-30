@@ -9,8 +9,7 @@ const cardImages: { [key: number]: string } = {
 };
 
 const GameCard = ({ cardNumber }: { cardNumber: number }) => {
-  // Determine which image to use based on the cardNumber
-  const cardImage = cardImages[cardNumber % 3];
+  const cardImage = cardImages[(cardNumber % 3) + 1];
 
   return (
     <div className="w-32 h-48 bg-white rounded-lg shadow-lg flex items-center justify-center overflow-hidden">
