@@ -8,7 +8,7 @@ import { TooltipProvider } from './components/ui/tooltip';
 import { useComponentStates } from './hooks/useComponentState';
 import { Phase, useElementStore } from './utils/store';
 import { useDojo } from './DojoContext';
-import { Has, defineSystem } from '@dojoengine/recs';
+import { Has, defineSystem, HasValue } from '@dojoengine/recs';
 
 function App() {
   const {
@@ -16,20 +16,22 @@ function App() {
       clientComponents: { Game },
       world,
     },
+    account: { account },
   } = useDojo();
   const { playerIds } = useComponentStates();
 
-  const { current_state, set_game_id } = useElementStore((state) => state);
+  const { current_state, set_game_id, set_game } = useElementStore((state) => state);
 
   const isFortifyPanelVisible =
     current_state === Phase.FORTIFY || current_state === Phase.ATTACK || current_state === Phase.DEPLOY;
 
   useEffect(() => {
-    defineSystem(world, [Has(Game)], function ({ value: [newValue] }: any) {
-      console.log(newValue);
-      set_game_id(newValue.id);
+    defineSystem(world, [HasValue(Game, { host: BigInt(account.address) })], ({ value: [newGame] }: any) => {
+      set_game_id(newGame.id);
+      console.log(newGame);
+      set_game(newGame);
     });
-  }, []);
+  }, [account]);
 
   return (
     <>

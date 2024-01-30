@@ -6,6 +6,7 @@ export async function setupWorld(provider: DojoProvider) {
     const contractName = 'zconqueror::systems::host::host';
     const create = async (account: Account, name: string, playerCount: number) => {
       try {
+        // todo checker si le pb vient pas de la (string to bigNumberish)
         return await provider.execute(account, contractName, 'create', [provider.getWorldAddress(), playerCount, name]);
       } catch (error) {
         console.error('Error executing create:', error);

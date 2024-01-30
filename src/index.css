@@ -12,6 +12,9 @@ html {
   background-size: cover;
   background-position: center center;
 }
+.shadow-outline {
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
 
 @layer base {
   :root {
