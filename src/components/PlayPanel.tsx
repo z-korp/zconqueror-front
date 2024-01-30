@@ -9,9 +9,8 @@ import { avatars } from '../utils/pfps';
 import { Phase, useElementStore } from '../utils/store';
 import { useEffect, useState } from 'react';
 import { feltToStr, unpackU128toNumberArray } from '@/utils/unpack';
-import { Card, CardTitle } from './ui/card';
-import RoundButton from './roundButton';
 import GameCard from './GameCard';
+import OverlayWithText from './OverlayWithText';
 
 interface PlayPanelProps {
   index: number;
@@ -27,7 +26,7 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
     account: { account },
   } = useDojo();
 
-  const { current_address, game_id } = useElementStore((state) => state);
+  const { current_address, game_id, game } = useElementStore((state) => state);
 
   const { current_state, set_current_state } = useElementStore((state) => state);
 
@@ -41,6 +40,19 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
   const [showCardsPopup, setShowCardsPopup] = useState(false);
   const [showCardMenu, setShowCardMenu] = useState(false);
   const [selectedCards, setSelectedCards] = useState<number[]>([]);
+  const [showOverlay, setShowOverlay] = useState(false);
+  const [overlayText, setOverlayText] = useState('');
+
+  const textFromState = (state: number) => {
+    if (state === 1) {
+      return 'Deploying';
+    } else if (state === 2) {
+      return 'Attacking';
+    } else if (state === 3) {
+      return 'Fortifying';
+    }
+    return 'Unknown';
+  };
 
   useEffect(() => {
     if (player?.conqueror === 1) {
@@ -49,19 +61,35 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
   }, [player?.conqueror]);
 
   useEffect(() => {
-    if (conqueredThisTurn) {
-      setCards(unpackU128toNumberArray(player.cards).filter((e: number) => e !== 0));
-      setPendingCards(unpackU128toNumberArray(player.cards).filter((e: number) => e !== 0));
-      setShowCardsPopup(true);
-      setConqueredThisTurn(false);
+    if (game_id != null) {
+      if (conqueredThisTurn) {
+        setCards(unpackU128toNumberArray(player.cards).filter((e: number) => e !== 0));
+        setPendingCards(unpackU128toNumberArray(player.cards).filter((e: number) => e !== 0));
+        setShowCardsPopup(true);
+        setConqueredThisTurn(false);
+      }
+
+      const timer = setTimeout(() => {
+        setCurrentTurn(turn);
+        setCurrentPlayer(player);
+      }, 4000);
+
+      const timer2 = setTimeout(() => {
+        let text = textFromState(1);
+        setOverlayText(text);
+        setShowOverlay(true);
+      }, 4500);
+
+      const timer3 = setTimeout(() => {
+        setShowOverlay(false);
+      }, 6000);
+
+      return () => {
+        clearTimeout(timer);
+        clearTimeout(timer2);
+        clearTimeout(timer3);
+      };
     }
-
-    const timer = setTimeout(() => {
-      setCurrentTurn(turn);
-      setCurrentPlayer(player);
-    }, 4000);
-
-    return () => clearTimeout(timer);
   }, [turn]);
 
   useEffect(() => {
@@ -83,26 +111,25 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
   const color = colorPlayer[index + 1];
   const image = avatars[index + 1];
 
-  const textFromState = (state: number) => {
-    if (state === 1) {
-      return 'Deploying';
-    } else if (state === 2) {
-      return 'Attacking';
-    } else if (state === 3) {
-      return 'Fortifying';
-    }
-  };
-
   const handleNextPhaseClick = () => {
     if (game_id == null || game_id == undefined) return;
+    let text = '';
     if (current_state < 3) {
       play.finish(account, game_id);
+      text = textFromState(current_state + 1);
       set_current_state(current_state + 1);
+      setOverlayText(text);
+      setShowOverlay(true);
     } else {
       play.finish(account, game_id);
-
       set_current_state(Phase.DEPLOY);
     }
+
+    const timer2 = setTimeout(() => {
+      setShowOverlay(false);
+    }, 2000);
+
+    return () => clearTimeout(timer2);
   };
 
   const closePopup = () => {
@@ -144,6 +171,7 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
 
   return (
     <>
+      {showOverlay && <OverlayWithText text={overlayText} />}
       <div className="flex relative items-center">
         <div
           className="mx-10"
