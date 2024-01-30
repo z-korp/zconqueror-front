@@ -101,6 +101,7 @@ const Region: React.FC<RegionProps> = ({ d, id, region, containerRef, onRegionCl
             handlePathClick={onRegionClick}
             troups={id}
             color={'pink'}
+            containerRef={containerRef}
           />,
 
           containerRef.current // render the button directly in the body
@@ -112,12 +113,13 @@ const Region: React.FC<RegionProps> = ({ d, id, region, containerRef, onRegionCl
         containerRef.current &&
         ReactDOM.createPortal(
           <TroopsMarker
-            position={position}
+            position={{ x: position.x, y: position.y }}
             handlePathClick={onRegionClick}
             troups={troups}
             color={color}
             tile={tile}
             playerTurn={playerTurn}
+            containerRef={containerRef}
           />,
 
           containerRef.current // render the button directly in the body
