@@ -103,7 +103,6 @@ const Map = () => {
     <>
       <div className="absolute top-[25%] left-1 w-1/6 z-10">{isFortifyPanelVisible && <FortifyPanel />}</div>
       <div className="relative" ref={containerRef}>
-        {/* <img src={carte} alt="Carte" className="w-full h-full absolute top-0 left-0" /> */}
         <div className={`h-[600px] w-full overflow-hidden`} onClick={(e) => toggleZoom(e)} style={zoomStyle}>
           <svg
             viewBox="0 0 3669 1932" // Ajustez cette valeur en fonction de vos coordonnées
