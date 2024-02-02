@@ -6,9 +6,11 @@ import { getComponentValue } from '@latticexyz/recs';
 import { useEffect, useState } from 'react';
 import Counter from '../panel/Counter';
 import SelectionPanel from '../panel/SelectionPanel';
+import { ShieldPlus, Swords, Milestone } from 'lucide-react';
 
 const FortifyPanel = () => {
   const [armyCount, setArmyCount] = useState(0);
+  const [isActionSelected, setIsActionSelected] = useState(false);
   const { current_source, set_current_source, current_target, set_current_target, current_state, game_id } =
     useElementStore((state) => state);
 
@@ -99,8 +101,10 @@ const FortifyPanel = () => {
           setArmyCount(sourceTileData.army - 1);
         }
       }
+      setIsActionSelected(true);
     } else {
       setSourceTile(null);
+      setIsActionSelected(false);
     }
 
     if (current_target !== null) {
@@ -170,9 +174,14 @@ const FortifyPanel = () => {
   const isFortifyTurn = () => {
     return current_state === Phase.FORTIFY;
   };
-
+  console.log('current_state', current_state);
   return (
-    <div className={`flex flex-col items-center justify-center p-4`}>
+    <div
+      id="parent"
+      className={`flex flex-col items-center justify-center p-4 min-w-[180px] min-w-[200px] ${
+        isActionSelected && 'border-4 rounded-lg border-primary bg-black bg-opacity-30 backdrop-blur-md drop-shadow-lg'
+      } `}
+    >
       {isAttackTurn() ? (
         current_source && (
           <>
@@ -195,8 +204,11 @@ const FortifyPanel = () => {
                   selectedRegion={current_target}
                   onRemoveSelected={() => removeSelected(2)}
                 />
-                <button onClick={onAttack} className="w-full py-2 mt-4 text-white bg-red-500 rounded hover:bg-red-600">
-                  Attack
+                <button
+                  onClick={onAttack}
+                  className="flex items-center justify-center w-full py-2 mt-4 text-white bg-red-500 rounded hover:bg-red-600 drop-shadow-lg hover:transform hover:-translate-y-1 transition-transform ease-in-out"
+                >
+                  Attack <Swords className="ml-2" />
                 </button>
               </>
             )}
@@ -222,9 +234,9 @@ const FortifyPanel = () => {
               />
               <button
                 onClick={onMoveTroops}
-                className="w-full py-2 mt-4 text-white bg-blue-500 rounded hover:bg-blue-600"
+                className="flex items-center justify-center w-full py-2 mt-4 text-white bg-green-500 rounded hover:bg-green-600 drop-shadow-lg hover:transform hover:-translate-y-1 transition-transform ease-in-out"
               >
-                Move Troops
+                Move Troops <Milestone className="ml-2" />
               </button>
             </>
           )}
@@ -246,9 +258,9 @@ const FortifyPanel = () => {
               />
               <button
                 onClick={handleSupply}
-                className="w-32 py-2 mt-4 text-white bg-blue-500 rounded hover:bg-blue-600"
+                className="flex items-center justify-center w-full py-2 mt-4 text-white bg-green-500 rounded hover:bg-green-600 drop-shadow-lg hover:transform hover:-translate-y-1 transition-transform ease-in-out"
               >
-                Deploy troops
+                Deploy troops <ShieldPlus className="ml-2" />
               </button>
             </>
           )}

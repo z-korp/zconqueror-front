@@ -3,10 +3,11 @@ import { useComponentStates } from '@/hooks/useComponentState';
 import { getNeighbors } from '@/utils/map';
 import { Phase, useElementStore } from '@/utils/store';
 import { getComponentValue } from '@latticexyz/recs';
-import { Fragment, useRef } from 'react';
-import carte from '../../../public/map_sea3D.png';
+import React, { Fragment, useRef, useState } from 'react';
+import carte from '../../../public/map_sea3D_transparent.png';
 import mapDataRaw from '../../assets/map/map.json';
 import Region from './Region';
+import FortifyPanel from './FortifyPanel';
 
 const mapData: MapData = mapDataRaw;
 
@@ -67,18 +68,45 @@ const Map = () => {
       }
     }
   };
+  const [isZoomed, setIsZoomed] = useState(false);
+  const [clickPosition, setClickPosition] = useState({ x: 0, y: 0, rectWidth: 0, rectHeight: 0 });
+
+  const toggleZoom = (e) => {
+    const rect = e.target.getBoundingClientRect();
+    const x = e.clientX; // Position X du clic par rapport à la div
+    const y = e.clientY; // Position Y du clic par rapport à la div
+
+    const rectWidth = rect.width; // Largeur de la div
+    const rectHeight = rect.height; // Hauteur de la div
+
+    console.log(x, y);
+    console.log(rect.left, rect.top, rectWidth, rectHeight);
+
+    setClickPosition({ x, y, rectWidth, rectHeight });
+    setIsZoomed(!isZoomed);
+  };
+
+  const zoomStyle = isZoomed
+    ? {
+        // transform: `scale(1.25) translate(${clickPosition.rectWidth / 2 - clickPosition.x}px, ${
+        //   clickPosition.rectHeight / 2 - clickPosition.y
+        // }px)`,
+        transform: `translate(-10px,10px)`,
+        transition: 'transform 1s ease-in-out', // Durée de l'animation
+      }
+    : {};
+
+  const isFortifyPanelVisible =
+    current_state === Phase.FORTIFY || current_state === Phase.ATTACK || current_state === Phase.DEPLOY;
 
   return (
     <>
-      <div className="relative w-full h-[500px]" ref={containerRef}>
-        {/* <img src={carte} alt="Carte" className="w-full h-full absolute top-0 left-0" /> */}
-        <div className="w-full h-full absolute top-0 left-0">
+      <div className="absolute top-[25%] left-1 w-1/6 z-10">{isFortifyPanelVisible && <FortifyPanel />}</div>
+      <div className="relative" ref={containerRef}>
+        <div className={`h-[600px] w-full overflow-hidden`} onClick={(e) => toggleZoom(e)} style={zoomStyle}>
           <svg
             viewBox="0 0 3669 1932" // Ajustez cette valeur en fonction de vos coordonnées
-            preserveAspectRatio="none"
-            className="w-full h-full absolute top-0 left-0 fill-cyan-500"
-            width={'100%'}
-            height={'100%'}
+            className="absolute top-0 left-0 w-full h-full"
           >
             <image href={carte} width="100%" height="100%" />
 
