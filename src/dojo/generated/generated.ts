@@ -41,19 +41,27 @@ export async function setupWorld(provider: DojoProvider) {
 
   function host() {
     const contractName = 'zconqueror::systems::host::host';
-    const create = async (account: Account, name: string, playerCount: number) => {
+    const create = async (account: Account) => {
       try {
-        // todo checker si le pb vient pas de la (string to bigNumberish)
-        return await executeAndCheck(account, contractName, 'create', [provider.getWorldAddress(), playerCount, name]);
+        return await executeAndCheck(account, contractName, 'create', [provider.getWorldAddress()]);
       } catch (error) {
         console.error('Error executing create:', error);
         throw error;
       }
     };
 
-    const join = async (account: Account, gameId: number, playerName: string) => {
+    const set_max_players = async (account: Account, gameId: Number, playerCount: Number) => {
       try {
-        return await executeAndCheck(account, contractName, 'join', [provider.getWorldAddress(), gameId, playerName]);
+        return await executeAndCheck(account, contractName, 'set_max_players', [provider.getWorldAddress(), gameId, playerCount]);
+      } catch (error) {
+        console.error('Error executing create:', error);
+        throw error;
+      }
+    };
+
+    const join = async (account: Account, gameId: Number) => {
+      try {
+        return await executeAndCheck(account, contractName, 'join', [provider.getWorldAddress(), gameId]);
       } catch (error) {
         console.error('Error executing join:', error);
         throw error;
@@ -71,6 +79,7 @@ export async function setupWorld(provider: DojoProvider) {
 
     return {
       create,
+      set_max_players,
       join,
       start,
     };

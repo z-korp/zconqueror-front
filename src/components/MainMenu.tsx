@@ -3,7 +3,6 @@ import { useElementStore } from '@/utils/store';
 import { z } from 'zod';
 import { Button } from './ui/button';
 import JoinGameForm, { joinFormSchema } from './JoinGameForm';
-import { SidePanel } from './DebugPanel';
 import GameState from '@/utils/gamestate';
 import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '@radix-ui/react-dialog';
 import { DialogHeader } from './ui/dialog';
@@ -35,7 +34,7 @@ const MainMenu: React.FC = () => {
         const burnerAccount = account.account
         if (actionJoinData) {
             setTimeout(() => {
-                host.join(burnerAccount, actionJoinData.game_id, actionJoinData.username)
+                host.join(burnerAccount, actionJoinData.game_id)
                     .then(() => {
                         set_game_id(actionJoinData.game_id)
                         set_game_state(GameState.Lobby);    
@@ -45,12 +44,11 @@ const MainMenu: React.FC = () => {
             defineSystem(world, [HasValue(Game, { host: BigInt(burnerAccount.address) })], ({ value: [newGame] }: any) => {
                 set_game_id(newGame.id);
                 console.log(newGame);
-                set_game(newGame);
                 set_game_state(GameState.Lobby);
             });
             setTimeout(() => {
                 console.log("create with", burnerAccount.address)
-                host.create(burnerAccount, "test", 4);    
+                host.create(burnerAccount);    
             }, 500)
         }
     }, [account, accountInit, actionJoinData])
@@ -70,7 +68,6 @@ const MainMenu: React.FC = () => {
 
     return (
         <div className="flex gap-3 mb-4">
-            <SidePanel />
             <Button onClick={createNewGame}>Create a new game</Button>
             <Dialog>
                 <DialogTrigger asChild={true}>

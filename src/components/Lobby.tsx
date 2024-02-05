@@ -2,15 +2,32 @@ import { useDojo } from '@/DojoContext';
 import GameState from '@/utils/gamestate';
 import { useElementStore } from '@/utils/store';
 import { Button } from './ui/button';
+import { useComponentValue, useEntityQuery } from '@dojoengine/react';
+import { HasValue } from '@dojoengine/recs';
+
 const Lobby: React.FC = () => {
     const {
         setup: {
             client: { host },
+            clientComponents: { Game, Player }
         },
         account: { account },
     } = useDojo();
 
     const { set_game_state, set_game_id, game_id } = useElementStore((state) => state);
+
+    // Get game info
+    const game = useComponentValue(Game, useEntityQuery([HasValue(Game, { id: game_id })]));
+    if (!game) {
+        return
+    }
+    const isHost = '0x' + game.host.toString(16) === account.address
+
+    const playersId = useEntityQuery([HasValue(Player, { game_id })])
+    const players = []
+    for (const playerId of playersId) {
+        players.push(useComponentValue(Player, playerId))
+    }
 
     const startGame = () => {
         if (!game_id) {
@@ -29,23 +46,29 @@ const Lobby: React.FC = () => {
                 set_game_state(GameState.MainMenu)
             }}>Back</Button>
             Lobby
+            <h2>
+                Game id: { game_id }
+            </h2>
             <p>
-                Nb players: 4
-            </p >
-            <Button onClick={startGame}>Start</Button>
+                Max numbers: { game.player_count }
+                {
+                    isHost && 
+                    <>
+                        <Button>Change Player Limit</Button>
+                        <Button onClick={startGame}>Start</Button>
+                    </>
+                }
+            </p>
 
-            {/* {game_creator && (
-                <>
-                    <input
-                        id="inputGameId"
-                        type="text"
-                        value={gameIdInput}
-                        onChange={(e) => setGameIdInput(e.target.value)}
-                        placeholder="Enter Game ID"
-                    />
-                    <Button onClick={handleStartGame}>Start the game</Button>
-                </>
-            )} */}
+            <div className="flex gap-3 mb-4">
+            {
+                players.map((p) => {
+                    return (
+                        <p key={p.address}>{p.address}</p>
+                    )
+                })
+            }
+            </div>
         </div >
     );
 };

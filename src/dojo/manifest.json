@@ -949,7 +949,7 @@
     {
       "name": "zconqueror::systems::host::host",
       "address": "0x55bac3cb43efa8a014bed327fdf470f528374f1e2208663bae331dbc2658da3",
-      "class_hash": "0x5f932813ffc41970bf8a98e10897305963aa6b61a4a7233f1e35ce3da14dff5",
+      "class_hash": "0x4a0ec34e92a67e69f0fab9d69a059d8f4314c95ba04e1a4d497844cc7700c4b",
       "abi": [
         {
           "type": "impl",
@@ -977,14 +977,6 @@
                 {
                   "name": "world",
                   "type": "dojo::world::IWorldDispatcher"
-                },
-                {
-                  "name": "player_count",
-                  "type": "core::integer::u8"
-                },
-                {
-                  "name": "player_name",
-                  "type": "core::felt252"
                 }
               ],
               "outputs": [
@@ -992,6 +984,42 @@
                   "type": "core::integer::u32"
                 }
               ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "set_max_players",
+              "inputs": [
+                {
+                  "name": "world",
+                  "type": "dojo::world::IWorldDispatcher"
+                },
+                {
+                  "name": "game_id",
+                  "type": "core::integer::u32"
+                },
+                {
+                  "name": "player_count",
+                  "type": "core::integer::u8"
+                }
+              ],
+              "outputs": [],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "set_username",
+              "inputs": [
+                {
+                  "name": "world",
+                  "type": "dojo::world::IWorldDispatcher"
+                },
+                {
+                  "name": "player_name",
+                  "type": "core::felt252"
+                }
+              ],
+              "outputs": [],
               "state_mutability": "view"
             },
             {
@@ -1005,10 +1033,6 @@
                 {
                   "name": "game_id",
                   "type": "core::integer::u32"
-                },
-                {
-                  "name": "player_name",
-                  "type": "core::felt252"
                 }
               ],
               "outputs": [],
