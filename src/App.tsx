@@ -9,6 +9,11 @@ import PlayPanel from './components/PlayPanel';
 import Map from './components/map/Map';
 import { Toaster } from './components/ui/toaster';
 import { TooltipProvider } from './components/ui/tooltip';
+
+import GameState from './utils/gamestate';
+import MainMenu from './components/MainMenu';
+import Lobby from './components/Lobby';
+
 import { useGetPlayers } from './hooks/useGetPlayers';
 import { sanitizeGame } from './utils/sanitizer';
 import { useElementStore } from './utils/store';
@@ -25,7 +30,7 @@ function App() {
 
   const { id } = useParams<{ id?: string }>();
 
-  const { set_game } = useElementStore((state) => state);
+  const { set_game, game_state } = useElementStore((state) => state);
 
   useEffect(() => {
     console.log('URL ID:', id);
@@ -66,6 +71,37 @@ function App() {
       <div className="fixed bottom-0 right-0 w-1/4 pr-1 pb-1">
         <PlayersPanel players={players} />
       </div>
+      {
+        game_state == GameState.MainMenu &&
+        <MainMenu />
+      }
+      {
+        game_state == GameState.Lobby &&
+        <Lobby />
+      }
+      {
+        game_state == GameState.Game &&
+        <>
+          <TooltipProvider>
+            <NewGame />
+            <div className="flex">
+              <div className="w-full">
+                <Map />
+              </div>
+            </div>
+            <div className="absolute top-24 right-0 flex gap-14 flex-col">
+              {playerIds.map((entityId, index) => (
+                <SidePlayerInfo key={index} index={index} entityId={entityId} />
+              ))}
+            </div>
+          </TooltipProvider>
+          <div className="flex justify-center">
+            {playerIds.map((entityId, index) => (
+              <PlayPanel key={index} index={index} entityId={entityId} />
+            ))}
+          </div>
+        </>
+      }
     </>
   );
 }
