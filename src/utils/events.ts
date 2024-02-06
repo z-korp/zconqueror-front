@@ -31,6 +31,7 @@ export const createSupplyLog = (result: SupplyEventResult): LogType => {
   return {
     timestamp: Date.now(),
     log: `${result.playerName} supplied ${result.troops} to region ${result.region}`,
+    regionFrom: result.region,
   };
 };
 
@@ -64,6 +65,7 @@ export const createDefendLog = (result: DefendEventResult): LogType => {
     log: `${result.attackerName} attacked ${result.defenderName} at region ${result.targetTile}. Result: ${
       result.result ? 'win' : 'loose'
     }`,
+    regionTo: result.targetTile,
   };
 };
 
@@ -95,5 +97,7 @@ export const createFortifyLog = (result: FortifyEventResult): LogType => {
   return {
     timestamp: Date.now(),
     log: `${result.playerName} moved ${result.troops} from region ${result.fromTile} to region ${result.toTile}`,
+    regionFrom: result.fromTile,
+    regionTo: result.toTile,
   };
 };

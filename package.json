@@ -32,6 +32,7 @@
     "@types/react-modal": "^3.16.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
+    "date-fns": "^3.3.1",
     "ethers": "^5.7.2",
     "graphql": "^16.7.1",
     "graphql-request": "^6.1.0",
