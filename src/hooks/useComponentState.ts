@@ -1,6 +1,6 @@
-import { getEntityIdFromKeys } from '@dojoengine/utils';
 import { useElementStore } from '@/utils/store';
-import { EntityIndex, getComponentValue } from '@latticexyz/recs';
+import { getEntityIdFromKeys } from '@dojoengine/utils';
+import { getComponentValue } from '@latticexyz/recs';
 import { useEffect, useState } from 'react';
 import { useDojo } from '../DojoContext';
 

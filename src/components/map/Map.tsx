@@ -3,11 +3,11 @@ import { useComponentStates } from '@/hooks/useComponentState';
 import { getNeighbors } from '@/utils/map';
 import { Phase, useElementStore } from '@/utils/store';
 import { getComponentValue } from '@latticexyz/recs';
-import React, { Fragment, useRef, useState } from 'react';
+import { Fragment, useRef, useState } from 'react';
 import carte from '../../../public/map_sea3D_transparent.png';
 import mapDataRaw from '../../assets/map/map.json';
-import Region from './Region';
 import FortifyPanel from './FortifyPanel';
+import Region from './Region';
 
 const mapData: MapData = mapDataRaw;
 
@@ -72,6 +72,7 @@ const Map = () => {
   const [clickPosition, setClickPosition] = useState({ x: 0, y: 0, rectWidth: 0, rectHeight: 0 });
 
   const toggleZoom = (e) => {
+    return;
     const rect = e.target.getBoundingClientRect();
     const x = e.clientX; // Position X du clic par rapport à la div
     const y = e.clientY; // Position Y du clic par rapport à la div

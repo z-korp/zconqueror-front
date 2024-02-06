@@ -1,10 +1,10 @@
 // Counter.jsx
-type CounterProps = {
+interface CounterProps {
   count: number;
   onDecrement: () => void;
   onIncrement: () => void;
   maxCount: number;
-};
+}
 
 const Counter = ({ count, onDecrement, onIncrement, maxCount }: CounterProps) => {
   return (

@@ -1,20 +1,25 @@
-import { useEffect, useState } from 'react';
+import { HasValue, defineSystem } from '@dojoengine/recs';
+import { useEffect } from 'react';
 import './App.css';
+import { useDojo } from './DojoContext';
 import NewGame from './components/NewGame';
 import PlayPanel from './components/PlayPanel';
 import SidePlayerInfo from './components/SidePlayerInfo';
 import Map from './components/map/Map';
+import { Toaster } from './components/ui/toaster';
 import { TooltipProvider } from './components/ui/tooltip';
 import { useComponentStates } from './hooks/useComponentState';
+import { useLogs } from './hooks/useLogs';
 import { Phase, useElementStore } from './utils/store';
-import { useDojo } from './DojoContext';
-import { Has, defineSystem, HasValue } from '@dojoengine/recs';
 
 function App() {
   const {
     setup: {
       clientComponents: { Game },
       world,
+      updates: {
+        eventUpdates: { createSupplyEvents },
+      },
     },
     account: { account },
   } = useDojo();
@@ -33,8 +38,14 @@ function App() {
     });
   }, [account]);
 
+  const { logs } = useLogs();
+  useEffect(() => {
+    logs.map((l) => console.log(`[${l.timestamp}]`, l.log));
+  }, [logs]);
+
   return (
     <>
+      <Toaster />
       <TooltipProvider>
         <NewGame />
         <div className="flex">

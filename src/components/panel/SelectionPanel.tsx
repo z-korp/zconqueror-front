@@ -5,11 +5,11 @@ import { useComponentValue } from '@dojoengine/react';
 import { GiSwordsEmblem } from 'react-icons/gi';
 
 // SelectionPanel.jsx
-type SelectionPanelProps = {
+interface SelectionPanelProps {
   title: string;
   selectedRegion: number | null;
   onRemoveSelected: () => void;
-};
+}
 
 const SelectionPanel = ({ selectedRegion, title, onRemoveSelected }: SelectionPanelProps) => {
   const {

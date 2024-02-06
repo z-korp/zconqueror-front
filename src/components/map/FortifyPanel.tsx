@@ -3,10 +3,10 @@ import { useComponentStates } from '@/hooks/useComponentState';
 import { Phase, useElementStore } from '@/utils/store';
 import { useComponentValue } from '@dojoengine/react';
 import { getComponentValue } from '@latticexyz/recs';
+import { Milestone, ShieldPlus, Swords } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import Counter from '../panel/Counter';
 import SelectionPanel from '../panel/SelectionPanel';
-import { ShieldPlus, Swords, Milestone } from 'lucide-react';
 
 const FortifyPanel = () => {
   const [armyCount, setArmyCount] = useState(0);
@@ -174,7 +174,7 @@ const FortifyPanel = () => {
   const isFortifyTurn = () => {
     return current_state === Phase.FORTIFY;
   };
-  console.log('current_state', current_state);
+
   return (
     <div
       id="parent"
