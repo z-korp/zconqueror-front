@@ -10,7 +10,7 @@ import { defineSystem, HasValue } from '@dojoengine/recs';
 import { useEffect, useRef, useState } from 'react';
 
 const MainMenu: React.FC = () => {
-    const { set_game_state, set_game_id, set_game } = useElementStore((state) => state);
+    const { set_game_state, set_game_id } = useElementStore((state) => state);
 
     const {
         setup: {
