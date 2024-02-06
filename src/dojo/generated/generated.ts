@@ -1,13 +1,50 @@
-import { Account } from 'starknet';
 import { DojoProvider } from '@dojoengine/core';
+import { Account, RevertedTransactionReceiptResponse } from 'starknet';
+
+const tryBetterErrorMsg = (msg: string): string => {
+  const failureReasonIndex = msg.indexOf('Failure reason');
+  if (failureReasonIndex > 0) {
+    let betterMsg = msg.substring(failureReasonIndex);
+    const cairoTracebackIndex = betterMsg.indexOf('Cairo traceback');
+    betterMsg = betterMsg.substring(0, cairoTracebackIndex);
+    return betterMsg;
+  }
+
+  return msg;
+};
 
 export async function setupWorld(provider: DojoProvider) {
+  // Transaction execution and checking wrapper
+  const executeAndCheck = async (account: Account, contractName: string, methodName: string, args: any[]) => {
+    const ret = await provider.execute(account, contractName, methodName, args);
+    const receipt = await account.waitForTransaction(ret.transaction_hash, {
+      retryInterval: 100,
+    });
+
+    // Add any additional checks or logic here based on the receipt
+    if (receipt.status === 'REJECTED') {
+      console.log('Transaction Rejected');
+    }
+
+    if ('execution_status' in receipt) {
+      // The receipt is of a type that includes execution_status
+      if (receipt.execution_status === 'REVERTED') {
+        const errorMessage = tryBetterErrorMsg(
+          (receipt as RevertedTransactionReceiptResponse).revert_reason || 'Transaction Reverted'
+        );
+        console.log('ERROR KATANA', errorMessage);
+      }
+    }
+
+    return receipt;
+  };
+
   function host() {
     const contractName = 'zconqueror::systems::host::host';
     const create = async (account: Account, name: string, playerCount: number) => {
       try {
         // todo checker si le pb vient pas de la (string to bigNumberish)
-        return await provider.execute(account, contractName, 'create', [provider.getWorldAddress(), playerCount, name]);
+        return await executeAndCheck(account, contractName, 'create', [provider.getWorldAddress(), playerCount, name]);
       } catch (error) {
         console.error('Error executing create:', error);
         throw error;
@@ -16,7 +53,7 @@ export async function setupWorld(provider: DojoProvider) {
 
     const join = async (account: Account, gameId: number, playerName: string) => {
       try {
-        return await provider.execute(account, contractName, 'join', [provider.getWorldAddress(), gameId, playerName]);
+        return await executeAndCheck(account, contractName, 'join', [provider.getWorldAddress(), gameId, playerName]);
       } catch (error) {
         console.error('Error executing join:', error);
         throw error;
@@ -25,7 +62,7 @@ export async function setupWorld(provider: DojoProvider) {
 
     const start = async (account: Account, gameId: number) => {
       try {
-        return await provider.execute(account, contractName, 'start', [provider.getWorldAddress(), gameId]);
+        return await executeAndCheck(account, contractName, 'start', [provider.getWorldAddress(), gameId]);
       } catch (error) {
         console.error('Error executing start:', error);
         throw error;
@@ -50,7 +87,7 @@ export async function setupWorld(provider: DojoProvider) {
       dispatched: number
     ) => {
       try {
-        return await provider.execute(account, contractName, 'attack', [
+        return await executeAndCheck(account, contractName, 'attack', [
           provider.getWorldAddress(),
           gameId,
           attackerIndex,
@@ -65,7 +102,7 @@ export async function setupWorld(provider: DojoProvider) {
 
     const defend = async (account: Account, gameId: number, attackerIndex: number, defenderIndex: number) => {
       try {
-        return await provider.execute(account, contractName, 'defend', [
+        return await executeAndCheck(account, contractName, 'defend', [
           provider.getWorldAddress(),
           gameId,
           attackerIndex,
@@ -79,7 +116,7 @@ export async function setupWorld(provider: DojoProvider) {
 
     const discard = async (account: Account, gameId: number, cardOne: number, cardTwo: number, cardThree: number) => {
       try {
-        return await provider.execute(account, contractName, 'discard', [
+        return await executeAndCheck(account, contractName, 'discard', [
           provider.getWorldAddress(),
           gameId,
           cardOne,
@@ -94,7 +131,7 @@ export async function setupWorld(provider: DojoProvider) {
 
     const finish = async (account: Account, gameId: number) => {
       try {
-        return await provider.execute(account, contractName, 'finish', [provider.getWorldAddress(), gameId]);
+        return await executeAndCheck(account, contractName, 'finish', [provider.getWorldAddress(), gameId]);
       } catch (error) {
         console.error('Error executing finish:', error);
         throw error;
@@ -109,7 +146,7 @@ export async function setupWorld(provider: DojoProvider) {
       army: number
     ) => {
       try {
-        return await provider.execute(account, contractName, 'transfer', [
+        return await executeAndCheck(account, contractName, 'transfer', [
           provider.getWorldAddress(),
           gameId,
           sourceIndex,
@@ -124,7 +161,7 @@ export async function setupWorld(provider: DojoProvider) {
 
     const supply = async (account: Account, gameId: number, tileIndex: number, supply: number) => {
       try {
-        return await provider.execute(account, contractName, 'supply', [
+        return await executeAndCheck(account, contractName, 'supply', [
           provider.getWorldAddress(),
           gameId,
           tileIndex,
