@@ -11,6 +11,7 @@ import { TooltipProvider } from './components/ui/tooltip';
 import { useComponentStates } from './hooks/useComponentState';
 import { useLogs } from './hooks/useLogs';
 import { Phase, useElementStore } from './utils/store';
+import ActionLogs from './components/ActionLogs';
 
 function App() {
   const {
@@ -25,10 +26,7 @@ function App() {
   } = useDojo();
   const { playerIds } = useComponentStates();
 
-  const { current_state, set_game_id, set_game } = useElementStore((state) => state);
-
-  const isFortifyPanelVisible =
-    current_state === Phase.FORTIFY || current_state === Phase.ATTACK || current_state === Phase.DEPLOY;
+  const { set_game_id, set_game } = useElementStore((state) => state);
 
   useEffect(() => {
     defineSystem(world, [HasValue(Game, { host: BigInt(account.address) })], ({ value: [newGame] }: any) => {
@@ -63,6 +61,9 @@ function App() {
         {playerIds.map((entityId, index) => (
           <PlayPanel key={index} index={index} entityId={entityId} />
         ))}
+      </div>
+      <div className="fixed bottom-0 left-0 w-1/3">
+        <ActionLogs logs={logs} />
       </div>
     </>
   );
