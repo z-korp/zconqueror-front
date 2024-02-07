@@ -18,7 +18,7 @@ export enum EventType {
   Fortify,
 }
 
-export type LogType = { timestamp: number; log: string; regionFrom?: number; regionTo?: number };
+export type LogType = { timestamp: number; log: string[]; regionFrom?: number; regionTo?: number; type: EventType };
 
 const generateLogFromEvent = (event: Event): LogType => {
   if (event.keys[0] === SUPPLY_EVENT) {
