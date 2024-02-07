@@ -2,6 +2,7 @@ import { HasValue, defineSystem } from '@dojoengine/recs';
 import { useEffect } from 'react';
 import './App.css';
 import { useDojo } from './DojoContext';
+import ActionLogs from './components/ActionLogs';
 import NewGame from './components/NewGame';
 import PlayPanel from './components/PlayPanel';
 import SidePlayerInfo from './components/SidePlayerInfo';
@@ -9,18 +10,13 @@ import Map from './components/map/Map';
 import { Toaster } from './components/ui/toaster';
 import { TooltipProvider } from './components/ui/tooltip';
 import { useComponentStates } from './hooks/useComponentState';
-import { useLogs } from './hooks/useLogs';
-import { Phase, useElementStore } from './utils/store';
-import ActionLogs from './components/ActionLogs';
+import { useElementStore } from './utils/store';
 
 function App() {
   const {
     setup: {
       clientComponents: { Game },
       world,
-      updates: {
-        eventUpdates: { createSupplyEvents },
-      },
     },
     account: { account },
   } = useDojo();
@@ -35,11 +31,6 @@ function App() {
       set_game(newGame);
     });
   }, [account]);
-
-  const { logs } = useLogs();
-  useEffect(() => {
-    logs.map((l) => console.log(`[${l.timestamp}]`, l.log));
-  }, [logs]);
 
   return (
     <>

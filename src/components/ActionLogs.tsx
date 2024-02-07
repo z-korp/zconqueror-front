@@ -1,12 +1,14 @@
-import { EventType, LogType } from '@/hooks/useLogs';
-import React, { useEffect, useRef, useState } from 'react';
-import { format } from 'date-fns';
+import { EventType, LogType, useLogs } from '@/hooks/useLogs';
 import { getIdFromName } from '@/utils/events';
 import { useElementStore } from '@/utils/store';
+import { format } from 'date-fns';
+import React, { useEffect, useRef, useState } from 'react';
 
 //TODO ADD SWAP DE CARDS
 
-const ActionLogs: React.FC<{ logs: LogType[] }> = ({ logs }) => {
+const ActionLogs: React.FC = () => {
+  const { logs } = useLogs();
+
   const logsRef = useRef<HTMLDivElement>(null);
 
   const [isCollapsed, setIsCollapsed] = useState(false);
