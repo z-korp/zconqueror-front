@@ -54,7 +54,7 @@ function App() {
         ))}
       </div>
       <div className="fixed bottom-0 left-0 w-1/3">
-        <ActionLogs logs={logs} />
+        <ActionLogs />
       </div>
     </>
   );
