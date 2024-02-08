@@ -1,9 +1,9 @@
 export const unpackU128toNumberArray = (u128: number): number[] => {
   const bigIntValue = BigInt(u128); // Convertit le nombre en BigInt
-  let numbers = []; // Utilise un tableau simple de nombres
+  const numbers = []; // Utilise un tableau simple de nombres
 
   for (let i = 0; i < 16; i++) {
-    let number = Number((bigIntValue >> BigInt(8 * i)) & BigInt(0xff));
+    const number = Number((bigIntValue >> BigInt(8 * i)) & BigInt(0xff));
     if (number) {
       numbers.push(number);
     }

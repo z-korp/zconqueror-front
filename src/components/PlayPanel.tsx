@@ -1,41 +1,33 @@
 import { useDojo } from '@/DojoContext';
-import { useComponentStates } from '@/hooks/useComponentState';
+import { useTurn } from '@/hooks/useTurn';
 import { colorClasses, colorPlayer } from '@/utils/colors';
-import { useComponentValue } from '@dojoengine/react';
-import { EntityIndex } from '@latticexyz/recs';
-import { GiBattleGear } from 'react-icons/gi';
+import { useEffect, useState } from 'react';
 import { FaChevronRight } from 'react-icons/fa6';
+import { GiBattleGear } from 'react-icons/gi';
 import { avatars } from '../utils/pfps';
 import { Phase, useElementStore } from '../utils/store';
-import { useEffect, useState } from 'react';
-import { feltToStr, unpackU128toNumberArray } from '@/utils/unpack';
 import GameCard from './GameCard';
 import OverlayWithText from './OverlayWithText';
 
 interface PlayPanelProps {
   index: number;
-  entityId: EntityIndex;
+  player: any;
 }
 
-const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
+const PlayPanel = ({ index, player }: PlayPanelProps) => {
   const {
     setup: {
-      clientComponents: { Player },
       client: { play },
     },
     account: { account },
   } = useDojo();
 
-  const { current_address, game_id, game } = useElementStore((state) => state);
+  const { current_state, set_current_state, game } = useElementStore((state) => state);
+  const { turn } = useTurn();
 
-  const { current_state, set_current_state } = useElementStore((state) => state);
-
-  const { turn } = useComponentStates();
-  const player = useComponentValue(Player, entityId);
   const [cards, setCards] = useState<number[]>([]);
   const [pendingCards, setPendingCards] = useState<number[]>([]);
   const [conqueredThisTurn, setConqueredThisTurn] = useState(false);
-  const [currentPlayer, setCurrentPlayer] = useState(player);
   const [currentTurn, setCurrentTurn] = useState(turn);
   const [showCardsPopup, setShowCardsPopup] = useState(false);
   const [showCardMenu, setShowCardMenu] = useState(false);
@@ -61,21 +53,20 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
   }, [player?.conqueror]);
 
   useEffect(() => {
-    if (game_id != null) {
+    if (game.id != null) {
       if (conqueredThisTurn) {
-        setCards(unpackU128toNumberArray(player.cards).filter((e: number) => e !== 0));
-        setPendingCards(unpackU128toNumberArray(player.cards).filter((e: number) => e !== 0));
+        setCards(player.cards);
+        setPendingCards(player.cards);
         setShowCardsPopup(true);
         setConqueredThisTurn(false);
       }
 
       const timer = setTimeout(() => {
         setCurrentTurn(turn);
-        setCurrentPlayer(player);
       }, 4000);
 
       const timer2 = setTimeout(() => {
-        let text = textFromState(1);
+        const text = textFromState(1);
         setOverlayText(text);
         setShowOverlay(true);
       }, 4500);
@@ -104,25 +95,21 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
 
   if (player === undefined) return null;
   if (index !== currentTurn) return null;
-  if (currentPlayer === undefined) return null;
 
-  const { supply } = player;
-
-  const name = feltToStr(currentPlayer.name);
   const color = colorPlayer[index + 1];
   const image = avatars[index + 1];
 
   const handleNextPhaseClick = () => {
-    if (game_id == null || game_id == undefined) return;
+    if (game.id == null || game.id == undefined) return;
     let text = '';
     if (current_state < 3) {
-      play.finish(account, game_id);
+      play.finish(account, game.id);
       text = textFromState(current_state + 1);
       set_current_state(current_state + 1);
       setOverlayText(text);
       setShowOverlay(true);
     } else {
-      play.finish(account, game_id);
+      play.finish(account, game.id);
       set_current_state(Phase.DEPLOY);
     }
 
@@ -143,8 +130,8 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
 
   const discardCards = () => {
     console.log(selectedCards[0]);
-    if (game_id !== undefined && game_id !== null) {
-      play.discard(account, game_id, selectedCards[0], selectedCards[1], selectedCards[2]);
+    if (game.id !== undefined && game.id !== null) {
+      play.discard(account, game.id, selectedCards[0], selectedCards[1], selectedCards[2]);
       setSelectedCards([]);
     }
   };
@@ -186,7 +173,7 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
         </div>
       )}
       <div className="fixed bottom-14 left-0 right-0 flex justify-center items-end p-4 pointer-events-none">
-        {showOverlay && <OverlayWithText text={overlayText} />}
+        {false && showOverlay && <OverlayWithText text={overlayText} />}
         {/* Section du panneau de jeu */}
         <div className="flex relative items-center">
           <div
@@ -282,13 +269,13 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
             <div
               className={`absolute flex justify-center h-[120px] w-[120px] rounded-full -right-[25px] -top-[25px] z-10 bg-red-500 border-8 border-red-600 pointer-events-auto`}
             >
-              {current_state === Phase.DEPLOY && supply > 0 && (
+              {current_state === Phase.DEPLOY && player.supply > 0 && (
                 <div className="flex flex-row gap-1 items-center text-4xl text-white drop-shadow-[0_6.2px_8.2px_rgba(0,0,0,0.8)]">
-                  <p className="font-space-mono">{supply}</p>
+                  <p className="font-space-mono">{player.supply}</p>
                   <GiBattleGear />
                 </div>
               )}
-              {supply === 0 && (
+              {player.supply === 0 && (
                 <button
                   className="absolute top-1 flex justify-center items-center w-[80px] h-[80px] rounded-full active:translate-y-2  active:[box-shadow:0_0px_0_0_#15803d]
                 active:border-b-[0px]
@@ -309,7 +296,9 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
             <div
               className={`absolute flex justify-center items-center h-[50px] w-[426px] -left-[13px] -bottom-[25px] rounded-md drop-shadow-[0_6.2px_8.2px_rgba(0,0,0,0.8)]  ${colorClasses[color]}`}
             >
-              <span className="text-white uppercase font-bold drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">{name}</span>
+              <span className="text-white uppercase font-bold drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">
+                {player.name}
+              </span>
             </div>
             {/* Card options */}
             {/* <div className="flex justify-center space-x-4">

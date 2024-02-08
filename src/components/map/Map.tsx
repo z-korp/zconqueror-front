@@ -1,8 +1,8 @@
 import { useDojo } from '@/DojoContext';
-import { useComponentStates } from '@/hooks/useComponentState';
+import { useGetTiles } from '@/hooks/useGetTiles';
+import { useTurn } from '@/hooks/useTurn';
 import { getNeighbors } from '@/utils/map';
 import { Phase, useElementStore } from '@/utils/store';
-import { getComponentValue } from '@latticexyz/recs';
 import { Fragment, useRef, useState } from 'react';
 import carte from '../../../public/map_sea3D_transparent.png';
 import mapDataRaw from '../../assets/map/map.json';
@@ -29,11 +29,12 @@ const Map = () => {
     },
   } = useDojo();
 
-  const { tileIds, turn } = useComponentStates();
+  const { turn } = useTurn();
+  const { tiles } = useGetTiles();
   const { current_state, current_source, set_current_source, set_current_target } = useElementStore((state) => state);
 
   const handleRegionClick = (regionId: number) => {
-    const tile = getComponentValue(Tile, tileIds[regionId - 1]);
+    const tile = tiles[regionId - 1];
     if (current_state == Phase.DEPLOY) {
       if (tile.owner !== turn) {
         set_current_source(null);

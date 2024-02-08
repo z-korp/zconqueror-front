@@ -9,7 +9,7 @@ import SidePlayerInfo from './components/SidePlayerInfo';
 import Map from './components/map/Map';
 import { Toaster } from './components/ui/toaster';
 import { TooltipProvider } from './components/ui/tooltip';
-import { useComponentStates } from './hooks/useComponentState';
+import { useGetPlayers } from './hooks/useGetPlayers';
 import { useElementStore } from './utils/store';
 
 function App() {
@@ -20,17 +20,18 @@ function App() {
     },
     account: { account },
   } = useDojo();
-  const { playerIds } = useComponentStates();
 
-  const { set_game_id, set_game } = useElementStore((state) => state);
+  const { set_game } = useElementStore((state) => state);
 
   useEffect(() => {
+    // Get the game that the user is hosting, if any
     defineSystem(world, [HasValue(Game, { host: BigInt(account.address) })], ({ value: [newGame] }: any) => {
-      set_game_id(newGame.id);
-      console.log(newGame);
+      console.log('newGame', newGame);
       set_game(newGame);
     });
   }, [account]);
+
+  const { players } = useGetPlayers();
 
   return (
     <>
@@ -43,14 +44,14 @@ function App() {
           </div>
         </div>
         <div className="absolute top-24 right-0 flex gap-14 flex-col">
-          {playerIds.map((entityId, index) => (
-            <SidePlayerInfo key={index} index={index} entityId={entityId} />
+          {players.map((player, index) => (
+            <SidePlayerInfo key={index} index={index} player={player} />
           ))}
         </div>
       </TooltipProvider>
       <div className="flex justify-center">
-        {playerIds.map((entityId, index) => (
-          <PlayPanel key={index} index={index} entityId={entityId} />
+        {players.map((player, index) => (
+          <PlayPanel key={index} index={index} player={player} />
         ))}
       </div>
       <div className="fixed bottom-0 left-0 w-1/3">
