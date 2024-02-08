@@ -41,10 +41,10 @@ const ActionLogs: React.FC = () => {
         onClick={toggleCollapse}
       >
         <span>Logs</span>
-        <span>{isCollapsed ? '▼' : '▲'}</span>
+        <span>{isCollapsed ? '▲' : '▼'}</span>
       </div>
       {!isCollapsed && (
-        <div ref={logsRef} className="overflow-auto h-48 p-4 bg-gray-700 rounded-b">
+        <div ref={logsRef} className="overflow-auto h-48 p-4 bg-gray-700 rounded-b text-start">
           {logs.map((log, index) => (
             <div key={index} className="text-sm mb-2 text-left">
               <span className=" text-white vt323-font">{format(log.timestamp, 'HH:mm:ss')} - </span>
