@@ -1,5 +1,6 @@
 import { useDojo } from '@/DojoContext';
-import { Phase, useElementStore } from '@/utils/store';
+import { useElementStore } from '@/utils/store';
+import { isTest } from '@/utils/test';
 import { useState } from 'react';
 import { z } from 'zod';
 import { SidePanel } from './DebugPanel';
@@ -7,10 +8,9 @@ import JoinGameForm, { joinFormSchema } from './JoinGameForm';
 import NewGameForm, { createFormSchema } from './NewGameForm';
 import { Button } from './ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
-import { isTest } from '@/utils/test';
 
 const NewGame: React.FC = () => {
-  const { set_current_state, set_game_creator, game_creator, game } = useElementStore((state) => state);
+  const { set_game_creator, game_creator, game } = useElementStore((state) => state);
 
   const {
     setup: {
@@ -26,13 +26,11 @@ const NewGame: React.FC = () => {
   async function handleCreateFormSubmit(data: z.infer<typeof createFormSchema>) {
     await host.create(account, data.username, data.numberOfPlayers);
     set_game_creator(true);
-    set_current_state(Phase.DEPLOY);
     setCreateModalOpen(false);
   }
 
   async function handleJoinFormSubmit(data: z.infer<typeof joinFormSchema>) {
     await host.join(account, data.game_id, data.username);
-    set_current_state(Phase.DEPLOY);
     setJoinModalOpen(false);
   }
 

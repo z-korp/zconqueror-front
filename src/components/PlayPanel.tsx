@@ -1,4 +1,5 @@
 import { useDojo } from '@/DojoContext';
+import { usePhase } from '@/hooks/usePhase';
 import { useTurn } from '@/hooks/useTurn';
 import { colorPlayer } from '@/utils/colors';
 import { useEffect, useState } from 'react';
@@ -23,28 +24,30 @@ const PlayPanel = ({ index, player }: PlayPanelProps) => {
     account: { account },
   } = useDojo();
 
-  const { current_state, set_current_state, game } = useElementStore((state) => state);
+  const { game } = useElementStore((state) => state);
   const { turn } = useTurn();
+  const { phase } = usePhase();
 
   const [cards, setCards] = useState<number[]>([]);
   const [pendingCards, setPendingCards] = useState<number[]>([]);
   const [conqueredThisTurn, setConqueredThisTurn] = useState(false);
-  const [currentTurn, setCurrentTurn] = useState(turn);
   const [showCardsPopup, setShowCardsPopup] = useState(false);
   const [showCardMenu, setShowCardMenu] = useState(false);
   const [selectedCards, setSelectedCards] = useState<number[]>([]);
   const [showOverlay, setShowOverlay] = useState(false);
   const [overlayText, setOverlayText] = useState('');
 
-  const textFromState = (state: number) => {
-    if (state === 1) {
-      return 'Deploying';
-    } else if (state === 2) {
-      return 'Attacking';
-    } else if (state === 3) {
-      return 'Fortifying';
+  const textFromState = (phase: Phase) => {
+    switch (phase) {
+      case Phase.DEPLOY:
+        return 'Deploying';
+      case Phase.ATTACK:
+        return 'Attacking';
+      case Phase.FORTIFY:
+        return 'Fortifying';
+      default:
+        return 'Unknown'; // Consider handling unexpected cases or add a default message
     }
-    return 'Unknown';
   };
 
   useEffect(() => {
@@ -62,10 +65,6 @@ const PlayPanel = ({ index, player }: PlayPanelProps) => {
         setConqueredThisTurn(false);
       }
 
-      const timer = setTimeout(() => {
-        setCurrentTurn(turn);
-      }, 4000);
-
       const timer2 = setTimeout(() => {
         const text = textFromState(1);
         setOverlayText(text);
@@ -77,7 +76,6 @@ const PlayPanel = ({ index, player }: PlayPanelProps) => {
       }, 6000);
 
       return () => {
-        clearTimeout(timer);
         clearTimeout(timer2);
         clearTimeout(timer3);
       };
@@ -95,7 +93,7 @@ const PlayPanel = ({ index, player }: PlayPanelProps) => {
   }, [showCardsPopup]);
 
   if (player === undefined) return null;
-  if (index !== currentTurn) return null;
+  if (index !== turn) return null;
 
   const color = colorPlayer[index + 1];
   const image = avatars[index + 1];
@@ -103,15 +101,13 @@ const PlayPanel = ({ index, player }: PlayPanelProps) => {
   const handleNextPhaseClick = () => {
     if (game.id == null || game.id == undefined) return;
     let text = '';
-    if (current_state < 3) {
+    if (phase < 3) {
       play.finish(account, game.id);
-      text = textFromState(current_state + 1);
-      set_current_state(current_state + 1);
+      text = textFromState(phase + 1);
       setOverlayText(text);
       setShowOverlay(true);
     } else {
       play.finish(account, game.id);
-      set_current_state(Phase.DEPLOY);
     }
 
     const timer2 = setTimeout(() => {
@@ -185,7 +181,7 @@ const PlayPanel = ({ index, player }: PlayPanelProps) => {
           supply={player.supply}
           handleNextPhaseClick={handleNextPhaseClick}
           textFromState={textFromState}
-          current_state={current_state}
+          phase={phase}
         />
       </div>
     </>

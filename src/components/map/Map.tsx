@@ -1,5 +1,6 @@
 import { useDojo } from '@/DojoContext';
 import { useGetTiles } from '@/hooks/useGetTiles';
+import { usePhase } from '@/hooks/usePhase';
 import { useTurn } from '@/hooks/useTurn';
 import { getNeighbors } from '@/utils/map';
 import { Phase, useElementStore } from '@/utils/store';
@@ -30,18 +31,19 @@ const Map = () => {
   } = useDojo();
 
   const { turn } = useTurn();
+  const { phase } = usePhase();
   const { tiles } = useGetTiles();
-  const { current_state, current_source, set_current_source, set_current_target } = useElementStore((state) => state);
+  const { current_source, set_current_source, set_current_target } = useElementStore((state) => state);
 
   const handleRegionClick = (regionId: number) => {
     const tile = tiles[regionId - 1];
-    if (current_state == Phase.DEPLOY) {
+    if (phase == Phase.DEPLOY) {
       if (tile.owner !== turn) {
         set_current_source(null);
         return;
       }
       set_current_source(regionId);
-    } else if (current_state == Phase.ATTACK) {
+    } else if (phase == Phase.ATTACK) {
       if (tile !== undefined) {
         if (tile.owner === turn) {
           set_current_source(regionId);
@@ -56,7 +58,7 @@ const Map = () => {
       } else {
         console.log('Can t interract with this tile');
       }
-    } else if (current_state == Phase.FORTIFY) {
+    } else if (phase == Phase.FORTIFY) {
       // if clicked tile is owned by the player
       if (tile.owner === turn) {
         if (current_source) {
@@ -98,8 +100,7 @@ const Map = () => {
       }
     : {};
 
-  const isFortifyPanelVisible =
-    current_state === Phase.FORTIFY || current_state === Phase.ATTACK || current_state === Phase.DEPLOY;
+  const isFortifyPanelVisible = phase === Phase.FORTIFY || phase === Phase.ATTACK || phase === Phase.DEPLOY;
 
   return (
     <>

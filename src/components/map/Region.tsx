@@ -1,4 +1,5 @@
 import { useGetTiles } from '@/hooks/useGetTiles';
+import { usePhase } from '@/hooks/usePhase';
 import { colorPlayer } from '@/utils/colors';
 import { getNeighbors } from '@/utils/map';
 import { Phase, useElementStore } from '@/utils/store';
@@ -19,7 +20,8 @@ interface RegionProps {
 }
 
 const Region: React.FC<RegionProps> = ({ d, id, region, containerRef, onRegionClick, playerTurn }: RegionProps) => {
-  const { current_state, current_source, current_target } = useElementStore((state) => state);
+  const { phase } = usePhase();
+  const { current_source, current_target } = useElementStore((state) => state);
 
   const [isHilighted, setIsHighlighted] = useState(false);
   const { tiles } = useGetTiles();
@@ -60,13 +62,13 @@ const Region: React.FC<RegionProps> = ({ d, id, region, containerRef, onRegionCl
   }, [region]);
 
   useEffect(() => {
-    if (current_state === Phase.DEPLOY) {
+    if (phase === Phase.DEPLOY) {
       if (current_source === id) {
         setIsHighlighted(true);
       } else {
         setIsHighlighted(false);
       }
-    } else if (current_state === Phase.ATTACK || current_state === Phase.FORTIFY) {
+    } else if (phase === Phase.ATTACK || phase === Phase.FORTIFY) {
       if (current_source && current_target === null && current_source !== id) {
         const neighbors = getNeighbors(current_source);
 
@@ -78,7 +80,7 @@ const Region: React.FC<RegionProps> = ({ d, id, region, containerRef, onRegionCl
         setIsHighlighted(false);
       }
     }
-  }, [current_source, current_state, current_target, id]);
+  }, [current_source, phase, current_target, id]);
 
   return (
     <>

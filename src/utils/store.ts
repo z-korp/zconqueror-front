@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 
 export enum Phase {
-  NOTHING,
   DEPLOY,
   ATTACK,
   FORTIFY,
@@ -12,8 +11,6 @@ interface State {
   set_game: (game: any) => void;
   game_creator: boolean;
   set_game_creator: (game_creator: boolean) => void;
-  current_state: Phase;
-  set_current_state: (current_state: Phase) => void;
   current_source: number | null;
   set_current_source: (source: number | null) => void;
   current_target: number | null;
@@ -29,8 +26,6 @@ export const useElementStore = create<State>((set) => ({
   set_game: (game: any) => set(() => ({ game })),
   game_creator: false,
   set_game_creator: (game_creator: boolean) => set(() => ({ game_creator })),
-  current_state: Phase.NOTHING,
-  set_current_state: (current_state: Phase) => set(() => ({ current_state })),
   current_source: null,
   set_current_source: (source: number | null) => set(() => ({ current_source: source })),
   current_target: null,

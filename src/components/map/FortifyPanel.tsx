@@ -1,6 +1,7 @@
 import { useDojo } from '@/DojoContext';
 import { useGetCurrentPlayer } from '@/hooks/useGetCurrentPlayer';
 import { useGetTiles } from '@/hooks/useGetTiles';
+import { usePhase } from '@/hooks/usePhase';
 import { Phase, useElementStore } from '@/utils/store';
 import { Milestone, ShieldPlus, Swords } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -17,10 +18,12 @@ const FortifyPanel = () => {
 
   const [armyCount, setArmyCount] = useState(0);
   const [isActionSelected, setIsActionSelected] = useState(false);
-  const { current_source, set_current_source, current_target, set_current_target, current_state, game } =
-    useElementStore((state) => state);
+  const { current_source, set_current_source, current_target, set_current_target, game } = useElementStore(
+    (state) => state
+  );
 
   const { currentPlayer } = useGetCurrentPlayer();
+  const { phase } = usePhase();
 
   const [sourceTile, setSourceTile] = useState<any | null>(null);
   const [targetTile, setTargetTile] = useState<any | null>(null);
@@ -59,14 +62,14 @@ const FortifyPanel = () => {
   };
 
   useEffect(() => {
-    // Reset the armyCount state to 0 when current_state changes
+    // Reset the armyCount state to 0 when phase changes
     setArmyCount(0);
     set_current_source(null);
     set_current_target(null);
-  }, [current_state]);
+  }, [phase]);
 
   const increment = () => {
-    if (current_state === Phase.DEPLOY) {
+    if (phase === Phase.DEPLOY) {
       if (armyCount <= currentPlayer.supply) {
         setArmyCount(armyCount + 1);
       }
@@ -90,7 +93,7 @@ const FortifyPanel = () => {
       const sourceTileData = tiles[current_source - 1];
       setSourceTile(sourceTileData);
       if (sourceTileData && sourceTileData.army) {
-        if (current_state === Phase.DEPLOY) {
+        if (phase === Phase.DEPLOY) {
           setArmyCount(currentPlayer.supply);
         } else {
           setArmyCount(sourceTileData.army - 1);
@@ -108,7 +111,7 @@ const FortifyPanel = () => {
     } else {
       setTargetTile(null);
     }
-  }, [current_source, current_state, current_target]);
+  }, [current_source, phase, current_target]);
 
   const handleSupply = () => {
     if (game.id == null || game.id == undefined) return;
@@ -163,11 +166,11 @@ const FortifyPanel = () => {
   };
 
   const isAttackTurn = () => {
-    return current_state === Phase.ATTACK;
+    return phase === Phase.ATTACK;
   };
 
   const isFortifyTurn = () => {
-    return current_state === Phase.FORTIFY;
+    return phase === Phase.FORTIFY;
   };
 
   return (
@@ -181,7 +184,7 @@ const FortifyPanel = () => {
         current_source && (
           <>
             <SelectionPanel
-              title={current_state === Phase.ATTACK ? 'Attacker' : 'Fortifier'}
+              title={phase === Phase.ATTACK ? 'Attacker' : 'Fortifier'}
               selectedRegion={current_source}
               onRemoveSelected={() => removeSelected(1)}
             />
@@ -195,7 +198,7 @@ const FortifyPanel = () => {
                 />
 
                 <SelectionPanel
-                  title={current_state === Phase.ATTACK ? 'Defender' : 'Fortified'}
+                  title={phase === Phase.ATTACK ? 'Defender' : 'Fortified'}
                   selectedRegion={current_target}
                   onRemoveSelected={() => removeSelected(2)}
                 />
