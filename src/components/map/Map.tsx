@@ -4,7 +4,7 @@ import { getNeighbors } from '@/utils/map';
 import { Phase, useElementStore } from '@/utils/store';
 import { getComponentValue } from '@latticexyz/recs';
 import React, { Fragment, useRef, useState } from 'react';
-import carte from '../../../public/map_sea3D_transparent.png';
+import carte from '../../../public/map_sea3D_transparent_2.png';
 import mapDataRaw from '../../assets/map/map.json';
 import Region from './Region';
 import FortifyPanel from './FortifyPanel';
@@ -103,12 +103,13 @@ const Map = () => {
     <>
       <div className="absolute top-[25%] left-1 w-1/6 z-10">{isFortifyPanelVisible && <FortifyPanel />}</div>
       <div className="relative" ref={containerRef}>
-        <div className={`h-[600px] w-full overflow-hidden`} onClick={(e) => toggleZoom(e)} style={zoomStyle}>
+        <div className={`h-[600px] w-full`} onClick={(e) => toggleZoom(e)} style={zoomStyle}>
           <svg
             viewBox="0 0 3669 1932" // Ajustez cette valeur en fonction de vos coordonnées
             className="absolute top-0 left-0 w-full h-full"
+            overflow="visible"
           >
-            <image href={carte} width="100%" height="100%" />
+            <image href={carte} width="130%" height="130%" x={(3669 - 3669 * 1.3) / 2} y={(1932 - 1932 * 1.3) / 2} />
 
             {Object.keys(mapData).map((region) => (
               <Fragment key={region}>
