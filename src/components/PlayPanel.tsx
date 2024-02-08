@@ -1,17 +1,14 @@
 import { useDojo } from '@/DojoContext';
 import { useTurn } from '@/hooks/useTurn';
-import { colorClasses, colorPlayer } from '@/utils/colors';
+import { colorPlayer } from '@/utils/colors';
 import { useEffect, useState } from 'react';
-import { FaChevronRight } from 'react-icons/fa6';
-import { GiBattleGear } from 'react-icons/gi';
 import { avatars } from '../utils/pfps';
 import { Phase, useElementStore } from '../utils/store';
-import GameCard from './GameCard';
-import OverlayWithText from './OverlayWithText';
 import ActionPlayerPanel from './ActionPlayerPanel';
-import StatusPlayer from './StatusPlayer';
-import CardsPopup from './CardsPopup';
 import CardMenu from './CardMenu';
+import CardsPopup from './CardsPopup';
+import OverlayWithText from './OverlayWithText';
+import StatusPlayer from './StatusPlayer';
 
 interface PlayPanelProps {
   index: number;
@@ -182,10 +179,10 @@ const PlayPanel = ({ index, player }: PlayPanelProps) => {
         )}
         {/* Barre d'état du joueur */}
         <StatusPlayer
-          name={name}
+          name={player.name}
           color={color}
           image={image}
-          supply={supply}
+          supply={player.supply}
           handleNextPhaseClick={handleNextPhaseClick}
           textFromState={textFromState}
           current_state={current_state}

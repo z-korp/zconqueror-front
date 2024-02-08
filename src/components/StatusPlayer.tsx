@@ -1,7 +1,7 @@
+import { colorClasses } from '@/utils/colors';
+import { FaChevronRight } from 'react-icons/fa6';
 import { GiBattleGear } from 'react-icons/gi';
 import { Phase } from '../utils/store';
-import { FaChevronRight } from 'react-icons/fa6';
-import { colorClasses } from '@/utils/colors';
 
 interface StatusPlayerProps {
   image: string;
