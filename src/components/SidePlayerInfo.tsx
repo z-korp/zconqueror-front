@@ -69,7 +69,11 @@ const SidePlayerInfo: React.FC<SidePlayerInfoProps> = ({ index, player }) => {
         </>
       )}
       <button onClick={toggleOtherElements}>
-        <div className="absolute h-[110px] w-[110px] left-[100px] -top-[5px] rounded-full bg-red-400 z-10 hover:transform hover:-translate-y-1 transition-transform ease-in-out">
+        <div
+          className={`absolute h-[110px] w-[110px] left-[100px] -top-[5px] rounded-full bg-red-400 z-10 ${
+            !showOtherElements && 'translate-x-24'
+          } hover:transform hover:-translate-y-1 transition-transform ease-in-out `}
+        >
           <img src={image} alt={'player'} className="rounded-full" />
           <div className="absolute top-1 left-0 border border-slate-700 transform -translate-y-1/2 -rotate-12 bg-white text-black px-2 py-1 rounded">
             {cards ? cards.length : 0}
