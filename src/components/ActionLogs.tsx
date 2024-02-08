@@ -46,13 +46,13 @@ const ActionLogs: React.FC = () => {
       {!isCollapsed && (
         <div ref={logsRef} className="overflow-auto h-48 p-4 bg-gray-700 rounded-b">
           {logs.map((log, index) => (
-            <div key={index} className="text-sm mb-2">
-              <span className="text-gray-500">{format(log.timestamp, 'HH:mm:ss')}</span> -
+            <div key={index} className="text-sm mb-2 text-left">
+              <span className=" text-white vt323-font">{format(log.timestamp, 'HH:mm:ss')} - </span>
               {log.type === EventType.Supply && (
                 <>
-                  <span className="text-gray-500">{log.log[0]} </span>
+                  <span className=" text-white vt323-font">{log.log[0]} </span>
                   <span
-                    className="text-gray-500 underline"
+                    className=" text-white vt323-font underline"
                     onMouseOver={() => handleMouseOver(log.log[1])}
                     onMouseLeave={handleMouseLeave}
                   >
@@ -62,30 +62,30 @@ const ActionLogs: React.FC = () => {
               )}
               {log.type === EventType.Defend && (
                 <>
-                  <span className="text-gray-500">{log.log[0]} </span>
+                  <span className=" text-white vt323-font">{log.log[0]} </span>
                   <span
-                    className="text-gray-500 underline"
+                    className=" text-white vt323-font underline"
                     onMouseOver={() => handleMouseOver(log.log[1])}
                     onMouseLeave={handleMouseLeave}
                   >
                     {log.log[1]}
                   </span>
-                  <span className="text-gray-500"> {log.log[2]}</span>
+                  <span className=" text-white vt323-font"> {log.log[2]}</span>
                 </>
               )}
               {log.type === EventType.Fortify && (
                 <>
-                  <span className="text-gray-500">{log.log[0]} </span>
+                  <span className=" text-white vt323-font">{log.log[0]} </span>
                   <span
-                    className="text-gray-500 underline"
+                    className=" text-white vt323-font underline"
                     onMouseOver={() => handleMouseOver(log.log[1])}
                     onMouseLeave={handleMouseLeave}
                   >
                     {log.log[1]}
                   </span>
-                  <span className="text-gray-500"> {log.log[2]} </span>
+                  <span className=" text-white vt323-font"> {log.log[2]} </span>
                   <span
-                    className="text-gray-500 underline"
+                    className=" text-white vt323-font underline"
                     onMouseOver={() => handleMouseOver(log.log[3])}
                     onMouseLeave={handleMouseLeave}
                   >
