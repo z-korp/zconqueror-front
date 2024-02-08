@@ -7,9 +7,10 @@ import JoinGameForm, { joinFormSchema } from './JoinGameForm';
 import NewGameForm, { createFormSchema } from './NewGameForm';
 import { Button } from './ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
+import { isTest } from '@/utils/test';
 
 const NewGame: React.FC = () => {
-  const { set_current_state, set_game_creator, game_creator } = useElementStore((state) => state);
+  const { set_current_state, set_game_creator, game_creator, game } = useElementStore((state) => state);
 
   const {
     setup: {
@@ -93,6 +94,7 @@ const NewGame: React.FC = () => {
           account.address.length - 3
         )}`}</div>
       )}
+      {isTest && game && <div className="flex items-center">{`Game id: ${game.id}`}</div>}
     </div>
   );
 };

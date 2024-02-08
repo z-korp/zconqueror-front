@@ -20,7 +20,7 @@ export function useGetTiles() {
   );
 
   useEffect(() => {
-    console.log('tiles', tiles);
+    //console.log('tiles', tiles);
   }, [tiles]);
 
   return {
