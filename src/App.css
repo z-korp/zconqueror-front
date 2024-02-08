@@ -54,3 +54,24 @@
     @apply absolute p-4 border-4 border-black rounded shadow-lg bg-white w-[80%] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-base outline-none;
   }
 }
+
+/* Custom scrollbar styles */
+.scrollbar-custom {
+  scrollbar-width: thin;
+  scrollbar-color: #4b5563 #374151; /* Using a hex color code for gray-700 */
+}
+
+/* For WebKit (Chrome, Safari, etc.) */
+.scrollbar-custom::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollbar-custom::-webkit-scrollbar-track {
+  background: #374151; /* Hex color code for gray-700 */
+}
+
+.scrollbar-custom::-webkit-scrollbar-thumb {
+  background-color: #4b5563; /* Direct color name */
+  border-radius: 20px;
+  border: 3px solid #374151; /* Hex color code for gray-700 */
+}
