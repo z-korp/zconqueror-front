@@ -8,7 +8,7 @@ import { useComponentValue } from '@dojoengine/react';
 import React, { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import TroopsMarker from './TroopMarker';
-import carte from '../../../public/texture_grass.png';
+import carte from '../../../public/texture1.png';
 
 interface RegionProps {
   d: string;
@@ -125,8 +125,8 @@ const Region: React.FC<RegionProps> = ({ d, id, region, containerRef, onRegionCl
           containerRef.current // render the button directly in the body
         )}
       <defs>
-        <pattern id="texture" patternUnits="userSpaceOnUse" width="3669" height="1932">
-          <image href={carte} x="0" y="0" width="3669" height="1932" />
+        <pattern id="texture" patternUnits="userSpaceOnUse" width="900" height="647">
+          <image href={carte} x="0" y="0" width="900" height="647" />
         </pattern>
         <mask id="pathMask">
           <path d={d} fill="blue" stroke="black" strokeWidth="10" />
