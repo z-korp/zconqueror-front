@@ -49,7 +49,7 @@ export default function StatusPlayer({
         </div>
         {/* Bouton "Next Phase" */}
         <div
-          className={`absolute flex justify-center h-[120px] w-[120px] rounded-full -right-[25px] -top-[25px] z-10 bg-red-500 border-8 border-red-600 pointer-events-auto`}
+          className={`absolute flex justify-center h-[120px] w-[120px] rounded-full -right-[25px] -top-[25px] z-10 ${colorClasses[color]} border-8 ${colorClasses[color]} pointer-events-auto`}
         >
           {phase === Phase.DEPLOY && supply > 0 && (
             <div className="flex flex-row gap-1 items-center text-4xl text-white drop-shadow-[0_6.2px_8.2px_rgba(0,0,0,0.8)]">

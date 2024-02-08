@@ -1,4 +1,5 @@
 import { useDojo } from '@/DojoContext';
+import { useGetCurrentPlayer } from '@/hooks/useGetCurrentPlayer';
 import { usePhase } from '@/hooks/usePhase';
 import { useTurn } from '@/hooks/useTurn';
 import { colorPlayer } from '@/utils/colors';
@@ -11,12 +12,7 @@ import CardsPopup from './CardsPopup';
 import OverlayWithText from './OverlayWithText';
 import StatusPlayer from './StatusPlayer';
 
-interface PlayPanelProps {
-  index: number;
-  player: any;
-}
-
-const PlayPanel = ({ index, player }: PlayPanelProps) => {
+const PlayPanel = () => {
   const {
     setup: {
       client: { play },
@@ -24,6 +20,7 @@ const PlayPanel = ({ index, player }: PlayPanelProps) => {
     account: { account },
   } = useDojo();
 
+  const { currentPlayer: player } = useGetCurrentPlayer();
   const { game } = useElementStore((state) => state);
   const { turn } = useTurn();
   const { phase } = usePhase();
@@ -57,7 +54,7 @@ const PlayPanel = ({ index, player }: PlayPanelProps) => {
   }, [player?.conqueror]);
 
   useEffect(() => {
-    if (game.id != null) {
+    if (game && game.id != null) {
       if (conqueredThisTurn) {
         setCards(player.cards);
         setPendingCards(player.cards);
@@ -92,11 +89,11 @@ const PlayPanel = ({ index, player }: PlayPanelProps) => {
     return () => clearTimeout(timer);
   }, [showCardsPopup]);
 
-  if (player === undefined) return null;
-  if (index !== turn) return null;
+  if (game === undefined || game === null) return null;
+  if (player === undefined || player === null) return null;
 
-  const color = colorPlayer[index + 1];
-  const image = avatars[index + 1];
+  const color = colorPlayer[turn + 1];
+  const image = avatars[turn + 1];
 
   const handleNextPhaseClick = () => {
     if (game.id == null || game.id == undefined) return;
@@ -153,6 +150,8 @@ const PlayPanel = ({ index, player }: PlayPanelProps) => {
       setPendingCards(pendingCards.filter((c) => c !== cardNumber));
     }
   };
+
+  console.log(player);
 
   return (
     <>
