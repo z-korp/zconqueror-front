@@ -1,31 +1,27 @@
 import { useDojo } from '@/DojoContext';
-import { useComponentStates } from '@/hooks/useComponentState';
+import { useGetCurrentPlayer } from '@/hooks/useGetCurrentPlayer';
+import { useGetTiles } from '@/hooks/useGetTiles';
 import { Phase, useElementStore } from '@/utils/store';
-import { useComponentValue } from '@dojoengine/react';
-import { getComponentValue } from '@latticexyz/recs';
+import { Milestone, ShieldPlus, Swords } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import Counter from '../panel/Counter';
 import SelectionPanel from '../panel/SelectionPanel';
-import { ShieldPlus, Swords, Milestone } from 'lucide-react';
 
 const FortifyPanel = () => {
-  const [armyCount, setArmyCount] = useState(0);
-  const [isActionSelected, setIsActionSelected] = useState(false);
-  const { current_source, set_current_source, current_target, set_current_target, current_state, game_id } =
-    useElementStore((state) => state);
-
   const {
     setup: {
       client: { play },
-      clientComponents: { Tile, Player },
     },
     account: { account },
   } = useDojo();
 
-  const { currentPlayerId } = useComponentStates();
-  const player = useComponentValue(Player, currentPlayerId);
+  const [armyCount, setArmyCount] = useState(0);
+  const [isActionSelected, setIsActionSelected] = useState(false);
+  const { current_source, set_current_source, current_target, set_current_target, current_state, game } =
+    useElementStore((state) => state);
 
-  const { current_address } = useElementStore((state) => state);
+  const { currentPlayer } = useGetCurrentPlayer();
+
   const [sourceTile, setSourceTile] = useState<any | null>(null);
   const [targetTile, setTargetTile] = useState<any | null>(null);
 
@@ -35,9 +31,8 @@ const FortifyPanel = () => {
     visible: false,
   });
 
-  // Example positions, you'll need to calculate these based on your game's grid
-  const attackerPosition = { x: 125, y: 150 }; // Replace with actual position
-  const targetPosition = { x: 125, y: 300 }; // Replace with actual position
+  const attackerPosition = { x: 125, y: 150 };
+  const targetPosition = { x: 125, y: 300 };
 
   // Trigger the animation on some game event, e.g., attack
   const animateArrow = () => {
@@ -72,7 +67,7 @@ const FortifyPanel = () => {
 
   const increment = () => {
     if (current_state === Phase.DEPLOY) {
-      if (armyCount <= player.supply) {
+      if (armyCount <= currentPlayer.supply) {
         setArmyCount(armyCount + 1);
       }
     } else {
@@ -88,15 +83,15 @@ const FortifyPanel = () => {
     }
   };
 
-  const { tileIds } = useComponentStates();
+  const { tiles } = useGetTiles();
 
   useEffect(() => {
     if (current_source !== null) {
-      const sourceTileData = getComponentValue(Tile, tileIds[current_source - 1]);
+      const sourceTileData = tiles[current_source - 1];
       setSourceTile(sourceTileData);
       if (sourceTileData && sourceTileData.army) {
         if (current_state === Phase.DEPLOY) {
-          setArmyCount(player.supply);
+          setArmyCount(currentPlayer.supply);
         } else {
           setArmyCount(sourceTileData.army - 1);
         }
@@ -108,54 +103,54 @@ const FortifyPanel = () => {
     }
 
     if (current_target !== null) {
-      const targetTileData = getComponentValue(Tile, tileIds[current_target - 1]);
+      const targetTileData = tiles[current_target - 1];
       setTargetTile(targetTileData);
     } else {
       setTargetTile(null);
     }
-  }, [current_source, current_target, Tile, tileIds]);
+  }, [current_source, current_state, current_target]);
 
   const handleSupply = () => {
-    if (game_id == null || game_id == undefined) return;
+    if (game.id == null || game.id == undefined) return;
     if (current_source === null) return;
-    if (player && player.supply < armyCount) {
+    if (currentPlayer && currentPlayer.supply < armyCount) {
       //todo put toast here
-      console.log('Not enough supply', player.supply, armyCount);
+      console.log('Not enough supply', currentPlayer.supply, armyCount);
       // alert('Not enough supply', player.supply);
       return;
     }
-    play.supply(account, game_id, current_source, armyCount);
-    setArmyCount(player.supply - armyCount);
+    play.supply(account, game.id, current_source, armyCount);
+    setArmyCount(currentPlayer.supply - armyCount);
   };
 
   const onMoveTroops = async () => {
     if (current_source === null || current_target === null) return;
 
-    if (game_id == null || game_id == undefined) return;
+    if (game.id == null || game.id == undefined) return;
     animateArrow();
-    await play.transfer(account, game_id, current_source, current_target, armyCount);
+    await play.transfer(account, game.id, current_source, current_target, armyCount);
   };
 
   const onAttack = async () => {
     // Implement attack logic here
     if (current_source === null || current_target === null) return;
 
-    if (game_id == null || game_id == undefined) return;
+    if (game.id == null || game.id == undefined) return;
 
     // todo adapt to compare to source.supply
-    if (player && player.attack < armyCount) {
+    if (currentPlayer && currentPlayer.attack < armyCount) {
       //todo put toast here
       alert('Not enough attack');
       return;
     }
     animateArrow();
 
-    await play.attack(account, game_id, current_source, current_target, armyCount);
+    await play.attack(account, game.id, current_source, current_target, armyCount);
 
     const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
     await sleep(100);
 
-    play.defend(account, game_id, current_source, current_target);
+    play.defend(account, game.id, current_source, current_target);
   };
 
   const removeSelected = (type: number): void => {
@@ -174,7 +169,7 @@ const FortifyPanel = () => {
   const isFortifyTurn = () => {
     return current_state === Phase.FORTIFY;
   };
-  console.log('current_state', current_state);
+
   return (
     <div
       id="parent"
@@ -254,7 +249,7 @@ const FortifyPanel = () => {
                 count={armyCount}
                 onDecrement={decrement}
                 onIncrement={increment}
-                maxCount={player ? player.supply : Infinity}
+                maxCount={currentPlayer ? currentPlayer.supply : Infinity}
               />
               <button
                 onClick={handleSupply}

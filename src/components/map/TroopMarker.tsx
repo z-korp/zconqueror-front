@@ -1,7 +1,6 @@
 import { FC, useEffect, useState } from 'react';
-import RoundButton from '../RoundButton';
 import '../../styles/Button.css';
-import { set } from 'zod';
+import RoundButton from '../RoundButton';
 
 interface TroopsMarkerProps {
   position: { x: number; y: number };

@@ -2,11 +2,12 @@ import { getSyncEntities } from '@dojoengine/state';
 import * as torii from '@dojoengine/torii-client';
 import { createClientComponents } from './createClientComponents';
 //import { createSystemCalls } from './createSystemCalls';
-import { defineContractComponents } from './contractComponents';
-import { world } from './world';
-import { Config } from '../../DojoConfig';
-import { setupWorld } from './generated/generated';
 import { DojoProvider } from '@dojoengine/core';
+import { Config } from '../../DojoConfig';
+import { defineContractComponents } from './contractComponents';
+import { setupWorld } from './generated/generated';
+import { world } from './world';
+import { createUpdates } from './createUpdates';
 
 export type SetupResult = Awaited<ReturnType<typeof setup>>;
 
@@ -29,11 +30,14 @@ export async function setup({ ...config }: Config) {
 
   const client = await setupWorld(new DojoProvider(config.manifest, config.rpcUrl));
 
+  const updates = await createUpdates(clientComponents);
+
   return {
     client,
     clientComponents,
     contractComponents,
     config,
     world,
+    updates,
   };
 }

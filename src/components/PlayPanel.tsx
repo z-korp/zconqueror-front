@@ -1,12 +1,12 @@
 import { useDojo } from '@/DojoContext';
-import { useComponentStates } from '@/hooks/useComponentState';
-import { colorPlayer } from '@/utils/colors';
-import { useComponentValue } from '@dojoengine/react';
-import { EntityIndex } from '@latticexyz/recs';
+import { useTurn } from '@/hooks/useTurn';
+import { colorClasses, colorPlayer } from '@/utils/colors';
+import { useEffect, useState } from 'react';
+import { FaChevronRight } from 'react-icons/fa6';
+import { GiBattleGear } from 'react-icons/gi';
 import { avatars } from '../utils/pfps';
 import { Phase, useElementStore } from '../utils/store';
-import { useEffect, useState } from 'react';
-import { feltToStr, unpackU128toNumberArray } from '@/utils/unpack';
+import GameCard from './GameCard';
 import OverlayWithText from './OverlayWithText';
 import ActionPlayerPanel from './ActionPlayerPanel';
 import StatusPlayer from './StatusPlayer';
@@ -15,28 +15,23 @@ import CardMenu from './CardMenu';
 
 interface PlayPanelProps {
   index: number;
-  entityId: EntityIndex;
+  player: any;
 }
 
-const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
+const PlayPanel = ({ index, player }: PlayPanelProps) => {
   const {
     setup: {
-      clientComponents: { Player },
       client: { play },
     },
     account: { account },
   } = useDojo();
 
-  const { current_address, game_id, game } = useElementStore((state) => state);
+  const { current_state, set_current_state, game } = useElementStore((state) => state);
+  const { turn } = useTurn();
 
-  const { current_state, set_current_state } = useElementStore((state) => state);
-
-  const { turn } = useComponentStates();
-  const player = useComponentValue(Player, entityId);
   const [cards, setCards] = useState<number[]>([]);
   const [pendingCards, setPendingCards] = useState<number[]>([]);
   const [conqueredThisTurn, setConqueredThisTurn] = useState(false);
-  const [currentPlayer, setCurrentPlayer] = useState(player);
   const [currentTurn, setCurrentTurn] = useState(turn);
   const [showCardsPopup, setShowCardsPopup] = useState(false);
   const [showCardMenu, setShowCardMenu] = useState(false);
@@ -62,21 +57,20 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
   }, [player?.conqueror]);
 
   useEffect(() => {
-    if (game_id != null) {
+    if (game.id != null) {
       if (conqueredThisTurn) {
-        setCards(unpackU128toNumberArray(player.cards).filter((e: number) => e !== 0));
-        setPendingCards(unpackU128toNumberArray(player.cards).filter((e: number) => e !== 0));
+        setCards(player.cards);
+        setPendingCards(player.cards);
         setShowCardsPopup(true);
         setConqueredThisTurn(false);
       }
 
       const timer = setTimeout(() => {
         setCurrentTurn(turn);
-        setCurrentPlayer(player);
       }, 4000);
 
       const timer2 = setTimeout(() => {
-        let text = textFromState(1);
+        const text = textFromState(1);
         setOverlayText(text);
         setShowOverlay(true);
       }, 4500);
@@ -105,25 +99,21 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
 
   if (player === undefined) return null;
   if (index !== currentTurn) return null;
-  if (currentPlayer === undefined) return null;
 
-  const { supply } = player;
-
-  const name = feltToStr(currentPlayer.name);
   const color = colorPlayer[index + 1];
   const image = avatars[index + 1];
 
   const handleNextPhaseClick = () => {
-    if (game_id == null || game_id == undefined) return;
+    if (game.id == null || game.id == undefined) return;
     let text = '';
     if (current_state < 3) {
-      play.finish(account, game_id);
+      play.finish(account, game.id);
       text = textFromState(current_state + 1);
       set_current_state(current_state + 1);
       setOverlayText(text);
       setShowOverlay(true);
     } else {
-      play.finish(account, game_id);
+      play.finish(account, game.id);
       set_current_state(Phase.DEPLOY);
     }
 
@@ -144,8 +134,8 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
 
   const discardCards = () => {
     console.log(selectedCards[0]);
-    if (game_id !== undefined && game_id !== null) {
-      play.discard(account, game_id, selectedCards[0], selectedCards[1], selectedCards[2]);
+    if (game.id !== undefined && game.id !== null) {
+      play.discard(account, game.id, selectedCards[0], selectedCards[1], selectedCards[2]);
       setSelectedCards([]);
     }
   };
@@ -175,7 +165,7 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
     <>
       {showCardsPopup && <CardsPopup cards={cards} onClose={() => setShowCardsPopup(false)} />}
       <div className="fixed bottom-14 left-0 right-0 flex justify-center items-end p-4 pointer-events-none">
-        {showOverlay && <OverlayWithText text={overlayText} />}
+        {false && showOverlay && <OverlayWithText text={overlayText} />}
         {/* Section du panneau de jeu */}
         <ActionPlayerPanel toggleCardMenu={toggleCardMenu} cards={cards} />
 
