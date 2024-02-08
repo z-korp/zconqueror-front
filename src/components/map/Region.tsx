@@ -5,7 +5,7 @@ import { getNeighbors } from '@/utils/map';
 import { Phase, useElementStore } from '@/utils/store';
 import React, { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
-import carte from '../../../public/texture1.png';
+import texture from '../../../public/texture_white.png';
 import TroopsMarker from './TroopMarker';
 
 interface RegionProps {
@@ -103,7 +103,7 @@ const Region: React.FC<RegionProps> = ({ d, id, region, containerRef, onRegionCl
         )}
       <defs>
         <pattern id="texture" patternUnits="userSpaceOnUse" width="900" height="647">
-          <image href={carte} x="0" y="0" width="900" height="647" />
+          <image href={texture} x="0" y="0" width="900" height="647" />
         </pattern>
         <mask id="pathMask">
           <path d={d} fill="blue" stroke="black" strokeWidth="10" />

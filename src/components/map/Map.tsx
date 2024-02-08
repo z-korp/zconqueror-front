@@ -4,8 +4,9 @@ import { usePhase } from '@/hooks/usePhase';
 import { useTurn } from '@/hooks/useTurn';
 import { getNeighbors } from '@/utils/map';
 import { Phase, useElementStore } from '@/utils/store';
-import React, { Fragment, useRef, useState } from 'react';
+import { Fragment, useRef, useState } from 'react';
 import carte from '../../../public/map_sea3D_transparent_2.png';
+import mapReliefSvg from '../../../public/map_original_relief.svg';
 import mapDataRaw from '../../assets/map/map.json';
 import FortifyPanel from './FortifyPanel';
 import Region from './Region';
@@ -112,8 +113,13 @@ const Map = () => {
             className="absolute top-0 left-0 w-full h-full"
             overflow="visible"
           >
-            <image href={carte} width="130%" height="130%" x={(3669 - 3669 * 1.3) / 2} y={(1932 - 1932 * 1.3) / 2} />
-
+            <image
+              href={mapReliefSvg}
+              width="108%"
+              height="108%"
+              x={(3669 - 3669 * 1.08) / 2}
+              y={(1932 - 1932 * 1.08) / 2}
+            />
             {Object.keys(mapData).map((region) => (
               <Fragment key={region}>
                 {mapData[region].map((item) => (
