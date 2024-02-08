@@ -1,12 +1,11 @@
-// BurnerActions.tsx
-import React, { useEffect, useState } from 'react';
 import { useDojo } from '@/DojoContext';
-import { Button } from './ui/button';
 import { useElementStore } from '@/utils/store';
+import React from 'react';
+import { Button } from './ui/button';
 
 const Burner: React.FC = () => {
   const {
-    account: { create, list, select, isDeploying },
+    account: { create, list, select, isDeploying, clear },
   } = useDojo();
 
   const { current_address, set_current_address } = useElementStore((state) => state);
@@ -42,6 +41,7 @@ const Burner: React.FC = () => {
         <Button className="self-end" onClick={handleCreate}>
           {isDeploying ? 'Deploying...' : 'Create burner'}
         </Button>
+        <Button onClick={() => clear()}>Clear burners</Button>
       </div>
     </div>
   );

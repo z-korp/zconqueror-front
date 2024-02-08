@@ -1,14 +1,12 @@
-import { useDojo } from '@/DojoContext';
-import { useComponentStates } from '@/hooks/useComponentState';
+import { useGetTiles } from '@/hooks/useGetTiles';
+import { usePhase } from '@/hooks/usePhase';
 import { colorPlayer } from '@/utils/colors';
 import { getNeighbors } from '@/utils/map';
 import { Phase, useElementStore } from '@/utils/store';
-import { isTest } from '@/utils/test';
-import { useComponentValue } from '@dojoengine/react';
 import React, { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
-import TroopsMarker from './TroopMarker';
 import carte from '../../../public/texture1.png';
+import TroopsMarker from './TroopMarker';
 
 interface RegionProps {
   d: string;
@@ -22,17 +20,13 @@ interface RegionProps {
 }
 
 const Region: React.FC<RegionProps> = ({ d, id, region, containerRef, onRegionClick, playerTurn }: RegionProps) => {
-  const {
-    setup: {
-      clientComponents: { Tile },
-    },
-  } = useDojo();
-  const { current_state, current_source, current_target } = useElementStore((state) => state);
+  const { phase } = usePhase();
+  const { current_source, current_target } = useElementStore((state) => state);
 
   const [isHilighted, setIsHighlighted] = useState(false);
-  const { tileIds } = useComponentStates();
+  const { tiles } = useGetTiles();
 
-  const tile = useComponentValue(Tile, tileIds[id - 1]);
+  const tile = tiles[id - 1];
 
   const troups = tile ? tile.army : 0;
   const color = tile ? colorPlayer[tile.owner + 1 || 0] : 'white';
@@ -68,13 +62,13 @@ const Region: React.FC<RegionProps> = ({ d, id, region, containerRef, onRegionCl
   }, [region]);
 
   useEffect(() => {
-    if (current_state === Phase.DEPLOY) {
+    if (phase === Phase.DEPLOY) {
       if (current_source === id) {
         setIsHighlighted(true);
       } else {
         setIsHighlighted(false);
       }
-    } else if (current_state === Phase.ATTACK || current_state === Phase.FORTIFY) {
+    } else if (phase === Phase.ATTACK || phase === Phase.FORTIFY) {
       if (current_source && current_target === null && current_source !== id) {
         const neighbors = getNeighbors(current_source);
 
@@ -86,27 +80,10 @@ const Region: React.FC<RegionProps> = ({ d, id, region, containerRef, onRegionCl
         setIsHighlighted(false);
       }
     }
-  }, [current_source, current_state, current_target, id]);
+  }, [current_source, phase, current_target, id]);
 
   return (
     <>
-      {isTest &&
-        position &&
-        troups !== undefined &&
-        containerRef &&
-        containerRef.current &&
-        ReactDOM.createPortal(
-          <TroopsMarker
-            position={{ x: position.x, y: position.y }}
-            handlePathClick={onRegionClick}
-            troups={id}
-            color={'pink'}
-            containerRef={containerRef}
-          />,
-
-          containerRef.current // render the button directly in the body
-        )}
-
       {position &&
         troups !== undefined &&
         containerRef &&

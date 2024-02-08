@@ -1,13 +1,14 @@
 import { useDojo } from '@/DojoContext';
-import { useComponentStates } from '@/hooks/useComponentState';
+import { useGetTiles } from '@/hooks/useGetTiles';
+import { usePhase } from '@/hooks/usePhase';
+import { useTurn } from '@/hooks/useTurn';
 import { getNeighbors } from '@/utils/map';
 import { Phase, useElementStore } from '@/utils/store';
-import { getComponentValue } from '@latticexyz/recs';
 import React, { Fragment, useRef, useState } from 'react';
 import carte from '../../../public/map_sea3D_transparent_2.png';
 import mapDataRaw from '../../assets/map/map.json';
-import Region from './Region';
 import FortifyPanel from './FortifyPanel';
+import Region from './Region';
 
 const mapData: MapData = mapDataRaw;
 
@@ -29,18 +30,20 @@ const Map = () => {
     },
   } = useDojo();
 
-  const { tileIds, turn } = useComponentStates();
-  const { current_state, current_source, set_current_source, set_current_target } = useElementStore((state) => state);
+  const { turn } = useTurn();
+  const { phase } = usePhase();
+  const { tiles } = useGetTiles();
+  const { current_source, set_current_source, set_current_target } = useElementStore((state) => state);
 
   const handleRegionClick = (regionId: number) => {
-    const tile = getComponentValue(Tile, tileIds[regionId - 1]);
-    if (current_state == Phase.DEPLOY) {
+    const tile = tiles[regionId - 1];
+    if (phase == Phase.DEPLOY) {
       if (tile.owner !== turn) {
         set_current_source(null);
         return;
       }
       set_current_source(regionId);
-    } else if (current_state == Phase.ATTACK) {
+    } else if (phase == Phase.ATTACK) {
       if (tile !== undefined) {
         if (tile.owner === turn) {
           set_current_source(regionId);
@@ -55,7 +58,7 @@ const Map = () => {
       } else {
         console.log('Can t interract with this tile');
       }
-    } else if (current_state == Phase.FORTIFY) {
+    } else if (phase == Phase.FORTIFY) {
       // if clicked tile is owned by the player
       if (tile.owner === turn) {
         if (current_source) {
@@ -72,6 +75,7 @@ const Map = () => {
   const [clickPosition, setClickPosition] = useState({ x: 0, y: 0, rectWidth: 0, rectHeight: 0 });
 
   const toggleZoom = (e) => {
+    return;
     const rect = e.target.getBoundingClientRect();
     const x = e.clientX; // Position X du clic par rapport à la div
     const y = e.clientY; // Position Y du clic par rapport à la div
@@ -96,8 +100,7 @@ const Map = () => {
       }
     : {};
 
-  const isFortifyPanelVisible =
-    current_state === Phase.FORTIFY || current_state === Phase.ATTACK || current_state === Phase.DEPLOY;
+  const isFortifyPanelVisible = phase === Phase.FORTIFY || phase === Phase.ATTACK || phase === Phase.DEPLOY;
 
   return (
     <>

@@ -1,10 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App.tsx';
-import './index.css';
-import { setup } from './dojo/setup';
-import { DojoProvider } from './DojoContext';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { dojoConfig } from '../dojoConfig.ts';
+import App from './App.tsx';
+import { DojoProvider } from './DojoContext';
+import { setup } from './dojo/setup';
+import './index.css';
 
 async function init() {
   const rootElement = document.getElementById('root');
@@ -15,7 +16,11 @@ async function init() {
   root.render(
     <React.StrictMode>
       <DojoProvider value={setupResult}>
-        <App />
+        <Router>
+          <Routes>
+            <Route path="/:id" element={<App />} />
+          </Routes>
+        </Router>
       </DojoProvider>
     </React.StrictMode>
   );

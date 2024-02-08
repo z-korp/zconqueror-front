@@ -1,44 +1,41 @@
 import { useDojo } from '@/DojoContext';
 import { colorClasses, colorPlayer } from '@/utils/colors';
-import { useComponentValue } from '@dojoengine/react';
-import { EntityIndex, getComponentValue, getEntitiesWithValue } from '@latticexyz/recs';
+import { useElementStore } from '@/utils/store';
+import { isTest } from '@/utils/test';
+import { getComponentValue, getEntitiesWithValue } from '@latticexyz/recs';
+import { useState } from 'react';
 import { GiFrance, GiSwordsEmblem } from 'react-icons/gi';
+import { undefined } from 'zod';
 import { avatars } from '../utils/pfps';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
-import { useState } from 'react';
-import { feltToStr, unpackU128toNumberArray } from '@/utils/unpack';
 
 interface SidePlayerInfoProps {
   index: number;
-  entityId: EntityIndex;
+  player: any;
 }
 
-const SidePlayerInfo: React.FC<SidePlayerInfoProps> = ({ index, entityId }) => {
+const SidePlayerInfo: React.FC<SidePlayerInfoProps> = ({ index, player }) => {
   const [showOtherElements, setShowOtherElements] = useState<boolean | null>(true);
   const {
     setup: {
-      clientComponents: { Player, Tile },
+      clientComponents: { Tile },
     },
   } = useDojo();
 
-  const player = useComponentValue(Player, entityId);
-  if (player === undefined) return null;
+  const { game } = useElementStore((state) => state);
 
-  const tiles = getEntitiesWithValue(Tile, { owner: index });
+  if (player === undefined || game === undefined) return null;
 
-  const { name: rawName, cards } = player;
-
-  const name = feltToStr(player.name);
+  const cards = player.cards;
   const color = colorPlayer[index + 1];
-  0;
   const image = avatars[index + 1];
+
+  const tiles = getEntitiesWithValue(Tile, { owner: index, game_id: game.id });
   const territories = [...tiles].length;
   const troops = [...tiles]
     .map((e) => getComponentValue(Tile, e))
     .map((obj) => obj.army)
     .reduce((acc, curr) => acc + curr, 0);
-
-  const cardsArray = unpackU128toNumberArray(cards).filter((e: any) => e !== 0);
 
   const toggleOtherElements = () => {
     setShowOtherElements(!showOtherElements);
@@ -83,7 +80,7 @@ const SidePlayerInfo: React.FC<SidePlayerInfoProps> = ({ index, entityId }) => {
         >
           <img src={image} alt={'player'} className="rounded-full" />
           <div className="absolute top-1 left-0 border border-slate-700 transform -translate-y-1/2 -rotate-12 bg-white text-black px-2 py-1 rounded">
-            {cardsArray ? cardsArray.length : 0}
+            {cards ? cards.length : 0}
           </div>
         </div>
       </button>
@@ -92,8 +89,13 @@ const SidePlayerInfo: React.FC<SidePlayerInfoProps> = ({ index, entityId }) => {
           className={`absolute w-[150px] h-[30px] bg-black -bottom-[25px] left-[75px] rounded-md ${colorClasses[color]} z-10 border-2 border-${colorClasses[color]}`}
         >
           <span className="uppercase text-white font-bold drop-shadow-[0_6.2px_8.2px_rgba(0,0,0,0.8)] text-sm">
-            {name}
+            {player.name}
           </span>
+          {isTest && (
+            <div className="text-white font-bold drop-shadow-[0_6.2px_8.2px_rgba(0,0,0,0.8)] text-sm mt-1">
+              {player.address.slice(0, 4) + '...' + player.address.slice(-3)}
+            </div>
+          )}
         </div>
       )}
     </div>

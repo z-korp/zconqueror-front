@@ -1,58 +1,50 @@
 import { useDojo } from '@/DojoContext';
-import { useComponentStates } from '@/hooks/useComponentState';
+import { useGetCurrentPlayer } from '@/hooks/useGetCurrentPlayer';
+import { usePhase } from '@/hooks/usePhase';
+import { useTurn } from '@/hooks/useTurn';
 import { colorPlayer } from '@/utils/colors';
-import { useComponentValue } from '@dojoengine/react';
-import { EntityIndex } from '@latticexyz/recs';
+import { useEffect, useState } from 'react';
 import { avatars } from '../utils/pfps';
 import { Phase, useElementStore } from '../utils/store';
-import { useEffect, useState } from 'react';
-import { feltToStr, unpackU128toNumberArray } from '@/utils/unpack';
-import OverlayWithText from './OverlayWithText';
 import ActionPlayerPanel from './ActionPlayerPanel';
-import StatusPlayer from './StatusPlayer';
-import CardsPopup from './CardsPopup';
 import CardMenu from './CardMenu';
+import CardsPopup from './CardsPopup';
+import OverlayWithText from './OverlayWithText';
+import StatusPlayer from './StatusPlayer';
 
-interface PlayPanelProps {
-  index: number;
-  entityId: EntityIndex;
-}
-
-const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
+const PlayPanel = () => {
   const {
     setup: {
-      clientComponents: { Player },
       client: { play },
     },
     account: { account },
   } = useDojo();
 
-  const { current_address, game_id, game } = useElementStore((state) => state);
+  const { currentPlayer: player } = useGetCurrentPlayer();
+  const { game } = useElementStore((state) => state);
+  const { turn } = useTurn();
+  const { phase } = usePhase();
 
-  const { current_state, set_current_state } = useElementStore((state) => state);
-
-  const { turn } = useComponentStates();
-  const player = useComponentValue(Player, entityId);
   const [cards, setCards] = useState<number[]>([]);
   const [pendingCards, setPendingCards] = useState<number[]>([]);
   const [conqueredThisTurn, setConqueredThisTurn] = useState(false);
-  const [currentPlayer, setCurrentPlayer] = useState(player);
-  const [currentTurn, setCurrentTurn] = useState(turn);
   const [showCardsPopup, setShowCardsPopup] = useState(false);
   const [showCardMenu, setShowCardMenu] = useState(false);
   const [selectedCards, setSelectedCards] = useState<number[]>([]);
   const [showOverlay, setShowOverlay] = useState(false);
   const [overlayText, setOverlayText] = useState('');
 
-  const textFromState = (state: number) => {
-    if (state === 1) {
-      return 'Deploying';
-    } else if (state === 2) {
-      return 'Attacking';
-    } else if (state === 3) {
-      return 'Fortifying';
+  const textFromState = (phase: Phase) => {
+    switch (phase) {
+      case Phase.DEPLOY:
+        return 'Deploying';
+      case Phase.ATTACK:
+        return 'Attacking';
+      case Phase.FORTIFY:
+        return 'Fortifying';
+      default:
+        return 'Unknown'; // Consider handling unexpected cases or add a default message
     }
-    return 'Unknown';
   };
 
   useEffect(() => {
@@ -62,21 +54,16 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
   }, [player?.conqueror]);
 
   useEffect(() => {
-    if (game_id != null) {
+    if (game && game.id != null) {
       if (conqueredThisTurn) {
-        setCards(unpackU128toNumberArray(player.cards).filter((e: number) => e !== 0));
-        setPendingCards(unpackU128toNumberArray(player.cards).filter((e: number) => e !== 0));
+        setCards(player.cards);
+        setPendingCards(player.cards);
         setShowCardsPopup(true);
         setConqueredThisTurn(false);
       }
 
-      const timer = setTimeout(() => {
-        setCurrentTurn(turn);
-        setCurrentPlayer(player);
-      }, 4000);
-
       const timer2 = setTimeout(() => {
-        let text = textFromState(1);
+        const text = textFromState(1);
         setOverlayText(text);
         setShowOverlay(true);
       }, 4500);
@@ -86,7 +73,6 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
       }, 6000);
 
       return () => {
-        clearTimeout(timer);
         clearTimeout(timer2);
         clearTimeout(timer3);
       };
@@ -103,28 +89,22 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
     return () => clearTimeout(timer);
   }, [showCardsPopup]);
 
-  if (player === undefined) return null;
-  if (index !== currentTurn) return null;
-  if (currentPlayer === undefined) return null;
+  if (game === undefined || game === null) return null;
+  if (player === undefined || player === null) return null;
 
-  const { supply } = player;
-
-  const name = feltToStr(currentPlayer.name);
-  const color = colorPlayer[index + 1];
-  const image = avatars[index + 1];
+  const color = colorPlayer[turn + 1];
+  const image = avatars[turn + 1];
 
   const handleNextPhaseClick = () => {
-    if (game_id == null || game_id == undefined) return;
+    if (game.id == null || game.id == undefined) return;
     let text = '';
-    if (current_state < 3) {
-      play.finish(account, game_id);
-      text = textFromState(current_state + 1);
-      set_current_state(current_state + 1);
+    if (phase < 3) {
+      play.finish(account, game.id);
+      text = textFromState(phase + 1);
       setOverlayText(text);
       setShowOverlay(true);
     } else {
-      play.finish(account, game_id);
-      set_current_state(Phase.DEPLOY);
+      play.finish(account, game.id);
     }
 
     const timer2 = setTimeout(() => {
@@ -144,8 +124,8 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
 
   const discardCards = () => {
     console.log(selectedCards[0]);
-    if (game_id !== undefined && game_id !== null) {
-      play.discard(account, game_id, selectedCards[0], selectedCards[1], selectedCards[2]);
+    if (game.id !== undefined && game.id !== null) {
+      play.discard(account, game.id, selectedCards[0], selectedCards[1], selectedCards[2]);
       setSelectedCards([]);
     }
   };
@@ -171,11 +151,13 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
     }
   };
 
+  console.log(player);
+
   return (
     <>
       {showCardsPopup && <CardsPopup cards={cards} onClose={() => setShowCardsPopup(false)} />}
       <div className="fixed bottom-14 left-0 right-0 flex justify-center items-end p-4 pointer-events-none">
-        {showOverlay && <OverlayWithText text={overlayText} />}
+        {false && showOverlay && <OverlayWithText text={overlayText} />}
         {/* Section du panneau de jeu */}
         <ActionPlayerPanel toggleCardMenu={toggleCardMenu} cards={cards} />
 
@@ -192,13 +174,13 @@ const PlayPanel = ({ index, entityId }: PlayPanelProps) => {
         )}
         {/* Barre d'état du joueur */}
         <StatusPlayer
-          name={name}
+          name={player.name}
           color={color}
           image={image}
-          supply={supply}
+          supply={player.supply}
           handleNextPhaseClick={handleNextPhaseClick}
           textFromState={textFromState}
-          current_state={current_state}
+          phase={phase}
         />
       </div>
     </>
