@@ -5,7 +5,6 @@ import { useTurn } from '@/hooks/useTurn';
 import { getNeighbors } from '@/utils/map';
 import { Phase, useElementStore } from '@/utils/store';
 import { Fragment, useRef, useState } from 'react';
-import carte from '../../../public/map_sea3D_transparent_2.png';
 import mapReliefSvg from '../../../public/map_original_relief.svg';
 import mapDataRaw from '../../assets/map/map.json';
 import FortifyPanel from './FortifyPanel';
