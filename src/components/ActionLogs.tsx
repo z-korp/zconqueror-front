@@ -48,9 +48,9 @@ const ActionLogs: React.FC = () => {
   });
 
   return (
-    <div className="max-w-xl w-full">
+    <div className="max-w-xl w-full border-2 rounded-lg bg-stone-700 border-stone-900 text-white vt323-font">
       <div
-        className="flex justify-between items-center p-2 border-b border-gray-600 bg-gray-700 rounded-t cursor-pointer text-white vt323-font"
+        className="flex justify-between items-center p-2 border-b border-stone-900  rounded-t cursor-pointer"
         onClick={toggleCollapse}
       >
         <span>{`Logs (${logs.length})`}</span>
@@ -59,15 +59,15 @@ const ActionLogs: React.FC = () => {
 
       <animated.div style={springProps} ref={logsRef} className="max-h-48 overflow-x-auto scrollbar-custom">
         {logs.length !== 0 && (
-          <div className="p-2 bg-gray-700 rounded-b text-start">
+          <div className="p-2 rounded-b text-start">
             {logs.map((log, index) => (
               <div key={index} className="text-sm mb-2 text-left">
-                <span className=" text-white vt323-font">{format(log.timestamp, 'HH:mm:ss')} - </span>
+                <span>{format(log.timestamp, 'HH:mm:ss')} - </span>
                 {log.type === EventType.Supply && (
                   <>
-                    <span className=" text-white vt323-font">{log.log[0]} </span>
+                    <span>{log.log[0]} </span>
                     <span
-                      className=" text-white vt323-font underline"
+                      className="underline"
                       onMouseOver={() => handleMouseOver(log.log[1])}
                       onMouseLeave={handleMouseLeave}
                     >
@@ -77,30 +77,30 @@ const ActionLogs: React.FC = () => {
                 )}
                 {log.type === EventType.Defend && (
                   <>
-                    <span className=" text-white vt323-font">{log.log[0]} </span>
+                    <span>{log.log[0]} </span>
                     <span
-                      className=" text-white vt323-font underline"
+                      className="underline"
                       onMouseOver={() => handleMouseOver(log.log[1])}
                       onMouseLeave={handleMouseLeave}
                     >
                       {log.log[1]}
                     </span>
-                    <span className=" text-white vt323-font"> {log.log[2]}</span>
+                    <span> {log.log[2]}</span>
                   </>
                 )}
                 {log.type === EventType.Fortify && (
                   <>
-                    <span className=" text-white vt323-font">{log.log[0]} </span>
+                    <span>{log.log[0]} </span>
                     <span
-                      className=" text-white vt323-font underline"
+                      className="underline"
                       onMouseOver={() => handleMouseOver(log.log[1])}
                       onMouseLeave={handleMouseLeave}
                     >
                       {log.log[1]}
                     </span>
-                    <span className=" text-white vt323-font"> {log.log[2]} </span>
+                    <span> {log.log[2]} </span>
                     <span
-                      className=" text-white vt323-font underline"
+                      className="underline"
                       onMouseOver={() => handleMouseOver(log.log[3])}
                       onMouseLeave={handleMouseLeave}
                     >

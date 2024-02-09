@@ -8,6 +8,7 @@ import { GiFrance, GiSwordsEmblem } from 'react-icons/gi';
 import { undefined } from 'zod';
 import { avatars } from '../utils/pfps';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
+import { MountainSnow, RectangleVertical, Swords } from 'lucide-react';
 
 interface SidePlayerInfoProps {
   index: number;
@@ -29,6 +30,7 @@ const SidePlayerInfo: React.FC<SidePlayerInfoProps> = ({ index, player }) => {
   const cards = player.cards;
   const color = colorPlayer[index + 1];
   const image = avatars[index + 1];
+  const address = player.address;
 
   const tiles = getEntitiesWithValue(Tile, { owner: index, game_id: game.id });
   const territories = [...tiles].length;
@@ -37,67 +39,41 @@ const SidePlayerInfo: React.FC<SidePlayerInfoProps> = ({ index, player }) => {
     .map((obj) => obj.army)
     .reduce((acc, curr) => acc + curr, 0);
 
-  const toggleOtherElements = () => {
-    setShowOtherElements(!showOtherElements);
-  };
-
   return (
-    <div
-      className={`relative inline-flex h-[100px] w-[250px] rounded-l-full drop-shadow-[0_6.2px_8.2px_rgba(0,0,0,0.8)]`}
-    >
-      {showOtherElements && (
-        <>
-          <div
-            className={`flex flex-col justify-center w-2/3 h-full pl-6 bg-black bg-opacity-75 rounded-l-full border-4 border-${colorClasses[color]}`}
-          >
-            <Tooltip>
-              <TooltipTrigger>
-                <div className="flex gap-2 items-center text-white text-2xl">
-                  <GiSwordsEmblem />
-                  <p className="font-space-mono w-5">{troops}</p>
-                </div>
-              </TooltipTrigger>
-              <TooltipContent>Troops</TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger>
-                <div className="flex gap-2 items-center text-white text-2xl">
-                  <GiFrance />
-                  <p className="font-space-mono w-5">{territories}</p>
-                </div>
-              </TooltipTrigger>
-              <TooltipContent>Territories</TooltipContent>
-            </Tooltip>
-          </div>
-          <div className={` w-1/3 h-full ${colorClasses[color]}`}></div>
-        </>
-      )}
-      <button onClick={toggleOtherElements}>
-        <div
-          className={`absolute h-[110px] w-[110px] left-[100px] -top-[5px] rounded-full bg-customRed-400 z-10 ${
-            !showOtherElements && 'translate-x-24'
-          } hover:transform hover:-translate-y-1 transition-transform ease-in-out `}
-        >
+    <div className="divide-y divide-stone-500 text-black">
+      {/* Repeat this block for each player */}
+      <div className="flex items-center py-2 px-4">
+        <div className="w-12 h-12">
           <img src={image} alt={'player'} className="rounded-full" />
-          <div className="absolute top-1 left-0 border border-slate-700 transform -translate-y-1/2 -rotate-12 bg-white text-black px-2 py-1 rounded">
-            {cards ? cards.length : 0}
-          </div>
         </div>
-      </button>
-      {showOtherElements && (
-        <div
-          className={`absolute w-[150px] h-[30px] bg-black -bottom-[25px] left-[75px] rounded-md ${colorClasses[color]} z-10 border-2 border-${colorClasses[color]}`}
-        >
-          <span className="uppercase text-white font-bold drop-shadow-[0_6.2px_8.2px_rgba(0,0,0,0.8)] text-sm">
-            {player.name}
-          </span>
-          {isTest && (
-            <div className="text-white font-bold drop-shadow-[0_6.2px_8.2px_rgba(0,0,0,0.8)] text-sm mt-1">
-              {player.address.slice(0, 4) + '...' + player.address.slice(-3)}
-            </div>
-          )}
+        <div className="flex-grow">
+          <div className="text-white text-sm truncate">{`${address.substring(0, 2)}...${address.substring(
+            address.length - 3
+          )}`}</div>
         </div>
-      )}
+        <div className="flex gap-1">
+          {/* Replace with actual icons */}
+          <button className={`${colorClasses[color]} rounded px-2 py-1 flex items-center`}>
+            <span className="icon mr-1">
+              <RectangleVertical size={18} />
+            </span>
+            <span>{cards ? cards.length : 0}</span>
+          </button>
+          <button className={`${colorClasses[color]} rounded px-2 py-1 flex items-center`}>
+            <span className="icon mr-1">
+              <Swords size={18} />
+            </span>
+            <span>{troops}</span>
+          </button>
+          <button className={`${colorClasses[color]} rounded px-2 py-1 flex items-center`}>
+            <span className="icon mr-1">
+              <MountainSnow size={18} />
+            </span>
+            <span>{territories} </span>
+          </button>
+        </div>
+      </div>
+      {/* End of player block */}
     </div>
   );
 };
