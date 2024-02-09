@@ -1,12 +1,14 @@
-import { useDojo } from '@/DojoContext';
 import { useGetTiles } from '@/hooks/useGetTiles';
 import { usePhase } from '@/hooks/usePhase';
+import { useRegionCentersStore } from '@/hooks/useRegionCentersStore';
 import { useTurn } from '@/hooks/useTurn';
 import { getNeighbors } from '@/utils/map';
 import { Phase, useElementStore } from '@/utils/store';
 import { Fragment, useRef, useState } from 'react';
+import ReactDOM from 'react-dom';
 import carte from '../../../public/map_sea3D_transparent.png';
 import mapDataRaw from '../../assets/map/map.json';
+import Arrow from './Arrow';
 import FortifyPanel from './FortifyPanel';
 import Region from './Region';
 
@@ -24,11 +26,7 @@ interface MapData {
 const Map = () => {
   const containerRef = useRef(null);
 
-  const {
-    setup: {
-      clientComponents: { Tile },
-    },
-  } = useDojo();
+  const centers = useRegionCentersStore((state) => state.centers);
 
   const { turn } = useTurn();
   const { phase } = usePhase();
@@ -74,7 +72,7 @@ const Map = () => {
   const [isZoomed, setIsZoomed] = useState(false);
   const [clickPosition, setClickPosition] = useState({ x: 0, y: 0, rectWidth: 0, rectHeight: 0 });
 
-  const toggleZoom = (e) => {
+  const toggleZoom = (e: any) => {
     return;
     const rect = e.target.getBoundingClientRect();
     const x = e.clientX; // Position X du clic par rapport à la div
@@ -112,6 +110,13 @@ const Map = () => {
             className="absolute top-0 left-0 w-full h-full"
           >
             <image href={carte} width="100%" height="100%" />
+
+            {containerRef &&
+              containerRef.current &&
+              ReactDOM.createPortal(
+                <Arrow to={centers[2]} from={centers[5]} color="black" action={Phase.ATTACK} />,
+                containerRef.current
+              )}
 
             {Object.keys(mapData).map((region) => (
               <Fragment key={region}>

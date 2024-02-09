@@ -1,5 +1,6 @@
 import { useGetTiles } from '@/hooks/useGetTiles';
 import { usePhase } from '@/hooks/usePhase';
+import { useRegionCentersStore } from '@/hooks/useRegionCentersStore';
 import { colorPlayer } from '@/utils/colors';
 import { getNeighbors } from '@/utils/map';
 import { Phase, useElementStore } from '@/utils/store';
@@ -15,7 +16,6 @@ interface Point {
 
 interface RegionProps {
   d: string;
-  fillOpacity: number;
   id: number;
   region: string;
   troups?: number;
@@ -25,19 +25,63 @@ interface RegionProps {
 }
 
 const Region: React.FC<RegionProps> = ({ d, id, region, containerRef, onRegionClick, playerTurn }: RegionProps) => {
+  const setCenter = useRegionCentersStore((state) => state.setCenter);
+  const pathRef = useRef<SVGPathElement>(null);
+
+  const center = useRegionCentersStore((state) => state.centers[id]);
+  useEffect(() => {
+    if (id === 1) console.log('center', center);
+    setPosition(center || { x: 0, y: 0 });
+  }, [center, id]);
+
   const { phase } = usePhase();
   const { current_source, current_target } = useElementStore((state) => state);
 
-  const [isHilighted, setIsHighlighted] = useState(false);
   const { tiles } = useGetTiles();
-
   const tile = tiles[id - 1];
 
   const troups = tile ? tile.army : 0;
   const color = tile ? colorPlayer[tile.owner + 1 || 0] : 'white';
 
+  const [isHilighted, setIsHighlighted] = useState(false);
   const [position, setPosition] = useState<{ x: number; y: number }>();
-  const pathRef = useRef<SVGPathElement>(null);
+
+  const updateCenter = () => {
+    if (pathRef.current) {
+      const points = parsePathForPoints(d);
+      if (points.length > 0) {
+        const centroid = calculateCentroid(points);
+
+        const svgElement = pathRef.current.ownerSVGElement;
+        if (svgElement) {
+          const point = svgElement.createSVGPoint();
+          point.x = centroid.x;
+          point.y = centroid.y;
+          const ctm = svgElement.getScreenCTM();
+          if (!ctm) return;
+
+          const screenPoint = point.matrixTransform(ctm);
+
+          // Adjust for the SVG's position in the viewport
+          const svgRect = svgElement.getBoundingClientRect();
+          if (id === 1) console.log('svgRect', svgRect, screenPoint.x, screenPoint.y, centroid.x, centroid.y, points);
+          const x = screenPoint.x - svgRect.left;
+          const y = screenPoint.y - svgRect.top;
+
+          setCenter(id, { x, y });
+        }
+      }
+    }
+  };
+
+  useEffect(() => {
+    updateCenter();
+    // Add resize event listener to update center upon resize
+    window.addEventListener('resize', updateCenter);
+
+    // Remove event listener on cleanup
+    return () => window.removeEventListener('resize', updateCenter);
+  }, [d, id, region]);
 
   function parsePathForPoints(d: string): Point[] {
     const points: Point[] = [];
@@ -94,7 +138,7 @@ const Region: React.FC<RegionProps> = ({ d, id, region, containerRef, onRegionCl
     return centroid;
   }
 
-  useEffect(() => {
+  /*useEffect(() => {
     const path = pathRef.current;
     if (path) {
       const points = parsePathForPoints(d);
@@ -120,7 +164,7 @@ const Region: React.FC<RegionProps> = ({ d, id, region, containerRef, onRegionCl
         }
       }
     }
-  }, [d, region]);
+  }, [d, region]);*/
 
   useEffect(() => {
     if (phase === Phase.DEPLOY) {
