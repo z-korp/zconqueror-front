@@ -1,12 +1,13 @@
 import { useGetTiles } from '@/hooks/useGetTiles';
 import { usePhase } from '@/hooks/usePhase';
-import { colorPlayer, colorTilePlayer } from '@/utils/colors';
+import { colorPlayer } from '@/utils/colors';
 import { getNeighbors } from '@/utils/map';
 import { Phase, useElementStore } from '@/utils/store';
 import React, { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import texture from '../../../public/texture_white.png';
 import TroopsMarker from './TroopMarker';
+import { colorTilePlayer, colorTilePlayerHighlight } from '@/utils/customColors';
 
 interface RegionProps {
   d: string;
@@ -31,6 +32,7 @@ const Region: React.FC<RegionProps> = ({ d, id, region, containerRef, onRegionCl
   const troups = tile ? tile.army : 0;
   const color = tile ? colorPlayer[tile.owner + 1 || 0] : 'white';
   const colorTile = tile ? colorTilePlayer[tile.owner + 1 || 0] : 'white';
+  const colorTileHighLight = tile ? colorTilePlayerHighlight[tile.owner + 1 || 0] : 'white';
 
   const [position, setPosition] = useState<{ x: number; y: number }>();
   const pathRef = useRef<SVGPathElement>(null);
@@ -103,9 +105,9 @@ const Region: React.FC<RegionProps> = ({ d, id, region, containerRef, onRegionCl
           containerRef.current // render the button directly in the body
         )}
       <defs>
-        <pattern id="texture" patternUnits="userSpaceOnUse" width="900" height="647">
+        {/*<pattern id="texture" patternUnits="userSpaceOnUse" width="900" height="647">
           <image href={texture} x="0" y="0" width="900" height="647" />
-        </pattern>
+        </pattern>*/}
         <mask id="pathMask">
           <path d={d} fill="blue" stroke="black" strokeWidth="10" />
         </mask>
@@ -113,7 +115,8 @@ const Region: React.FC<RegionProps> = ({ d, id, region, containerRef, onRegionCl
       <path
         ref={pathRef}
         d={d}
-        fill={`url(#texture)`}
+        //fill={`url(#texture)`}
+        fill={'white'}
         fillOpacity={1.0}
         stroke={isHilighted ? 'black' : 'gray'}
         strokeWidth="10"
@@ -122,8 +125,7 @@ const Region: React.FC<RegionProps> = ({ d, id, region, containerRef, onRegionCl
       <path
         ref={pathRef}
         d={d}
-        fill={colorTile}
-        fillOpacity={isHilighted ? 0.9 : 0.6}
+        fill={isHilighted ? colorTileHighLight : colorTile}
         stroke={isHilighted ? 'black' : 'gray'}
         strokeWidth="10"
         onClick={onRegionClick}

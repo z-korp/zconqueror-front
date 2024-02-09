@@ -3,7 +3,7 @@ export const colorClasses: any = {
   blue: 'bg-customBlue-500 border-customBlue-700',
   green: 'bg-customGreen-500 border-customGreen-700',
   yellow: 'bg-customYellow-500 border-customYellow-700',
-  purple: 'bg-purpleYellow-500 border-purpleYellow-700',
+  purple: 'bg-customPurple-500 border-customPurple-700',
   pink: 'bg-customPink-500 border-customPink-700',
   orange: 'bg-customOrange-500 border-customOrange-700',
   cyan: 'bg-customCyan-500 border-customCyan-700',
@@ -16,7 +16,7 @@ export const color100: any = {
   blue: 'bg-customBlue-100 border-customBlue-500',
   green: 'bg-customGreen-100 border-customGreen-500',
   yellow: 'bg-customYellow-100 border-customYellow-500',
-  purple: 'bg-purpleYellow-100 border-purpleYellow-500',
+  purple: 'bg-customPurple-100 border-customPurple-500',
   pink: 'bg-customPink-100 border-customPink-500',
   orange: 'bg-customOrange-100 border-customOrange-500',
   cyan: 'bg-customCyan-100 border-customCyan-500',
@@ -36,18 +36,4 @@ export const colorPlayer = [
   'cyan',
   'indigo',
   'teal',
-];
-
-export const colorTilePlayer = [
-  '#fff', // 'none
-  '#ffe6d6', // red
-  '#dcf5ff', // blue
-  '#eefbe9', // green
-  '#ffffe2', // yellow
-  '#f5ebff', // purple
-  '#ffe2f7', // pink
-  '#fff2e3', //orange
-  '#e5faff', // cian
-  '#cad9ff', // indigo
-  '#ebf3ff', //teal
 ];
