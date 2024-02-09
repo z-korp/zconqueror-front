@@ -1,8 +1,8 @@
 import { useDojo } from '@/DojoContext';
 import { useGetCurrentPlayer } from '@/hooks/useGetCurrentPlayer';
 import { useGetTiles } from '@/hooks/useGetTiles';
-import { Phase, useElementStore } from '@/utils/store';
 import { usePhase } from '@/hooks/usePhase';
+import { Phase, useElementStore } from '@/utils/store';
 import { Milestone, ShieldPlus, Swords } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Slider } from './ui/slider';
@@ -15,17 +15,22 @@ const ActionPanel = () => {
     account: { account },
   } = useDojo();
 
-  const [armyCount, setArmyCount] = useState(0);
-  const [isActionSelected, setIsActionSelected] = useState(false);
-  const { current_source, set_current_source, current_target, set_current_target, game } = useElementStore(
-    (state) => state
-  );
+  const {
+    current_source,
+    set_current_source,
+    current_target,
+    set_current_target,
+    game,
+    set_army_count: setArmyCount,
+    army_count: armyCount,
+  } = useElementStore((state) => state);
   const { phase } = usePhase();
   const { currentPlayer } = useGetCurrentPlayer();
   const [sourceTile, setSourceTile] = useState<any | null>(null);
   const [targetTile, setTargetTile] = useState<any | null>(null);
+  const [isActionSelected, setIsActionSelected] = useState(false);
 
-  const [arrowPosition, setArrowPosition] = useState({
+  /*const [arrowPosition, setArrowPosition] = useState({
     x: 0,
     y: 0,
     visible: false,
@@ -35,7 +40,7 @@ const ActionPanel = () => {
   const targetPosition = { x: 125, y: 300 };
 
   // Trigger the animation on some game event, e.g., attack
-  const animateArrow = () => {
+  /*const animateArrow = () => {
     let start: any = null;
     const duration = 1000; // Duration of animation in milliseconds
 
@@ -56,10 +61,9 @@ const ActionPanel = () => {
     };
 
     requestAnimationFrame(step);
-  };
+  };*/
 
   useEffect(() => {
-    // Reset the armyCount state to 0 when current_state changes
     setArmyCount(0);
     set_current_source(null);
     set_current_target(null);
@@ -110,7 +114,7 @@ const ActionPanel = () => {
     if (current_source === null || current_target === null) return;
 
     if (game.id == null || game.id == undefined) return;
-    animateArrow();
+    //animateArrow();
     await play.transfer(account, game.id, current_source, current_target, armyCount);
   };
 
@@ -126,7 +130,7 @@ const ActionPanel = () => {
       alert('Not enough attack');
       return;
     }
-    animateArrow();
+    //animateArrow();
 
     await play.attack(account, game.id, current_source, current_target, armyCount);
 
@@ -134,6 +138,7 @@ const ActionPanel = () => {
     await sleep(100);
 
     play.defend(account, game.id, current_source, current_target);
+    set_current_source(null);
   };
 
   const removeSelected = (): void => {
@@ -175,7 +180,7 @@ const ActionPanel = () => {
             <>
               <button
                 onClick={onAttack}
-                className="flex items-center justify-center py-2 px-1 text-white bg-red-500 rounded hover:bg-red-600 drop-shadow-lg hover:transform hover:-translate-y-1 transition-transform ease-in-out"
+                className="flex items-center justify-center h-8 px-2 text-white bg-red-500 rounded hover:bg-red-600 drop-shadow-lg hover:transform hover:-translate-y-1 transition-transform ease-in-out"
               >
                 Attack <Swords className="ml-2" />
               </button>
@@ -190,7 +195,7 @@ const ActionPanel = () => {
         )
       ) : isFortifyTurn() ? (
         <>
-          {current_source && sourceTile && sourceTile.army > 1 && current_target && (
+          {currentPlayer && targetTile && current_source && sourceTile && sourceTile.army > 1 && current_target && (
             <div
               id="parent"
               className={`flex items-center justify-around p-4 h-24 ${
@@ -200,18 +205,19 @@ const ActionPanel = () => {
             >
               <Slider
                 className="w-32"
-                min={targetTile ? targetTile.army : 0}
-                max={currentPlayer && sourceTile && targetTile ? targetTile.army + sourceTile.army - 1 : Infinity}
+                min={1}
+                max={sourceTile.army - 1}
                 value={[armyCount]}
                 onValueChange={(newValue: number[]) => {
-                  setArmyCount(newValue[0] - targetTile.army);
+                  setArmyCount(newValue[0]);
                 }}
               ></Slider>
               <button
                 onClick={onMoveTroops}
-                className="flex items-center justify-center py-2 px-1 text-white bg-green-500 rounded hover:bg-green-600 drop-shadow-lg hover:transform hover:-translate-y-1 transition-transform ease-in-out"
+                className="flex items-center justify-center h-8 px-2 text-white bg-green-500 rounded hover:bg-green-600 drop-shadow-lg hover:transform hover:-translate-y-1 transition-transform ease-in-out"
               >
-                Move Troops <Milestone className="ml-2" />
+                Move Troops
+                <Milestone className="ml-2" />
               </button>
               <button
                 onClick={removeSelected}
@@ -224,7 +230,7 @@ const ActionPanel = () => {
         </>
       ) : (
         <>
-          {current_source && currentPlayer.supply > 0 && (
+          {currentPlayer && sourceTile && current_source && currentPlayer.supply > 0 && (
             <div
               id="parent"
               className={`flex items-center justify-around p-4 h-24 ${
@@ -234,18 +240,18 @@ const ActionPanel = () => {
             >
               <Slider
                 className="w-32"
-                min={sourceTile ? sourceTile.army : 0}
-                max={currentPlayer && sourceTile ? sourceTile.army + currentPlayer.supply : Infinity}
+                min={1}
+                max={currentPlayer.supply}
                 value={[armyCount]}
                 onValueChange={(newValue: number[]) => {
-                  setArmyCount(newValue[0] - sourceTile.army);
+                  setArmyCount(newValue[0]);
                 }}
               ></Slider>
               <button
                 onClick={handleSupply}
-                className="flex items-center justify-center py-2 px-1  text-white bg-green-500 rounded hover:bg-green-600 drop-shadow-lg hover:transform hover:-translate-y-1 transition-transform ease-in-out"
+                className="flex items-center justify-center h-8 px-2  text-white bg-green-500 rounded hover:bg-green-600 drop-shadow-lg hover:transform hover:-translate-y-1 transition-transform ease-in-out"
               >
-                Deploy troops <ShieldPlus className="ml-2" />
+                Deploy Troops <ShieldPlus className="ml-2" />
               </button>
               <button
                 onClick={removeSelected}

@@ -6,6 +6,7 @@ import { getNeighbors } from '@/utils/map';
 import { Phase, useElementStore } from '@/utils/store';
 import React, { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
+import { undefined } from 'zod';
 import TroopsMarker from './TroopMarker';
 
 interface Point {
@@ -26,14 +27,26 @@ interface RegionProps {
 
 const Region: React.FC<RegionProps> = ({ d, id, region, containerRef, onRegionClick, playerTurn }: RegionProps) => {
   const { phase } = usePhase();
-  const { current_source, current_target, highlighted_region } = useElementStore((state) => state);
+  const { current_source, current_target, army_count , highlighted_region} = useElementStore((state) => state);
 
   const [isHilighted, setIsHighlighted] = useState(false);
   const { tiles } = useGetTiles();
 
   const tile = tiles[id - 1];
 
-  const troups = tile ? tile.army : 0;
+  const tileArmy = tile ? tile.army : 0;
+  let troups = tileArmy;
+  if (phase === Phase.FORTIFY && id === current_target) {
+    troups = tileArmy + army_count;
+  }
+
+  if (phase === Phase.FORTIFY && id === current_source && current_target !== null) {
+    troups = tileArmy - army_count;
+  }
+  if (phase === Phase.DEPLOY && id === current_source) {
+    troups = tileArmy + army_count;
+  }
+
   const color = tile ? colorPlayer[tile.owner + 1 || 0] : 'white';
   const colorTile = tile ? colorTilePlayer[tile.owner + 1 || 0] : 'white';
   const colorTileHighLight = tile ? colorTilePlayerHighlight[tile.owner + 1 || 0] : 'white';
