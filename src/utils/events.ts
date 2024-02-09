@@ -37,7 +37,7 @@ export const parseSupplyEvent = (event: Event): SupplyEventResult => {
   console.log('-------> Supply event', event);
   const troops = parseInt(event.data[0]);
   const region = parseInt(event.data[1]);
-  const playerName = feltToStr(event.keys[1]);
+  const playerName = feltToStr(event.keys[2]);
 
   return {
     timestamp: event.createdAt,
@@ -71,8 +71,8 @@ export const parseDefendEvent = (event: Event): DefendEventResult => {
   console.log('-------> Defend event', event);
   const targetTile = parseInt(event.data[0]);
   const result = Boolean(parseInt(event.data[1]));
-  const attackerName = feltToStr(event.keys[1]);
-  const defenderName = feltToStr(event.keys[2]);
+  const attackerName = feltToStr(event.keys[2]);
+  const defenderName = feltToStr(event.keys[3]);
 
   return {
     timestamp: event.createdAt,
@@ -109,7 +109,7 @@ interface FortifyEventResult {
 
 export const parseFortifyEvent = (event: Event): FortifyEventResult => {
   console.log('-------> Fortify event', event);
-  const playerName = feltToStr(event.keys[1]);
+  const playerName = feltToStr(event.keys[2]);
   const fromTile = parseInt(event.data[0]);
   const toTile = parseInt(event.data[1]);
   const troops = parseInt(event.data[2]);

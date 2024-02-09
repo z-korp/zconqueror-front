@@ -6,12 +6,12 @@ import { colorPlayer } from '@/utils/colors';
 import { useEffect, useState } from 'react';
 import { avatars } from '../utils/pfps';
 import { Phase, useElementStore } from '../utils/store';
+import ActionPanel from './ActionPanel';
 import ActionPlayerPanel from './ActionPlayerPanel';
 import CardMenu from './CardMenu';
 import CardsPopup from './CardsPopup';
 import OverlayWithText from './OverlayWithText';
 import StatusPlayer from './StatusPlayer';
-import ActionPanel from './ActionPanel';
 
 const PlayPanel = () => {
   const {
@@ -151,8 +151,6 @@ const PlayPanel = () => {
       setPendingCards(pendingCards.filter((c) => c !== cardNumber));
     }
   };
-
-  console.log(player);
 
   return (
     <>

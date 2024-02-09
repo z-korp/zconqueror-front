@@ -67,7 +67,7 @@ const ActionLogs: React.FC = () => {
                   <>
                     <span className=" text-white vt323-font">{log.log[0]} </span>
                     <span
-                      className=" text-white vt323-font underline"
+                      className="cursor-pointer hover:text-yellow-500 text-white vt323-font underline"
                       onMouseOver={() => handleMouseOver(log.log[1])}
                       onMouseLeave={handleMouseLeave}
                     >
@@ -79,7 +79,7 @@ const ActionLogs: React.FC = () => {
                   <>
                     <span className=" text-white vt323-font">{log.log[0]} </span>
                     <span
-                      className=" text-white vt323-font underline"
+                      className="cursor-pointer hover:text-yellow-500 text-white vt323-font underline"
                       onMouseOver={() => handleMouseOver(log.log[1])}
                       onMouseLeave={handleMouseLeave}
                     >
@@ -92,7 +92,7 @@ const ActionLogs: React.FC = () => {
                   <>
                     <span className=" text-white vt323-font">{log.log[0]} </span>
                     <span
-                      className=" text-white vt323-font underline"
+                      className="cursor-pointer hover:text-yellow-500 text-white vt323-font underline"
                       onMouseOver={() => handleMouseOver(log.log[1])}
                       onMouseLeave={handleMouseLeave}
                     >
@@ -100,7 +100,7 @@ const ActionLogs: React.FC = () => {
                     </span>
                     <span className=" text-white vt323-font"> {log.log[2]} </span>
                     <span
-                      className=" text-white vt323-font underline"
+                      className="cursor-pointer hover:text-yellow-500 text-white vt323-font underline"
                       onMouseOver={() => handleMouseOver(log.log[3])}
                       onMouseLeave={handleMouseLeave}
                     >
