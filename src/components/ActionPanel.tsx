@@ -68,7 +68,6 @@ const ActionPanel = () => {
   const { tiles } = useGetTiles();
 
   useEffect(() => {
-    console.log('currentState', phase);
     if (current_source !== null) {
       const sourceTileData = tiles[current_source - 1];
       setSourceTile(sourceTileData);
@@ -94,7 +93,6 @@ const ActionPanel = () => {
   }, [current_source, phase, current_target]);
 
   const handleSupply = () => {
-    console.log('try handle supply');
     if (game.id == null || game.id == undefined) return;
     if (current_source === null) return;
     if (currentPlayer && currentPlayer.supply < armyCount) {
@@ -152,17 +150,18 @@ const ActionPanel = () => {
   };
 
   return (
-    <div
-      id="parent"
-      className={`flex items-center justify-around p-4 h-24 ${
-        isActionSelected && 'border-4 rounded-lg border-primary bg-black bg-opacity-30 backdrop-blur-md drop-shadow-lg'
-      } `}
-    >
+    <>
       {isAttackTurn() ? (
         current_source &&
         current_target &&
         sourceTile.army > 1 && (
-          <>
+          <div
+            id="parent"
+            className={`flex items-center justify-around p-4 h-24 ${
+              isActionSelected &&
+              'border-4 rounded-lg border-primary bg-black bg-opacity-30 backdrop-blur-md drop-shadow-lg'
+            } `}
+          >
             <Slider
               className="w-32"
               min={1}
@@ -187,12 +186,18 @@ const ActionPanel = () => {
                 ✕
               </button>
             </>
-          </>
+          </div>
         )
       ) : isFortifyTurn() ? (
         <>
           {current_source && sourceTile && sourceTile.army > 1 && current_target && (
-            <>
+            <div
+              id="parent"
+              className={`flex items-center justify-around p-4 h-24 ${
+                isActionSelected &&
+                'border-4 rounded-lg border-primary bg-black bg-opacity-30 backdrop-blur-md drop-shadow-lg'
+              } `}
+            >
               <Slider
                 className="w-32"
                 min={targetTile ? targetTile.army : 0}
@@ -214,13 +219,19 @@ const ActionPanel = () => {
               >
                 ✕
               </button>
-            </>
+            </div>
           )}
         </>
       ) : (
         <>
           {current_source && currentPlayer.supply > 0 && (
-            <>
+            <div
+              id="parent"
+              className={`flex items-center justify-around p-4 h-24 ${
+                isActionSelected &&
+                'border-4 rounded-lg border-primary bg-black bg-opacity-30 backdrop-blur-md drop-shadow-lg'
+              } `}
+            >
               <Slider
                 className="w-32"
                 min={sourceTile ? sourceTile.army : 0}
@@ -242,11 +253,11 @@ const ActionPanel = () => {
               >
                 ✕
               </button>
-            </>
+            </div>
           )}
         </>
       )}
-    </div>
+    </>
   );
 };
 export default ActionPanel;
