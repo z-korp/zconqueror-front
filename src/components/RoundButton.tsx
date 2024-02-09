@@ -34,7 +34,7 @@ const RoundButton: FC<RoundButtonProps> = ({ color, onClick, children, style, cl
     blue: 'bg-customBlue-500 border-customBlue-700',
     green: 'bg-customGreen-500 border-customGreen-700',
     yellow: 'bg-customYellow-500 border-customYellow-700',
-    purple: 'bg-purpleYellow-500 border-purpleYellow-700',
+    purple: 'bg-customPurple-500 border-customPurple-700',
     pink: 'bg-customPink-500 border-customPink-700',
     orange: 'bg-customOrange-500 border-customOrange-700',
     cyan: 'bg-customCyan-500 border-customCyan-700',
