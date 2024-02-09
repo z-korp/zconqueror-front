@@ -1,7 +1,8 @@
 import { useDojo } from '@/DojoContext';
-import { DEFEND_EVENT, SUPPLY_EVENT } from '@/constants';
-import { Event } from '@/dojo/createEventSubscription';
+import { DEFEND_EVENT, FORTIFY_EVENT, SUPPLY_EVENT } from '@/constants';
+import { fetchEventsOnce } from '@/services/fetchEvents';
 import {
+  Event,
   createDefendLog,
   createFortifyLog,
   createSupplyLog,
@@ -43,6 +44,7 @@ export const useLogs = () => {
     },
   } = useDojo();
 
+  // Subscribe to events
   useEffect(() => {
     // Check if already subscribed to prevent duplication due to HMR
     if (!subscribedRef.current) {
@@ -87,7 +89,24 @@ export const useLogs = () => {
         subscribedRef.current = false;
       };
     }
-  }, []); // Empty dependency array ensures this effect runs only once on mount
+  }, []);
 
-  return { logs };
+  // Fetch events history (before subscription)
+  useEffect(() => {
+    const fetchEvents = async () => {
+      await fetchEventsOnce([SUPPLY_EVENT], (event: Event) =>
+        setLogs((prevLogs) => [...prevLogs, generateLogFromEvent(event)])
+      );
+      await fetchEventsOnce([FORTIFY_EVENT], (event) =>
+        setLogs((prevLogs) => [...prevLogs, generateLogFromEvent(event)])
+      );
+      await fetchEventsOnce([DEFEND_EVENT], (event) =>
+        setLogs((prevLogs) => [...prevLogs, generateLogFromEvent(event)])
+      );
+    };
+
+    fetchEvents();
+  }, []);
+
+  return { logs: logs.sort((a, b) => b.timestamp - a.timestamp) };
 };

@@ -1,10 +1,13 @@
 import { EventType, LogType } from '@/hooks/useLogs';
-import { feltToStr } from './unpack';
+import { parse } from 'date-fns';
 import nameData from '../assets/map/nameData.json';
+import { feltToStr } from './unpack';
 
 export type Event = {
+  id: string;
   keys: string[];
   data: string[];
+  createdAt: string;
 };
 
 function getNameFromId(id: number): string {
@@ -24,6 +27,7 @@ export function getIdFromName(name: string): number | null {
 //---------------------------------------------------------------------
 // Supply event
 interface SupplyEventResult {
+  timestamp: string;
   playerName: string;
   troops: number;
   region: number;
@@ -36,6 +40,7 @@ export const parseSupplyEvent = (event: Event): SupplyEventResult => {
   const playerName = feltToStr(event.keys[1]);
 
   return {
+    timestamp: event.createdAt,
     playerName,
     troops,
     region,
@@ -43,8 +48,9 @@ export const parseSupplyEvent = (event: Event): SupplyEventResult => {
 };
 
 export const createSupplyLog = (result: SupplyEventResult): LogType => {
+  const date = parse(result.timestamp, 'yyyy-MM-dd HH:mm:ss', new Date());
   return {
-    timestamp: Date.now(),
+    timestamp: date.getTime(),
     log: [`${result.playerName} supplied ${result.troops} troops to region`, getNameFromId(result.region)],
     regionFrom: result.region,
     type: EventType.Supply,
@@ -54,6 +60,7 @@ export const createSupplyLog = (result: SupplyEventResult): LogType => {
 //---------------------------------------------------------------------
 // Defend event
 interface DefendEventResult {
+  timestamp: string;
   attackerName: string;
   defenderName: string;
   targetTile: number;
@@ -68,6 +75,7 @@ export const parseDefendEvent = (event: Event): DefendEventResult => {
   const defenderName = feltToStr(event.keys[2]);
 
   return {
+    timestamp: event.createdAt,
     attackerName,
     defenderName,
     targetTile,
@@ -76,8 +84,9 @@ export const parseDefendEvent = (event: Event): DefendEventResult => {
 };
 
 export const createDefendLog = (result: DefendEventResult): LogType => {
+  const date = parse(result.timestamp, 'yyyy-MM-dd HH:mm:ss', new Date());
   return {
-    timestamp: Date.now(),
+    timestamp: date.getTime(),
     log: [
       `${result.attackerName} attacked ${result.defenderName} at region`,
       getNameFromId(result.targetTile),
@@ -91,6 +100,7 @@ export const createDefendLog = (result: DefendEventResult): LogType => {
 //---------------------------------------------------------------------
 // Fortify event
 interface FortifyEventResult {
+  timestamp: string;
   playerName: string;
   fromTile: number;
   toTile: number;
@@ -105,6 +115,7 @@ export const parseFortifyEvent = (event: Event): FortifyEventResult => {
   const troops = parseInt(event.data[2]);
 
   return {
+    timestamp: event.createdAt,
     playerName,
     fromTile,
     toTile,
@@ -113,8 +124,9 @@ export const parseFortifyEvent = (event: Event): FortifyEventResult => {
 };
 
 export const createFortifyLog = (result: FortifyEventResult): LogType => {
+  const date = parse(result.timestamp, 'yyyy-MM-dd HH:mm:ss', new Date());
   return {
-    timestamp: Date.now(),
+    timestamp: date.getTime(),
     log: [
       `${result.playerName} moved ${result.troops} from region `,
       getNameFromId(result.fromTile),
