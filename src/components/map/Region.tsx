@@ -16,7 +16,6 @@ interface Point {
 
 interface RegionProps {
   d: string;
-  fillOpacity: number;
   id: number;
   region: string;
   troups?: number;
@@ -27,7 +26,7 @@ interface RegionProps {
 
 const Region: React.FC<RegionProps> = ({ d, id, region, containerRef, onRegionClick, playerTurn }: RegionProps) => {
   const { phase } = usePhase();
-  const { current_source, current_target, army_count , highlighted_region} = useElementStore((state) => state);
+  const { current_source, current_target, army_count, highlighted_region } = useElementStore((state) => state);
 
   const [isHilighted, setIsHighlighted] = useState(false);
   const { tiles } = useGetTiles();

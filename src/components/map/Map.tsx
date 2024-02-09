@@ -66,7 +66,7 @@ const Map = () => {
   const [isZoomed, setIsZoomed] = useState(false);
   const [clickPosition, setClickPosition] = useState({ x: 0, y: 0, rectWidth: 0, rectHeight: 0 });
 
-  const toggleZoom = (e) => {
+  const toggleZoom = (e: any) => {
     return;
     const rect = e.target.getBoundingClientRect();
     const x = e.clientX; // Position X du clic par rapport à la div
