@@ -23,10 +23,10 @@ export default function StatusPlayer({
   handleNextPhaseClick,
 }: StatusPlayerProps) {
   return (
-    <div className="h-[100px] max-w-[400px] rounded-md w-full bg-black bg-opacity-30 backdrop-blur-md">
+    <div className="h-[100px]  rounded-md w-full bg-black bg-opacity-30 backdrop-blur-md">
       <div className="relative w-full h-full">
         {/* Image du joueur */}
-        <div className="absolute h-[120px] w-[120px] rounded-full bg-red-400 -left-[25px] -top-[25px] z-10">
+        <div className="absolute h-[120px] w-[120px] rounded-full bg-customRed-400 -left-[25px] -top-[25px] z-10">
           <img src={image} alt={'player'} className="rounded-full" />
         </div>
         {/* Barre d'état */}
@@ -76,7 +76,7 @@ export default function StatusPlayer({
           )}
         </div>
         <div
-          className={`absolute flex justify-center items-center h-[50px] w-[426px] -left-[13px] -bottom-[25px] rounded-md drop-shadow-[0_6.2px_8.2px_rgba(0,0,0,0.8)]  ${colorClasses[color]}`}
+          className={`absolute flex justify-center items-center h-[50px] w-full  -bottom-[25px] rounded-md drop-shadow-[0_6.2px_8.2px_rgba(0,0,0,0.8)]  ${colorClasses[color]}`}
         >
           <span className="text-white uppercase font-bold drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">{name}</span>
         </div>

@@ -11,6 +11,7 @@ import CardMenu from './CardMenu';
 import CardsPopup from './CardsPopup';
 import OverlayWithText from './OverlayWithText';
 import StatusPlayer from './StatusPlayer';
+import ActionPanel from './ActionPanel';
 
 const PlayPanel = () => {
   const {
@@ -156,7 +157,7 @@ const PlayPanel = () => {
   return (
     <>
       {showCardsPopup && <CardsPopup cards={cards} onClose={() => setShowCardsPopup(false)} />}
-      <div className="fixed bottom-14 left-0 right-0 flex justify-center items-end p-4 pointer-events-none">
+      <div className="fixed bottom-14 left-0 right-0 flex justify-center items-end p-4">
         {false && showOverlay && <OverlayWithText text={overlayText} />}
         {/* Section du panneau de jeu */}
         <ActionPlayerPanel toggleCardMenu={toggleCardMenu} cards={cards} />
@@ -172,16 +173,19 @@ const PlayPanel = () => {
             isOpen={showCardMenu}
           />
         )}
-        {/* Barre d'état du joueur */}
-        <StatusPlayer
-          name={player.name}
-          color={color}
-          image={image}
-          supply={player.supply}
-          handleNextPhaseClick={handleNextPhaseClick}
-          textFromState={textFromState}
-          phase={phase}
-        />
+        <div className="flex flex-col max-w-[500px] w-full " onClick={() => console.log('click')}>
+          <ActionPanel></ActionPanel>
+          {/* Barre d'état du joueur */}
+          <StatusPlayer
+            name={player.name}
+            color={color}
+            image={image}
+            supply={player.supply}
+            handleNextPhaseClick={handleNextPhaseClick}
+            textFromState={textFromState}
+            phase={phase}
+          />
+        </div>
       </div>
     </>
   );

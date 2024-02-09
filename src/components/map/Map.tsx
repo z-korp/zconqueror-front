@@ -5,9 +5,8 @@ import { useTurn } from '@/hooks/useTurn';
 import { getNeighbors } from '@/utils/map';
 import { Phase, useElementStore } from '@/utils/store';
 import { Fragment, useRef, useState } from 'react';
-import carte from '../../../public/map_sea3D_transparent.png';
+import mapReliefSvg from '../../../public/map_original_relief.svg';
 import mapDataRaw from '../../assets/map/map.json';
-import FortifyPanel from './FortifyPanel';
 import Region from './Region';
 
 const mapData: MapData = mapDataRaw;
@@ -100,19 +99,22 @@ const Map = () => {
       }
     : {};
 
-  const isFortifyPanelVisible = phase === Phase.FORTIFY || phase === Phase.ATTACK || phase === Phase.DEPLOY;
-
   return (
     <>
-      <div className="absolute top-[25%] left-1 w-1/6 z-10">{isFortifyPanelVisible && <FortifyPanel />}</div>
       <div className="relative" ref={containerRef}>
-        <div className={`h-[600px] w-full overflow-hidden`} onClick={(e) => toggleZoom(e)} style={zoomStyle}>
+        <div className={`h-[600px] w-full`} onClick={(e) => toggleZoom(e)} style={zoomStyle}>
           <svg
             viewBox="0 0 3669 1932" // Ajustez cette valeur en fonction de vos coordonnées
             className="absolute top-0 left-0 w-full h-full"
+            overflow="visible"
           >
-            <image href={carte} width="100%" height="100%" />
-
+            <image
+              href={mapReliefSvg}
+              width="108%"
+              height="108%"
+              x={(3669 - 3669 * 1.08) / 2}
+              y={(1932 - 1932 * 1.08) / 2}
+            />
             {Object.keys(mapData).map((region) => (
               <Fragment key={region}>
                 {mapData[region].map((item) => (

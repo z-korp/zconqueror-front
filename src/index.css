@@ -49,7 +49,7 @@ html {
 
     --radius: 0.5rem;
 
-    --background-image: url('../public/map_sea.png');
+    --background-image: url('../public/map_background_2.png');
   }
 
   .dark {
@@ -81,7 +81,7 @@ html {
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
 
-    --background-image: url('../public/map_sea.png');
+    --background-image: url('../public/map_background_2.png');
   }
 }
 

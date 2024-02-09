@@ -74,7 +74,7 @@ const SidePlayerInfo: React.FC<SidePlayerInfoProps> = ({ index, player }) => {
       )}
       <button onClick={toggleOtherElements}>
         <div
-          className={`absolute h-[110px] w-[110px] left-[100px] -top-[5px] rounded-full bg-red-400 z-10 ${
+          className={`absolute h-[110px] w-[110px] left-[100px] -top-[5px] rounded-full bg-customRed-400 z-10 ${
             !showOtherElements && 'translate-x-24'
           } hover:transform hover:-translate-y-1 transition-transform ease-in-out `}
         >

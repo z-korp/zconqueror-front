@@ -1,14 +1,13 @@
 import { useDojo } from '@/DojoContext';
 import { useGetCurrentPlayer } from '@/hooks/useGetCurrentPlayer';
 import { useGetTiles } from '@/hooks/useGetTiles';
-import { usePhase } from '@/hooks/usePhase';
 import { Phase, useElementStore } from '@/utils/store';
+import { usePhase } from '@/hooks/usePhase';
 import { Milestone, ShieldPlus, Swords } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import Counter from '../panel/Counter';
-import SelectionPanel from '../panel/SelectionPanel';
+import { Slider } from './ui/slider';
 
-const FortifyPanel = () => {
+const ActionPanel = () => {
   const {
     setup: {
       client: { play },
@@ -21,10 +20,8 @@ const FortifyPanel = () => {
   const { current_source, set_current_source, current_target, set_current_target, game } = useElementStore(
     (state) => state
   );
-
-  const { currentPlayer } = useGetCurrentPlayer();
   const { phase } = usePhase();
-
+  const { currentPlayer } = useGetCurrentPlayer();
   const [sourceTile, setSourceTile] = useState<any | null>(null);
   const [targetTile, setTargetTile] = useState<any | null>(null);
 
@@ -62,29 +59,11 @@ const FortifyPanel = () => {
   };
 
   useEffect(() => {
-    // Reset the armyCount state to 0 when phase changes
+    // Reset the armyCount state to 0 when current_state changes
     setArmyCount(0);
     set_current_source(null);
     set_current_target(null);
   }, [phase]);
-
-  const increment = () => {
-    if (phase === Phase.DEPLOY) {
-      if (armyCount <= currentPlayer.supply) {
-        setArmyCount(armyCount + 1);
-      }
-    } else {
-      if (sourceTile && armyCount < sourceTile.army - 1) {
-        setArmyCount(armyCount + 1);
-      }
-    }
-  };
-
-  const decrement = () => {
-    if (armyCount > 1) {
-      setArmyCount(armyCount - 1);
-    }
-  };
 
   const { tiles } = useGetTiles();
 
@@ -124,6 +103,7 @@ const FortifyPanel = () => {
     }
     play.supply(account, game.id, current_source, armyCount);
     setArmyCount(currentPlayer.supply - armyCount);
+    set_current_source(null);
   };
 
   const onMoveTroops = async () => {
@@ -156,13 +136,9 @@ const FortifyPanel = () => {
     play.defend(account, game.id, current_source, current_target);
   };
 
-  const removeSelected = (type: number): void => {
-    if (type === 1) {
-      set_current_source(null);
-      set_current_target(null);
-    } else if (type === 2) {
-      set_current_target(null);
-    }
+  const removeSelected = (): void => {
+    set_current_source(null);
+    set_current_target(null);
   };
 
   const isAttackTurn = () => {
@@ -174,98 +150,114 @@ const FortifyPanel = () => {
   };
 
   return (
-    <div
-      id="parent"
-      className={`flex flex-col items-center justify-center p-4 min-w-[180px] min-w-[200px] ${
-        isActionSelected && 'border-4 rounded-lg border-primary bg-black bg-opacity-30 backdrop-blur-md drop-shadow-lg'
-      } `}
-    >
+    <>
       {isAttackTurn() ? (
-        current_source && (
-          <>
-            <SelectionPanel
-              title={phase === Phase.ATTACK ? 'Attacker' : 'Fortifier'}
-              selectedRegion={current_source}
-              onRemoveSelected={() => removeSelected(1)}
-            />
-            {current_target && (
-              <>
-                <Counter
-                  count={armyCount}
-                  onDecrement={decrement}
-                  onIncrement={increment}
-                  maxCount={sourceTile ? sourceTile.army - 1 : Infinity}
-                />
-
-                <SelectionPanel
-                  title={phase === Phase.ATTACK ? 'Defender' : 'Fortified'}
-                  selectedRegion={current_target}
-                  onRemoveSelected={() => removeSelected(2)}
-                />
-                <button
-                  onClick={onAttack}
-                  className="flex items-center justify-center w-full py-2 mt-4 text-white bg-red-500 rounded hover:bg-red-600 drop-shadow-lg hover:transform hover:-translate-y-1 transition-transform ease-in-out"
-                >
-                  Attack <Swords className="ml-2" />
-                </button>
-              </>
-            )}
-          </>
+        current_source &&
+        current_target &&
+        sourceTile.army > 1 && (
+          <div
+            id="parent"
+            className={`flex items-center justify-around p-4 h-24 ${
+              isActionSelected &&
+              'border-4 rounded-lg border-primary bg-black bg-opacity-30 backdrop-blur-md drop-shadow-lg'
+            } `}
+          >
+            <Slider
+              className="w-32"
+              min={1}
+              max={sourceTile ? sourceTile.army - 1 : Infinity}
+              value={[armyCount]}
+              onValueChange={(newValue: number[]) => {
+                setArmyCount(newValue[0]);
+              }}
+              color="red"
+            ></Slider>
+            <>
+              <button
+                onClick={onAttack}
+                className="flex items-center justify-center py-2 px-1 text-white bg-red-500 rounded hover:bg-red-600 drop-shadow-lg hover:transform hover:-translate-y-1 transition-transform ease-in-out"
+              >
+                Attack <Swords className="ml-2" />
+              </button>
+              <button
+                onClick={removeSelected}
+                className="absolute top-1 right-1 flex items-center justify-center w-[22px] h-[22px] bg-red-500 text-white rounded-full text-xs"
+              >
+                ✕
+              </button>
+            </>
+          </div>
         )
       ) : isFortifyTurn() ? (
         <>
-          {current_source && (
-            <SelectionPanel title="Origin" selectedRegion={current_source} onRemoveSelected={() => removeSelected(1)} />
-          )}
-          {current_target && (
-            <>
-              <Counter
-                count={armyCount}
-                onDecrement={decrement}
-                onIncrement={increment}
-                maxCount={sourceTile ? sourceTile.army - 1 : Infinity}
-              />
-              <SelectionPanel
-                title="Destination"
-                selectedRegion={current_target}
-                onRemoveSelected={() => removeSelected(2)}
-              />
+          {current_source && sourceTile && sourceTile.army > 1 && current_target && (
+            <div
+              id="parent"
+              className={`flex items-center justify-around p-4 h-24 ${
+                isActionSelected &&
+                'border-4 rounded-lg border-primary bg-black bg-opacity-30 backdrop-blur-md drop-shadow-lg'
+              } `}
+            >
+              <Slider
+                className="w-32"
+                min={targetTile ? targetTile.army : 0}
+                max={currentPlayer && sourceTile && targetTile ? targetTile.army + sourceTile.army - 1 : Infinity}
+                value={[armyCount]}
+                onValueChange={(newValue: number[]) => {
+                  setArmyCount(newValue[0] - targetTile.army);
+                }}
+              ></Slider>
               <button
                 onClick={onMoveTroops}
-                className="flex items-center justify-center w-full py-2 mt-4 text-white bg-green-500 rounded hover:bg-green-600 drop-shadow-lg hover:transform hover:-translate-y-1 transition-transform ease-in-out"
+                className="flex items-center justify-center py-2 px-1 text-white bg-green-500 rounded hover:bg-green-600 drop-shadow-lg hover:transform hover:-translate-y-1 transition-transform ease-in-out"
               >
                 Move Troops <Milestone className="ml-2" />
               </button>
-            </>
+              <button
+                onClick={removeSelected}
+                className="absolute top-1 right-1 flex items-center justify-center w-[22px] h-[22px] bg-red-500 text-white rounded-full text-xs"
+              >
+                ✕
+              </button>
+            </div>
           )}
         </>
       ) : (
         <>
-          {current_source && (
-            <>
-              <SelectionPanel
-                title="Territory"
-                selectedRegion={current_source}
-                onRemoveSelected={() => removeSelected(1)}
-              />
-              <Counter
-                count={armyCount}
-                onDecrement={decrement}
-                onIncrement={increment}
-                maxCount={currentPlayer ? currentPlayer.supply : Infinity}
-              />
+          {current_source && currentPlayer.supply > 0 && (
+            <div
+              id="parent"
+              className={`flex items-center justify-around p-4 h-24 ${
+                isActionSelected &&
+                'border-4 rounded-lg border-primary bg-black bg-opacity-30 backdrop-blur-md drop-shadow-lg'
+              } `}
+            >
+              <Slider
+                className="w-32"
+                min={sourceTile ? sourceTile.army : 0}
+                max={currentPlayer && sourceTile ? sourceTile.army + currentPlayer.supply : Infinity}
+                value={[armyCount]}
+                onValueChange={(newValue: number[]) => {
+                  setArmyCount(newValue[0] - sourceTile.army);
+                }}
+              ></Slider>
               <button
                 onClick={handleSupply}
-                className="flex items-center justify-center w-full py-2 mt-4 text-white bg-green-500 rounded hover:bg-green-600 drop-shadow-lg hover:transform hover:-translate-y-1 transition-transform ease-in-out"
+                className="flex items-center justify-center py-2 px-1  text-white bg-green-500 rounded hover:bg-green-600 drop-shadow-lg hover:transform hover:-translate-y-1 transition-transform ease-in-out"
               >
                 Deploy troops <ShieldPlus className="ml-2" />
               </button>
-            </>
+              <button
+                onClick={removeSelected}
+                className="absolute top-1 right-1 flex items-center justify-center w-[22px] h-[22px] bg-red-500 text-white rounded-full text-xs"
+              >
+                ✕
+              </button>
+            </div>
           )}
         </>
       )}
-    </div>
+    </>
   );
 };
-
-export default FortifyPanel;
+export default ActionPanel;
