@@ -1,13 +1,9 @@
 import { useDojo } from '@/DojoContext';
 import { colorClasses, colorPlayer } from '@/utils/colors';
 import { useElementStore } from '@/utils/store';
-import { isTest } from '@/utils/test';
 import { getComponentValue, getEntitiesWithValue } from '@latticexyz/recs';
-import { useState } from 'react';
-import { GiFrance, GiSwordsEmblem } from 'react-icons/gi';
 import { undefined } from 'zod';
 import { avatars } from '../utils/pfps';
-import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 import { MountainSnow, RectangleVertical, Swords } from 'lucide-react';
 
 interface SidePlayerInfoProps {
@@ -16,7 +12,6 @@ interface SidePlayerInfoProps {
 }
 
 const SidePlayerInfo: React.FC<SidePlayerInfoProps> = ({ index, player }) => {
-  const [showOtherElements, setShowOtherElements] = useState<boolean | null>(true);
   const {
     setup: {
       clientComponents: { Tile },
