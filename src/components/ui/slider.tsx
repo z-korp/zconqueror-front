@@ -1,7 +1,7 @@
 'use client';
 
-import * as React from 'react';
 import * as SliderPrimitive from '@radix-ui/react-slider';
+import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 export const Slider = React.forwardRef<
@@ -20,6 +20,11 @@ export const Slider = React.forwardRef<
   };
 
   const [value, setValue] = React.useState(propValue || [min]);
+
+  // Add useEffect here to update internal state when propValue changes
+  React.useEffect(() => {
+    setValue(propValue || [min]);
+  }, [propValue, min]);
 
   const handleMinClick = () => {
     handleValueChange([min]);

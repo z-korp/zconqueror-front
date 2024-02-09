@@ -1,4 +1,3 @@
-import { useDojo } from '@/DojoContext';
 import { useGetTiles } from '@/hooks/useGetTiles';
 import { usePhase } from '@/hooks/usePhase';
 import { useTurn } from '@/hooks/useTurn';
@@ -22,12 +21,6 @@ interface MapData {
 
 const Map = () => {
   const containerRef = useRef(null);
-
-  const {
-    setup: {
-      clientComponents: { Tile },
-    },
-  } = useDojo();
 
   const { turn } = useTurn();
   const { phase } = usePhase();
