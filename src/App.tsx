@@ -11,6 +11,7 @@ import Map from './components/map/Map';
 import { Toaster } from './components/ui/toaster';
 import { TooltipProvider } from './components/ui/tooltip';
 import { useGetPlayers } from './hooks/useGetPlayers';
+import { sanitizeGame } from './utils/sanitizer';
 import { useElementStore } from './utils/store';
 
 function App() {
@@ -32,13 +33,13 @@ function App() {
       // Get the game with the ID from the URL
       defineSystem(world, [HasValue(Game, { id: Number(id) })], ({ value: [newGame] }: any) => {
         console.log('newGame', newGame);
-        set_game(newGame);
+        set_game(sanitizeGame(newGame));
       });
     } else {
       // Get the game that the user is hosting, if any
       defineSystem(world, [HasValue(Game, { host: BigInt(account.address) })], ({ value: [newGame] }: any) => {
         console.log('newGame', newGame);
-        set_game(newGame);
+        set_game(sanitizeGame(newGame));
       });
     }
   }, [account]);

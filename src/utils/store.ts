@@ -9,8 +9,6 @@ export enum Phase {
 interface State {
   game: any;
   set_game: (game: any) => void;
-  game_creator: boolean;
-  set_game_creator: (game_creator: boolean) => void;
   current_source: number | null;
   set_current_source: (source: number | null) => void;
   current_target: number | null;
@@ -24,8 +22,6 @@ interface State {
 export const useElementStore = create<State>((set) => ({
   game: undefined,
   set_game: (game: any) => set(() => ({ game })),
-  game_creator: false,
-  set_game_creator: (game_creator: boolean) => set(() => ({ game_creator })),
   current_source: null,
   set_current_source: (source: number | null) => set(() => ({ current_source: source })),
   current_target: null,

@@ -1,4 +1,5 @@
 import { useDojo } from '@/DojoContext';
+import { formatStarkNetAddress } from '@/utils/sanitizer';
 import { useElementStore } from '@/utils/store';
 import { isTest } from '@/utils/test';
 import { useState } from 'react';
@@ -10,7 +11,7 @@ import { Button } from './ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
 
 const NewGame: React.FC = () => {
-  const { set_game_creator, game_creator, game } = useElementStore((state) => state);
+  const { game } = useElementStore((state) => state);
 
   const {
     setup: {
@@ -25,7 +26,6 @@ const NewGame: React.FC = () => {
 
   async function handleCreateFormSubmit(data: z.infer<typeof createFormSchema>) {
     await host.create(account, data.username, data.numberOfPlayers);
-    set_game_creator(true);
     setCreateModalOpen(false);
   }
 
@@ -72,7 +72,7 @@ const NewGame: React.FC = () => {
           </DialogHeader>
         </DialogContent>
       </Dialog>
-      {game_creator && (
+      {game && game.host === formatStarkNetAddress(account.address) && (
         <>
           <input
             id="inputGameId"

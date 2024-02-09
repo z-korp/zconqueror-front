@@ -18,6 +18,7 @@ async function init() {
       <DojoProvider value={setupResult}>
         <Router>
           <Routes>
+            <Route path="" element={<App />} />
             <Route path="/:id" element={<App />} />
           </Routes>
         </Router>
