@@ -10,6 +10,7 @@ import {
   parseFortifyEvent,
   parseSupplyEvent,
 } from '@/utils/events';
+import { useElementStore } from '@/utils/store';
 import { useEffect, useRef, useState } from 'react';
 import { Subscription } from 'rxjs';
 
@@ -43,6 +44,8 @@ export const useLogs = () => {
       },
     },
   } = useDojo();
+
+  const { game } = useElementStore((state) => state);
 
   // Subscribe to events
   useEffect(() => {
@@ -94,19 +97,19 @@ export const useLogs = () => {
   // Fetch events history (before subscription)
   useEffect(() => {
     const fetchEvents = async () => {
-      await fetchEventsOnce([SUPPLY_EVENT], (event: Event) =>
+      await fetchEventsOnce([SUPPLY_EVENT, '0x' + game.id.toString(16)], (event: Event) =>
         setLogs((prevLogs) => [...prevLogs, generateLogFromEvent(event)])
       );
-      await fetchEventsOnce([FORTIFY_EVENT], (event) =>
+      await fetchEventsOnce([FORTIFY_EVENT, '0x' + game.id.toString(16)], (event) =>
         setLogs((prevLogs) => [...prevLogs, generateLogFromEvent(event)])
       );
-      await fetchEventsOnce([DEFEND_EVENT], (event) =>
+      await fetchEventsOnce([DEFEND_EVENT, '0x' + game.id.toString(16)], (event) =>
         setLogs((prevLogs) => [...prevLogs, generateLogFromEvent(event)])
       );
     };
 
-    fetchEvents();
-  }, []);
+    if (game) fetchEvents();
+  }, [game]);
 
-  return { logs: logs.sort((a, b) => b.timestamp - a.timestamp) };
+  return { logs: logs.sort((a, b) => a.timestamp - b.timestamp) };
 };
