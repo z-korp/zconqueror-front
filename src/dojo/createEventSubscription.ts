@@ -1,13 +1,7 @@
+import { Event } from '@/utils/events';
 import { gql } from 'graphql-request';
 import { createClient } from 'graphql-ws';
 import { BehaviorSubject, Observable } from 'rxjs';
-
-export type Event = {
-  id: string[];
-  keys: string[];
-  data: any;
-  created_at: string;
-};
 
 export async function createEventSubscription(keys: string[]): Promise<Observable<Event | null>> {
   const wsClient = createClient({ url: import.meta.env.VITE_TORII_WS });

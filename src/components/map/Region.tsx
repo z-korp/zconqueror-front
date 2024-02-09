@@ -27,7 +27,7 @@ interface RegionProps {
 
 const Region: React.FC<RegionProps> = ({ d, id, region, containerRef, onRegionClick, playerTurn }: RegionProps) => {
   const { phase } = usePhase();
-  const { current_source, current_target, army_count } = useElementStore((state) => state);
+  const { current_source, current_target, army_count , highlighted_region} = useElementStore((state) => state);
 
   const [isHilighted, setIsHighlighted] = useState(false);
   const { tiles } = useGetTiles();
@@ -158,6 +158,23 @@ const Region: React.FC<RegionProps> = ({ d, id, region, containerRef, onRegionCl
     }
   }, [current_source, phase, current_target, id]);
 
+  const isLogHighlighted = highlighted_region === id;
+
+  const determineFillColor = (
+    isHighlighted: boolean,
+    isLogHighlighted: boolean,
+    colorTileHighLight: string,
+    colorTile: string
+  ) => {
+    if (isHighlighted) {
+      return colorTileHighLight;
+    } else if (isLogHighlighted) {
+      return 'yellow';
+    } else {
+      return colorTile;
+    }
+  };
+
   return (
     <>
       {position &&
@@ -193,12 +210,11 @@ const Region: React.FC<RegionProps> = ({ d, id, region, containerRef, onRegionCl
         fillOpacity={1.0}
         stroke={isHilighted ? 'black' : 'gray'}
         strokeWidth="10"
-        onClick={onRegionClick}
       />
       <path
         ref={pathRef}
         d={d}
-        fill={isHilighted ? colorTileHighLight : colorTile}
+        fill={determineFillColor(isHilighted, isLogHighlighted, colorTileHighLight, colorTile)}
         stroke={isHilighted ? 'black' : 'gray'}
         strokeWidth="10"
         onClick={onRegionClick}

@@ -1,7 +1,8 @@
 import { useDojo } from '@/DojoContext';
-import { DEFEND_EVENT, SUPPLY_EVENT } from '@/constants';
-import { Event } from '@/dojo/createEventSubscription';
+import { DEFEND_EVENT, FORTIFY_EVENT, SUPPLY_EVENT } from '@/constants';
+import { fetchEventsOnce } from '@/services/fetchEvents';
 import {
+  Event,
   createDefendLog,
   createFortifyLog,
   createSupplyLog,
@@ -9,6 +10,7 @@ import {
   parseFortifyEvent,
   parseSupplyEvent,
 } from '@/utils/events';
+import { useElementStore } from '@/utils/store';
 import { useEffect, useRef, useState } from 'react';
 import { Subscription } from 'rxjs';
 
@@ -43,6 +45,9 @@ export const useLogs = () => {
     },
   } = useDojo();
 
+  const { game } = useElementStore((state) => state);
+
+  // Subscribe to events
   useEffect(() => {
     // Check if already subscribed to prevent duplication due to HMR
     if (!subscribedRef.current) {
@@ -87,7 +92,24 @@ export const useLogs = () => {
         subscribedRef.current = false;
       };
     }
-  }, []); // Empty dependency array ensures this effect runs only once on mount
+  }, []);
 
-  return { logs };
+  // Fetch events history (before subscription)
+  useEffect(() => {
+    const fetchEvents = async () => {
+      await fetchEventsOnce([SUPPLY_EVENT, '0x' + game.id.toString(16)], (event: Event) =>
+        setLogs((prevLogs) => [...prevLogs, generateLogFromEvent(event)])
+      );
+      await fetchEventsOnce([FORTIFY_EVENT, '0x' + game.id.toString(16)], (event) =>
+        setLogs((prevLogs) => [...prevLogs, generateLogFromEvent(event)])
+      );
+      await fetchEventsOnce([DEFEND_EVENT, '0x' + game.id.toString(16)], (event) =>
+        setLogs((prevLogs) => [...prevLogs, generateLogFromEvent(event)])
+      );
+    };
+
+    if (game) fetchEvents();
+  }, [game]);
+
+  return { logs: logs.sort((a, b) => a.timestamp - b.timestamp) };
 };

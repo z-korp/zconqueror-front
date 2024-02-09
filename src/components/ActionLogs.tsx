@@ -73,7 +73,7 @@ const ActionLogs: React.FC = () => {
                   <>
                     <span>{log.log[0]} </span>
                     <span
-                      className="underline"
+                      className="underline cursor-pointer hover:text-yellow-500"
                       onMouseOver={() => handleMouseOver(log.log[1])}
                       onMouseLeave={handleMouseLeave}
                     >
@@ -85,7 +85,7 @@ const ActionLogs: React.FC = () => {
                   <>
                     <span>{log.log[0]} </span>
                     <span
-                      className="underline"
+                      className="underline cursor-pointer hover:text-yellow-500"
                       onMouseOver={() => handleMouseOver(log.log[1])}
                       onMouseLeave={handleMouseLeave}
                     >
@@ -98,7 +98,7 @@ const ActionLogs: React.FC = () => {
                   <>
                     <span>{log.log[0]} </span>
                     <span
-                      className="underline"
+                      className="underline cursor-pointer hover:text-yellow-500"
                       onMouseOver={() => handleMouseOver(log.log[1])}
                       onMouseLeave={handleMouseLeave}
                     >
@@ -106,7 +106,7 @@ const ActionLogs: React.FC = () => {
                     </span>
                     <span> {log.log[2]} </span>
                     <span
-                      className="underline"
+                      className="cursor-pointer hover:text-yellow-500 underline"
                       onMouseOver={() => handleMouseOver(log.log[3])}
                       onMouseLeave={handleMouseLeave}
                     >
