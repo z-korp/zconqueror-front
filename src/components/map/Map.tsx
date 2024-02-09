@@ -7,7 +7,6 @@ import { Phase, useElementStore } from '@/utils/store';
 import { Fragment, useRef, useState } from 'react';
 import carte from '../../../public/map_sea3D_transparent.png';
 import mapDataRaw from '../../assets/map/map.json';
-import FortifyPanel from './FortifyPanel';
 import Region from './Region';
 
 const mapData: MapData = mapDataRaw;
@@ -100,11 +99,8 @@ const Map = () => {
       }
     : {};
 
-  const isFortifyPanelVisible = phase === Phase.FORTIFY || phase === Phase.ATTACK || phase === Phase.DEPLOY;
-
   return (
     <>
-      <div className="absolute top-[25%] left-1 w-1/6 z-10">{isFortifyPanelVisible && <FortifyPanel />}</div>
       <div className="relative" ref={containerRef}>
         <div className={`h-[600px] w-full overflow-hidden`} onClick={(e) => toggleZoom(e)} style={zoomStyle}>
           <svg
