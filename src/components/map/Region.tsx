@@ -1,6 +1,6 @@
 import { useGetTiles } from '@/hooks/useGetTiles';
 import { usePhase } from '@/hooks/usePhase';
-import { colorPlayer } from '@/utils/colors';
+import { colorPlayer, colorTilePlayer } from '@/utils/colors';
 import { getNeighbors } from '@/utils/map';
 import { Phase, useElementStore } from '@/utils/store';
 import React, { useEffect, useRef, useState } from 'react';
@@ -30,6 +30,7 @@ const Region: React.FC<RegionProps> = ({ d, id, region, containerRef, onRegionCl
 
   const troups = tile ? tile.army : 0;
   const color = tile ? colorPlayer[tile.owner + 1 || 0] : 'white';
+  const colorTile = tile ? colorTilePlayer[tile.owner + 1 || 0] : 'white';
 
   const [position, setPosition] = useState<{ x: number; y: number }>();
   const pathRef = useRef<SVGPathElement>(null);
@@ -121,7 +122,7 @@ const Region: React.FC<RegionProps> = ({ d, id, region, containerRef, onRegionCl
       <path
         ref={pathRef}
         d={d}
-        fill={color}
+        fill={colorTile}
         fillOpacity={isHilighted ? 0.9 : 0.6}
         stroke={isHilighted ? 'black' : 'gray'}
         strokeWidth="10"

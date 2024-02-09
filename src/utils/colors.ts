@@ -1,27 +1,27 @@
 export const colorClasses: any = {
-  red: 'bg-red-500 border-red-700',
-  blue: 'bg-blue-500 border-blue-700',
-  green: 'bg-green-500 border-green-700',
-  yellow: 'bg-yellow-500 border-yellow-700',
-  purple: 'bg-purple-500 border-purple-700',
-  pink: 'bg-pink-500 border-pink-700',
-  orange: 'bg-orange-500 border-orange-700',
-  cyan: 'bg-cyan-500 border-cyan-700',
-  indigo: 'bg-indigo-500 border-indigo-700',
-  teal: 'bg-teal-500 border-teal-700',
+  red: 'bg-customRed-500 border-customRed-700',
+  blue: 'bg-customBlue-500 border-customBlue-700',
+  green: 'bg-customGreen-500 border-customGreen-700',
+  yellow: 'bg-customYellow-500 border-customYellow-700',
+  purple: 'bg-purpleYellow-500 border-purpleYellow-700',
+  pink: 'bg-customPink-500 border-customPink-700',
+  orange: 'bg-customOrange-500 border-customOrange-700',
+  cyan: 'bg-customCyan-500 border-customCyan-700',
+  indigo: 'bg-customIndigo-500 border-customIndigo-700',
+  teal: 'bg-customTeal-500 border-customTeal-700',
 };
 
 export const color100: any = {
-  red: 'bg-red-100 border-red-500',
-  blue: 'bg-blue-100 border-blue-500',
-  green: 'bg-green-100 border-green-500',
-  yellow: 'bg-yellow-100 border-yellow-500',
-  purple: 'bg-purple-100 border-purple-500',
-  pink: 'bg-pink-100 border-pink-500',
-  orange: 'bg-orange-100 border-orange-500',
-  cyan: 'bg-cyan-100 border-cyan-500',
-  indigo: 'bg-indigo-100 border-indigo-500',
-  teal: 'bg-teal-100 border-teal-500',
+  red: 'bg-customRed-100 border-customRed-500',
+  blue: 'bg-customBlue-100 border-customBlue-500',
+  green: 'bg-customGreen-100 border-customGreen-500',
+  yellow: 'bg-customYellow-100 border-customYellow-500',
+  purple: 'bg-purpleYellow-100 border-purpleYellow-500',
+  pink: 'bg-customPink-100 border-customPink-500',
+  orange: 'bg-customOrange-100 border-customOrange-500',
+  cyan: 'bg-customCyan-100 border-customCyan-500',
+  indigo: 'bg-customIndigo-100 border-customIndigo-500',
+  teal: 'bg-customTeal-100 border-customTeal-500',
 };
 
 export const colorPlayer = [
@@ -36,4 +36,18 @@ export const colorPlayer = [
   'cyan',
   'indigo',
   'teal',
+];
+
+export const colorTilePlayer = [
+  '#fff', // 'none
+  '#ffe6d6', // red
+  '#dcf5ff', // blue
+  '#eefbe9', // green
+  '#ffffe2', // yellow
+  '#f5ebff', // purple
+  '#ffe2f7', // pink
+  '#fff2e3', //orange
+  '#e5faff', // cian
+  '#cad9ff', // indigo
+  '#ebf3ff', //teal
 ];

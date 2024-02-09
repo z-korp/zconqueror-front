@@ -26,7 +26,7 @@ export default function StatusPlayer({
     <div className="h-[100px] max-w-[400px] rounded-md w-full bg-black bg-opacity-30 backdrop-blur-md">
       <div className="relative w-full h-full">
         {/* Image du joueur */}
-        <div className="absolute h-[120px] w-[120px] rounded-full bg-red-400 -left-[25px] -top-[25px] z-10">
+        <div className="absolute h-[120px] w-[120px] rounded-full bg-customRed-400 -left-[25px] -top-[25px] z-10">
           <img src={image} alt={'player'} className="rounded-full" />
         </div>
         {/* Barre d'état */}
