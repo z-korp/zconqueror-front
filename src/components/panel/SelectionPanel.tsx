@@ -20,7 +20,7 @@ const SelectionPanel = ({ selectedRegion, title, onRemoveSelected }: SelectionPa
       <span>{title}</span>
       <button
         onClick={onRemoveSelected}
-        className="absolute top-1 right-1 flex items-center justify-center w-[22px] h-[22px] bg-customRed-500 text-white rounded-full text-xs"
+        className="absolute top-1 right-1 flex items-center justify-center w-[22px] h-[22px] bg-red-500 text-white rounded-full text-xs"
       >
         ✕
       </button>
