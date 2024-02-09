@@ -47,6 +47,12 @@ const ActionLogs: React.FC = () => {
     config: { tension: 170, friction: 26 },
   });
 
+  useEffect(() => {
+    if (logsRef.current) {
+      logsRef.current.scrollTop = logsRef.current.scrollHeight;
+    }
+  }, [logs]);
+
   return (
     <div className="max-w-xl w-full">
       <div
