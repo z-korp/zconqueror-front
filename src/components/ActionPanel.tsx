@@ -171,11 +171,12 @@ const ActionPanel = () => {
               onValueChange={(newValue: number[]) => {
                 setArmyCount(newValue[0]);
               }}
+              color="red"
             ></Slider>
             <>
               <button
                 onClick={onAttack}
-                className="flex items-center justify-center w-full py-2 mt-4 text-white bg-red-500 rounded hover:bg-red-600 drop-shadow-lg hover:transform hover:-translate-y-1 transition-transform ease-in-out"
+                className="flex items-center justify-center py-2 px-1 text-white bg-red-500 rounded hover:bg-red-600 drop-shadow-lg hover:transform hover:-translate-y-1 transition-transform ease-in-out"
               >
                 Attack <Swords className="ml-2" />
               </button>
@@ -203,7 +204,7 @@ const ActionPanel = () => {
               ></Slider>
               <button
                 onClick={onMoveTroops}
-                className="flex items-center justify-center w-15 py-2 px-1 text-white bg-green-500 rounded hover:bg-green-600 drop-shadow-lg hover:transform hover:-translate-y-1 transition-transform ease-in-out"
+                className="flex items-center justify-center py-2 px-1 text-white bg-green-500 rounded hover:bg-green-600 drop-shadow-lg hover:transform hover:-translate-y-1 transition-transform ease-in-out"
               >
                 Move Troops <Milestone className="ml-2" />
               </button>
@@ -231,7 +232,7 @@ const ActionPanel = () => {
               ></Slider>
               <button
                 onClick={handleSupply}
-                className="flex items-center justify-center w-15 py-2 px-1  text-white bg-green-500 rounded hover:bg-green-600 drop-shadow-lg hover:transform hover:-translate-y-1 transition-transform ease-in-out"
+                className="flex items-center justify-center py-2 px-1  text-white bg-green-500 rounded hover:bg-green-600 drop-shadow-lg hover:transform hover:-translate-y-1 transition-transform ease-in-out"
               >
                 Deploy troops <ShieldPlus className="ml-2" />
               </button>
