@@ -24,30 +24,34 @@ export default function StatusPlayer({
 }: StatusPlayerProps) {
   return (
     <>
-      <div className="relative p-2 bg-gray-800 rounded-lg">
-        {/* Tab Buttons */}
-        <div className="absolute top-0 left-0 right-0">
-          <div className="flex justify-center bg-gray-700 rounded-t-lg gap-4 h-full">
-            <button className="h-full text-white px-1 rounded-t-md transition-colors duration-300 ease-in-out focus:outline-none focus:bg-gray-600">
-              DEPLOY
-            </button>
-            <button className="text-white px-1 rounded-t-md transition-colors duration-300 ease-in-out focus:outline-none focus:bg-gray-600">
-              MOVE
-            </button>
-            <button className="text-white px-1 rounded-t-md transition-colors duration-300 ease-in-out focus:outline-none focus:bg-gray-600">
-              ATTACK
-            </button>
-          </div>
-        </div>
+      <div className="relative w-auto h-100 flex flex-col vt323-font text-white">
         {/* Player Avatar, positioned at the top-left corner */}
         <div className="absolute -top-6 -left-6 w-24 h-24">
-          <img src={image} alt="player" className="rounded-full border-4 border-gray-800" />
+          <img src={image} alt="player" className="rounded-full border-4 border-stone-900" />
+        </div>
+        <div className="flex bg-stone-700 border-x-2 border-t-2 border-stone-900 h-[2.4em] justify-center rounded-t-lg">
+          <div className="w-1/6"></div>
+          <div className="w-5/6">
+            <button className={`w-1/3 h-full  ${phase === Phase.DEPLOY && 'bg-stone-900'} border-r-2 border-stone-900`}>
+              DEPLOY
+            </button>
+            <button className={`w-1/3 h-full  ${phase === Phase.ATTACK && 'bg-stone-900'} border-r-2 border-stone-900`}>
+              ATTACK
+            </button>
+            <button className={`w-1/3 h-full ${phase === Phase.FORTIFY && 'bg-stone-900'} `}>MOVE</button>
+          </div>
         </div>
 
-        {/* Counter and Next Button, with some padding at the bottom to make space for the tabs */}
-        <div className="flex items-center justify-between pt-20 pl-10 pb-2">
-          <div className="text-white bg-gray-700 rounded px-3 py-2">Place 3/30</div>
-          <button className="bg-green-500 text-white rounded px-4 py-2">NEXT</button>
+        <div className="flex pb-4 bg-stone-700 border-2 border-stone-900 rounded-b-lg">
+          {/* Content for middle, which fills remaining height */}
+          <div className="pt-8 flex flex-wrap basis-2/3 overflow-auto justify-center align-middle">
+            <div className=" bg-gray-900 rounded px-3 py-2">Place 3/30</div>
+          </div>
+          <div className="pt-8  flex flex-wrap basis-1/3 overflow-auto justify-center align-middle">
+            <button className="bg-green-500  rounded px-4 py-2" onClick={handleNextPhaseClick}>
+              NEXT
+            </button>
+          </div>
         </div>
       </div>
 

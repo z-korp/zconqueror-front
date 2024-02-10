@@ -173,7 +173,7 @@ const PlayPanel = () => {
             isOpen={showCardMenu}
           />
         )}
-        <div className="flex flex-col max-w-[500px] w-full " onClick={() => console.log('click')}>
+        <div className="flex flex-col max-w-[350px] w-full " onClick={() => console.log('click')}>
           <ActionPanel></ActionPanel>
           {/* Barre d'état du joueur */}
           <StatusPlayer

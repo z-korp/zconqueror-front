@@ -36,3 +36,20 @@
   -webkit-text-stroke: 0.1em #000; /* Épaisseur et couleur du contour */
   color: transparent;
 }
+
+.arrow-right {
+  position: relative;
+}
+
+.arrow-right::after {
+  content: '';
+  position: absolute;
+  right: -1em; /* Adjust as needed */
+  top: 50%;
+  width: 0;
+  height: 0;
+  border-top: 1.2em solid transparent; /* Adjust size as needed */
+  border-bottom: 1.2em solid transparent; /* Adjust size as needed */
+  border-left: 0.5em solid #432020; /* Adjust color and size as needed */
+  transform: translateY(-50%);
+}
