@@ -155,7 +155,7 @@ const PlayPanel = () => {
   return (
     <>
       {showCardsPopup && <CardsPopup cards={cards} onClose={() => setShowCardsPopup(false)} />}
-      <div className="fixed bottom-14 left-0 right-0 flex justify-center items-end p-4">
+      <div className="fixed bottom-0 left-0 right-0 flex justify-center items-end p-4">
         {false && showOverlay && <OverlayWithText text={overlayText} />}
         {/* Section du panneau de jeu */}
         <ActionPlayerPanel toggleCardMenu={toggleCardMenu} cards={cards} />
@@ -171,16 +171,15 @@ const PlayPanel = () => {
             isOpen={showCardMenu}
           />
         )}
-        <div className="flex flex-col max-w-[500px] w-full " onClick={() => console.log('click')}>
-          <ActionPanel></ActionPanel>
+        <div className="flex flex-col max-w-[420px] w-full" onClick={() => console.log('click')}>
+          <div className="mb-8 vt323-font">
+            <ActionPanel />
+          </div>
           {/* Barre d'état du joueur */}
           <StatusPlayer
-            name={player.name}
-            color={color}
             image={image}
             supply={player.supply}
             handleNextPhaseClick={handleNextPhaseClick}
-            textFromState={textFromState}
             phase={phase}
           />
         </div>

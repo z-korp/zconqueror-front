@@ -1,4 +1,3 @@
-import { LogType, useLogs } from '@/hooks/useLogs';
 import React, { useEffect, useRef, useState } from 'react';
 import { animated, useSpring } from 'react-spring';
 import SidePlayerInfo from './SidePlayerInfo';
