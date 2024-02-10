@@ -19,7 +19,6 @@ const Lobby: React.FC = () => {
     const { set_game_state, set_game_id, game_id } = useElementStore((state) => state);
     const [players, setPlayers] = useState<any>({}) 
 
-
     // Get game info
     const game = useComponentValue(Game, useEntityQuery([HasValue(Game, { id: game_id })]));
     if (!game) {
@@ -43,7 +42,7 @@ const Lobby: React.FC = () => {
     }, [])
 
     const startGame = async () => {
-        if (!game_id) {
+        if (game_id === undefined) {
             console.error("Game id not defined")
             return
         }

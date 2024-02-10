@@ -55,15 +55,15 @@ function App() {
     <>
       
       {
-        game_state == GameState.MainMenu &&
+        game_state === GameState.MainMenu &&
         <MainMenu />
       }
       {
-        game_state == GameState.Lobby &&
+        game_state === GameState.Lobby &&
         <Lobby />
       }
       {
-        game_state == GameState.Game &&
+        game_state === GameState.Game &&
         <>
           <Toaster />
           <TooltipProvider>

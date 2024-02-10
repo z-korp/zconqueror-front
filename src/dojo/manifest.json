@@ -949,7 +949,7 @@
     {
       "name": "zconqueror::systems::host::host",
       "address": "0x55bac3cb43efa8a014bed327fdf470f528374f1e2208663bae331dbc2658da3",
-      "class_hash": "0x4a0ec34e92a67e69f0fab9d69a059d8f4314c95ba04e1a4d497844cc7700c4b",
+      "class_hash": "0x365778834f333cf64ace789afef73ba8f20ae49bede083ce5da0e7c29bdf02b",
       "abi": [
         {
           "type": "impl",

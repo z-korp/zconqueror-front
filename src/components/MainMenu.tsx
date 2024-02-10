@@ -10,7 +10,7 @@ import { defineSystem, HasValue } from '@dojoengine/recs';
 import { useEffect, useRef, useState } from 'react';
 
 const MainMenu: React.FC = () => {
-    const { set_game_state, set_game_id } = useElementStore((state) => state);
+    const { set_game_state, game_state, set_game_id } = useElementStore((state) => state);
 
     const {
         setup: {
@@ -31,20 +31,32 @@ const MainMenu: React.FC = () => {
             return
         }
 
+        if (game_state !== GameState.MainMenu) {
+            return
+        }
+
         const burnerAccount = account.account
         if (actionJoinData) {
             setTimeout(() => {
                 host.join(burnerAccount, actionJoinData.game_id)
                     .then(() => {
                         set_game_id(actionJoinData.game_id)
-                        set_game_state(GameState.Lobby);    
+                        set_game_state(GameState.Lobby);
+                        console.log("yes")
+                        defineSystem(world, [HasValue(Game, { game_id: actionJoinData.game_id })], ({ value: [newGame] }: any) => {
+                            console.log("NEW GAME", newGame)
+                        });
                     });
             }, 500)
         } else {
             defineSystem(world, [HasValue(Game, { host: BigInt(burnerAccount.address) })], ({ value: [newGame] }: any) => {
-                set_game_id(newGame.id);
-                console.log(newGame);
-                set_game_state(GameState.Lobby);
+                if (game_state === GameState.MainMenu) {
+                    set_game_id(newGame.id);
+                    set_game_state(GameState.Lobby);
+                    defineSystem(world, [HasValue(Game, { game_id: newGame.id })], ({ value: [newGame] }: any) => {
+                        console.log("NEW GAME", newGame)
+                    });        
+                }
             });
             setTimeout(() => {
                 console.log("create with", burnerAccount.address)

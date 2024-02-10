@@ -22,6 +22,7 @@ async function init() {
             <Route path="/:id" element={<App />} />
           </Routes>
         </Router>
+        {/* <App /> */}
       </DojoProvider>
     </React.StrictMode>
   );
