@@ -16,6 +16,9 @@ const tryBetterErrorMsg = (msg: string): string => {
 export async function setupWorld(provider: DojoProvider) {
   // Transaction execution and checking wrapper
   const executeAndCheck = async (account: Account, contractName: string, methodName: string, args: any[]) => {
+
+    console.log(account)
+
     const ret = await provider.execute(account, contractName, methodName, args);
     const receipt = await account.waitForTransaction(ret.transaction_hash, {
       retryInterval: 100,

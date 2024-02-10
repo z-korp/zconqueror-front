@@ -1086,7 +1086,7 @@
     {
       "name": "zconqueror::systems::play::play",
       "address": "0x127f3efb89714e50194dab6d7a5875eb63ebee78e04adf36584b8748bf14ac7",
-      "class_hash": "0x45a153bbdec33552433644c44272c6e05d0e91232fe0c8a0431797653cb4bd3",
+      "class_hash": "0x75a63f23572e1e089564a71fd4d2a2924af0b1f7b43709630feeb22e5ee4e92",
       "abi": [
         {
           "type": "impl",
@@ -1157,7 +1157,7 @@
                 }
               ],
               "outputs": [],
-              "state_mutability": "view"
+              "state_mutability": "external"
             },
             {
               "type": "function",
@@ -1225,7 +1225,7 @@
                 }
               ],
               "outputs": [],
-              "state_mutability": "view"
+              "state_mutability": "external"
             },
             {
               "type": "function",
@@ -1253,7 +1253,112 @@
                 }
               ],
               "outputs": [],
-              "state_mutability": "view"
+              "state_mutability": "external"
+            }
+          ]
+        },
+        {
+          "type": "event",
+          "name": "zconqueror::systems::play::play::Supply",
+          "kind": "struct",
+          "members": [
+            {
+              "name": "game_id",
+              "type": "core::integer::u32",
+              "kind": "key"
+            },
+            {
+              "name": "player_name",
+              "type": "core::felt252",
+              "kind": "key"
+            },
+            {
+              "name": "troops",
+              "type": "core::integer::u32",
+              "kind": "data"
+            },
+            {
+              "name": "region",
+              "type": "core::integer::u8",
+              "kind": "data"
+            }
+          ]
+        },
+        {
+          "type": "enum",
+          "name": "core::bool",
+          "variants": [
+            {
+              "name": "False",
+              "type": "()"
+            },
+            {
+              "name": "True",
+              "type": "()"
+            }
+          ]
+        },
+        {
+          "type": "event",
+          "name": "zconqueror::systems::play::play::Defend",
+          "kind": "struct",
+          "members": [
+            {
+              "name": "game_id",
+              "type": "core::integer::u32",
+              "kind": "key"
+            },
+            {
+              "name": "attacker_name",
+              "type": "core::felt252",
+              "kind": "key"
+            },
+            {
+              "name": "defender_name",
+              "type": "core::felt252",
+              "kind": "key"
+            },
+            {
+              "name": "target_tile",
+              "type": "core::integer::u8",
+              "kind": "data"
+            },
+            {
+              "name": "result",
+              "type": "core::bool",
+              "kind": "data"
+            }
+          ]
+        },
+        {
+          "type": "event",
+          "name": "zconqueror::systems::play::play::Fortify",
+          "kind": "struct",
+          "members": [
+            {
+              "name": "game_id",
+              "type": "core::integer::u32",
+              "kind": "key"
+            },
+            {
+              "name": "player_name",
+              "type": "core::felt252",
+              "kind": "key"
+            },
+            {
+              "name": "from_tile",
+              "type": "core::integer::u8",
+              "kind": "data"
+            },
+            {
+              "name": "to_tile",
+              "type": "core::integer::u8",
+              "kind": "data"
+            },
+            {
+              "name": "troops",
+              "type": "core::integer::u32",
+              "kind": "data"
             }
           ]
         },
@@ -1261,7 +1366,23 @@
           "type": "event",
           "name": "zconqueror::systems::play::play::Event",
           "kind": "enum",
-          "variants": []
+          "variants": [
+            {
+              "name": "Supply",
+              "type": "zconqueror::systems::play::play::Supply",
+              "kind": "nested"
+            },
+            {
+              "name": "Defend",
+              "type": "zconqueror::systems::play::play::Defend",
+              "kind": "nested"
+            },
+            {
+              "name": "Fortify",
+              "type": "zconqueror::systems::play::play::Fortify",
+              "kind": "nested"
+            }
+          ]
         }
       ],
       "reads": [],
