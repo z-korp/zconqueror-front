@@ -11,7 +11,6 @@ export default function StatusPlayer({ image, phase, supply, handleNextPhaseClic
   return (
     <>
       <div className="relative w-auto h-100 flex flex-col vt323-font text-white rounded-lg drop-shadow-lg">
-        {/* Player Avatar, positioned at the top-left corner */}
         <div className="absolute -top-6 -left-5 w-24 h-24">
           <img src={image} alt="player" className="rounded-full border-4 border-stone-900" />
         </div>
@@ -29,7 +28,6 @@ export default function StatusPlayer({ image, phase, supply, handleNextPhaseClic
         </div>
 
         <div className="flex h-20 bg-stone-700 border-2 border-stone-900 rounded-b-lg">
-          {/* Content for middle, which fills remaining height */}
           <div className="flex w-2/3 justify-center items-center">
             <div className="h-10 rounded-lg px-4 py-2">{phase === Phase.DEPLOY && `Place: ${supply}`}</div>
           </div>
