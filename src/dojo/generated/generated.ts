@@ -16,8 +16,7 @@ const tryBetterErrorMsg = (msg: string): string => {
 export async function setupWorld(provider: DojoProvider) {
   // Transaction execution and checking wrapper
   const executeAndCheck = async (account: Account, contractName: string, methodName: string, args: any[]) => {
-
-    console.log(account)
+    console.log(account);
 
     const ret = await provider.execute(account, contractName, methodName, args);
     const receipt = await account.waitForTransaction(ret.transaction_hash, {
@@ -44,9 +43,9 @@ export async function setupWorld(provider: DojoProvider) {
 
   function host() {
     const contractName = 'zconqueror::systems::host::host';
-    const create = async (account: Account) => {
+    const create = async (account: Account, playerName: string) => {
       try {
-        return await executeAndCheck(account, contractName, 'create', [provider.getWorldAddress()]);
+        return await executeAndCheck(account, contractName, 'create', [provider.getWorldAddress(), playerName]);
       } catch (error) {
         console.error('Error executing create:', error);
         throw error;
@@ -55,16 +54,20 @@ export async function setupWorld(provider: DojoProvider) {
 
     const set_max_players = async (account: Account, gameId: Number, playerCount: Number) => {
       try {
-        return await executeAndCheck(account, contractName, 'set_max_players', [provider.getWorldAddress(), gameId, playerCount]);
+        return await executeAndCheck(account, contractName, 'set_max_players', [
+          provider.getWorldAddress(),
+          gameId,
+          playerCount,
+        ]);
       } catch (error) {
         console.error('Error executing create:', error);
         throw error;
       }
     };
 
-    const join = async (account: Account, gameId: Number) => {
+    const join = async (account: Account, gameId: Number, playerName: string) => {
       try {
-        return await executeAndCheck(account, contractName, 'join', [provider.getWorldAddress(), gameId]);
+        return await executeAndCheck(account, contractName, 'join', [provider.getWorldAddress(), gameId, playerName]);
       } catch (error) {
         console.error('Error executing join:', error);
         throw error;
