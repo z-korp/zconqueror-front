@@ -162,9 +162,9 @@ const ActionPanel = () => {
         sourceTile.army > 1 && (
           <div
             id="parent"
-            className={`flex items-center justify-around p-4 h-24 ${
+            className={`flex items-center justify-around p-4 h-28 ${
               isActionSelected &&
-              'border-4 rounded-lg border-primary bg-black bg-opacity-30 backdrop-blur-md drop-shadow-lg'
+              'border-2 rounded-lg border-primary bg-black bg-opacity-30 backdrop-blur-md drop-shadow-lg '
             } `}
           >
             <Slider
@@ -180,9 +180,9 @@ const ActionPanel = () => {
             <>
               <button
                 onClick={onAttack}
-                className="flex items-center justify-center h-8 px-2 text-white bg-red-500 rounded hover:bg-red-600 drop-shadow-lg hover:transform hover:-translate-y-1 transition-transform ease-in-out"
+                className="flex items-center justify-center h-10 px-2 text-white bg-red-500 rounded hover:bg-red-600 drop-shadow-lg hover:transform hover:-translate-y-1 transition-transform ease-in-out"
               >
-                Attack <Swords className="ml-2" />
+                ATTACK <Swords className="ml-2" />
               </button>
               <button
                 onClick={removeSelected}
@@ -198,9 +198,9 @@ const ActionPanel = () => {
           {currentPlayer && targetTile && current_source && sourceTile && sourceTile.army > 1 && current_target && (
             <div
               id="parent"
-              className={`flex items-center justify-around p-4 h-24 ${
+              className={`flex items-center justify-around p-4 h-28 ${
                 isActionSelected &&
-                'border-4 rounded-lg border-primary bg-black bg-opacity-30 backdrop-blur-md drop-shadow-lg'
+                'border-2 rounded-lg border-primary bg-black bg-opacity-30 backdrop-blur-md drop-shadow-lg'
               } `}
             >
               <Slider
@@ -214,9 +214,9 @@ const ActionPanel = () => {
               ></Slider>
               <button
                 onClick={onMoveTroops}
-                className="flex items-center justify-center h-8 px-2 text-white bg-green-500 rounded hover:bg-green-600 drop-shadow-lg hover:transform hover:-translate-y-1 transition-transform ease-in-out"
+                className="flex items-center justify-center h-10 px-2 text-white bg-green-500 rounded hover:bg-green-600 drop-shadow-lg hover:transform hover:-translate-y-1 transition-transform ease-in-out"
               >
-                Move Troops
+                MOVE
                 <Milestone className="ml-2" />
               </button>
               <button
@@ -233,9 +233,9 @@ const ActionPanel = () => {
           {currentPlayer && sourceTile && current_source && currentPlayer.supply > 0 && (
             <div
               id="parent"
-              className={`flex items-center justify-around p-4 h-24 ${
+              className={`flex items-center justify-around p-4 h-28 ${
                 isActionSelected &&
-                'border-4 rounded-lg border-primary bg-black bg-opacity-30 backdrop-blur-md drop-shadow-lg'
+                'border-2 rounded-lg border-primary bg-black bg-opacity-30 backdrop-blur-md drop-shadow-lg'
               } `}
             >
               <Slider
@@ -249,9 +249,9 @@ const ActionPanel = () => {
               ></Slider>
               <button
                 onClick={handleSupply}
-                className="flex items-center justify-center h-8 px-2  text-white bg-green-500 rounded hover:bg-green-600 drop-shadow-lg hover:transform hover:-translate-y-1 transition-transform ease-in-out"
+                className="flex items-center justify-center h-10 px-2 text-white bg-green-500 rounded hover:bg-green-600 drop-shadow-lg hover:transform hover:-translate-y-1 transition-transform ease-in-out"
               >
-                Deploy Troops <ShieldPlus className="ml-2" />
+                DEPLOY <ShieldPlus className="ml-2" />
               </button>
               <button
                 onClick={removeSelected}

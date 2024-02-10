@@ -24,9 +24,9 @@ export default function StatusPlayer({
 }: StatusPlayerProps) {
   return (
     <>
-      <div className="relative w-auto h-100 flex flex-col vt323-font text-white">
+      <div className="relative w-auto h-100 flex flex-col vt323-font text-white rounded-lg drop-shadow-lg">
         {/* Player Avatar, positioned at the top-left corner */}
-        <div className="absolute -top-6 -left-6 w-24 h-24">
+        <div className="absolute -top-6 -left-5 w-24 h-24">
           <img src={image} alt="player" className="rounded-full border-4 border-stone-900" />
         </div>
         <div className="flex bg-stone-700 border-x-2 border-t-2 border-stone-900 h-[2.4em] justify-center rounded-t-lg">
@@ -42,13 +42,16 @@ export default function StatusPlayer({
           </div>
         </div>
 
-        <div className="flex pb-4 bg-stone-700 border-2 border-stone-900 rounded-b-lg">
+        <div className="flex h-20 bg-stone-700 border-2 border-stone-900 rounded-b-lg">
           {/* Content for middle, which fills remaining height */}
-          <div className="pt-8 flex flex-wrap basis-2/3 overflow-auto justify-center align-middle">
-            <div className=" bg-gray-900 rounded px-3 py-2">Place 3/30</div>
+          <div className="flex w-2/3 justify-center items-center">
+            <div className="h-10 rounded-lg px-4 py-2">{phase === Phase.DEPLOY && `Place: ${supply}`}</div>
           </div>
-          <div className="pt-8  flex flex-wrap basis-1/3 overflow-auto justify-center align-middle">
-            <button className="bg-green-500  rounded px-4 py-2" onClick={handleNextPhaseClick}>
+          <div className="flex w-1/3 justify-center items-center">
+            <button
+              className="h-10 bg-green-500 rounded-lg drop-shadow-lg px-4 py-2 hover:transform hover:-translate-y-1 transition-transform ease-in-out"
+              onClick={handleNextPhaseClick}
+            >
               NEXT
             </button>
           </div>
