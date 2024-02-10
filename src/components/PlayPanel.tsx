@@ -179,12 +179,9 @@ const PlayPanel = () => {
           </div>
           {/* Barre d'état du joueur */}
           <StatusPlayer
-            name={player.name}
-            color={color}
             image={image}
             supply={player.supply}
             handleNextPhaseClick={handleNextPhaseClick}
-            textFromState={textFromState}
             phase={phase}
           />
         </div>
