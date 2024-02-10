@@ -4,20 +4,20 @@ import { useElementStore } from '@/utils/store';
 import { Button } from './ui/button';
 import { useComponentValue, useEntityQuery } from '@dojoengine/react';
 import { HasValue, defineSystem } from '@dojoengine/recs';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { sanitizeGame } from '@/utils/sanitizer';
 
 const Lobby: React.FC = () => {
     const {
         setup: {
             client: { host },
-            clientComponents: { Game, Player },
+            clientComponents: { Game },
             world,
         },
         account: { account },
     } = useDojo();
 
-    const { set_game_state, set_game_id, game_id } = useElementStore((state) => state);
-    const [players, setPlayers] = useState<any>({}) 
+    const { set_game_state, set_game_id, game_id, set_game } = useElementStore((state) => state);
 
     // Get game info
     const game = useComponentValue(Game, useEntityQuery([HasValue(Game, { id: game_id })]));
@@ -27,18 +27,11 @@ const Lobby: React.FC = () => {
     const isHost = '0x' + game.host.toString(16) === account.address
 
     useEffect(() => {
-        defineSystem(world, [HasValue(Player, { game_id })], ({ value: [newValue]}: any) => {
-            setPlayers((prevPlayers :any) => {
-                console.log(newValue, {
-                    ...prevPlayers,
-                    [newValue.address]: newValue
-                })
-                return {
-                    ...prevPlayers,
-                    [newValue.address]: newValue
-                }
-            })
-        })
+        defineSystem(world, [HasValue(Game, { id: game_id })], ({ value: [newGame] }: any) => {
+            if (newGame.seed == 0) return; // Game has not started
+            set_game(sanitizeGame(newGame))
+            set_game_state(GameState.Game)
+        });
     }, [])
 
     const startGame = async () => {
@@ -46,10 +39,7 @@ const Lobby: React.FC = () => {
             console.error("Game id not defined")
             return
         }
-        console.log("starts with ", account)
         await host.start(account, game_id);
-        console.log('Starting game with ID:', game_id);
-        set_game_state(GameState.Game)
     };
 
     return (
@@ -72,16 +62,6 @@ const Lobby: React.FC = () => {
                     </>
                 }
             </p>
-
-            <div className="flex gap-3 mb-4">
-            {
-                Object.values(players).map((p: any) => {
-                    return (
-                        <p key={p.address}>{p.address}</p>
-                    )
-                })
-            }
-            </div>
         </div >
     );
 };

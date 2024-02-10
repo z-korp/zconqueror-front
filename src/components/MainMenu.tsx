@@ -31,10 +31,6 @@ const MainMenu: React.FC = () => {
             return
         }
 
-        if (game_state !== GameState.MainMenu) {
-            return
-        }
-
         const burnerAccount = account.account
         if (actionJoinData) {
             setTimeout(() => {
@@ -42,10 +38,6 @@ const MainMenu: React.FC = () => {
                     .then(() => {
                         set_game_id(actionJoinData.game_id)
                         set_game_state(GameState.Lobby);
-                        console.log("yes")
-                        defineSystem(world, [HasValue(Game, { game_id: actionJoinData.game_id })], ({ value: [newGame] }: any) => {
-                            console.log("NEW GAME", newGame)
-                        });
                     });
             }, 500)
         } else {
@@ -53,9 +45,6 @@ const MainMenu: React.FC = () => {
                 if (game_state === GameState.MainMenu) {
                     set_game_id(newGame.id);
                     set_game_state(GameState.Lobby);
-                    defineSystem(world, [HasValue(Game, { game_id: newGame.id })], ({ value: [newGame] }: any) => {
-                        console.log("NEW GAME", newGame)
-                    });        
                 }
             });
             setTimeout(() => {

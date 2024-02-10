@@ -25,7 +25,7 @@ export function useGetPlayers() {
   );
 
   useEffect(() => {
-    console.log('players', players);
+    // console.log('players', players);
   }, [players]);
 
   return {
