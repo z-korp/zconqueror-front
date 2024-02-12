@@ -15,6 +15,8 @@ const ActionPanel = () => {
     account: { account },
   } = useDojo();
 
+  console.log("Playing with", account.address)
+
   const {
     current_source,
     set_current_source,

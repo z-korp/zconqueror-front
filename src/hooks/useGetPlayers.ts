@@ -24,10 +24,6 @@ export function useGetPlayers() {
     [playerEntities, Player]
   );
 
-  useEffect(() => {
-    console.log('players', players);
-  }, [players]);
-
   return {
     players,
   };

@@ -8,9 +8,6 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
 export const joinFormSchema = z.object({
-  username: z.string().min(2, {
-    message: 'Username must be at least 2 characters.',
-  }),
   game_id: z.coerce.number().refine((value) => !isNaN(value) && value >= 0, {
     message: 'Game id cannot be negative',
   }),
@@ -23,7 +20,6 @@ interface JoinGameFormProps {
 const JoinGameForm: React.FC<JoinGameFormProps> = ({ onFormSubmit }) => {
   const form = useForm<z.infer<typeof joinFormSchema>>({
     defaultValues: {
-      username: 'Player 2',
       game_id: 0,
     },
     resolver: zodResolver(joinFormSchema),
@@ -58,19 +54,6 @@ const JoinGameForm: React.FC<JoinGameFormProps> = ({ onFormSubmit }) => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-3">
-        <FormField
-          control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input placeholder="shadcn" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         <FormField
           control={form.control}
           name="game_id"
