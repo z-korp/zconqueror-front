@@ -39,7 +39,7 @@ const MainMenu: React.FC = () => {
           set_game_id(actionJoinData.game_id);
           set_game_state(GameState.Lobby);
         });
-      }, 500);
+      }, 5000);
     } else {
       defineSystem(world, [HasValue(Game, { host: BigInt(burnerAccount.address) })], ({ value: [newGame] }: any) => {
         if (game_state === GameState.MainMenu) {
@@ -50,7 +50,7 @@ const MainMenu: React.FC = () => {
       setTimeout(() => {
         console.log('create with', burnerAccount.address);
         host.create(burnerAccount, player_name);
-      }, 500);
+      }, 5000);
     }
   }, [account, accountInit, actionJoinData]);
 
