@@ -32,39 +32,6 @@ const ActionPanel = () => {
   const [targetTile, setTargetTile] = useState<any | null>(null);
   const [isActionSelected, setIsActionSelected] = useState(false);
 
-  /*const [arrowPosition, setArrowPosition] = useState({
-    x: 0,
-    y: 0,
-    visible: false,
-  });
-
-  const attackerPosition = { x: 125, y: 150 };
-  const targetPosition = { x: 125, y: 300 };
-
-  // Trigger the animation on some game event, e.g., attack
-  /*const animateArrow = () => {
-    let start: any = null;
-    const duration = 1000; // Duration of animation in milliseconds
-
-    const step = (timestamp: any) => {
-      if (!start) start = timestamp;
-      const progress = (timestamp - start) / duration;
-      const currentX = attackerPosition.x + progress * (targetPosition.x - attackerPosition.x);
-      const currentY = attackerPosition.y + progress * (targetPosition.y - attackerPosition.y);
-
-      setArrowPosition({ x: currentX, y: currentY, visible: true });
-
-      if (progress < 1) {
-        requestAnimationFrame(step);
-      } else {
-        // Hide the arrow after reaching the target
-        setArrowPosition({ ...arrowPosition, visible: false });
-      }
-    };
-
-    requestAnimationFrame(step);
-  };*/
-
   useEffect(() => {
     setArmyCount(0);
     set_current_source(null);

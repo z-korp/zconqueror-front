@@ -43,9 +43,9 @@ export async function setupWorld(provider: DojoProvider) {
 
   function host() {
     const contractName = 'zconqueror::systems::host::host';
-    const create = async (account: Account, playerName: string) => {
+    const create = async (account: Account, playerName: string, price: Number) => {
       try {
-        return await executeAndCheck(account, contractName, 'create', [provider.getWorldAddress(), playerName]);
+        return await executeAndCheck(account, contractName, 'create', [provider.getWorldAddress(), playerName, price]);
       } catch (error) {
         console.error('Error executing create:', error);
         throw error;

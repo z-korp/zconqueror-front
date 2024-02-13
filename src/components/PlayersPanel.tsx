@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { animated, useSpring } from 'react-spring';
 import SidePlayerInfo from './SidePlayerInfo';
 
@@ -38,8 +38,8 @@ const PlayersPanel = ({ players }: PlayersPanelProps) => {
         <span className="mr-2">{isCollapsed ? '▲' : '▼'}</span>
       </div>
 
-      <animated.div style={springProps} ref={playersRef} className="max-h overflow-x-auto scrollbar-custom">
-        {players.map((player, index) => (
+      <animated.div style={springProps} ref={playersRef} className="max-h overflow-hidden scrollbar-custom">
+        {players.map((player: any, index: number) => (
           <SidePlayerInfo key={index} index={index} player={player} />
         ))}
       </animated.div>
