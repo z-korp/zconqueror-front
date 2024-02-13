@@ -14,7 +14,6 @@ import { useElementStore } from './utils/store';
 import PlayersPanel from './components/PlayersPanel';
 
 function App() {
-
   // const { id } = useParams<{ id?: string }>();
 
   const { game_state } = useElementStore((state) => state);
@@ -40,17 +39,9 @@ function App() {
 
   return (
     <>
-      
-      {
-        game_state === GameState.MainMenu &&
-        <MainMenu />
-      }
-      {
-        game_state === GameState.Lobby &&
-        <Lobby />
-      }
-      {
-        game_state === GameState.Game &&
+      {game_state === GameState.MainMenu && <MainMenu />}
+      {game_state === GameState.Lobby && <Lobby />}
+      {game_state === GameState.Game && (
         <>
           <Toaster />
           <TooltipProvider>
@@ -70,7 +61,7 @@ function App() {
             <PlayersPanel players={players} />
           </div>
         </>
-      }
+      )}
     </>
   );
 }

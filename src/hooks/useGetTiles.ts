@@ -1,4 +1,4 @@
-import { useDojo } from '@/DojoContext';
+import { useDojo } from '@/dojo/useDojo';
 import { useElementStore } from '@/utils/store';
 import { useEntityQuery } from '@dojoengine/react';
 import { Has, HasValue, getComponentValue } from '@dojoengine/recs';
@@ -19,9 +19,9 @@ export function useGetTiles() {
     [tileEntities, Tile]
   );
 
-  useEffect(() => {
-    //console.log('tiles', tiles);
-  }, [tiles]);
+  /*useEffect(() => {
+    console.log('tiles', tiles);
+  }, [tiles]);*/
 
   return {
     tiles,

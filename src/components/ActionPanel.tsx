@@ -1,4 +1,3 @@
-import { useDojo } from '@/DojoContext';
 import { useGetCurrentPlayer } from '@/hooks/useGetCurrentPlayer';
 import { useGetTiles } from '@/hooks/useGetTiles';
 import { usePhase } from '@/hooks/usePhase';
@@ -6,6 +5,7 @@ import { Phase, useElementStore } from '@/utils/store';
 import { Milestone, ShieldPlus, Swords } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Slider } from './ui/slider';
+import { useDojo } from '@/dojo/useDojo';
 
 const ActionPanel = () => {
   const {
@@ -15,7 +15,7 @@ const ActionPanel = () => {
     account: { account },
   } = useDojo();
 
-  console.log("Playing with", account.address)
+  console.log('Playing with', account.address);
 
   const {
     current_source,

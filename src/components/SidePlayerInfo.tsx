@@ -1,10 +1,10 @@
-import { useDojo } from '@/DojoContext';
 import { colorClasses, colorPlayer } from '@/utils/colors';
 import { useElementStore } from '@/utils/store';
-import { getComponentValue, getEntitiesWithValue } from '@latticexyz/recs';
+import { getComponentValue, getEntitiesWithValue } from '@dojoengine/recs';
 import { undefined } from 'zod';
 import { avatars } from '../utils/pfps';
 import { MountainSnow, RectangleVertical, Swords } from 'lucide-react';
+import { useDojo } from '@/dojo/useDojo';
 
 interface SidePlayerInfoProps {
   index: number;

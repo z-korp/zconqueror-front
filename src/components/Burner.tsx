@@ -1,7 +1,7 @@
-import { useDojo } from '@/DojoContext';
 import { useElementStore } from '@/utils/store';
 import React from 'react';
 import { Button } from './ui/button';
+import { useDojo } from '@/dojo/useDojo';
 
 const Burner: React.FC = () => {
   const {

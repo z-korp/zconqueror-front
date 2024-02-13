@@ -1,4 +1,4 @@
-import { useDojo } from '@/DojoContext';
+import { useDojo } from '@/dojo/useDojo';
 import { sanitizePlayer } from '@/utils/sanitizer';
 import { useElementStore } from '@/utils/store';
 import { useEntityQuery } from '@dojoengine/react';

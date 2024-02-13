@@ -1,4 +1,3 @@
-import { useDojo } from '@/DojoContext';
 import { useElementStore } from '@/utils/store';
 import { z } from 'zod';
 import { Button } from './ui/button';
@@ -8,6 +7,7 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } 
 import { DialogHeader } from './ui/dialog';
 import { defineSystem, HasValue } from '@dojoengine/recs';
 import { useEffect, useRef, useState } from 'react';
+import { useDojo } from '@/dojo/useDojo';
 
 const MainMenu: React.FC = () => {
   const { set_game_state, game_state, set_game_id } = useElementStore((state) => state);
@@ -39,7 +39,7 @@ const MainMenu: React.FC = () => {
           set_game_id(actionJoinData.game_id);
           set_game_state(GameState.Lobby);
         });
-      }, 5000);
+      }, 500);
     } else {
       defineSystem(world, [HasValue(Game, { host: BigInt(burnerAccount.address) })], ({ value: [newGame] }: any) => {
         if (game_state === GameState.MainMenu) {
@@ -49,8 +49,8 @@ const MainMenu: React.FC = () => {
       });
       setTimeout(() => {
         console.log('create with', burnerAccount.address);
-        host.create(burnerAccount, player_name);
-      }, 5000);
+        host.create(burnerAccount, player_name, BigInt(0));
+      }, 500);
     }
   }, [account, accountInit, actionJoinData]);
 

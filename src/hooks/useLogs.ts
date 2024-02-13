@@ -1,5 +1,5 @@
-import { useDojo } from '@/DojoContext';
 import { DEFEND_EVENT, FORTIFY_EVENT, SUPPLY_EVENT } from '@/constants';
+import { useDojo } from '@/dojo/useDojo';
 import { fetchEventsOnce } from '@/services/fetchEvents';
 import {
   Event,

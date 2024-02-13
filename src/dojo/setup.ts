@@ -1,22 +1,22 @@
 import { getSyncEntities } from '@dojoengine/state';
+import { DojoConfig, DojoProvider } from '@dojoengine/core';
 import * as torii from '@dojoengine/torii-client';
 import { createClientComponents } from './createClientComponents';
-//import { createSystemCalls } from './createSystemCalls';
-import { DojoProvider } from '@dojoengine/core';
-import { Config } from '../../DojoConfig';
-import { defineContractComponents } from './contractComponents';
-import { setupWorld } from './generated/generated';
+import { defineContractComponents } from './generated/contractComponents';
 import { world } from './world';
+import { setupWorld } from './systems';
+import { Account } from 'starknet';
+import { BurnerManager } from '@dojoengine/create-burner';
 import { createUpdates } from './createUpdates';
 
 export type SetupResult = Awaited<ReturnType<typeof setup>>;
 
-export async function setup({ ...config }: Config) {
+export async function setup({ ...config }: DojoConfig) {
   // torii client
   const toriiClient = await torii.createClient([], {
     rpcUrl: config.rpcUrl,
     toriiUrl: config.toriiUrl,
-    worldAddress: config.manifest.world.address,
+    worldAddress: config.manifest.world.address || '',
   });
 
   // create contract components
@@ -28,16 +28,40 @@ export async function setup({ ...config }: Config) {
   // fetch all existing entities from torii
   await getSyncEntities(toriiClient, contractComponents as any);
 
-  const client = await setupWorld(new DojoProvider(config.manifest, config.rpcUrl));
+  // create dojo provider
+  const dojoProvider = new DojoProvider(config.manifest, config.rpcUrl);
 
+  // setup world
+  const client = await setupWorld(dojoProvider);
+
+  // create updates manager
   const updates = await createUpdates(clientComponents);
+
+  // create burner manager
+  const burnerManager = new BurnerManager({
+    masterAccount: new Account(dojoProvider.provider, config.masterAddress, config.masterPrivateKey),
+    accountClassHash: config.accountClassHash,
+    rpcProvider: dojoProvider.provider,
+  });
+
+  if (burnerManager.list().length === 0) {
+    try {
+      await burnerManager.create();
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  burnerManager.init();
 
   return {
     client,
     clientComponents,
     contractComponents,
     config,
-    world,
+    dojoProvider,
+    burnerManager,
     updates,
+    world,
   };
 }

@@ -1,3 +1,5 @@
+/* previously called generated.ts */
+
 import { DojoProvider } from '@dojoengine/core';
 import { Account, RevertedTransactionReceiptResponse } from 'starknet';
 
@@ -43,21 +45,13 @@ export async function setupWorld(provider: DojoProvider) {
 
   function host() {
     const contractName = 'zconqueror::systems::host::host';
-    const create = async (account: Account, playerName: string, price: Number) => {
+    const create = async (account: Account, playerName: string, price: bigint) => {
       try {
-        return await executeAndCheck(account, contractName, 'create', [provider.getWorldAddress(), playerName, price]);
-      } catch (error) {
-        console.error('Error executing create:', error);
-        throw error;
-      }
-    };
-
-    const set_max_players = async (account: Account, gameId: Number, playerCount: Number) => {
-      try {
-        return await executeAndCheck(account, contractName, 'set_max_players', [
+        return await executeAndCheck(account, contractName, 'create', [
           provider.getWorldAddress(),
-          gameId,
-          playerCount,
+          playerName,
+          price,
+          price,
         ]);
       } catch (error) {
         console.error('Error executing create:', error);
@@ -65,11 +59,20 @@ export async function setupWorld(provider: DojoProvider) {
       }
     };
 
-    const join = async (account: Account, gameId: Number, playerName: string) => {
+    const join = async (account: Account, gameId: number, playerName: string) => {
       try {
         return await executeAndCheck(account, contractName, 'join', [provider.getWorldAddress(), gameId, playerName]);
       } catch (error) {
         console.error('Error executing join:', error);
+        throw error;
+      }
+    };
+
+    const leave = async (account: Account, gameId: number) => {
+      try {
+        return await executeAndCheck(account, contractName, 'leave', [provider.getWorldAddress(), gameId]);
+      } catch (error) {
+        console.error('Error executing leave:', error);
         throw error;
       }
     };
@@ -83,11 +86,21 @@ export async function setupWorld(provider: DojoProvider) {
       }
     };
 
+    const claim = async (account: Account, gameId: number) => {
+      try {
+        return await executeAndCheck(account, contractName, 'claim', [provider.getWorldAddress(), gameId]);
+      } catch (error) {
+        console.error('Error executing claim:', error);
+        throw error;
+      }
+    };
+
     return {
       create,
-      set_max_players,
       join,
+      leave,
       start,
+      claim,
     };
   }
 
