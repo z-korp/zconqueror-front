@@ -6,8 +6,10 @@ import JoinGameForm, { joinFormSchema } from './JoinGameForm';
 import GameState from '@/utils/gamestate';
 import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '@radix-ui/react-dialog';
 import { DialogHeader } from './ui/dialog';
-import { defineSystem, HasValue } from '@dojoengine/recs';
+import { defineSystem, Has, HasValue, defineEnterSystem } from '@dojoengine/recs';
 import { useEffect, useRef, useState } from 'react';
+import { Table, TableBody, TableHead, TableHeader, TableRow } from './ui/table';
+import GameRow from './GameRow';
 
 const MainMenu: React.FC = () => {
   const { set_game_state, game_state, set_game_id } = useElementStore((state) => state);
@@ -26,7 +28,7 @@ const MainMenu: React.FC = () => {
   const [accountInit, setAccountInit] = useState<boolean>(false);
   const [actionJoinData, setActionJoinData] = useState<any>(undefined);
   const [player_name, setPlayerName] = useState('');
-
+  const [games, setGames] = useState<any[]>([]);
   useEffect(() => {
     if (!accountInit || prevAccount.current.address === account.account.address) {
       return;
@@ -39,7 +41,7 @@ const MainMenu: React.FC = () => {
           set_game_id(actionJoinData.game_id);
           set_game_state(GameState.Lobby);
         });
-      }, 5000);
+      }, 500);
     } else {
       defineSystem(world, [HasValue(Game, { host: BigInt(burnerAccount.address) })], ({ value: [newGame] }: any) => {
         if (game_state === GameState.MainMenu) {
@@ -48,9 +50,8 @@ const MainMenu: React.FC = () => {
         }
       });
       setTimeout(() => {
-        console.log('create with', burnerAccount.address);
         host.create(burnerAccount, player_name);
-      }, 5000);
+      }, 500);
     }
   }, [account, accountInit, actionJoinData]);
 
@@ -60,6 +61,24 @@ const MainMenu: React.FC = () => {
     account.create();
   }
 
+  useEffect(() => {
+    defineEnterSystem(world, [HasValue(Game, { seed: BigInt(0) })], ({ value: [newGame] }: any) => {
+      setGames((prevGames) => {
+        if (prevGames.find((game) => game.id === newGame.id)) {
+          return prevGames; // Return the previous games unchanged if newGame is already in games
+        } else {
+          return [...prevGames, newGame]; // Add newGame to games if it's not already in games
+        }
+      });
+    });
+    defineSystem(world, [Has(Game)], ({ value: [newGame] }: any) => {
+      console.log('Game Updated', newGame);
+      if (newGame.seed !== BigInt(0)) {
+        setGames((prevGames) => prevGames.filter((game) => game.id !== newGame.id));
+      }
+    });
+  }, []);
+
   async function handleJoinFormSubmit(data: z.infer<typeof joinFormSchema>) {
     prevAccount.current = account.account;
     setAccountInit(true);
@@ -68,27 +87,43 @@ const MainMenu: React.FC = () => {
   }
 
   return (
-    <div className="flex gap-3 mb-4">
-      <input
-        type="text"
-        value={player_name}
-        onChange={(e) => setPlayerName(e.target.value)}
-        placeholder="Enter player name"
-      />
-      <Button onClick={createNewGame}>Create a new game</Button>
-      <Dialog>
-        <DialogTrigger asChild={true}>
-          <Button>Join a game</Button>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Join a game</DialogTitle>
-            <DialogDescription asChild={true}>
-              <JoinGameForm onFormSubmit={handleJoinFormSubmit}></JoinGameForm>
-            </DialogDescription>
-          </DialogHeader>
-        </DialogContent>
-      </Dialog>
+    <div>
+      <div className="flex gap-3 mb-4">
+        <input
+          type="text"
+          value={player_name}
+          onChange={(e) => setPlayerName(e.target.value)}
+          placeholder="Enter player name"
+        />
+        <Button onClick={createNewGame}>Create a new game</Button>
+        <Dialog>
+          <DialogTrigger asChild={true}>
+            <Button>Join a game</Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Join a game</DialogTitle>
+              <DialogDescription asChild={true}>
+                <JoinGameForm onFormSubmit={handleJoinFormSubmit}></JoinGameForm>
+              </DialogDescription>
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
+      </div>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Host</TableHead>
+            <TableHead>ID</TableHead>
+            <TableHead>Players</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {games.map((game) => (
+            <GameRow key={game.id} game={game} />
+          ))}
+        </TableBody>
+      </Table>
     </div>
   );
 };
