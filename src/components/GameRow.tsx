@@ -28,11 +28,8 @@ const GameRow: React.FC<GameRowProps> = ({ game }) => {
 
   const { set_game_state, set_game_id, player_name } = useElementStore((state) => state);
 
-  console.log(game);
   const playerId = useEntityQuery([HasValue(Player, { game_id: game.id, index: 0 })], { updateOnValueChange: true });
-  console.log(playerId);
   const player = useComponentValue(Player, playerId[0]);
-  console.log(player);
 
   function joinGame(gameid: number) {
     host.join(account.account, gameid, player_name).then(() => {
