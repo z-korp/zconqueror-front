@@ -43,26 +43,31 @@ const Lobby: React.FC = () => {
   };
 
   return (
-    <div className="flex gap-3 mb-4">
-      <Button
-        onClick={() => {
-          set_game_id(0);
-          set_game_state(GameState.MainMenu);
-        }}
-      >
-        Back
-      </Button>
-      Lobby
-      <h2>Game id: {game_id}</h2>
-      <p>
-        Max numbers: {game.player_count}
-        {isHost && (
-          <>
-            <Button>Change Player Limit</Button>
-            <Button onClick={startGame}>Start</Button>
-          </>
-        )}
-      </p>
+    <div className="flex flex-col gap-4 overflow-hidden">
+      <div className="flex gap-3 mb-4">
+        <Button
+          onClick={() => {
+            set_game_id(0);
+            set_game_state(GameState.MainMenu);
+          }}
+        >
+          Back
+        </Button>
+        Lobby
+        <h2>Game id: {game_id}</h2>
+        <p>
+          Max numbers: {game.player_count}
+          {isHost && (
+            <>
+              <Button>Change Player Limit</Button>
+              <Button onClick={startGame}>Start</Button>
+            </>
+          )}
+        </p>
+      </div>
+      <h1 className="vt323-font text-white text-6xl fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+        Waiting for the game to start ...
+      </h1>
     </div>
   );
 };
