@@ -24,6 +24,8 @@ interface State {
   set_current_address: (address: string | null) => void;
   highlighted_region: number | null;
   setHighlightedRegion: (region: number | null) => void;
+  player_name: string;
+  setPlayerName: (name: string) => void;
 }
 
 export const useElementStore = create<State>((set) => ({
@@ -43,4 +45,6 @@ export const useElementStore = create<State>((set) => ({
   set_current_address: (address: string | null) => set(() => ({ current_address: address })),
   highlighted_region: null,
   setHighlightedRegion: (region: number | null) => set(() => ({ highlighted_region: region })),
+  player_name: '',
+  setPlayerName: (name: string) => set(() => ({ player_name: name })),
 }));
