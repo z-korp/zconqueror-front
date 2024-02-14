@@ -6,10 +6,12 @@ import GameState from '@/utils/gamestate';
 import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '@radix-ui/react-dialog';
 import { DialogHeader } from './ui/dialog';
 import { defineSystem, HasValue } from '@dojoengine/recs';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { useDojo } from '@/dojo/useDojo';
+import { useToast } from './ui/use-toast';
 
 const MainMenu: React.FC = () => {
+  const { toast } = useToast();
   const { set_game_state, game_state, set_game_id } = useElementStore((state) => state);
 
   const {
@@ -18,53 +20,41 @@ const MainMenu: React.FC = () => {
       clientComponents: { Game },
       world,
     },
-    account,
+    account: { account },
   } = useDojo();
 
-  const prevAccount = useRef<any>();
-
-  const [accountInit, setAccountInit] = useState<boolean>(false);
-  const [actionJoinData, setActionJoinData] = useState<any>(undefined);
-  const [player_name, setPlayerName] = useState('');
-
-  useEffect(() => {
-    if (!accountInit || prevAccount.current.address === account.account.address) {
-      return;
-    }
-
-    const burnerAccount = account.account;
-    if (actionJoinData) {
-      setTimeout(() => {
-        host.join(burnerAccount, actionJoinData.game_id, player_name).then(() => {
-          set_game_id(actionJoinData.game_id);
-          set_game_state(GameState.Lobby);
-        });
-      }, 500);
-    } else {
-      defineSystem(world, [HasValue(Game, { host: BigInt(burnerAccount.address) })], ({ value: [newGame] }: any) => {
-        if (game_state === GameState.MainMenu) {
-          set_game_id(newGame.id);
-          set_game_state(GameState.Lobby);
-        }
-      });
-      setTimeout(() => {
-        console.log('create with', burnerAccount.address);
-        host.create(burnerAccount, player_name, BigInt(0));
-      }, 500);
-    }
-  }, [account, accountInit, actionJoinData]);
+  const [player_name, setPlayerName] = useState('Test');
 
   async function createNewGame() {
-    prevAccount.current = account.account;
-    setAccountInit(true);
-    account.create();
+    defineSystem(world, [HasValue(Game, { host: BigInt(account.address) })], ({ value: [newGame] }: any) => {
+      if (game_state === GameState.MainMenu) {
+        set_game_id(newGame.id);
+        set_game_state(GameState.Lobby);
+      }
+    });
+
+    try {
+      // TBD get the id from here?
+      await host.create(account, player_name, /* price */ BigInt(0));
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        description: <code className="text-white text-xs">{error.message}</code>,
+      });
+    }
   }
 
   async function handleJoinFormSubmit(data: z.infer<typeof joinFormSchema>) {
-    prevAccount.current = account.account;
-    setAccountInit(true);
-    setActionJoinData(data);
-    account.create();
+    try {
+      await host.join(account, data.game_id, player_name);
+      set_game_id(data.game_id);
+      set_game_state(GameState.Lobby);
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        description: <code className="text-white text-xs">{error.message}</code>,
+      });
+    }
   }
 
   return (

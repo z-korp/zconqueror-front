@@ -9,7 +9,16 @@ const tryBetterErrorMsg = (msg: string): string => {
     let betterMsg = msg.substring(failureReasonIndex);
     const cairoTracebackIndex = betterMsg.indexOf('Cairo traceback');
     betterMsg = betterMsg.substring(0, cairoTracebackIndex);
-    return betterMsg;
+
+    const regex = /Failure reason:.*?\('([^']+)'\)/;
+    const matches = betterMsg.match(regex);
+
+    if (matches && matches.length > 1) {
+      console.log(matches[1]);
+      return matches[1];
+    } else {
+      return betterMsg;
+    }
   }
 
   return msg;
@@ -18,8 +27,6 @@ const tryBetterErrorMsg = (msg: string): string => {
 export async function setupWorld(provider: DojoProvider) {
   // Transaction execution and checking wrapper
   const executeAndCheck = async (account: Account, contractName: string, methodName: string, args: any[]) => {
-    console.log(account);
-
     const ret = await provider.execute(account, contractName, methodName, args);
     const receipt = await account.waitForTransaction(ret.transaction_hash, {
       retryInterval: 100,
@@ -28,6 +35,7 @@ export async function setupWorld(provider: DojoProvider) {
     // Add any additional checks or logic here based on the receipt
     if (receipt.status === 'REJECTED') {
       console.log('Transaction Rejected');
+      throw new Error('[Tx REJECTED] ');
     }
 
     if ('execution_status' in receipt) {
@@ -37,6 +45,7 @@ export async function setupWorld(provider: DojoProvider) {
           (receipt as RevertedTransactionReceiptResponse).revert_reason || 'Transaction Reverted'
         );
         console.log('ERROR KATANA', errorMessage);
+        throw new Error('[Tx REVERTED] ' + errorMessage);
       }
     }
 

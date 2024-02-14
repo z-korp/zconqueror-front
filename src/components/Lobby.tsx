@@ -6,6 +6,7 @@ import { HasValue, defineSystem } from '@dojoengine/recs';
 import { useEffect } from 'react';
 import { sanitizeGame } from '@/utils/sanitizer';
 import { useDojo } from '@/dojo/useDojo';
+import { useToast } from './ui/use-toast';
 
 const Lobby: React.FC = () => {
   const {
@@ -16,14 +17,13 @@ const Lobby: React.FC = () => {
     },
     account: { account },
   } = useDojo();
+  const { toast } = useToast();
 
   const { set_game_state, set_game_id, game_id, set_game } = useElementStore((state) => state);
 
   // Get game info
   const game = useComponentValue(Game, useEntityQuery([HasValue(Game, { id: game_id })]));
-  if (!game) {
-    return;
-  }
+
   const isHost = '0x' + game.host.toString(16) === account.address;
 
   useEffect(() => {
@@ -32,15 +32,30 @@ const Lobby: React.FC = () => {
       set_game(sanitizeGame(newGame));
       set_game_state(GameState.Game);
     });
-  }, []);
+  }, [game]);
 
   const startGame = async () => {
     if (game_id === undefined) {
       console.error('Game id not defined');
+      toast({
+        variant: 'destructive',
+        description: <code className="text-white text-xs">{'Game id not defined'}</code>,
+      });
       return;
     }
-    await host.start(account, game_id);
+    try {
+      await host.start(account, game_id);
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        description: <code className="text-white text-xs">{error.message}</code>,
+      });
+    }
   };
+
+  if (!game) {
+    return;
+  }
 
   return (
     <div className="flex gap-3 mb-4">
@@ -56,12 +71,7 @@ const Lobby: React.FC = () => {
       <h2>Game id: {game_id}</h2>
       <p>
         Max numbers: {game.player_count}
-        {isHost && (
-          <>
-            <Button>Change Player Limit</Button>
-            <Button onClick={startGame}>Start</Button>
-          </>
-        )}
+        {isHost && <Button onClick={startGame}>Start</Button>}
       </p>
     </div>
   );

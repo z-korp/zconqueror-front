@@ -12,6 +12,7 @@ import Lobby from './components/Lobby';
 import { useGetPlayers } from './hooks/useGetPlayers';
 import { useElementStore } from './utils/store';
 import PlayersPanel from './components/PlayersPanel';
+import { DebugPanel } from './components/DebugPanel';
 
 function App() {
   // const { id } = useParams<{ id?: string }>();
@@ -39,11 +40,14 @@ function App() {
 
   return (
     <>
+      <Toaster />
+      <div className="fixed top-0 left-0">
+        <DebugPanel />
+      </div>
       {game_state === GameState.MainMenu && <MainMenu />}
       {game_state === GameState.Lobby && <Lobby />}
       {game_state === GameState.Game && (
         <>
-          <Toaster />
           <TooltipProvider>
             <div className="flex">
               <div className="w-full">
