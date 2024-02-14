@@ -109,7 +109,7 @@ export const useLogs = () => {
     };
 
     if (game) fetchEvents();
-  }, [game]);
+  }, [game.id]);
 
   return { logs: logs.sort((a, b) => a.timestamp - b.timestamp) };
 };
