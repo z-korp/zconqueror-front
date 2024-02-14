@@ -12,7 +12,7 @@ import { Table, TableBody, TableHead, TableHeader, TableRow } from './ui/table';
 import GameRow from './GameRow';
 
 const MainMenu: React.FC = () => {
-  const { set_game_state, game_state, set_game_id } = useElementStore((state) => state);
+  const { set_game_state, game_state, set_game_id, player_name, setPlayerName } = useElementStore((state) => state);
 
   const {
     setup: {
@@ -27,7 +27,6 @@ const MainMenu: React.FC = () => {
 
   const [accountInit, setAccountInit] = useState<boolean>(false);
   const [actionJoinData, setActionJoinData] = useState<any>(undefined);
-  const [player_name, setPlayerName] = useState('');
   const [games, setGames] = useState<any[]>([]);
   useEffect(() => {
     if (!accountInit || prevAccount.current.address === account.account.address) {
@@ -110,20 +109,25 @@ const MainMenu: React.FC = () => {
           </DialogContent>
         </Dialog>
       </div>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Host</TableHead>
-            <TableHead>ID</TableHead>
-            <TableHead>Players</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {games.map((game) => (
-            <GameRow key={game.id} game={game} />
-          ))}
-        </TableBody>
-      </Table>
+      <div className="flex justify-center">
+        <div className="lg:w-1/2 md:w-3/4">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Host</TableHead>
+                <TableHead>ID</TableHead>
+                <TableHead>Players</TableHead>
+                <TableHead>Join</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {games.map((game) => (
+                <GameRow key={game.id} game={game} />
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </div>
     </div>
   );
 };
