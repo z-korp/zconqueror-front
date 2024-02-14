@@ -53,7 +53,7 @@ const JoinGameForm: React.FC<JoinGameFormProps> = ({ onFormSubmit }) => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-3">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-3 flex items-end gap-3">
         <FormField
           control={form.control}
           name="game_id"

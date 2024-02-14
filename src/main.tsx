@@ -6,6 +6,7 @@ import App from './App.tsx';
 import { setup } from './dojo/setup';
 import { DojoProvider } from './dojo/DojoContext.tsx';
 import './index.css';
+import { TooltipProvider } from '@radix-ui/react-tooltip';
 
 async function init() {
   const rootElement = document.getElementById('root');
@@ -16,13 +17,15 @@ async function init() {
   root.render(
     <React.StrictMode>
       <DojoProvider value={setupResult}>
-        <Router>
-          <Routes>
-            <Route path="" element={<App />} />
-            <Route path="/:id" element={<App />} />
-          </Routes>
-        </Router>
-        {/* <App /> */}
+        <TooltipProvider>
+          <Router>
+            <Routes>
+              <Route path="" element={<App />} />
+              <Route path="/:id" element={<App />} />
+            </Routes>
+          </Router>
+          {/* <App /> */}
+        </TooltipProvider>
       </DojoProvider>
     </React.StrictMode>
   );

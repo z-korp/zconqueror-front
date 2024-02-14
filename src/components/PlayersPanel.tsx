@@ -17,7 +17,7 @@ const PlayersPanel = ({ players }: PlayersPanelProps) => {
     if (playersRef.current) {
       setContentHeight(playersRef.current.scrollHeight);
     }
-  }, [isCollapsed]);
+  }, [players]);
 
   // Animate the container height
   const springProps = useSpring({

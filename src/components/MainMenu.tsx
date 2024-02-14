@@ -5,34 +5,38 @@ import JoinGameForm, { joinFormSchema } from './JoinGameForm';
 import GameState from '@/utils/gamestate';
 import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '@radix-ui/react-dialog';
 import { DialogHeader } from './ui/dialog';
-import { defineSystem, HasValue } from '@dojoengine/recs';
-import { useState } from 'react';
+import { HasValue } from '@dojoengine/recs';
+import { useEffect, useState } from 'react';
 import { useDojo } from '@/dojo/useDojo';
 import { useToast } from './ui/use-toast';
+import { useComponentValue, useEntityQuery } from '@dojoengine/react';
+import { Input } from './ui/input';
 
 const MainMenu: React.FC = () => {
   const { toast } = useToast();
-  const { set_game_state, game_state, set_game_id } = useElementStore((state) => state);
+  const { set_game_state, set_game_id } = useElementStore((state) => state);
 
   const {
     setup: {
       client: { host },
       clientComponents: { Game },
-      world,
     },
     account: { account },
   } = useDojo();
 
   const [player_name, setPlayerName] = useState('Test');
 
-  async function createNewGame() {
-    defineSystem(world, [HasValue(Game, { host: BigInt(account.address) })], ({ value: [newGame] }: any) => {
-      if (game_state === GameState.MainMenu) {
-        set_game_id(newGame.id);
-        set_game_state(GameState.Lobby);
-      }
-    });
+  const game = useComponentValue(Game, useEntityQuery([HasValue(Game, { host: BigInt(account.address) })]));
 
+  // if player is host of a game, go to the lobby
+  useEffect(() => {
+    if (game) {
+      set_game_id(game.id);
+      set_game_state(GameState.Lobby);
+    }
+  }, [game]);
+
+  const createNewGame = async () => {
     try {
       // TBD get the id from here?
       await host.create(account, player_name, /* price */ BigInt(0));
@@ -42,9 +46,9 @@ const MainMenu: React.FC = () => {
         description: <code className="text-white text-xs">{error.message}</code>,
       });
     }
-  }
+  };
 
-  async function handleJoinFormSubmit(data: z.infer<typeof joinFormSchema>) {
+  const handleJoinFormSubmit = async (data: z.infer<typeof joinFormSchema>) => {
     try {
       await host.join(account, data.game_id, player_name);
       set_game_id(data.game_id);
@@ -55,15 +59,16 @@ const MainMenu: React.FC = () => {
         description: <code className="text-white text-xs">{error.message}</code>,
       });
     }
-  }
+  };
 
   return (
     <div className="flex gap-3 mb-4">
-      <input
+      <Input
+        className="w-64"
         type="text"
+        placeholder="Pseudo"
         value={player_name}
         onChange={(e) => setPlayerName(e.target.value)}
-        placeholder="Enter player name"
       />
       <Button onClick={createNewGame}>Create a new game</Button>
       <Dialog>
@@ -72,7 +77,6 @@ const MainMenu: React.FC = () => {
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Join a game</DialogTitle>
             <DialogDescription asChild={true}>
               <JoinGameForm onFormSubmit={handleJoinFormSubmit}></JoinGameForm>
             </DialogDescription>

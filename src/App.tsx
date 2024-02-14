@@ -41,20 +41,18 @@ function App() {
   return (
     <>
       <Toaster />
-      <div className="fixed top-0 left-0">
+      <div className="fixed top-0 left-0 z-[1000]">
         <DebugPanel />
       </div>
       {game_state === GameState.MainMenu && <MainMenu />}
       {game_state === GameState.Lobby && <Lobby />}
       {game_state === GameState.Game && (
         <>
-          <TooltipProvider>
-            <div className="flex">
-              <div className="w-full">
-                <Map />
-              </div>
+          <div className="flex">
+            <div className="w-full">
+              <Map />
             </div>
-          </TooltipProvider>
+          </div>
           <div className="flex justify-center">
             <PlayPanel />
           </div>

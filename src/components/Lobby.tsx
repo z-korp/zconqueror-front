@@ -13,7 +13,6 @@ const Lobby: React.FC = () => {
     setup: {
       client: { host },
       clientComponents: { Game },
-      world,
     },
     account: { account },
   } = useDojo();
@@ -24,15 +23,15 @@ const Lobby: React.FC = () => {
   // Get game info
   const game = useComponentValue(Game, useEntityQuery([HasValue(Game, { id: game_id })]));
 
-  const isHost = '0x' + game.host.toString(16) === account.address;
-
   useEffect(() => {
-    defineSystem(world, [HasValue(Game, { id: game_id })], ({ value: [newGame] }: any) => {
-      if (newGame.seed == 0) return; // Game has not started
-      set_game(sanitizeGame(newGame));
+    if (game.seed != 0) {
+      // Game has started
+      set_game(sanitizeGame(game));
       set_game_state(GameState.Game);
-    });
+    }
   }, [game]);
+
+  const isHost = '0x' + game.host.toString(16) === account.address;
 
   const startGame = async () => {
     if (game_id === undefined) {
@@ -58,7 +57,7 @@ const Lobby: React.FC = () => {
   }
 
   return (
-    <div className="flex gap-3 mb-4">
+    <div className="flex gap-3 mb-4 items-center">
       <Button
         onClick={() => {
           set_game_id(0);
@@ -69,10 +68,8 @@ const Lobby: React.FC = () => {
       </Button>
       Lobby
       <h2>Game id: {game_id}</h2>
-      <p>
-        Max numbers: {game.player_count}
-        {isHost && <Button onClick={startGame}>Start</Button>}
-      </p>
+      <p>Max numbers: {game.player_count}</p>
+      {isHost && <Button onClick={startGame}>Start</Button>}
     </div>
   );
 };
