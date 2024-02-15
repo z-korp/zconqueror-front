@@ -33,8 +33,6 @@ const TroopsMarker: FC<TroopsMarkerProps> = ({
   const { phase } = usePhase();
   const { current_source, current_target } = useElementStore((state) => state);
 
-  console.log(current_source, current_target);
-
   useEffect(() => {
     const updateContainerWidth = () => {
       if (!initialized && containerRef.current) {
