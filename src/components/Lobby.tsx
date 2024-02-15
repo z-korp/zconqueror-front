@@ -2,7 +2,7 @@ import GameState from '@/utils/gamestate';
 import { useElementStore } from '@/utils/store';
 import { Button } from './ui/button';
 import { useComponentValue, useEntityQuery } from '@dojoengine/react';
-import { HasValue, defineSystem } from '@dojoengine/recs';
+import { HasValue } from '@dojoengine/recs';
 import { useEffect } from 'react';
 import { sanitizeGame } from '@/utils/sanitizer';
 import { useDojo } from '@/dojo/useDojo';
@@ -70,6 +70,9 @@ const Lobby: React.FC = () => {
       <h2>Game id: {game_id}</h2>
       <p>Max numbers: {game.player_count}</p>
       {isHost && <Button onClick={startGame}>Start</Button>}
+      <h1 className="vt323-font text-white text-6xl fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+        Waiting for the game to start ...
+      </h1>
     </div>
   );
 };
