@@ -189,7 +189,6 @@ const Region: React.FC<RegionProps> = ({ d, id, region, containerRef, onRegionCl
             tile={tile}
             playerTurn={playerTurn}
             containerRef={containerRef}
-            isHighlighted={isHilighted}
           />,
 
           containerRef.current // render the button directly in the body
