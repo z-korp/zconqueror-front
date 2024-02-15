@@ -7,8 +7,12 @@ import { setup } from './dojo/setup';
 import { DojoProvider } from './dojo/DojoContext.tsx';
 import './index.css';
 import { TooltipProvider } from '@radix-ui/react-tooltip';
+import { createClient } from 'graphql-ws';
 
 async function init() {
+  const wsClient = createClient({ url: import.meta.env.VITE_PUBLIC_TORII_WS });
+
+  console.log('wsClient', wsClient);
   const rootElement = document.getElementById('root');
   if (!rootElement) throw new Error('React root not found');
   const root = ReactDOM.createRoot(rootElement as HTMLElement);
