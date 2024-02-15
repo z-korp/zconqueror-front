@@ -1,5 +1,5 @@
-import { useDojo } from '@/DojoContext';
 import { DEFEND_EVENT, FORTIFY_EVENT, SUPPLY_EVENT } from '@/constants';
+import { useDojo } from '@/dojo/useDojo';
 import { fetchEventsOnce } from '@/services/fetchEvents';
 import {
   Event,
@@ -54,8 +54,6 @@ export const useLogs = () => {
       const subscriptions: Subscription[] = [];
 
       const subscribeToEvents = async () => {
-        console.log('Subscribing to events');
-
         const supplyObservable = await createSupplyEvents(0);
         const defendObservable = await createDefendEvents(0);
         const fortifyObservable = await createFortifyEvents(0);
@@ -87,8 +85,8 @@ export const useLogs = () => {
 
       // Cleanup function to unsubscribe
       return () => {
-        subscriptions.forEach((sub) => sub.unsubscribe());
         console.log('Unsubscribed from all events');
+        subscriptions.forEach((sub) => sub.unsubscribe());
         subscribedRef.current = false;
       };
     }

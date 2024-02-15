@@ -1,4 +1,3 @@
-import { useDojo } from '@/DojoContext';
 import { useGetCurrentPlayer } from '@/hooks/useGetCurrentPlayer';
 import { useGetTiles } from '@/hooks/useGetTiles';
 import { usePhase } from '@/hooks/usePhase';
@@ -6,6 +5,7 @@ import { Phase, useElementStore } from '@/utils/store';
 import { Milestone, ShieldPlus, Swords } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Slider } from './ui/slider';
+import { useDojo } from '@/dojo/useDojo';
 
 const ActionPanel = () => {
   const {
@@ -15,7 +15,7 @@ const ActionPanel = () => {
     account: { account },
   } = useDojo();
 
-  console.log("Playing with", account.address)
+  //console.log('Playing with', account.address);
 
   const {
     current_source,
@@ -31,39 +31,6 @@ const ActionPanel = () => {
   const [sourceTile, setSourceTile] = useState<any | null>(null);
   const [targetTile, setTargetTile] = useState<any | null>(null);
   const [isActionSelected, setIsActionSelected] = useState(false);
-
-  /*const [arrowPosition, setArrowPosition] = useState({
-    x: 0,
-    y: 0,
-    visible: false,
-  });
-
-  const attackerPosition = { x: 125, y: 150 };
-  const targetPosition = { x: 125, y: 300 };
-
-  // Trigger the animation on some game event, e.g., attack
-  /*const animateArrow = () => {
-    let start: any = null;
-    const duration = 1000; // Duration of animation in milliseconds
-
-    const step = (timestamp: any) => {
-      if (!start) start = timestamp;
-      const progress = (timestamp - start) / duration;
-      const currentX = attackerPosition.x + progress * (targetPosition.x - attackerPosition.x);
-      const currentY = attackerPosition.y + progress * (targetPosition.y - attackerPosition.y);
-
-      setArrowPosition({ x: currentX, y: currentY, visible: true });
-
-      if (progress < 1) {
-        requestAnimationFrame(step);
-      } else {
-        // Hide the arrow after reaching the target
-        setArrowPosition({ ...arrowPosition, visible: false });
-      }
-    };
-
-    requestAnimationFrame(step);
-  };*/
 
   useEffect(() => {
     setArmyCount(0);

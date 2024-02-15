@@ -1,113 +1,67 @@
-import { useDojo } from '@/DojoContext';
 import { useElementStore } from '@/utils/store';
-import { z } from 'zod';
 import { Button } from './ui/button';
-import JoinGameForm, { joinFormSchema } from './JoinGameForm';
 import GameState from '@/utils/gamestate';
-import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '@radix-ui/react-dialog';
-import { DialogHeader } from './ui/dialog';
-import { defineSystem, Has, HasValue, defineEnterSystem } from '@dojoengine/recs';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo } from 'react';
+import { useDojo } from '@/dojo/useDojo';
+import { useToast } from './ui/use-toast';
+import { useComponentValue, useEntityQuery } from '@dojoengine/react';
+import { Input } from './ui/input';
+import { HasValue, getComponentValue } from '@dojoengine/recs';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from './ui/table';
 import GameRow from './GameRow';
 
 const MainMenu: React.FC = () => {
-  const { set_game_state, game_state, set_game_id, player_name, setPlayerName } = useElementStore((state) => state);
+  const { toast } = useToast();
+  const { set_game_state, set_game_id, player_name, setPlayerName } = useElementStore((state) => state);
 
   const {
     setup: {
       client: { host },
       clientComponents: { Game },
-      world,
     },
-    account,
+    account: { account },
   } = useDojo();
 
-  const prevAccount = useRef<any>();
+  const game = useComponentValue(Game, useEntityQuery([HasValue(Game, { host: BigInt(account.address) })]));
 
-  const [accountInit, setAccountInit] = useState<boolean>(false);
-  const [actionJoinData, setActionJoinData] = useState<any>(undefined);
-  const [games, setGames] = useState<any[]>([]);
+  // if player is host of a game, go to the lobby
   useEffect(() => {
-    if (!accountInit || prevAccount.current.address === account.account.address) {
-      return;
+    if (game) {
+      set_game_id(game.id);
+      set_game_state(GameState.Lobby);
     }
+  }, [game]);
 
-    const burnerAccount = account.account;
-    if (actionJoinData) {
-      setTimeout(() => {
-        host.join(burnerAccount, actionJoinData.game_id, player_name).then(() => {
-          set_game_id(actionJoinData.game_id);
-          set_game_state(GameState.Lobby);
-        });
-      }, 500);
-    } else {
-      defineSystem(world, [HasValue(Game, { host: BigInt(burnerAccount.address) })], ({ value: [newGame] }: any) => {
-        if (game_state === GameState.MainMenu) {
-          set_game_id(newGame.id);
-          set_game_state(GameState.Lobby);
-        }
+  const createNewGame = async () => {
+    try {
+      // TBD get the id from here?
+      await host.create(account, player_name, /* price */ BigInt(0));
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        description: <code className="text-white text-xs">{error.message}</code>,
       });
-      setTimeout(() => {
-        host.create(burnerAccount, player_name);
-      }, 500);
     }
-  }, [account, accountInit, actionJoinData]);
+  };
 
-  async function createNewGame() {
-    prevAccount.current = account.account;
-    setAccountInit(true);
-    account.create();
-  }
+  const gameEntities: any = useEntityQuery([HasValue(Game, { seed: BigInt(0) })]);
+  const games = useMemo(
+    () => gameEntities.map((id: any) => getComponentValue(Game, id)).sort((a: any, b: any) => b.id - a.id),
+    [gameEntities, Game]
+  );
 
-  useEffect(() => {
-    defineEnterSystem(world, [HasValue(Game, { seed: BigInt(0) })], ({ value: [newGame] }: any) => {
-      setGames((prevGames) => {
-        if (prevGames.find((game) => game.id === newGame.id)) {
-          return prevGames; // Return the previous games unchanged if newGame is already in games
-        } else {
-          return [...prevGames, newGame]; // Add newGame to games if it's not already in games
-        }
-      });
-    });
-    defineSystem(world, [Has(Game)], ({ value: [newGame] }: any) => {
-      console.log('Game Updated', newGame);
-      if (newGame.seed !== BigInt(0)) {
-        setGames((prevGames) => prevGames.filter((game) => game.id !== newGame.id));
-      }
-    });
-  }, []);
-
-  async function handleJoinFormSubmit(data: z.infer<typeof joinFormSchema>) {
-    prevAccount.current = account.account;
-    setAccountInit(true);
-    setActionJoinData(data);
-    account.create();
-  }
-
+  if (!games) return null;
   return (
     <div>
       <div className="flex gap-3 mb-4">
-        <input
+        <Input
+          className="w-64"
           type="text"
+          placeholder="Pseudo"
           value={player_name}
           onChange={(e) => setPlayerName(e.target.value)}
-          placeholder="Enter player name"
         />
         <Button onClick={createNewGame}>Create a new game</Button>
-        <Dialog>
-          <DialogTrigger asChild={true}>
-            <Button>Join a game</Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Join a game</DialogTitle>
-              <DialogDescription asChild={true}>
-                <JoinGameForm onFormSubmit={handleJoinFormSubmit}></JoinGameForm>
-              </DialogDescription>
-            </DialogHeader>
-          </DialogContent>
-        </Dialog>
       </div>
       <div className="flex justify-center">
         <div className="lg:w-1/2 md:w-3/4">
@@ -121,7 +75,7 @@ const MainMenu: React.FC = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {games.map((game) => (
+              {games.map((game: any) => (
                 <GameRow key={game.id} game={game} />
               ))}
             </TableBody>

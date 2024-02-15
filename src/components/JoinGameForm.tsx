@@ -41,19 +41,19 @@ const JoinGameForm: React.FC<JoinGameFormProps> = ({ onFormSubmit }) => {
 
     onFormSubmit(data);
 
-    toast({
+    /*toast({
       title: 'You submitted the following values:',
       description: (
         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
           <code className="text-white">{JSON.stringify(data, null, 2)}</code>
         </pre>
       ),
-    });
+    });*/
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-3">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-3 flex items-end gap-3">
         <FormField
           control={form.control}
           name="game_id"

@@ -1,4 +1,4 @@
-import { EventType, LogType, useLogs } from '@/hooks/useLogs';
+import { EventType, useLogs } from '@/hooks/useLogs';
 import { getIdFromName } from '@/utils/events';
 import { useElementStore } from '@/utils/store';
 import { format } from 'date-fns';
@@ -19,16 +19,12 @@ const ActionLogs: React.FC = () => {
   const [contentHeight, setContentHeight] = useState(0);
 
   const toggleCollapse = () => setIsCollapsed((prev) => !prev);
-  useEffect(() => {
-    logs.map((l: LogType) => console.log(`[${l.log}]`, l.timestamp));
-  }, [logs]);
 
   useEffect(() => {
     if (logsRef.current) {
-      console.log(logsRef.current.scrollHeight);
       setContentHeight(logsRef.current.scrollHeight);
     }
-  }, [logs, isCollapsed]);
+  }, [logs]);
 
   function handleMouseOver(logEntry: string) {
     setHighlightedRegion(getIdFromName(logEntry));

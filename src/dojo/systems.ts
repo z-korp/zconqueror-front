@@ -1,3 +1,5 @@
+/* previously called generated.ts */
+
 import { DojoProvider } from '@dojoengine/core';
 import { Account, RevertedTransactionReceiptResponse } from 'starknet';
 
@@ -7,7 +9,16 @@ const tryBetterErrorMsg = (msg: string): string => {
     let betterMsg = msg.substring(failureReasonIndex);
     const cairoTracebackIndex = betterMsg.indexOf('Cairo traceback');
     betterMsg = betterMsg.substring(0, cairoTracebackIndex);
-    return betterMsg;
+
+    const regex = /Failure reason:.*?\('([^']+)'\)/;
+    const matches = betterMsg.match(regex);
+
+    if (matches && matches.length > 1) {
+      console.log(matches[1]);
+      return matches[1];
+    } else {
+      return betterMsg;
+    }
   }
 
   return msg;
@@ -16,8 +27,6 @@ const tryBetterErrorMsg = (msg: string): string => {
 export async function setupWorld(provider: DojoProvider) {
   // Transaction execution and checking wrapper
   const executeAndCheck = async (account: Account, contractName: string, methodName: string, args: any[]) => {
-    console.log(account);
-
     const ret = await provider.execute(account, contractName, methodName, args);
     const receipt = await account.waitForTransaction(ret.transaction_hash, {
       retryInterval: 100,
@@ -26,6 +35,7 @@ export async function setupWorld(provider: DojoProvider) {
     // Add any additional checks or logic here based on the receipt
     if (receipt.status === 'REJECTED') {
       console.log('Transaction Rejected');
+      throw new Error('[Tx REJECTED] ');
     }
 
     if ('execution_status' in receipt) {
@@ -35,6 +45,7 @@ export async function setupWorld(provider: DojoProvider) {
           (receipt as RevertedTransactionReceiptResponse).revert_reason || 'Transaction Reverted'
         );
         console.log('ERROR KATANA', errorMessage);
+        throw new Error('[Tx REVERTED] ' + errorMessage);
       }
     }
 
@@ -43,21 +54,13 @@ export async function setupWorld(provider: DojoProvider) {
 
   function host() {
     const contractName = 'zconqueror::systems::host::host';
-    const create = async (account: Account, playerName: string) => {
+    const create = async (account: Account, playerName: string, price: bigint) => {
       try {
-        return await executeAndCheck(account, contractName, 'create', [provider.getWorldAddress(), playerName]);
-      } catch (error) {
-        console.error('Error executing create:', error);
-        throw error;
-      }
-    };
-
-    const set_max_players = async (account: Account, gameId: Number, playerCount: Number) => {
-      try {
-        return await executeAndCheck(account, contractName, 'set_max_players', [
+        return await executeAndCheck(account, contractName, 'create', [
           provider.getWorldAddress(),
-          gameId,
-          playerCount,
+          playerName,
+          price,
+          price,
         ]);
       } catch (error) {
         console.error('Error executing create:', error);
@@ -65,11 +68,20 @@ export async function setupWorld(provider: DojoProvider) {
       }
     };
 
-    const join = async (account: Account, gameId: Number, playerName: string) => {
+    const join = async (account: Account, gameId: number, playerName: string) => {
       try {
         return await executeAndCheck(account, contractName, 'join', [provider.getWorldAddress(), gameId, playerName]);
       } catch (error) {
         console.error('Error executing join:', error);
+        throw error;
+      }
+    };
+
+    const leave = async (account: Account, gameId: number) => {
+      try {
+        return await executeAndCheck(account, contractName, 'leave', [provider.getWorldAddress(), gameId]);
+      } catch (error) {
+        console.error('Error executing leave:', error);
         throw error;
       }
     };
@@ -83,11 +95,21 @@ export async function setupWorld(provider: DojoProvider) {
       }
     };
 
+    const claim = async (account: Account, gameId: number) => {
+      try {
+        return await executeAndCheck(account, contractName, 'claim', [provider.getWorldAddress(), gameId]);
+      } catch (error) {
+        console.error('Error executing claim:', error);
+        throw error;
+      }
+    };
+
     return {
       create,
-      set_max_players,
       join,
+      leave,
       start,
+      claim,
     };
   }
 

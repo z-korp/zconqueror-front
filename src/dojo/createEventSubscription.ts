@@ -4,7 +4,7 @@ import { createClient } from 'graphql-ws';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 export async function createEventSubscription(keys: string[]): Promise<Observable<Event | null>> {
-  const wsClient = createClient({ url: import.meta.env.VITE_PUBLIC_TORII + '/graphql/ws' });
+  const wsClient = createClient({ url: import.meta.env.VITE_PUBLIC_TORII_WS });
 
   const lastUpdate$ = new BehaviorSubject<Event | null>(null);
 
@@ -26,7 +26,7 @@ export async function createEventSubscription(keys: string[]): Promise<Observabl
     {
       next: ({ data }) => {
         try {
-          console.log('data', data);
+          //console.log('data', data);
           const event = data?.eventEmitted as Event;
           if (event) {
             lastUpdate$.next(event);

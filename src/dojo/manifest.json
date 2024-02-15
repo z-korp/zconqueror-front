@@ -949,7 +949,7 @@
     {
       "name": "zconqueror::systems::host::host",
       "address": "0x55bac3cb43efa8a014bed327fdf470f528374f1e2208663bae331dbc2658da3",
-      "class_hash": "0x31caba04616d0561b5349c432de21104118610e9a44196f2addf2ed17946229",
+      "class_hash": "0x51edd930a363bfebfd3ce3570e571fda147c58ffd841f9d08d7f280479b86c",
       "abi": [
         {
           "type": "impl",
@@ -963,6 +963,20 @@
             {
               "name": "contract_address",
               "type": "core::starknet::contract_address::ContractAddress"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::integer::u256",
+          "members": [
+            {
+              "name": "low",
+              "type": "core::integer::u128"
+            },
+            {
+              "name": "high",
+              "type": "core::integer::u128"
             }
           ]
         },
@@ -981,6 +995,10 @@
                 {
                   "name": "player_name",
                   "type": "core::felt252"
+                },
+                {
+                  "name": "price",
+                  "type": "core::integer::u256"
                 }
               ],
               "outputs": [
@@ -988,42 +1006,6 @@
                   "type": "core::integer::u32"
                 }
               ],
-              "state_mutability": "view"
-            },
-            {
-              "type": "function",
-              "name": "set_max_players",
-              "inputs": [
-                {
-                  "name": "world",
-                  "type": "dojo::world::IWorldDispatcher"
-                },
-                {
-                  "name": "game_id",
-                  "type": "core::integer::u32"
-                },
-                {
-                  "name": "player_count",
-                  "type": "core::integer::u8"
-                }
-              ],
-              "outputs": [],
-              "state_mutability": "view"
-            },
-            {
-              "type": "function",
-              "name": "set_username",
-              "inputs": [
-                {
-                  "name": "world",
-                  "type": "dojo::world::IWorldDispatcher"
-                },
-                {
-                  "name": "player_name",
-                  "type": "core::felt252"
-                }
-              ],
-              "outputs": [],
               "state_mutability": "view"
             },
             {
@@ -1077,6 +1059,22 @@
               ],
               "outputs": [],
               "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "claim",
+              "inputs": [
+                {
+                  "name": "world",
+                  "type": "dojo::world::IWorldDispatcher"
+                },
+                {
+                  "name": "game_id",
+                  "type": "core::integer::u32"
+                }
+              ],
+              "outputs": [],
+              "state_mutability": "view"
             }
           ]
         },
@@ -1094,7 +1092,7 @@
     {
       "name": "zconqueror::systems::play::play",
       "address": "0x127f3efb89714e50194dab6d7a5875eb63ebee78e04adf36584b8748bf14ac7",
-      "class_hash": "0x75a63f23572e1e089564a71fd4d2a2924af0b1f7b43709630feeb22e5ee4e92",
+      "class_hash": "0x4a1667446d1f1efde0d73f98fcaa418f8ffaefa74adbce59e3f1dc014cd1e9b",
       "abi": [
         {
           "type": "impl",
@@ -1436,9 +1434,14 @@
           "name": "nonce",
           "type": "u8",
           "key": false
+        },
+        {
+          "name": "price",
+          "type": "u256",
+          "key": false
         }
       ],
-      "class_hash": "0x40cc61a4678ad9781daa9c3af8801940dab90095717a43b3ff3be0f1f89588f",
+      "class_hash": "0x6a50ed1c9dad1d274cf28fc79d7497ab33795eded57751ed1ea91861fe3513b",
       "abi": [
         {
           "type": "function",
@@ -1638,9 +1641,14 @@
           "name": "conqueror",
           "type": "bool",
           "key": false
+        },
+        {
+          "name": "rank",
+          "type": "u8",
+          "key": false
         }
       ],
-      "class_hash": "0x40f35db0b6a0a9242c93179b6c3c19f5f07b7ce9f6f93e3ba49eb27b64730ef",
+      "class_hash": "0xf1cff9dd01bc120280c5a75b4ff30dc6a09887a160d9ab2331f1916d92c994",
       "abi": [
         {
           "type": "function",

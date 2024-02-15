@@ -1,7 +1,7 @@
 enum GameState {
-    MainMenu,
-    Lobby,
-    Game
+  MainMenu,
+  Lobby,
+  Game,
 }
 
-export default GameState
+export default GameState;

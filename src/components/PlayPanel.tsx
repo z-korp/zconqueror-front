@@ -1,4 +1,3 @@
-import { useDojo } from '@/DojoContext';
 import { useGetCurrentPlayer } from '@/hooks/useGetCurrentPlayer';
 import { usePhase } from '@/hooks/usePhase';
 import { useTurn } from '@/hooks/useTurn';
@@ -12,6 +11,7 @@ import CardMenu from './CardMenu';
 import CardsPopup from './CardsPopup';
 import OverlayWithText from './OverlayWithText';
 import StatusPlayer from './StatusPlayer';
+import { useDojo } from '@/dojo/useDojo';
 
 const PlayPanel = () => {
   const {
