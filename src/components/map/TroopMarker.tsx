@@ -29,7 +29,6 @@ const TroopsMarker: FC<TroopsMarkerProps> = ({
   const [ratioElement, setRatioElement] = useState(1);
   const [containerWidthInit, setContainerWidthInit] = useState(null);
   const [initialized, setInitialized] = useState(false);
-  const [isAnimated, setIsAnimated] = useState(false);
   const [flip, setFlip] = useState(false);
   const { phase } = usePhase();
   const { current_source, current_target } = useElementStore((state) => state);
@@ -94,9 +93,6 @@ const TroopsMarker: FC<TroopsMarkerProps> = ({
     return () => clearInterval(interval);
   }, []);
 
-  useEffect(() => {
-    setIsAnimated(false);
-  }, [phase]);
   if (troups === 0) return null;
 
   return (
