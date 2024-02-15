@@ -149,7 +149,7 @@ const Region: React.FC<RegionProps> = ({ d, id, region, containerRef, onRegionCl
       }
     } else if (phase === Phase.ATTACK || phase === Phase.FORTIFY) {
       if (current_source !== null) {
-        if (id === 2) console.log('current_source', current_source, id);
+        //if (id === 2) console.log('current_source', current_source, id);
         if (current_target === null) {
           // if there is no target
           if (current_source !== id) {
@@ -170,8 +170,8 @@ const Region: React.FC<RegionProps> = ({ d, id, region, containerRef, onRegionCl
             setIsHighlighted(true);
           }
         } else if (current_target !== null) {
-          if (id === 2) console.log('bbbbb');
-          if (id === 2) console.log('current_target', current_target);
+          //if (id === 2) console.log('bbbbb');
+          //if (id === 2) console.log('current_target', current_target);
           if (current_target === id) {
             // if the current tile is the target
             setHilightedColor('black');
