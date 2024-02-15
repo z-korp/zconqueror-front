@@ -1,7 +1,9 @@
 import { FC, useEffect, useState } from 'react';
 import '../../styles/Button.css';
 import RoundButton from '../RoundButton';
-import { Swords } from 'lucide-react';
+import { Shield, Swords } from 'lucide-react';
+import { usePhase } from '@/hooks/usePhase';
+import { Phase, useElementStore } from '@/utils/store';
 
 interface TroopsMarkerProps {
   position: { x: number; y: number };
@@ -29,6 +31,10 @@ const TroopsMarker: FC<TroopsMarkerProps> = ({
   const [initialized, setInitialized] = useState(false);
   const [isAnimated, setIsAnimated] = useState(false);
   const [flip, setFlip] = useState(false);
+  const { phase } = usePhase();
+  const { current_source, current_target } = useElementStore((state) => state);
+
+  console.log(current_source, current_target);
 
   useEffect(() => {
     const updateContainerWidth = () => {
@@ -78,17 +84,6 @@ const TroopsMarker: FC<TroopsMarkerProps> = ({
     }
   };
 
-  const handleSecondAction = () => {
-    console.log('Deuxième action exécutée');
-    setIsAnimated((currentIsAnimated) => !currentIsAnimated);
-    // Votre logique pour la deuxième action ici
-  };
-
-  const handleBothActions = () => {
-    handlePathClick();
-    handleSecondAction();
-  };
-
   useEffect(() => {
     // Set up a timer that toggles the `isActive` state every second
     const interval = setInterval(() => {
@@ -99,6 +94,9 @@ const TroopsMarker: FC<TroopsMarkerProps> = ({
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    setIsAnimated(false);
+  }, [phase]);
   if (troups === 0) return null;
 
   return (
@@ -110,15 +108,20 @@ const TroopsMarker: FC<TroopsMarkerProps> = ({
           left: `calc(${markerPosition.x}px - 30px)`,
         }}
       >
-        {isAnimated && (
+        {phase === Phase.ATTACK && current_source === tile.id && (
           <div className={`blason ${flip ? 'flip' : ''}`} onClick={() => setFlip(!flip)}>
-            <Swords size={60} fill="red" stroke="red"></Swords>
+            <Swords size={60} fill="red" stroke="red" />
+          </div>
+        )}
+        {phase === Phase.ATTACK && current_target === tile.id && (
+          <div className={`blason ${flip ? 'flip' : ''}`} onClick={() => setFlip(!flip)}>
+            <Shield size={60} fill="blue" stroke="blue" />
           </div>
         )}
       </div>
       <RoundButton
         color={color}
-        onClick={handleBothActions}
+        onClick={handlePathClick}
         className="absolute"
         style={{
           top: `calc(${markerPosition.y}px - 15px)`,
