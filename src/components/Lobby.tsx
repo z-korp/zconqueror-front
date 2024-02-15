@@ -71,7 +71,10 @@ const Lobby: React.FC = () => {
       <p>Max numbers: {game.player_count}</p>
       {isHost && <Button onClick={startGame}>Start</Button>}
       <h1 className="vt323-font text-white text-6xl fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-        Waiting for the game to start ...
+        Waiting for the game to start
+        <span className="inline-block animate-jump delay-100">.</span>
+        <span className="inline-block animate-jump delay-200">.</span>
+        <span className="inline-block animate-jump delay-300">.</span>
       </h1>
     </div>
   );

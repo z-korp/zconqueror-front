@@ -94,3 +94,19 @@
 .blason:not(.flip) {
   animation: rotateYNegative 1s forwards;
 }
+
+@keyframes jump {
+  0% {
+    transform: translateY(0); /* Position de départ */
+  }
+  50% {
+    transform: translateY(-10px); /* Position haute */
+  }
+  100% {
+    transform: translateY(0); /* Retour à la position de départ */
+  }
+}
+
+.animate-jump {
+  animation: jump 1s infinite alternate; /* Nom de l'animation, durée, nombre de répétitions */
+}
