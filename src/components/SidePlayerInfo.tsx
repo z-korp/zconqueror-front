@@ -25,7 +25,7 @@ const SidePlayerInfo: React.FC<SidePlayerInfoProps> = ({ index, player }) => {
   const cards = player.cards;
   const color = colorPlayer[index + 1];
   const image = avatars[index + 1];
-  const address = player.address;
+  const name = player.name;
 
   const tiles = getEntitiesWithValue(Tile, { owner: index, game_id: game.id });
   const territories = [...tiles].length;
@@ -42,9 +42,7 @@ const SidePlayerInfo: React.FC<SidePlayerInfoProps> = ({ index, player }) => {
           <img src={image} alt={'player'} className="rounded-full" />
         </div>
         <div className="flex-grow">
-          <div className="text-white text-sm truncate">{`${address.substring(0, 2)}...${address.substring(
-            address.length - 3
-          )}`}</div>
+          <div className="text-white text-sm truncate">{`${name}`}</div>
         </div>
         <div className="flex gap-1">
           {/* Replace with actual icons */}
