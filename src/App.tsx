@@ -13,11 +13,15 @@ import { useGetPlayers } from './hooks/useGetPlayers';
 import { useElementStore } from './utils/store';
 import PlayersPanel from './components/PlayersPanel';
 import { DebugPanel } from './components/DebugPanel';
+import { createClient } from 'graphql-ws';
 
 function App() {
   // const { id } = useParams<{ id?: string }>();
 
   const { game_state } = useElementStore((state) => state);
+  const wsClient = createClient({ url: import.meta.env.VITE_PUBLIC_TORII_WS });
+
+  console.log('wsClient', wsClient);
 
   // useEffect(() => {
   //   console.log('URL ID:', id);
