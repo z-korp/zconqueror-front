@@ -14,9 +14,9 @@ export function useGetCurrentPlayer() {
     }
   }, [turn, players]);
 
-  useEffect(() => {
+  /*useEffect(() => {
     console.log('currentPlayer', currentPlayer);
-  }, [currentPlayer]);
+  }, [currentPlayer]);*/
 
   return {
     currentPlayer,

@@ -1,5 +1,6 @@
 import { useGetTiles } from '@/hooks/useGetTiles';
 import { usePhase } from '@/hooks/usePhase';
+import { useTurn } from '@/hooks/useTurn';
 import { colorPlayer } from '@/utils/colors';
 import { colorTilePlayer, colorTilePlayerHighlight } from '@/utils/customColors';
 import { getNeighbors } from '@/utils/map';
@@ -26,9 +27,11 @@ interface RegionProps {
 
 const Region: React.FC<RegionProps> = ({ d, id, region, containerRef, onRegionClick, playerTurn }: RegionProps) => {
   const { phase } = usePhase();
+  const { turn } = useTurn();
   const { current_source, current_target, army_count, highlighted_region } = useElementStore((state) => state);
 
   const [isHilighted, setIsHighlighted] = useState(false);
+  const [hilightedColor, setHilightedColor] = useState('yellow');
   const { tiles } = useGetTiles();
 
   const tile = tiles[id - 1];
@@ -139,34 +142,65 @@ const Region: React.FC<RegionProps> = ({ d, id, region, containerRef, onRegionCl
   useEffect(() => {
     if (phase === Phase.DEPLOY) {
       if (current_source === id) {
+        setHilightedColor('black');
         setIsHighlighted(true);
       } else {
         setIsHighlighted(false);
       }
     } else if (phase === Phase.ATTACK || phase === Phase.FORTIFY) {
-      if (current_source && current_target === null && current_source !== id) {
-        const neighbors = getNeighbors(current_source);
-
-        if (neighbors.includes(id)) setIsHighlighted(true);
-        else setIsHighlighted(false);
-      } else if (current_source && current_target && (current_target === id || current_source === id)) {
-        setIsHighlighted(true);
-      } else {
-        setIsHighlighted(false);
+      if (current_source !== null) {
+        //if (id === 2) console.log('current_source', current_source, id);
+        if (current_target === null) {
+          // if there is no target
+          if (current_source !== id) {
+            // if the current tile is not the source
+            const neighbors = getNeighbors(current_source);
+            if (neighbors.includes(id)) {
+              // if the current tile is a neighbor of the source
+              if ((phase === Phase.FORTIFY && tile.owner === turn) || (phase === Phase.ATTACK && tile.owner !== turn)) {
+                setHilightedColor('black');
+                setIsHighlighted(true);
+              } else {
+                setIsHighlighted(false);
+              }
+            } else setIsHighlighted(false);
+          } else {
+            // if the current tile is the source
+            setHilightedColor('yellow');
+            setIsHighlighted(true);
+          }
+        } else if (current_target !== null) {
+          //if (id === 2) console.log('bbbbb');
+          //if (id === 2) console.log('current_target', current_target);
+          if (current_target === id) {
+            // if the current tile is the target
+            setHilightedColor('black');
+            setIsHighlighted(true);
+          } else if (current_source === id) {
+            // if the current tile is the source
+            setHilightedColor('yellow');
+            setIsHighlighted(true);
+          }
+        } else {
+          setIsHighlighted(false);
+        }
       }
     }
   }, [current_source, phase, current_target, id]);
 
   const isLogHighlighted = highlighted_region === id;
 
+  //if (id === 2) console.log('hilightedColor', hilightedColor, 'isHilighted', isHilighted);
+
   const determineFillColor = (
     isHighlighted: boolean,
+    hilightedColor: string,
     isLogHighlighted: boolean,
     colorTileHighLight: string,
     colorTile: string
   ) => {
     if (isHighlighted) {
-      return colorTileHighLight;
+      return hilightedColor === 'black' ? colorTileHighLight : hilightedColor;
     } else if (isLogHighlighted) {
       return 'yellow';
     } else {
@@ -213,7 +247,7 @@ const Region: React.FC<RegionProps> = ({ d, id, region, containerRef, onRegionCl
       <path
         ref={pathRef}
         d={d}
-        fill={determineFillColor(isHilighted, isLogHighlighted, colorTileHighLight, colorTile)}
+        fill={determineFillColor(isHilighted, hilightedColor, isLogHighlighted, colorTileHighLight, colorTile)}
         stroke={isHilighted ? 'black' : 'gray'}
         strokeWidth="10"
         onClick={onRegionClick}

@@ -1,4 +1,4 @@
-import { Components } from '@latticexyz/recs';
+import { Components } from '@dojoengine/recs';
 import { DEFEND_EVENT, FORTIFY_EVENT, SUPPLY_EVENT } from '../constants';
 import { createEventSubscription } from './createEventSubscription';
 

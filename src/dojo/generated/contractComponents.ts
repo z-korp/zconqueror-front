@@ -2,6 +2,8 @@
 
 import { defineComponent, Type as RecsType, World } from '@dojoengine/recs';
 
+export type ContractComponents = Awaited<ReturnType<typeof defineContractComponents>>;
+
 export function defineContractComponents(world: World) {
   return {
     Game: (() => {
@@ -15,11 +17,12 @@ export function defineContractComponents(world: World) {
           player_count: RecsType.Number,
           slots: RecsType.Number,
           nonce: RecsType.Number,
+          price: RecsType.BigInt,
         },
         {
           metadata: {
             name: 'Game',
-            types: ['u32', 'contractaddress', 'bool', 'felt252', 'u8', 'u8', 'u8'],
+            types: ['u32', 'contractaddress', 'bool', 'felt252', 'u8', 'u8', 'u8', 'u256'],
             customTypes: [],
           },
         }
@@ -36,11 +39,12 @@ export function defineContractComponents(world: World) {
           supply: RecsType.Number,
           cards: RecsType.BigInt,
           conqueror: RecsType.Boolean,
+          rank: RecsType.Number,
         },
         {
           metadata: {
             name: 'Player',
-            types: ['u32', 'u32', 'contractaddress', 'felt252', 'u32', 'u128', 'bool'],
+            types: ['u32', 'u32', 'contractaddress', 'felt252', 'u32', 'u128', 'bool', 'u8'],
             customTypes: [],
           },
         }

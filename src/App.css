@@ -58,7 +58,7 @@
 /* Custom scrollbar styles */
 .scrollbar-custom {
   scrollbar-width: thin;
-  scrollbar-color: #4b5563 #374151; /* Using a hex color code for gray-700 */
+  scrollbar-color: #4b5563 rgb(68 64 60); /* Using a hex color code for gray-700 */
 }
 
 /* For WebKit (Chrome, Safari, etc.) */
