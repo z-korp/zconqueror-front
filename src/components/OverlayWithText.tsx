@@ -1,11 +1,8 @@
 import React from 'react';
-import Dice from './Dice/Dice';
 
 interface OverlayWithTextProps {
   text: string;
 }
-
-const round = 1;
 
 const OverlayWithText: React.FC<OverlayWithTextProps> = ({ text }) => {
   return (
@@ -16,14 +13,6 @@ const OverlayWithText: React.FC<OverlayWithTextProps> = ({ text }) => {
       }}
     >
       <span className="text-white text-6xl font-bold shadow-outline z-[1001]">{text}</span>
-      <div className="flex relative justify-center items-center">
-        <div className="absolute" style={{ transform: `translate(50px,-50px)` }}>
-          <Dice currentRound={round} />
-        </div>
-        <div className="absolute" style={{ transform: `translate(-50px,50px)` }}>
-          <Dice currentRound={round} />
-        </div>
-      </div>
     </div>
   );
 };
