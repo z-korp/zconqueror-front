@@ -190,7 +190,7 @@ const Region: React.FC<RegionProps> = ({ d, id, region, containerRef, onRegionCl
 
   const isLogHighlighted = highlighted_region === id;
 
-  if (id === 2) console.log('hilightedColor', hilightedColor, 'isHilighted', isHilighted);
+  //if (id === 2) console.log('hilightedColor', hilightedColor, 'isHilighted', isHilighted);
 
   const determineFillColor = (
     isHighlighted: boolean,
