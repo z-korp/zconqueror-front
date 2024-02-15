@@ -1,6 +1,9 @@
 import { FC, useEffect, useState } from 'react';
 import '../../styles/Button.css';
 import RoundButton from '../RoundButton';
+import { Shield, Swords } from 'lucide-react';
+import { usePhase } from '@/hooks/usePhase';
+import { Phase, useElementStore } from '@/utils/store';
 
 interface TroopsMarkerProps {
   position: { x: number; y: number };
@@ -26,6 +29,11 @@ const TroopsMarker: FC<TroopsMarkerProps> = ({
   const [ratioElement, setRatioElement] = useState(1);
   const [containerWidthInit, setContainerWidthInit] = useState(null);
   const [initialized, setInitialized] = useState(false);
+  const [flip, setFlip] = useState(false);
+  const { phase } = usePhase();
+  const { current_source, current_target } = useElementStore((state) => state);
+
+  console.log(current_source, current_target);
 
   useEffect(() => {
     const updateContainerWidth = () => {
@@ -75,23 +83,53 @@ const TroopsMarker: FC<TroopsMarkerProps> = ({
     }
   };
 
+  useEffect(() => {
+    // Set up a timer that toggles the `isActive` state every second
+    const interval = setInterval(() => {
+      setFlip((currentFlip) => !currentFlip);
+    }, 2000);
+
+    // Clean up the interval on component unmount
+    return () => clearInterval(interval);
+  }, []);
+
   if (troups === 0) return null;
 
   return (
-    <RoundButton
-      color={color}
-      onClick={handlePathClick}
-      className="absolute z-99"
-      style={{
-        top: `calc(${markerPosition.y}px - 15px)`,
-        left: `calc(${markerPosition.x}px - 15px)`,
-      }}
-      shouldJump={tile.owner === playerTurn ? true : false}
-    >
-      <span className="text-lg text-white text-with-outline" data-text={troups}>
-        {troups}
-      </span>
-    </RoundButton>
+    <>
+      <div
+        className="absolute"
+        style={{
+          top: `calc(${markerPosition.y}px - 30px)`,
+          left: `calc(${markerPosition.x}px - 30px)`,
+        }}
+      >
+        {phase === Phase.ATTACK && current_source === tile.id && (
+          <div className={`blason ${flip ? 'flip' : ''}`} onClick={() => setFlip(!flip)}>
+            <Swords size={60} fill="red" stroke="red" />
+          </div>
+        )}
+        {phase === Phase.ATTACK && current_target === tile.id && (
+          <div className={`blason ${flip ? 'flip' : ''}`} onClick={() => setFlip(!flip)}>
+            <Shield size={60} fill="blue" stroke="blue" />
+          </div>
+        )}
+      </div>
+      <RoundButton
+        color={color}
+        onClick={handlePathClick}
+        className="absolute"
+        style={{
+          top: `calc(${markerPosition.y}px - 15px)`,
+          left: `calc(${markerPosition.x}px - 15px)`,
+        }}
+        shouldJump={tile.owner === playerTurn ? true : false}
+      >
+        <span className="text-lg text-white text-with-outline" data-text={troups}>
+          {troups}
+        </span>
+      </RoundButton>
+    </>
   );
 };
 

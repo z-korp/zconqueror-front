@@ -87,7 +87,7 @@ const Map = () => {
         // transform: `scale(1.25) translate(${clickPosition.rectWidth / 2 - clickPosition.x}px, ${
         //   clickPosition.rectHeight / 2 - clickPosition.y
         // }px)`,
-        transform: `translate(-10px,10px)`,
+        transform: `translate(-1000px,1000px)`,
         transition: 'transform 1s ease-in-out', // Durée de l'animation
       }
     : {};

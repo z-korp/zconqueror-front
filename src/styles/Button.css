@@ -53,3 +53,44 @@
   border-left: 0.5em solid #432020; /* Adjust color and size as needed */
   transform: translateY(-50%);
 }
+
+.blason {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  transition: 2000ms ease-in-out;
+  transform: perspective(1000px) rotateY(var(--rotate-y, 0));
+}
+
+/* Define keyframe for rotation in one direction */
+@keyframes rotateYPositive {
+  from {
+    transform: perspective(1000px) rotateY(0);
+  }
+  to {
+    transform: perspective(1000px) rotateY(180deg);
+  }
+}
+
+@keyframes rotateYNegative {
+  from {
+    transform: perspective(1000px) rotateY(180deg);
+  }
+  to {
+    transform: perspective(1000px) rotateY(360deg); /* 360deg ensures it continues in the same direction */
+  }
+}
+
+/* Apply the animation when .flipo class is added */
+.blason.flip {
+  animation: rotateYPositive 1s forwards;
+}
+
+/* Apply reverse animation when going back to the initial state */
+/* This is optional based on your toggle logic */
+.blason:not(.flip) {
+  animation: rotateYNegative 1s forwards;
+}
