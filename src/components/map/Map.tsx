@@ -7,6 +7,7 @@ import { Fragment, useRef, useState } from 'react';
 import mapReliefSvg from '../../../public/map_original_relief.svg';
 import mapDataRaw from '../../assets/map/map.json';
 import Region from './Region';
+import OverlayWithText from '../OverlayWithText';
 
 const mapData: MapData = mapDataRaw;
 
@@ -87,13 +88,14 @@ const Map = () => {
         // transform: `scale(1.25) translate(${clickPosition.rectWidth / 2 - clickPosition.x}px, ${
         //   clickPosition.rectHeight / 2 - clickPosition.y
         // }px)`,
-        transform: `translate(-10px,10px)`,
+        transform: `translate(-1000px,1000px)`,
         transition: 'transform 1s ease-in-out', // Durée de l'animation
       }
     : {};
 
   return (
     <>
+      <OverlayWithText text="" />
       <div className="relative" ref={containerRef}>
         <div className={`h-[600px] w-full`} onClick={(e) => toggleZoom(e)} style={zoomStyle}>
           <svg

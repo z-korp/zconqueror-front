@@ -171,7 +171,7 @@ const PlayPanel = () => {
             isOpen={showCardMenu}
           />
         )}
-        <div className="flex flex-col max-w-[420px] w-full" onClick={() => console.log('click')}>
+        <div className="flex flex-col max-w-[420px] w-full z-20" onClick={() => console.log('click')}>
           <div className="mb-8 vt323-font">
             <ActionPanel />
           </div>
