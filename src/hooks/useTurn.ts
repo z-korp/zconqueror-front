@@ -1,9 +1,8 @@
-import { useElementStore } from '@/utils/store';
 import { useEffect, useState } from 'react';
+import { useGame } from './useGame';
 
 export const useTurn = () => {
-  const { game } = useElementStore((state) => state);
-
+  const game = useGame();
   const [turn, setTurn] = useState<number>(1);
 
   useEffect(() => {

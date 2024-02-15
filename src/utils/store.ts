@@ -8,12 +8,10 @@ export enum Phase {
 }
 
 interface State {
-  game: any;
-  set_game: (game: any) => void;
+  game_id: number; // 0 = no game
+  set_game_id: (game_id: number) => void;
   game_state: GameState;
   set_game_state: (game_state: GameState) => void;
-  game_id: number | undefined;
-  set_game_id: (game_id: number) => void;
   current_source: number | null;
   set_current_source: (source: number | null) => void;
   current_target: number | null;
@@ -27,12 +25,10 @@ interface State {
 }
 
 export const useElementStore = create<State>((set) => ({
-  game: null,
-  set_game: (game: any) => set(() => ({ game })),
+  game_id: 0,
+  set_game_id: (game_id: number) => set(() => ({ game_id })),
   game_state: GameState.MainMenu,
   set_game_state: (game_state: GameState) => set(() => ({ game_state })),
-  game_id: undefined,
-  set_game_id: (game_id: number) => set(() => ({ game_id })),
   current_source: null,
   set_current_source: (source: number | null) => set(() => ({ current_source: source })),
   current_target: null,

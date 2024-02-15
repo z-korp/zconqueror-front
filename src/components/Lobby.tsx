@@ -1,37 +1,39 @@
 import GameState from '@/utils/gamestate';
 import { useElementStore } from '@/utils/store';
 import { Button } from './ui/button';
-import { useComponentValue, useEntityQuery } from '@dojoengine/react';
-import { HasValue } from '@dojoengine/recs';
 import { useEffect } from 'react';
-import { sanitizeGame } from '@/utils/sanitizer';
+import { formatStarkNetAddress } from '@/utils/sanitizer';
 import { useDojo } from '@/dojo/useDojo';
 import { useToast } from './ui/use-toast';
+import { useGetPlayersForGame } from '@/hooks/useGetPlayersForGame';
+import { useGame } from '@/hooks/useGame';
+import { feltToStr } from '@/utils/unpack';
 
 const Lobby: React.FC = () => {
   const {
     setup: {
       client: { host },
-      clientComponents: { Game },
     },
     account: { account },
   } = useDojo();
   const { toast } = useToast();
 
-  const { set_game_state, set_game_id, game_id, set_game } = useElementStore((state) => state);
+  const { set_game_state, set_game_id, game_id } = useElementStore((state) => state);
 
-  // Get game info
-  const game = useComponentValue(Game, useEntityQuery([HasValue(Game, { id: game_id })]));
+  const game = useGame();
+
+  const { players } = useGetPlayersForGame(game_id);
 
   useEffect(() => {
-    if (game.seed != 0) {
+    if (game && Number(game.seed.toString(16)) !== 0) {
       // Game has started
-      set_game(sanitizeGame(game));
       set_game_state(GameState.Game);
     }
-  }, [game]);
+  }, [game?.seed]);
 
-  const isHost = '0x' + game.host.toString(16) === account.address;
+  const isHost = (host: string, address: string) => {
+    return host === formatStarkNetAddress(address);
+  };
 
   const startGame = async () => {
     if (game_id === undefined) {
@@ -52,27 +54,52 @@ const Lobby: React.FC = () => {
     }
   };
 
+  const leaveGame = async (game_id: number) => {
+    try {
+      await host.leave(account, game_id);
+      set_game_id(0);
+      set_game_state(GameState.MainMenu);
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        description: <code className="text-white text-xs">{error.message}</code>,
+      });
+    }
+  };
+
   if (!game) {
     return;
   }
 
   return (
-    <div className="flex gap-3 mb-4 items-center">
-      <Button
-        onClick={() => {
-          set_game_id(0);
-          set_game_state(GameState.MainMenu);
-        }}
-      >
-        Back
-      </Button>
-      Lobby
-      <h2>Game id: {game_id}</h2>
-      <p>Max numbers: {game.player_count}</p>
-      {isHost && <Button onClick={startGame}>Start</Button>}
-      <h1 className="vt323-font text-white text-6xl fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-        Waiting for the game to start ...
-      </h1>
+    <div>
+      <div className="flex gap-3 mb-4 items-center">
+        <Button
+          onClick={async () => {
+            if (game.id !== undefined) {
+              await leaveGame(game.id);
+            }
+          }}
+        >
+          Back
+        </Button>
+        Lobby
+        <h2>Game id: {game.id}</h2>
+        <p>
+          Players: {players.length}/{game.player_count}
+        </p>
+        {isHost(game.host, account.address) && <Button onClick={startGame}>Start</Button>}
+        <h1 className="vt323-font text-white text-6xl fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          Waiting for the game to start ...
+        </h1>
+      </div>
+      <div>
+        {players.map((player: any) => (
+          <div key={player.address}>{`${player.name} - ${player.address} ${
+            isHost(game.host, player.address) ? '[HOST]' : ''
+          } `}</div>
+        ))}
+      </div>
     </div>
   );
 };
