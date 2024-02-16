@@ -11,7 +11,8 @@ import { createClient } from 'graphql-ws';
 
 async function init() {
   const wsClient = createClient({ url: import.meta.env.VITE_PUBLIC_TORII_WS });
-
+  console.log(import.meta.env.VITE_PUBLIC_TORII_WS);
+  console.log(import.meta.env.VITE_PUBLIC_TORII);
   console.log('wsClient', wsClient);
   const rootElement = document.getElementById('root');
   if (!rootElement) throw new Error('React root not found');
