@@ -7,7 +7,7 @@ import { useDojo } from '@/dojo/useDojo';
 import { useToast } from './ui/use-toast';
 import { useGetPlayersForGame } from '@/hooks/useGetPlayersForGame';
 import { useGame } from '@/hooks/useGame';
-import { feltToStr } from '@/utils/unpack';
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from './ui/table';
 
 const Lobby: React.FC = () => {
   const {
@@ -73,7 +73,7 @@ const Lobby: React.FC = () => {
 
   return (
     <div>
-      <div className="flex gap-3 mb-4 items-center">
+      <div className="flex gap-3 mb-2 items-center">
         <Button
           onClick={async () => {
             if (game.id !== undefined) {
@@ -96,12 +96,38 @@ const Lobby: React.FC = () => {
           <span className="inline-block animate-jump delay-300">.</span>
         </h1>
       </div>
-      <div>
-        {players.map((player: any) => (
-          <div key={player.address}>{`${player.name} - ${player.address} ${
-            isHost(game.host, player.address) ? '[HOST]' : ''
-          } `}</div>
-        ))}
+      <div className="flex justify-center">
+        <div>
+          {players.length !== 0 && (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Address</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {players.map((player: any) => (
+                  <TableRow key={player.address}>
+                    <TableCell>{player.name}</TableCell>
+                    <TableCell>
+                      {
+                        <div className="flex gap-3 items-center">
+                          <span>{player.address} </span>{' '}
+                          <div>
+                            {!isHost(game.host, player.address) && (
+                              <Button onClick={() => console.log(`Kick ${player.name}`)}>Kick</Button>
+                            )}
+                          </div>
+                        </div>
+                      }
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </div>
       </div>
     </div>
   );
