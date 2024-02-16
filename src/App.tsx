@@ -18,7 +18,8 @@ function App() {
   // const { id } = useParams<{ id?: string }>();
 
   const { game_state } = useElementStore((state) => state);
-
+  console.log(import.meta.env.VITE_PUBLIC_TORII_WS);
+  console.log(import.meta.env.VITE_PUBLIC_TORII);
   // useEffect(() => {
   //   console.log('URL ID:', id);
   //   if (id !== undefined) {
