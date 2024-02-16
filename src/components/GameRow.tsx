@@ -33,6 +33,13 @@ const GameRow: React.FC<GameRowProps> = ({ game }) => {
   const player = useComponentValue(Player, playerId[0]);
 
   const joinGame = async (gameid: number) => {
+    if (!player_name) {
+      toast({
+        variant: 'destructive',
+        description: <code className="text-white text-xs">{'Please enter a pseudo'}</code>,
+      });
+      return;
+    }
     try {
       await host.join(account, gameid, player_name);
       set_game_id(gameid);

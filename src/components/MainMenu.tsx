@@ -17,22 +17,34 @@ const MainMenu: React.FC = () => {
   const {
     setup: {
       client: { host },
-      clientComponents: { Game },
+      clientComponents: { Game, Player },
     },
     account: { account },
   } = useDojo();
 
   const game = useComponentValue(Game, useEntityQuery([HasValue(Game, { host: BigInt(account.address) })]));
+  const player = useComponentValue(Player, useEntityQuery([HasValue(Player, { address: BigInt(account.address) })]));
 
   // if player is host of a game, go to the lobby
   useEffect(() => {
-    if (game) {
+    if (player) {
+      set_game_id(player.game_id);
+      set_game_state(GameState.Lobby);
+    } else if (game) {
       set_game_id(game.id);
       set_game_state(GameState.Lobby);
     }
-  }, [game]);
+  }, [game, player]);
 
   const createNewGame = async () => {
+    if (!player_name) {
+      toast({
+        variant: 'destructive',
+        description: <code className="text-white text-xs">{'Please enter a pseudo'}</code>,
+      });
+      return;
+    }
+
     try {
       // TBD get the id from here?
       await host.create(account, player_name, /* price */ BigInt(0));

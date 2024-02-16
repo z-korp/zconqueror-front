@@ -7,7 +7,7 @@ interface StatusPlayerProps {
   handleNextPhaseClick: () => void;
 }
 
-export default function StatusPlayer({ image, phase, supply, handleNextPhaseClick }: StatusPlayerProps) {
+const StatusPlayer: React.FC<StatusPlayerProps> = ({ image, phase, supply, handleNextPhaseClick }) => {
   return (
     <>
       <div className="relative w-auto h-100 flex flex-col vt323-font text-white rounded-lg drop-shadow-lg">
@@ -43,4 +43,6 @@ export default function StatusPlayer({ image, phase, supply, handleNextPhaseClic
       </div>
     </>
   );
-}
+};
+
+export default StatusPlayer;

@@ -20,7 +20,7 @@ const ActionPanel = () => {
     set_current_source,
     current_target,
     set_current_target,
-    game,
+    game_id,
     set_army_count: setArmyCount,
     army_count: armyCount,
   } = useElementStore((state) => state);
@@ -64,7 +64,7 @@ const ActionPanel = () => {
   }, [current_source, phase, current_target]);
 
   const handleSupply = () => {
-    if (game.id == null || game.id == undefined) return;
+    if (game_id == null || game_id == undefined) return;
     if (current_source === null) return;
     if (currentPlayer && currentPlayer.supply < armyCount) {
       //todo put toast here
@@ -72,7 +72,7 @@ const ActionPanel = () => {
       // alert('Not enough supply', player.supply);
       return;
     }
-    play.supply(account, game.id, current_source, armyCount);
+    play.supply(account, game_id, current_source, armyCount);
     setArmyCount(currentPlayer.supply - armyCount);
     set_current_source(null);
   };
@@ -80,16 +80,16 @@ const ActionPanel = () => {
   const onMoveTroops = async () => {
     if (current_source === null || current_target === null) return;
 
-    if (game.id == null || game.id == undefined) return;
+    if (game_id == null || game_id == undefined) return;
     //animateArrow();
-    await play.transfer(account, game.id, current_source, current_target, armyCount);
+    await play.transfer(account, game_id, current_source, current_target, armyCount);
   };
 
   const onAttack = async () => {
     // Implement attack logic here
     if (current_source === null || current_target === null) return;
 
-    if (game.id == null || game.id == undefined) return;
+    if (game_id == null || game_id == undefined) return;
 
     // todo adapt to compare to source.supply
     if (currentPlayer && currentPlayer.attack < armyCount) {
@@ -99,12 +99,12 @@ const ActionPanel = () => {
     }
     //animateArrow();
 
-    await play.attack(account, game.id, current_source, current_target, armyCount);
+    await play.attack(account, game_id, current_source, current_target, armyCount);
 
     const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
     await sleep(100);
 
-    play.defend(account, game.id, current_source, current_target);
+    play.defend(account, game_id, current_source, current_target);
     set_current_source(null);
   };
 

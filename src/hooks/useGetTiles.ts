@@ -11,8 +11,8 @@ export function useGetTiles() {
     },
   } = useDojo();
 
-  const { game } = useElementStore((state) => state);
-  const tileEntities = useEntityQuery([Has(Tile), HasValue(Tile, { game_id: game?.id })]);
+  const { game_id } = useElementStore((state) => state);
+  const tileEntities = useEntityQuery([Has(Tile), HasValue(Tile, { game_id: game_id })]);
 
   const tiles = useMemo(
     () => tileEntities.map((id) => getComponentValue(Tile, id)).sort((a, b) => a.id - b.id),

@@ -1,8 +1,9 @@
 import { Phase, useElementStore } from '@/utils/store';
 import { useEffect, useState } from 'react';
+import { useGame } from './useGame';
 
 export const usePhase = () => {
-  const { game } = useElementStore((state) => state);
+  const game = useGame();
 
   const [phase, setPhase] = useState<Phase>(Phase.DEPLOY);
 

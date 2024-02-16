@@ -45,7 +45,7 @@ export const useLogs = () => {
     },
   } = useDojo();
 
-  const { game } = useElementStore((state) => state);
+  const { game_id } = useElementStore((state) => state);
 
   // Subscribe to events
   useEffect(() => {
@@ -94,20 +94,24 @@ export const useLogs = () => {
 
   // Fetch events history (before subscription)
   useEffect(() => {
+    // Clear logs when game changes
+    setLogs([]);
+
     const fetchEvents = async () => {
-      await fetchEventsOnce([SUPPLY_EVENT, '0x' + game.id.toString(16)], (event: Event) =>
+      // Assuming fetchEventsOnce is defined elsewhere and handles fetching events based on the provided arguments
+      await fetchEventsOnce([SUPPLY_EVENT, '0x' + game_id.toString(16)], (event: Event) =>
         setLogs((prevLogs) => [...prevLogs, generateLogFromEvent(event)])
       );
-      await fetchEventsOnce([FORTIFY_EVENT, '0x' + game.id.toString(16)], (event) =>
+      await fetchEventsOnce([FORTIFY_EVENT, '0x' + game_id.toString(16)], (event) =>
         setLogs((prevLogs) => [...prevLogs, generateLogFromEvent(event)])
       );
-      await fetchEventsOnce([DEFEND_EVENT, '0x' + game.id.toString(16)], (event) =>
+      await fetchEventsOnce([DEFEND_EVENT, '0x' + game_id.toString(16)], (event) =>
         setLogs((prevLogs) => [...prevLogs, generateLogFromEvent(event)])
       );
     };
 
-    if (game) fetchEvents();
-  }, [game.id]);
+    if (game_id) fetchEvents();
+  }, [game_id]);
 
   return { logs: logs.sort((a, b) => a.timestamp - b.timestamp) };
 };

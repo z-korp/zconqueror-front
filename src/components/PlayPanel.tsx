@@ -4,7 +4,7 @@ import { useTurn } from '@/hooks/useTurn';
 import { colorPlayer } from '@/utils/colors';
 import { useEffect, useState } from 'react';
 import { avatars } from '../utils/pfps';
-import { Phase, useElementStore } from '../utils/store';
+import { Phase } from '../utils/store';
 import ActionPanel from './ActionPanel';
 import ActionPlayerPanel from './ActionPlayerPanel';
 import CardMenu from './CardMenu';
@@ -12,6 +12,7 @@ import CardsPopup from './CardsPopup';
 import OverlayWithText from './OverlayWithText';
 import StatusPlayer from './StatusPlayer';
 import { useDojo } from '@/dojo/useDojo';
+import { useGame } from '@/hooks/useGame';
 
 const PlayPanel = () => {
   const {
@@ -22,9 +23,10 @@ const PlayPanel = () => {
   } = useDojo();
 
   const { currentPlayer: player } = useGetCurrentPlayer();
-  const { game } = useElementStore((state) => state);
   const { turn } = useTurn();
   const { phase } = usePhase();
+
+  const game = useGame();
 
   const [cards, setCards] = useState<number[]>([]);
   const [pendingCards, setPendingCards] = useState<number[]>([]);
