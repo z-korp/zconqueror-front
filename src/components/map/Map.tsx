@@ -112,7 +112,6 @@ const Map = () => {
               <Fragment key={region}>
                 {mapData[region].map((item) => (
                   <Region
-                    playerTurn={turn}
                     key={item.id}
                     id={item.id}
                     region={region}

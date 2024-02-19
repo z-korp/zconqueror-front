@@ -19,18 +19,18 @@ export const sanitizePlayer = (player: any) => {
 };
 
 export const bigIntAddressToString = (address: bigint) => {
-  return formatStarkNetAddress(validateAndParseAddress(address));
-};
-
-export const formatStarkNetAddress = (address: string) => {
-  //console.log('formatStarkNetAddress', address);
-  // Ensure the address is a hex string without the '0x' prefix
-  const hexAddress = address.startsWith('0x') ? address.slice(2) : address;
-  // Pad the address to 64 bytes (128 characters) length
-  const paddedAddress = hexAddress.padStart(64, '0');
-  return '0x' + paddedAddress;
+  return removeLeadingZeros(validateAndParseAddress(address));
 };
 
 export const shortAddress = (address: string) => {
   return `${address.slice(0, 4)}...${address.slice(-4)}`;
+};
+
+export const removeLeadingZeros = (address: string) => {
+  // Check if the address starts with '0x' and then remove leading zeros from the hexadecimal part
+  if (address.startsWith('0x')) {
+    return '0x' + address.substring(2).replace(/^0+/, '');
+  }
+  // Return the original address if it doesn't start with '0x'
+  return address;
 };

@@ -1,9 +1,12 @@
 import { FC, useEffect, useState } from 'react';
-import '../../styles/Button.css';
-import RoundButton from '../RoundButton';
 import { Shield, Swords } from 'lucide-react';
 import { usePhase } from '@/hooks/usePhase';
 import { Phase, useElementStore } from '@/utils/store';
+import { useMe } from '@/hooks/useMe';
+import RoundButton from '../RoundButton';
+
+import '../../styles/Button.css';
+import { useTurn } from '@/hooks/useTurn';
 
 interface TroopsMarkerProps {
   position: { x: number; y: number };
@@ -11,19 +14,13 @@ interface TroopsMarkerProps {
   troups: number;
   color: string;
   tile: any;
-  playerTurn: number;
   containerRef: any;
 }
 
-const TroopsMarker: FC<TroopsMarkerProps> = ({
-  position,
-  handlePathClick,
-  troups,
-  color,
-  tile,
-  playerTurn,
-  containerRef,
-}) => {
+const TroopsMarker: FC<TroopsMarkerProps> = ({ position, handlePathClick, troups, color, tile, containerRef }) => {
+  const { isItMyTurn } = useMe();
+  const { turn } = useTurn();
+
   const [markerPosition, setMarkerPosition] = useState(position);
 
   const [ratioElement, setRatioElement] = useState(1);
@@ -121,7 +118,7 @@ const TroopsMarker: FC<TroopsMarkerProps> = ({
           top: `calc(${markerPosition.y}px - 15px)`,
           left: `calc(${markerPosition.x}px - 15px)`,
         }}
-        shouldJump={tile.owner === playerTurn ? true : false}
+        shouldJump={tile.owner === turn && isItMyTurn}
       >
         <span className="text-lg text-white text-with-outline" data-text={troups}>
           {troups}

@@ -21,11 +21,10 @@ interface RegionProps {
   region: string;
   troups?: number;
   containerRef?: React.MutableRefObject<null>;
-  playerTurn: number;
   onRegionClick: () => void;
 }
 
-const Region: React.FC<RegionProps> = ({ d, id, region, containerRef, onRegionClick, playerTurn }: RegionProps) => {
+const Region: React.FC<RegionProps> = ({ d, id, region, containerRef, onRegionClick }: RegionProps) => {
   const { phase } = usePhase();
   const { turn } = useTurn();
   const { current_source, current_target, army_count, highlighted_region } = useElementStore((state) => state);
@@ -221,7 +220,6 @@ const Region: React.FC<RegionProps> = ({ d, id, region, containerRef, onRegionCl
             troups={troups}
             color={color}
             tile={tile}
-            playerTurn={playerTurn}
             containerRef={containerRef}
           />,
 
