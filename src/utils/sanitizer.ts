@@ -3,25 +3,18 @@ import { feltToStr, unpackU128toNumberArray } from './unpack';
 
 export const sanitizeGame = (game: any) => {
   return {
+    ...game,
     host: bigIntAddressToString(game.host),
-    id: game.id,
-    nonce: game.nonce,
-    over: game.over,
     player_count: game.player_count,
-    seed: game.seed,
-    slots: game.slots,
   };
 };
 
 export const sanitizePlayer = (player: any) => {
   return {
-    index: player.index,
-    game_id: player.game_id,
+    ...player,
     address: bigIntAddressToString(player.address),
     cards: unpackU128toNumberArray(player.cards).filter((e: number) => e !== 0),
-    conqueror: player.conqueror,
     name: feltToStr(player.name),
-    supply: player.supply,
   };
 };
 

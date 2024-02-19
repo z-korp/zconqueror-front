@@ -3,7 +3,6 @@ import ActionLogs from './components/ActionLogs';
 import PlayPanel from './components/PlayPanel';
 import Map from './components/map/Map';
 import { Toaster } from './components/ui/toaster';
-import { TooltipProvider } from './components/ui/tooltip';
 
 import GameState from './utils/gamestate';
 import MainMenu from './components/MainMenu';
