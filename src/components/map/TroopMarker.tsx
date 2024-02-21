@@ -88,6 +88,18 @@ const TroopsMarker: FC<TroopsMarkerProps> = ({ position, handlePathClick, troups
     return () => clearInterval(interval);
   }, []);
 
+  const shouldJump = (phase: Phase) => {
+    if (tile.owner !== turn) return false;
+    if (current_source !== null) return false;
+    if (!isItMyTurn) return false;
+
+    if (phase === Phase.ATTACK || phase === Phase.FORTIFY) {
+      if (tile.army > 1) return true;
+    } else if (phase === Phase.DEPLOY) {
+      return true;
+    }
+  };
+
   if (troups === 0) return null;
 
   return (
@@ -118,7 +130,7 @@ const TroopsMarker: FC<TroopsMarkerProps> = ({ position, handlePathClick, troups
           top: `calc(${markerPosition.y}px - 15px)`,
           left: `calc(${markerPosition.x}px - 15px)`,
         }}
-        shouldJump={tile.owner === turn && isItMyTurn && current_source === null}
+        shouldJump={shouldJump(phase)}
       >
         <span className="text-lg text-white text-with-outline" data-text={troups}>
           {troups}
