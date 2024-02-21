@@ -105,7 +105,7 @@ const ActionPanel = () => {
     await sleep(100);
 
     play.defend(account, game_id, current_source, current_target);
-    set_current_source(null);
+    removeSelected();
   };
 
   const removeSelected = (): void => {
