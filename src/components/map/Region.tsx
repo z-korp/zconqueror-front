@@ -183,6 +183,8 @@ const Region: React.FC<RegionProps> = ({ d, id, region, containerRef, onRegionCl
         } else {
           setIsHighlighted(false);
         }
+      } else {
+        setIsHighlighted(false);
       }
     }
   }, [current_source, phase, current_target, id]);

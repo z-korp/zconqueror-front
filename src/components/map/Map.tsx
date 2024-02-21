@@ -41,7 +41,7 @@ const Map = () => {
       set_current_source(regionId);
     } else if (phase == Phase.ATTACK) {
       if (tile !== undefined) {
-        if (tile.owner === turn) {
+        if (tile.owner === turn && tile.army > 1) {
           set_current_source(regionId);
           set_current_target(null);
         } else {
