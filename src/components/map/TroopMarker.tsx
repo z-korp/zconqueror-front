@@ -118,7 +118,7 @@ const TroopsMarker: FC<TroopsMarkerProps> = ({ position, handlePathClick, troups
           top: `calc(${markerPosition.y}px - 15px)`,
           left: `calc(${markerPosition.x}px - 15px)`,
         }}
-        shouldJump={tile.owner === turn && isItMyTurn}
+        shouldJump={tile.owner === turn && isItMyTurn && current_source === null}
       >
         <span className="text-lg text-white text-with-outline" data-text={troups}>
           {troups}
