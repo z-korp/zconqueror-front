@@ -12,6 +12,7 @@ import { useGetPlayers } from './hooks/useGetPlayers';
 import { useElementStore } from './utils/store';
 import PlayersPanel from './components/PlayersPanel';
 import { DebugPanel } from './components/DebugPanel';
+import OverlayEndGame from './components/OverlayEndGame';
 
 function App() {
   // const { id } = useParams<{ id?: string }>();
@@ -63,6 +64,7 @@ function App() {
           </div>
         </>
       )}
+      <OverlayEndGame players={players} />
     </>
   );
 }
