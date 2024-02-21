@@ -13,6 +13,7 @@ import { useElementStore } from './utils/store';
 import PlayersPanel from './components/PlayersPanel';
 import { DebugPanel } from './components/DebugPanel';
 import OverlayEndGame from './components/OverlayEndGame';
+import { useMe } from './hooks/useMe';
 
 function App() {
   // const { id } = useParams<{ id?: string }>();
@@ -37,6 +38,7 @@ function App() {
   // }, [account]);
 
   const { players } = useGetPlayers();
+  const { me } = useMe();
 
   return (
     <>
@@ -64,7 +66,7 @@ function App() {
           </div>
         </>
       )}
-      <OverlayEndGame players={players} />
+      {me && me.rank !== 0 && <OverlayEndGame me={me} players={players} />}
     </>
   );
 }

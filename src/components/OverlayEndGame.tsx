@@ -4,9 +4,10 @@ import { avatars } from '../utils/pfps';
 
 interface OverlayEndGameProps {
   players: any;
+  me: any;
 }
 
-const OverlayEndGame: React.FC<OverlayEndGameProps> = ({ players }) => {
+const OverlayEndGame: React.FC<OverlayEndGameProps> = ({ me, players }) => {
   const text = 'Game Over';
   const [showOverlay, setShowOverlay] = useState(true);
 
@@ -35,7 +36,7 @@ const OverlayEndGame: React.FC<OverlayEndGameProps> = ({ players }) => {
           <div className="relative flex flex-col items-center w-1/2 rounded-lg bg-stone-700 border-2 border-stone-900 pb-16 pt-16">
             <div className="absolute top-0 left-0 transform -translate-y-1/2 w-full flex justify-center">
               <span className="px-6 py-2 text-white text-6xl rounded-lg bg-stone-700 border-2 border-stone-900 drop-shadow-lg">
-                {text}
+                {me.rank === 1 ? 'WINNER' : text}
               </span>
             </div>
             <button className="absolute top-0 right-2 text-secondary text-lg" onClick={handleCloseOverlay}>
@@ -44,7 +45,7 @@ const OverlayEndGame: React.FC<OverlayEndGameProps> = ({ players }) => {
             <div className="flex flex-col items-center justify-center w-full">
               {players
                 .filter((player: any) => player.rank !== 0)
-                .sort((a: any, b: any) => a.rank - b.rank)
+                .sort((playerA: any, playerB: any) => playerA.rank - playerB.rank)
                 .map((player: any, index: number) => (
                   <div className="flex gap-4 mb-2 items-center justify-center text-white text-lg w-full" key={index}>
                     {player.rank === 1 && <Trophy className="w-8 h-8" stroke="gold" />}
