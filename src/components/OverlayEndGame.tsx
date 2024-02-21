@@ -51,7 +51,9 @@ const OverlayEndGame: React.FC<OverlayEndGameProps> = ({ me, players }) => {
                     {player.rank === 1 && <Trophy className="w-8 h-8" stroke="gold" />}
                     {player.rank === 2 && <Medal className="w-8 h-8" stroke="silver" />}
                     {player.rank === 3 && <Medal className="w-8 h-8" stroke={getColorRGB('bronze')} />}
-                    {player.rank !== 1 && player.rank !== 2 && player.rank !== 3 && <span>{player.rank}</span>}
+                    {player.rank !== 1 && player.rank !== 2 && player.rank !== 3 && (
+                      <span className="w-8 h-8">{player.rank}</span>
+                    )}
                     <img
                       src={avatars[player.index + 1]}
                       alt="player"
