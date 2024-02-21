@@ -22,8 +22,8 @@ const OverlayEndGame: React.FC<OverlayEndGameProps> = ({ me, players }) => {
 
   const handleCloseOverlay = () => {
     setShowOverlay(false);
-    console.log('Overlay fermé');
   };
+
   return (
     <>
       {showOverlay && (
