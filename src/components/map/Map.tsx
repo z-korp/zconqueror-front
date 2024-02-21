@@ -7,6 +7,7 @@ import { Fragment, useRef, useState } from 'react';
 import mapReliefSvg from '../../../public/map_original_relief.svg';
 import mapDataRaw from '../../assets/map/map.json';
 import Region from './Region';
+import { useMe } from '@/hooks/useMe';
 
 const mapData: MapData = mapDataRaw;
 
@@ -21,6 +22,7 @@ interface MapData {
 
 const Map = () => {
   const containerRef = useRef(null);
+  const { isItMyTurn } = useMe();
 
   const { turn } = useTurn();
   const { phase } = usePhase();
@@ -28,6 +30,8 @@ const Map = () => {
   const { current_source, set_current_source, set_current_target } = useElementStore((state) => state);
 
   const handleRegionClick = (regionId: number) => {
+    if (!isItMyTurn) return;
+
     const tile = tiles[regionId - 1];
     if (phase == Phase.DEPLOY) {
       if (tile.owner !== turn) {
@@ -112,7 +116,6 @@ const Map = () => {
               <Fragment key={region}>
                 {mapData[region].map((item) => (
                   <Region
-                    playerTurn={turn}
                     key={item.id}
                     id={item.id}
                     region={region}

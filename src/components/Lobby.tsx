@@ -2,7 +2,7 @@ import GameState from '@/utils/gamestate';
 import { useElementStore } from '@/utils/store';
 import { Button } from './ui/button';
 import { useEffect } from 'react';
-import { formatStarkNetAddress } from '@/utils/sanitizer';
+import { removeLeadingZeros } from '@/utils/sanitizer';
 import { useDojo } from '@/dojo/useDojo';
 import { useToast } from './ui/use-toast';
 import { useGetPlayersForGame } from '@/hooks/useGetPlayersForGame';
@@ -32,7 +32,7 @@ const Lobby: React.FC = () => {
   }, [game?.seed]);
 
   const isHost = (host: string, address: string) => {
-    return host === formatStarkNetAddress(address);
+    return host === removeLeadingZeros(address);
   };
 
   const startGame = async () => {
