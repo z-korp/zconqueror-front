@@ -1,7 +1,5 @@
 import { CSSProperties, FC, ReactNode, useEffect, useRef, useState } from 'react';
 import '../styles/Button.css';
-import { useElementStore } from '@/utils/store';
-import { interval } from 'date-fns';
 
 interface RoundButtonProps {
   color: string;
