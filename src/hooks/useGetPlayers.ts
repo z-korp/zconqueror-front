@@ -24,7 +24,6 @@ export function useGetPlayers() {
     [playerEntities, Player]
   );
 
-  console.log('players', players);
   return {
     players,
   };

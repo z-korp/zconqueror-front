@@ -26,7 +26,6 @@ export async function createEventSubscription(keys: string[]): Promise<Observabl
     {
       next: ({ data }) => {
         try {
-          //console.log('data', data);
           const event = data?.eventEmitted as Event;
           if (event) {
             lastUpdate$.next(event);

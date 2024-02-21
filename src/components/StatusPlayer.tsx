@@ -1,4 +1,5 @@
 import { Phase } from '../utils/store';
+import { useMe } from '@/hooks/useMe';
 
 interface StatusPlayerProps {
   image: string;
@@ -8,6 +9,8 @@ interface StatusPlayerProps {
 }
 
 const StatusPlayer: React.FC<StatusPlayerProps> = ({ image, phase, supply, handleNextPhaseClick }) => {
+  const { isItMyTurn } = useMe();
+
   return (
     <>
       <div className="relative w-auto h-100 flex flex-col vt323-font text-white rounded-lg drop-shadow-lg">
@@ -32,12 +35,14 @@ const StatusPlayer: React.FC<StatusPlayerProps> = ({ image, phase, supply, handl
             <div className="h-10 rounded-lg px-4 py-2">{phase === Phase.DEPLOY && `Place: ${supply}`}</div>
           </div>
           <div className="flex w-1/3 justify-center items-center">
-            <button
-              className="h-10 bg-green-500 rounded-lg drop-shadow-lg px-4 py-2 hover:transform hover:-translate-y-1 transition-transform ease-in-out"
-              onClick={handleNextPhaseClick}
-            >
-              NEXT
-            </button>
+            {isItMyTurn && (
+              <button
+                className="h-10 bg-green-500 rounded-lg drop-shadow-lg px-4 py-2 hover:transform hover:-translate-y-1 transition-transform ease-in-out"
+                onClick={handleNextPhaseClick}
+              >
+                NEXT
+              </button>
+            )}
           </div>
         </div>
       </div>

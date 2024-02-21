@@ -1,7 +1,7 @@
 {
   "world": {
     "name": "dojo::world::world",
-    "address": "0x3a0e782a770361f8119970bfc1cdd7cd91a387a918a537d2808329b8e85e929",
+    "address": "0x4daffaec6ca974909b68f7868dd33a99151e11217751b27fef94753db48e9ec",
     "class_hash": "0x5ac623f0c96059936bd2d0904bdd31799e430fe08a0caff7a5f497260b16497",
     "abi": [
       {
@@ -948,8 +948,8 @@
   "contracts": [
     {
       "name": "zconqueror::systems::host::host",
-      "address": "0x55bac3cb43efa8a014bed327fdf470f528374f1e2208663bae331dbc2658da3",
-      "class_hash": "0x51edd930a363bfebfd3ce3570e571fda147c58ffd841f9d08d7f280479b86c",
+      "address": "0x42ba8cd5a81edc1eabc83a50dd2f0e3671ce431b24aa9affec196ed18cf6b5b",
+      "class_hash": "0x5e0feeab84027da4a714d2800a63c844cecb8d5c062b001aec1de8c145820f7",
       "abi": [
         {
           "type": "impl",
@@ -1091,8 +1091,8 @@
     },
     {
       "name": "zconqueror::systems::play::play",
-      "address": "0x127f3efb89714e50194dab6d7a5875eb63ebee78e04adf36584b8748bf14ac7",
-      "class_hash": "0x4a1667446d1f1efde0d73f98fcaa418f8ffaefa74adbce59e3f1dc014cd1e9b",
+      "address": "0x257da84810b6e148a0a5a8e0fb0d92a2a76a6d78d6d2d3b2e8e31d084c6b131",
+      "class_hash": "0x68a109aec50a011cd151436e18b76546532a31aa4d2c13677580803c05c70db",
       "abi": [
         {
           "type": "impl",
@@ -1441,40 +1441,12 @@
           "key": false
         }
       ],
-      "class_hash": "0x6a50ed1c9dad1d274cf28fc79d7497ab33795eded57751ed1ea91861fe3513b",
+      "class_hash": "0x120bf1da38511b4c6c3a33e03f1457c3fdf9f165345e2b3fa05422179143f5a",
       "abi": [
         {
-          "type": "function",
-          "name": "name",
-          "inputs": [],
-          "outputs": [
-            {
-              "type": "core::felt252"
-            }
-          ],
-          "state_mutability": "view"
-        },
-        {
-          "type": "function",
-          "name": "unpacked_size",
-          "inputs": [],
-          "outputs": [
-            {
-              "type": "core::integer::u32"
-            }
-          ],
-          "state_mutability": "view"
-        },
-        {
-          "type": "function",
-          "name": "packed_size",
-          "inputs": [],
-          "outputs": [
-            {
-              "type": "core::integer::u32"
-            }
-          ],
-          "state_mutability": "view"
+          "type": "impl",
+          "name": "DojoModelImpl",
+          "interface_name": "dojo::model::IDojoModel"
         },
         {
           "type": "struct",
@@ -1485,17 +1457,6 @@
               "type": "@core::array::Array::<core::integer::u8>"
             }
           ]
-        },
-        {
-          "type": "function",
-          "name": "layout",
-          "inputs": [],
-          "outputs": [
-            {
-              "type": "core::array::Span::<core::integer::u8>"
-            }
-          ],
-          "state_mutability": "view"
         },
         {
           "type": "struct",
@@ -1586,15 +1547,154 @@
           ]
         },
         {
-          "type": "function",
-          "name": "schema",
-          "inputs": [],
-          "outputs": [
+          "type": "interface",
+          "name": "dojo::model::IDojoModel",
+          "items": [
             {
-              "type": "dojo::database::introspect::Ty"
+              "type": "function",
+              "name": "name",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::felt252"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "unpacked_size",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::integer::u32"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "packed_size",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::integer::u32"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "layout",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::array::Span::<core::integer::u8>"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "schema",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "dojo::database::introspect::Ty"
+                }
+              ],
+              "state_mutability": "view"
             }
-          ],
-          "state_mutability": "view"
+          ]
+        },
+        {
+          "type": "impl",
+          "name": "gameImpl",
+          "interface_name": "zconqueror::models::game::Igame"
+        },
+        {
+          "type": "enum",
+          "name": "core::bool",
+          "variants": [
+            {
+              "name": "False",
+              "type": "()"
+            },
+            {
+              "name": "True",
+              "type": "()"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::integer::u256",
+          "members": [
+            {
+              "name": "low",
+              "type": "core::integer::u128"
+            },
+            {
+              "name": "high",
+              "type": "core::integer::u128"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "zconqueror::models::game::Game",
+          "members": [
+            {
+              "name": "id",
+              "type": "core::integer::u32"
+            },
+            {
+              "name": "host",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "over",
+              "type": "core::bool"
+            },
+            {
+              "name": "seed",
+              "type": "core::felt252"
+            },
+            {
+              "name": "player_count",
+              "type": "core::integer::u8"
+            },
+            {
+              "name": "slots",
+              "type": "core::integer::u8"
+            },
+            {
+              "name": "nonce",
+              "type": "core::integer::u8"
+            },
+            {
+              "name": "price",
+              "type": "core::integer::u256"
+            }
+          ]
+        },
+        {
+          "type": "interface",
+          "name": "zconqueror::models::game::Igame",
+          "items": [
+            {
+              "type": "function",
+              "name": "ensure_abi",
+              "inputs": [
+                {
+                  "name": "model",
+                  "type": "zconqueror::models::game::Game"
+                }
+              ],
+              "outputs": [],
+              "state_mutability": "view"
+            }
+          ]
         },
         {
           "type": "event",
@@ -1648,40 +1748,12 @@
           "key": false
         }
       ],
-      "class_hash": "0xf1cff9dd01bc120280c5a75b4ff30dc6a09887a160d9ab2331f1916d92c994",
+      "class_hash": "0x7a3e09e6e12ee14091598d15a4c66bdd261b46eb414f933b1ec9835e634292e",
       "abi": [
         {
-          "type": "function",
-          "name": "name",
-          "inputs": [],
-          "outputs": [
-            {
-              "type": "core::felt252"
-            }
-          ],
-          "state_mutability": "view"
-        },
-        {
-          "type": "function",
-          "name": "unpacked_size",
-          "inputs": [],
-          "outputs": [
-            {
-              "type": "core::integer::u32"
-            }
-          ],
-          "state_mutability": "view"
-        },
-        {
-          "type": "function",
-          "name": "packed_size",
-          "inputs": [],
-          "outputs": [
-            {
-              "type": "core::integer::u32"
-            }
-          ],
-          "state_mutability": "view"
+          "type": "impl",
+          "name": "DojoModelImpl",
+          "interface_name": "dojo::model::IDojoModel"
         },
         {
           "type": "struct",
@@ -1692,17 +1764,6 @@
               "type": "@core::array::Array::<core::integer::u8>"
             }
           ]
-        },
-        {
-          "type": "function",
-          "name": "layout",
-          "inputs": [],
-          "outputs": [
-            {
-              "type": "core::array::Span::<core::integer::u8>"
-            }
-          ],
-          "state_mutability": "view"
         },
         {
           "type": "struct",
@@ -1793,15 +1854,140 @@
           ]
         },
         {
-          "type": "function",
-          "name": "schema",
-          "inputs": [],
-          "outputs": [
+          "type": "interface",
+          "name": "dojo::model::IDojoModel",
+          "items": [
             {
-              "type": "dojo::database::introspect::Ty"
+              "type": "function",
+              "name": "name",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::felt252"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "unpacked_size",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::integer::u32"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "packed_size",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::integer::u32"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "layout",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::array::Span::<core::integer::u8>"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "schema",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "dojo::database::introspect::Ty"
+                }
+              ],
+              "state_mutability": "view"
             }
-          ],
-          "state_mutability": "view"
+          ]
+        },
+        {
+          "type": "impl",
+          "name": "playerImpl",
+          "interface_name": "zconqueror::models::player::Iplayer"
+        },
+        {
+          "type": "enum",
+          "name": "core::bool",
+          "variants": [
+            {
+              "name": "False",
+              "type": "()"
+            },
+            {
+              "name": "True",
+              "type": "()"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "zconqueror::models::player::Player",
+          "members": [
+            {
+              "name": "game_id",
+              "type": "core::integer::u32"
+            },
+            {
+              "name": "index",
+              "type": "core::integer::u32"
+            },
+            {
+              "name": "address",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "name",
+              "type": "core::felt252"
+            },
+            {
+              "name": "supply",
+              "type": "core::integer::u32"
+            },
+            {
+              "name": "cards",
+              "type": "core::integer::u128"
+            },
+            {
+              "name": "conqueror",
+              "type": "core::bool"
+            },
+            {
+              "name": "rank",
+              "type": "core::integer::u8"
+            }
+          ]
+        },
+        {
+          "type": "interface",
+          "name": "zconqueror::models::player::Iplayer",
+          "items": [
+            {
+              "type": "function",
+              "name": "ensure_abi",
+              "inputs": [
+                {
+                  "name": "model",
+                  "type": "zconqueror::models::player::Player"
+                }
+              ],
+              "outputs": [],
+              "state_mutability": "view"
+            }
+          ]
         },
         {
           "type": "event",
@@ -1855,40 +2041,12 @@
           "key": false
         }
       ],
-      "class_hash": "0xb18fb651411130aa0e20e784760c784c554cdd7dd7051df82471f583dbe73b",
+      "class_hash": "0x2668fc62339b6694215414677d7627e17ea13fdf163640137112ad96f3de35b",
       "abi": [
         {
-          "type": "function",
-          "name": "name",
-          "inputs": [],
-          "outputs": [
-            {
-              "type": "core::felt252"
-            }
-          ],
-          "state_mutability": "view"
-        },
-        {
-          "type": "function",
-          "name": "unpacked_size",
-          "inputs": [],
-          "outputs": [
-            {
-              "type": "core::integer::u32"
-            }
-          ],
-          "state_mutability": "view"
-        },
-        {
-          "type": "function",
-          "name": "packed_size",
-          "inputs": [],
-          "outputs": [
-            {
-              "type": "core::integer::u32"
-            }
-          ],
-          "state_mutability": "view"
+          "type": "impl",
+          "name": "DojoModelImpl",
+          "interface_name": "dojo::model::IDojoModel"
         },
         {
           "type": "struct",
@@ -1899,17 +2057,6 @@
               "type": "@core::array::Array::<core::integer::u8>"
             }
           ]
-        },
-        {
-          "type": "function",
-          "name": "layout",
-          "inputs": [],
-          "outputs": [
-            {
-              "type": "core::array::Span::<core::integer::u8>"
-            }
-          ],
-          "state_mutability": "view"
         },
         {
           "type": "struct",
@@ -2000,15 +2147,126 @@
           ]
         },
         {
-          "type": "function",
-          "name": "schema",
-          "inputs": [],
-          "outputs": [
+          "type": "interface",
+          "name": "dojo::model::IDojoModel",
+          "items": [
             {
-              "type": "dojo::database::introspect::Ty"
+              "type": "function",
+              "name": "name",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::felt252"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "unpacked_size",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::integer::u32"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "packed_size",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::integer::u32"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "layout",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::array::Span::<core::integer::u8>"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "schema",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "dojo::database::introspect::Ty"
+                }
+              ],
+              "state_mutability": "view"
             }
-          ],
-          "state_mutability": "view"
+          ]
+        },
+        {
+          "type": "impl",
+          "name": "tileImpl",
+          "interface_name": "zconqueror::models::tile::Itile"
+        },
+        {
+          "type": "struct",
+          "name": "zconqueror::models::tile::Tile",
+          "members": [
+            {
+              "name": "game_id",
+              "type": "core::integer::u32"
+            },
+            {
+              "name": "id",
+              "type": "core::integer::u8"
+            },
+            {
+              "name": "army",
+              "type": "core::integer::u32"
+            },
+            {
+              "name": "owner",
+              "type": "core::integer::u32"
+            },
+            {
+              "name": "dispatched",
+              "type": "core::integer::u32"
+            },
+            {
+              "name": "to",
+              "type": "core::integer::u8"
+            },
+            {
+              "name": "from",
+              "type": "core::integer::u8"
+            },
+            {
+              "name": "order",
+              "type": "core::felt252"
+            }
+          ]
+        },
+        {
+          "type": "interface",
+          "name": "zconqueror::models::tile::Itile",
+          "items": [
+            {
+              "type": "function",
+              "name": "ensure_abi",
+              "inputs": [
+                {
+                  "name": "model",
+                  "type": "zconqueror::models::tile::Tile"
+                }
+              ],
+              "outputs": [],
+              "state_mutability": "view"
+            }
+          ]
         },
         {
           "type": "event",
