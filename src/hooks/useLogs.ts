@@ -36,7 +36,6 @@ const generateLogFromEvent = (event: Event): LogType => {
 export const useLogs = () => {
   const [logs, setLogs] = useState<LogType[]>([]);
   const subscribedRef = useRef(false); // Tracks whether subscriptions have been made
-  // console.log('useLogs', logs);
   const {
     setup: {
       updates: {
@@ -54,7 +53,6 @@ export const useLogs = () => {
       const subscriptions: Subscription[] = [];
 
       const subscribeToEvents = async () => {
-        // console.log('subscribeToEvents');
         const supplyObservable = await createSupplyEvents(0);
         const defendObservable = await createDefendEvents(0);
         const fortifyObservable = await createFortifyEvents(0);
@@ -99,7 +97,6 @@ export const useLogs = () => {
     setLogs([]);
 
     const fetchEvents = async () => {
-      // console.log('Fetching events');
       // Assuming fetchEventsOnce is defined elsewhere and handles fetching events based on the provided arguments
       await fetchEventsOnce([SUPPLY_EVENT, '0x' + game_id.toString(16)], (event: Event) =>
         setLogs((prevLogs) => [...prevLogs, generateLogFromEvent(event)])
