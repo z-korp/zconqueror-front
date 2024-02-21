@@ -36,7 +36,6 @@ const generateLogFromEvent = (event: Event): LogType => {
 export const useLogs = () => {
   const [logs, setLogs] = useState<LogType[]>([]);
   const subscribedRef = useRef(false); // Tracks whether subscriptions have been made
-
   const {
     setup: {
       updates: {
