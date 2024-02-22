@@ -27,7 +27,6 @@ const CardMenu = ({ onClose, cards }: CardMenuProps) => {
   }, [cards]);
 
   const discardCards = () => {
-    console.log(selectedCards[0]);
     if (game.id !== undefined && game.id !== null) {
       play.discard(account, game.id, selectedCards[0], selectedCards[1], selectedCards[2]);
       setSelectedCards([]);
@@ -58,12 +57,12 @@ const CardMenu = ({ onClose, cards }: CardMenuProps) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50 vt323-font">
       <div className="relative bg-stone-700 border-2 border-stone-900 p-6 rounded-lg shadow-lg text-center pointer-events-auto">
-        <button
+        <Button
           onClick={onClose}
-          className="absolute top-2 right-2 flex items-center justify-center w-[22px] h-[22px] bg-red-500 text-white rounded-full text-xs"
+          className="absolute top-2 right-2 flex items-center justify-center w-[22px] h-[22px] p-1 bg-red-500 text-white rounded-full text-xs"
         >
           ✕
-        </button>
+        </Button>
         <div className="max-w-xl text-white mb-4 mx-auto">
           <p className="text-2xl">Here are your cards my Lord.</p>
           <p>

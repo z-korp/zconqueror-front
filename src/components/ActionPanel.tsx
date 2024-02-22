@@ -6,6 +6,7 @@ import { Milestone, ShieldPlus, Swords } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Slider } from './ui/slider';
 import { useDojo } from '@/dojo/useDojo';
+import { Button } from './ui/button';
 
 const ActionPanel = () => {
   const {
@@ -143,18 +144,18 @@ const ActionPanel = () => {
               color="red"
             ></Slider>
             <>
-              <button
+              <Button
                 onClick={handleAttack}
                 className="flex items-center justify-center h-10 px-2 text-white bg-red-500 rounded hover:bg-red-600 drop-shadow-lg hover:transform hover:-translate-y-1 transition-transform ease-in-out"
               >
                 ATTACK <Swords className="ml-2" />
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={removeSelected}
-                className="absolute top-1 right-1 flex items-center justify-center w-[22px] h-[22px] bg-red-500 text-white rounded-full text-xs"
+                className="absolute top-1 right-1 flex items-center justify-center p-1 w-[22px] h-[22px] bg-red-500 text-white rounded-full text-xs"
               >
                 ✕
-              </button>
+              </Button>
             </>
           </div>
         )
@@ -177,19 +178,19 @@ const ActionPanel = () => {
                   set_army_count(newValue[0]);
                 }}
               ></Slider>
-              <button
+              <Button
                 onClick={handleMoveTroops}
                 className="flex items-center justify-center h-10 px-2 text-white bg-green-500 rounded hover:bg-green-600 drop-shadow-lg hover:transform hover:-translate-y-1 transition-transform ease-in-out"
               >
                 MOVE
                 <Milestone className="ml-2" />
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={removeSelected}
-                className="absolute top-1 right-1 flex items-center justify-center w-[22px] h-[22px] bg-red-500 text-white rounded-full text-xs"
+                className="absolute top-1 right-1 flex items-center p-1 justify-center w-[22px] h-[22px] bg-red-500 text-white rounded-full text-xs"
               >
                 ✕
-              </button>
+              </Button>
             </div>
           )}
         </>
@@ -212,18 +213,18 @@ const ActionPanel = () => {
                   set_army_count(newValue[0]);
                 }}
               ></Slider>
-              <button
+              <Button
                 onClick={handleSupply}
                 className="flex items-center justify-center h-10 px-2 text-white bg-green-500 rounded hover:bg-green-600 drop-shadow-lg hover:transform hover:-translate-y-1 transition-transform ease-in-out"
               >
                 DEPLOY <ShieldPlus className="ml-2" />
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={removeSelected}
-                className="absolute top-1 right-1 flex items-center justify-center w-[22px] h-[22px] bg-red-500 text-white rounded-full text-xs"
+                className="absolute top-1 right-1 flex items-center p-1 justify-center w-[22px] h-[22px] bg-red-500 text-white rounded-full text-xs"
               >
                 ✕
-              </button>
+              </Button>
             </div>
           )}
         </>

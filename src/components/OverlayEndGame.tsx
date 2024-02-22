@@ -1,6 +1,7 @@
 import { Medal, Trophy } from 'lucide-react';
 import React, { useState } from 'react';
 import { avatars } from '../utils/pfps';
+import { Button } from './ui/button';
 
 interface OverlayEndGameProps {
   players: any;
@@ -39,9 +40,9 @@ const OverlayEndGame: React.FC<OverlayEndGameProps> = ({ me, players }) => {
                 {me.rank === 1 ? 'WINNER' : text}
               </span>
             </div>
-            <button className="absolute top-0 right-2 text-secondary text-lg" onClick={handleCloseOverlay}>
-              X
-            </button>
+            <Button className="absolute top-0 right-2 p-1 text-secondary text-lg" onClick={handleCloseOverlay}>
+              ✕
+            </Button>
             <div className="flex flex-col items-center justify-center w-full">
               {players
                 .filter((player: any) => player.rank !== 0)
