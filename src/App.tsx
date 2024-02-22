@@ -55,14 +55,14 @@ function App() {
               <Map />
             </div>
           </div>
-          <div className="flex justify-center">
-            <PlayPanel />
-          </div>
           <div className="fixed bottom-0 left-0 w-1/4 p-1">
             <ActionLogs />
           </div>
-          <div className="fixed bottom-0 right-0 w-1/4 pr-1 pb-1">
+          <div className="fixed bottom-0 right-0 w-1/4 p-1">
             <PlayersPanel players={players} />
+          </div>
+          <div className="flex justify-center">
+            <PlayPanel />
           </div>
         </>
       )}
