@@ -36,8 +36,6 @@ const PlayersPanel = ({ players }: PlayersPanelProps) => {
     config: { tension: 170, friction: 26 },
   });
 
-  console.log('currentPlayer', currentPlayer);
-
   return (
     <div className="max-w-xl w-full border-2 rounded-lg bg-stone-700 border-stone-900 text-white">
       <div
@@ -52,7 +50,7 @@ const PlayersPanel = ({ players }: PlayersPanelProps) => {
         {players.map((player: any, index: number) => (
           <div key={index}>
             {!isCollapsed && !isItMyTurn && currentPlayer && currentPlayer.index === index && (
-              <div className="absolute -left-24 mt-4 flex justify-center items-center h-10 w-24 rounded-l-lg mr-1 bg-stone-900 text-stone-500">
+              <div className="absolute -left-24 mt-4 flex justify-center items-center h-10 w-24 rounded-l-lg bg-stone-900 text-stone-500">
                 <span className="vt323-font text-white">{phaseName} ▶︎</span>
               </div>
             )}

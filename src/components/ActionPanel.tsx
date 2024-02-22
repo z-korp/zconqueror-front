@@ -96,9 +96,10 @@ const ActionPanel = () => {
 
     const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
     await sleep(100);
-
     play.defend(account, game_id, current_source, current_target);
+
     removeSelected();
+
     await sleep(5000);
     setIsDiceAnimation(false);
   };
