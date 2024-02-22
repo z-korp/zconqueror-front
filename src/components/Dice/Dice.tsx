@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './dice.css';
+import './Dice.css';
 
 interface DiceProps {
   currentRound: number;
