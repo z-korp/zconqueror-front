@@ -58,7 +58,7 @@ function App() {
           <div className="fixed bottom-0 left-0 w-1/4 p-1">
             <ActionLogs />
           </div>
-          <div className="fixed bottom-0 right-0 w-1/4 p-1">
+          <div className="fixed bottom-0 right-0 w-1/4 pb-1 pr-1">
             <PlayersPanel players={players} />
           </div>
           <div className="flex justify-center">

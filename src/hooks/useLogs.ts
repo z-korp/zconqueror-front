@@ -35,6 +35,7 @@ const generateLogFromEvent = (event: Event): LogType => {
 
 export const useLogs = () => {
   const [logs, setLogs] = useState<LogType[]>([]);
+  const [lastDefendResult, setLastDefendResult] = useState<any>(null);
   const subscribedRef = useRef(false); // Tracks whether subscriptions have been made
   const {
     setup: {
@@ -67,6 +68,7 @@ export const useLogs = () => {
           defendObservable.subscribe((event) => {
             if (event) {
               setLogs((prevLogs) => [...prevLogs, generateLogFromEvent(event)]);
+              setLastDefendResult(event);
             }
           }),
 
@@ -98,9 +100,9 @@ export const useLogs = () => {
 
     const fetchEvents = async () => {
       // Assuming fetchEventsOnce is defined elsewhere and handles fetching events based on the provided arguments
-      await fetchEventsOnce([SUPPLY_EVENT, '0x' + game_id.toString(16)], (event: Event) =>
-        setLogs((prevLogs) => [...prevLogs, generateLogFromEvent(event)])
-      );
+      await fetchEventsOnce([SUPPLY_EVENT, '0x' + game_id.toString(16)], (event: Event) => {
+        setLogs((prevLogs) => [...prevLogs, generateLogFromEvent(event)]);
+      });
       await fetchEventsOnce([FORTIFY_EVENT, '0x' + game_id.toString(16)], (event) =>
         setLogs((prevLogs) => [...prevLogs, generateLogFromEvent(event)])
       );
@@ -112,5 +114,5 @@ export const useLogs = () => {
     if (game_id) fetchEvents();
   }, [game_id]);
 
-  return { logs: logs.sort((a, b) => a.timestamp - b.timestamp) };
+  return { logs: logs.sort((a, b) => a.timestamp - b.timestamp), lastDefendResult };
 };

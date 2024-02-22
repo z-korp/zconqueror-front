@@ -6,6 +6,7 @@ import { Milestone, ShieldPlus, Swords } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Slider } from './ui/slider';
 import { useDojo } from '@/dojo/useDojo';
+import OverlayDice from './OverlayDice';
 import { Button } from './ui/button';
 
 const ActionPanel = () => {
@@ -30,6 +31,7 @@ const ActionPanel = () => {
   const [sourceTile, setSourceTile] = useState<any | null>(null);
   const [targetTile, setTargetTile] = useState<any | null>(null);
   const [isActionSelected, setIsActionSelected] = useState(false);
+  const [isDiceAnimation, setIsDiceAnimation] = useState(false);
 
   useEffect(() => {
     set_army_count(0);
@@ -88,14 +90,18 @@ const ActionPanel = () => {
       alert('Not enough attack');
       return;
     }
+    setIsDiceAnimation(true);
 
     await play.attack(account, game_id, current_source, current_target, army_count);
 
     const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
     await sleep(100);
-
     play.defend(account, game_id, current_source, current_target);
+
     removeSelected();
+
+    await sleep(5000);
+    setIsDiceAnimation(false);
   };
 
   const handleMoveTroops = async () => {
@@ -122,6 +128,7 @@ const ActionPanel = () => {
 
   return (
     <>
+      {isDiceAnimation && <OverlayDice />}
       {isAttackTurn() ? (
         current_source &&
         current_target &&

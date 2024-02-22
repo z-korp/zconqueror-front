@@ -121,3 +121,8 @@ export const colorTilePlayerHighlight = [
   '#fff', // 'none'
   ...Object.values(customColors).map((colorObj) => colorObj[500]),
 ];
+
+export const colorTilePlayerDark = [
+  '#fff', // 'none'
+  ...Object.values(customColors).map((colorObj) => colorObj[800]),
+];
