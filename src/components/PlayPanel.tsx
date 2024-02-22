@@ -2,6 +2,7 @@ import { usePhase } from '@/hooks/usePhase';
 import { useTurn } from '@/hooks/useTurn';
 import { useEffect, useState } from 'react';
 import { Phase, useElementStore } from '../utils/store';
+import { getPhaseName } from '@/utils/textState';
 import ActionPanel from './ActionPanel';
 import CardMenu from './CardMenu';
 import CardsPopup from './CardsPopup';
@@ -36,19 +37,6 @@ const PlayPanel = () => {
   const [showOverlay, setShowOverlay] = useState(false);
   const [overlayText, setOverlayText] = useState('');
 
-  const textFromState = (phase: Phase) => {
-    switch (phase) {
-      case Phase.DEPLOY:
-        return 'Deploying';
-      case Phase.ATTACK:
-        return 'Attacking';
-      case Phase.FORTIFY:
-        return 'Fortifying';
-      default:
-        return 'Unknown';
-    }
-  };
-
   useEffect(() => {
     if (player?.conqueror) {
       setConqueredThisTurn(true);
@@ -64,7 +52,7 @@ const PlayPanel = () => {
 
   useEffect(() => {
     if (isItMyTurn) {
-      const text = textFromState(Phase.DEPLOY);
+      const text = getPhaseName(Phase.DEPLOY);
       setOverlayText(text);
       setShowOverlay(true);
 
@@ -125,7 +113,7 @@ const PlayPanel = () => {
 
     if (phase < 2) {
       play.finish(account, game.id);
-      setOverlayText(textFromState(phase + 1));
+      setOverlayText(getPhaseName(phase + 1));
       setShowOverlay(true);
     } else {
       await play.finish(account, game.id);
