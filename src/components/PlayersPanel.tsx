@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { animated, useSpring } from 'react-spring';
 import SidePlayerInfo from './SidePlayerInfo';
+import { Player } from '@/utils/types';
 
 type PlayersPanelProps = {
-  players: any;
+  players: Player[];
 };
 
 const PlayersPanel = ({ players }: PlayersPanelProps) => {
@@ -34,12 +35,12 @@ const PlayersPanel = ({ players }: PlayersPanelProps) => {
         className="flex justify-between items-center p-2 border-b border-stone-900 rounded-t cursor-pointer vt323-font"
         onClick={toggleCollapse}
       >
-        <span>Players</span>
+        <span>{`Players (${players.length})`}</span>
         <span className="mr-2">{isCollapsed ? '▲' : '▼'}</span>
       </div>
 
       <animated.div style={springProps} ref={playersRef} className="max-h overflow-hidden scrollbar-custom">
-        {players.map((player: any, index: number) => (
+        {players.map((player: Player, index: number) => (
           <SidePlayerInfo key={index} index={index} player={player} />
         ))}
       </animated.div>
