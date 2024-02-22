@@ -54,9 +54,9 @@ const OverlayDice: React.FC<{}> = () => {
                 </span>
                 <div className="mt-6">
                   {Boolean(parseInt(lastDefendResult.data[1])) ? (
-                    <div className="text-green">A glorious victory !</div>
+                    <div className="text-green-500">A glorious victory !</div>
                   ) : (
-                    <div className="text-red">A crushing defeat !</div>
+                    <div className="text-red-500">A crushing defeat !</div>
                   )}
                 </div>
               </>
