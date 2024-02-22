@@ -7,11 +7,17 @@ interface DiceProps {
 
 const Dice: React.FC<DiceProps> = ({ currentRound }) => {
   const [rotate, setRotate] = useState<string>('');
+  const [fadeOut, setFadeOut] = useState<boolean>(false);
 
   useEffect(() => {
     if (currentRound === 6) {
       setRotate('rotate(90deg)');
     }
+
+    roll();
+    setTimeout(() => {
+      setFadeOut(true);
+    }, 3000);
   }, [currentRound]);
 
   const roll = () => {
@@ -41,13 +47,15 @@ const Dice: React.FC<DiceProps> = ({ currentRound }) => {
     const rotate: string = `rotateX(${xRand}deg) rotateY(${yRand}deg)`;
     const value: number = calculateResult(xRand, yRand);
     setRotate(rotate);
-    //caculateResult(xRand, yRand);
     // update scores and round with delay
   };
 
   return (
-    <div className="scene dim mt2 mb4 " onClick={roll}>
-      <div className="cube" style={{ transform: rotate }}>
+    <div className="scene dim mt2 mb4 ">
+      <div
+        className={`cube ${fadeOut ? 'transform opacity-0 ease-in-out duration-500' : ''}`}
+        style={{ transform: rotate }}
+      >
         <div className="bg-white cube__face cube__face--front front">
           <span className="dot dot1" />
         </div>
