@@ -1,11 +1,12 @@
 import { useDojo } from '@/dojo/useDojo';
 import { sanitizePlayer } from '@/utils/sanitizer';
 import { useElementStore } from '@/utils/store';
+import { Player } from '@/utils/types';
 import { useEntityQuery } from '@dojoengine/react';
 import { Has, HasValue, getComponentValue } from '@dojoengine/recs';
 import { useMemo } from 'react';
 
-export function useGetPlayers() {
+export function useGetPlayers(): { players: Player[] } {
   const {
     setup: {
       clientComponents: { Player },
