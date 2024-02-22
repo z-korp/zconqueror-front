@@ -133,16 +133,18 @@ const ActionPanel = () => {
               'border-2 rounded-lg border-primary bg-black bg-opacity-30 backdrop-blur-md drop-shadow-lg '
             } `}
           >
-            <Slider
-              className="w-32"
-              min={1}
-              max={sourceTile ? sourceTile.army - 1 : Infinity}
-              value={[army_count]}
-              onValueChange={(newValue: number[]) => {
-                set_army_count(newValue[0]);
-              }}
-              color="red"
-            ></Slider>
+            {sourceTile.army > 2 && (
+              <Slider
+                className="w-32"
+                min={1}
+                max={sourceTile ? sourceTile.army - 1 : Infinity}
+                value={[army_count]}
+                onValueChange={(newValue: number[]) => {
+                  set_army_count(newValue[0]);
+                }}
+                color="red"
+              ></Slider>
+            )}
             <>
               <Button
                 onClick={handleAttack}

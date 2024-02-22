@@ -50,7 +50,7 @@ const Map = () => {
         set_current_target(null);
       } else {
         // otherwise if clicked tile is not owned by the player
-        if (current_source && getNeighbors(current_source).includes(regionId)) {
+        if (current_source && getNeighbors(current_source).includes(regionId) && tile.owner !== turn) {
           // and is a neighbor of the current source
           set_current_target(regionId);
         } else {
