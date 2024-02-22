@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Dice from './Dice/Dice';
 import { useLogs } from '@/hooks/useLogs';
 import { feltToStr } from '@/utils/unpack';
-import { Shield, Swords } from 'lucide-react';
+import { Swords } from 'lucide-react';
 
 const round = 1;
 
