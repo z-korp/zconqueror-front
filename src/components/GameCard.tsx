@@ -12,8 +12,7 @@ const GameCard = ({ cardNumber }: { cardNumber: number }) => {
   const cardImage = cardImages[(cardNumber % 3) + 1];
 
   return (
-    <div className="w-32 h-48 bg-white rounded-lg shadow-lg flex items-center justify-center overflow-hidden">
-      {/* Render the image based on the cardNumber */}
+    <div className="w-32 h-48 bg-white border-2 border-stone-900 rounded-lg shadow-lg flex items-center justify-center overflow-hidden">
       {cardImage && <img src={cardImage} alt={`Card number ${cardNumber}`} />}
     </div>
   );

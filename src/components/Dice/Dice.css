@@ -16,7 +16,7 @@
   height: 200px;
   position: relative;
   transform-style: preserve-3d;
-  transition: transform 6s;
+  transition: transform 2s;
 }
 .cube:hover {
   cursor: pointer;

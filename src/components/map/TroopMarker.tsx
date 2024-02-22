@@ -4,6 +4,7 @@ import { usePhase } from '@/hooks/usePhase';
 import { Phase, useElementStore } from '@/utils/store';
 import { useMe } from '@/hooks/useMe';
 import RoundButton from '../RoundButton';
+import { colorTilePlayerDark } from '@/utils/customColors';
 
 import '../../styles/Button.css';
 import { useTurn } from '@/hooks/useTurn';
@@ -88,6 +89,18 @@ const TroopsMarker: FC<TroopsMarkerProps> = ({ position, handlePathClick, troups
     return () => clearInterval(interval);
   }, []);
 
+  const shouldJump = (phase: Phase) => {
+    if (tile.owner !== turn) return false;
+    if (current_source !== null) return false;
+    if (!isItMyTurn) return false;
+
+    if (phase === Phase.ATTACK || phase === Phase.FORTIFY) {
+      if (tile.army > 1) return true;
+    } else if (phase === Phase.DEPLOY) {
+      return true;
+    }
+  };
+
   if (troups === 0) return null;
 
   return (
@@ -101,12 +114,20 @@ const TroopsMarker: FC<TroopsMarkerProps> = ({ position, handlePathClick, troups
       >
         {phase === Phase.ATTACK && current_source === tile.id && (
           <div className={`blason ${flip ? 'flip' : ''}`} onClick={() => setFlip(!flip)}>
-            <Swords size={60} fill="red" stroke="red" />
+            <Swords
+              size={60}
+              fill={colorTilePlayerDark[tile.owner + 1 || 0]}
+              stroke={colorTilePlayerDark[tile.owner + 1 || 0]}
+            />
           </div>
         )}
         {phase === Phase.ATTACK && current_target === tile.id && (
           <div className={`blason ${flip ? 'flip' : ''}`} onClick={() => setFlip(!flip)}>
-            <Shield size={60} fill="blue" stroke="blue" />
+            <Shield
+              size={60}
+              fill={colorTilePlayerDark[tile.owner + 1 || 0]}
+              stroke={colorTilePlayerDark[tile.owner + 1 || 0]}
+            />
           </div>
         )}
       </div>
@@ -118,7 +139,7 @@ const TroopsMarker: FC<TroopsMarkerProps> = ({ position, handlePathClick, troups
           top: `calc(${markerPosition.y}px - 15px)`,
           left: `calc(${markerPosition.x}px - 15px)`,
         }}
-        shouldJump={tile.owner === turn && isItMyTurn && current_source === null}
+        shouldJump={shouldJump(phase)}
       >
         <span className="text-lg text-white text-with-outline" data-text={troups}>
           {troups}

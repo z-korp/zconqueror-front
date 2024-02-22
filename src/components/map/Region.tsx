@@ -34,19 +34,28 @@ const Region: React.FC<RegionProps> = ({ d, id, region, containerRef, onRegionCl
   const { tiles } = useGetTiles();
 
   const tile = tiles[id - 1];
-
   const tileArmy = tile ? tile.army : 0;
-  let troups = tileArmy;
-  if (phase === Phase.FORTIFY && id === current_target) {
-    troups = tileArmy + army_count;
-  }
+  const [troups, setTroups] = useState(0);
 
-  if (phase === Phase.FORTIFY && id === current_source && current_target !== null) {
-    troups = tileArmy - army_count;
-  }
-  if (phase === Phase.DEPLOY && id === current_source) {
-    troups = tileArmy + army_count;
-  }
+  useEffect(() => {
+    let newTroups = tileArmy;
+    if (phase === Phase.DEPLOY) {
+      if (id === current_source) {
+        newTroups = tileArmy + army_count;
+      }
+    } else if (phase === Phase.ATTACK) {
+      if (id === current_source && current_target !== null) {
+        newTroups = tileArmy - army_count;
+      }
+    } else if (phase === Phase.FORTIFY) {
+      if (id === current_target) {
+        newTroups = tileArmy + army_count;
+      } else if (id === current_source && current_target !== null) {
+        newTroups = tileArmy - army_count;
+      }
+    }
+    setTroups(newTroups);
+  }, [army_count, tileArmy, current_source, current_target]);
 
   const color = tile ? colorPlayer[tile.owner + 1 || 0] : 'white';
   const colorTile = tile ? colorTilePlayer[tile.owner + 1 || 0] : 'white';
