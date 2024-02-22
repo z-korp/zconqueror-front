@@ -1,19 +1,7 @@
-import { Phase, useElementStore } from '@/utils/store';
+import { Phase } from '@/utils/store';
 import { useEffect, useState } from 'react';
 import { useGame } from './useGame';
-
-const getPhaseName = (phase: Phase): string => {
-  switch (phase) {
-    case Phase.DEPLOY:
-      return 'Deploy';
-    case Phase.ATTACK:
-      return 'Attack';
-    case Phase.FORTIFY:
-      return 'Fortify';
-    default:
-      return '';
-  }
-};
+import { getPhaseName } from '@/utils/textState';
 
 export const usePhase = () => {
   const game = useGame();
