@@ -67,6 +67,17 @@ const Lobby: React.FC = () => {
     }
   };
 
+  const kickPlayer = async (player_index: number) => {
+    try {
+      await host.kick(account, game_id, player_index);
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        description: <code className="text-white text-xs">{error.message}</code>,
+      });
+    }
+  };
+
   if (!game) {
     return;
   }
@@ -116,7 +127,13 @@ const Lobby: React.FC = () => {
                           <span>{player.address} </span>{' '}
                           <div>
                             {!isHost(game.host, player.address) && (
-                              <Button onClick={() => console.log(`Kick ${player.name}`)}>Kick</Button>
+                              <Button
+                                onClick={async () => {
+                                  await kickPlayer(player.index);
+                                }}
+                              >
+                                Kick
+                              </Button>
                             )}
                           </div>
                         </div>
