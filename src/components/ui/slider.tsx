@@ -4,11 +4,12 @@ import * as SliderPrimitive from '@radix-ui/react-slider';
 import * as React from 'react';
 
 import { cn } from '@/lib/utils';
+import { Button } from './button';
 export const Slider = React.forwardRef<
   React.ElementRef<typeof SliderPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root> & { onChange?: (value: number[]) => void }
 >(({ className, min = 0, max = 100, value: propValue, onValueChange, color = 'green', ...props }, ref) => {
-  const colorClasses = {
+  const colorClasses: any = {
     green: {
       base: 'bg-green-500',
       hover: 'hover:bg-green-700',
@@ -41,12 +42,12 @@ export const Slider = React.forwardRef<
 
   return (
     <div className="flex items-center">
-      <button
+      <Button
         onClick={handleMinClick}
         className={`mx-2 py-1 w-8 ${colorClasses[color].base} text-white rounded ${colorClasses[color].hover} transition-colors duration-200 drop-shadow-lg`}
       >
         {min}
-      </button>
+      </Button>
       <SliderPrimitive.Root
         ref={ref}
         min={min}
@@ -66,12 +67,12 @@ export const Slider = React.forwardRef<
           </div>
         </SliderPrimitive.Thumb>
       </SliderPrimitive.Root>
-      <button
+      <Button
         onClick={handleMaxClick}
         className={` w-8  py-1 mx-2 text-center ${colorClasses[color].base} text-white rounded ${colorClasses[color].hover} transition-colors duration-200 drop-shadow-lg`}
       >
         {max}
-      </button>
+      </Button>
     </div>
   );
 });

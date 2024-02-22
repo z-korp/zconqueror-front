@@ -1,10 +1,10 @@
 export interface Player {
-  color: string;
+  game_id: number;
+  index: number;
   address: string;
   name: string;
   supply: number;
-  image: string;
-  troops: number;
-  territories: number;
-  cards: number;
+  cards: number[];
+  conqueror: boolean;
+  rank: number;
 }

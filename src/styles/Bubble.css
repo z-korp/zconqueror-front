@@ -1,0 +1,59 @@
+.bubble {
+  position: relative;
+  width: 300px;
+  text-align: center;
+  line-height: 1.4em;
+  margin: 40px auto;
+  background-color: #fff;
+  border: 2px solid black;
+  border-radius: 30px;
+  padding: 20px;
+  font-size: large;
+}
+
+.thought {
+  width: 300px;
+  border-radius: 200px;
+  padding: 30px;
+}
+
+.bubble:before,
+.bubble:after {
+  content: ' ';
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+.speech:before {
+  left: 15px;
+  bottom: -24px;
+  border: 12px solid;
+  border-color: black transparent transparent black;
+}
+
+.speech:after {
+  left: 17px;
+  bottom: -19px;
+  border: 12px solid;
+  border-color: #fff transparent transparent #fff;
+}
+
+.thought:before,
+.thought:after {
+  left: 10px;
+  bottom: -30px;
+  width: 40px;
+  height: 40px;
+  background-color: #fff;
+  border: 2px solid black;
+  border-radius: 28px;
+}
+
+.thought:after {
+  width: 20px;
+  height: 20px;
+  left: 5px;
+  bottom: -40px;
+  border-radius: 18px;
+}

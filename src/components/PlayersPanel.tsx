@@ -4,9 +4,10 @@ import SidePlayerInfo from './SidePlayerInfo';
 import { useMe } from '@/hooks/useMe';
 import { usePhase } from '@/hooks/usePhase';
 import { useGetCurrentPlayer } from '@/hooks/useGetCurrentPlayer';
+import { Player } from '@/utils/types';
 
 type PlayersPanelProps = {
-  players: any;
+  players: Player[];
 };
 
 const PlayersPanel = ({ players }: PlayersPanelProps) => {
@@ -43,7 +44,7 @@ const PlayersPanel = ({ players }: PlayersPanelProps) => {
         className="flex justify-between items-center p-2 border-b border-stone-900 rounded-t cursor-pointer vt323-font"
         onClick={toggleCollapse}
       >
-        <span>Players</span>
+        <span>{`Players (${players.length})`}</span>
         <span className="mr-2">{isCollapsed ? '▲' : '▼'}</span>
       </div>
 

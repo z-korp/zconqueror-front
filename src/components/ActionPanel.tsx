@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { Slider } from './ui/slider';
 import { useDojo } from '@/dojo/useDojo';
 import OverlayDice from './OverlayDice';
+import { Button } from './ui/button';
 
 const ActionPanel = () => {
   const {
@@ -22,8 +23,8 @@ const ActionPanel = () => {
     current_target,
     set_current_target,
     game_id,
-    set_army_count: setArmyCount,
-    army_count: armyCount,
+    set_army_count,
+    army_count,
   } = useElementStore((state) => state);
   const { phase } = usePhase();
   const { currentPlayer } = useGetCurrentPlayer();
@@ -33,7 +34,7 @@ const ActionPanel = () => {
   const [isDiceAnimation, setIsDiceAnimation] = useState(false);
 
   useEffect(() => {
-    setArmyCount(0);
+    set_army_count(0);
     set_current_source(null);
     set_current_target(null);
   }, [phase]);
@@ -46,9 +47,9 @@ const ActionPanel = () => {
       setSourceTile(sourceTileData);
       if (sourceTileData && sourceTileData.army) {
         if (phase === Phase.DEPLOY) {
-          setArmyCount(currentPlayer.supply);
+          set_army_count(currentPlayer.supply);
         } else {
-          setArmyCount(sourceTileData.army - 1);
+          set_army_count(sourceTileData.army - 1);
         }
       }
       setIsActionSelected(true);
@@ -63,45 +64,35 @@ const ActionPanel = () => {
     } else {
       setTargetTile(null);
     }
-  }, [current_source, phase, current_target]);
+  }, [current_source, current_target, phase]);
 
-  const handleSupply = () => {
+  const handleSupply = async () => {
     if (game_id == null || game_id == undefined) return;
     if (current_source === null) return;
-    if (currentPlayer && currentPlayer.supply < armyCount) {
-      //todo put toast here
-      console.log('Not enough supply', currentPlayer.supply, armyCount);
-      // alert('Not enough supply', player.supply);
+    if (currentPlayer && currentPlayer.supply < army_count) {
+      // todo put toast here
+      console.log('Not enough supply', currentPlayer.supply, army_count);
       return;
     }
-    play.supply(account, game_id, current_source, armyCount);
-    setArmyCount(currentPlayer.supply - armyCount);
-    set_current_source(null);
+
+    await play.supply(account, game_id, current_source, army_count);
+    removeSelected();
   };
 
-  const onMoveTroops = async () => {
-    if (current_source === null || current_target === null) return;
-
-    if (game_id == null || game_id == undefined) return;
-    //animateArrow();
-    await play.transfer(account, game_id, current_source, current_target, armyCount);
-  };
-
-  const onAttack = async () => {
-    // Implement attack logic here
+  const handleAttack = async () => {
     if (current_source === null || current_target === null) return;
 
     if (game_id == null || game_id == undefined) return;
 
     // todo adapt to compare to source.supply
-    if (currentPlayer && currentPlayer.attack < armyCount) {
+    if (currentPlayer && currentPlayer.attack < army_count) {
       //todo put toast here
       alert('Not enough attack');
       return;
     }
     setIsDiceAnimation(true);
 
-    await play.attack(account, game_id, current_source, current_target, armyCount);
+    await play.attack(account, game_id, current_source, current_target, army_count);
 
     const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
     await sleep(100);
@@ -110,6 +101,15 @@ const ActionPanel = () => {
     removeSelected();
     await sleep(5000);
     setIsDiceAnimation(false);
+  };
+
+  const handleMoveTroops = async () => {
+    if (current_source === null || current_target === null) return;
+
+    if (game_id == null || game_id == undefined) return;
+
+    await play.transfer(account, game_id, current_source, current_target, army_count);
+    removeSelected();
   };
 
   const removeSelected = (): void => {
@@ -143,25 +143,25 @@ const ActionPanel = () => {
               className="w-32"
               min={1}
               max={sourceTile ? sourceTile.army - 1 : Infinity}
-              value={[armyCount]}
+              value={[army_count]}
               onValueChange={(newValue: number[]) => {
-                setArmyCount(newValue[0]);
+                set_army_count(newValue[0]);
               }}
               color="red"
             ></Slider>
             <>
-              <button
-                onClick={onAttack}
+              <Button
+                onClick={handleAttack}
                 className="flex items-center justify-center h-10 px-2 text-white bg-red-500 rounded hover:bg-red-600 drop-shadow-lg hover:transform hover:-translate-y-1 transition-transform ease-in-out"
               >
                 ATTACK <Swords className="ml-2" />
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={removeSelected}
-                className="absolute top-1 right-1 flex items-center justify-center w-[22px] h-[22px] bg-red-500 text-white rounded-full text-xs"
+                className="absolute top-1 right-1 flex items-center justify-center p-1 w-[22px] h-[22px] bg-red-500 text-white rounded-full text-xs"
               >
                 ✕
-              </button>
+              </Button>
             </>
           </div>
         )
@@ -179,24 +179,24 @@ const ActionPanel = () => {
                 className="w-32"
                 min={1}
                 max={sourceTile.army - 1}
-                value={[armyCount]}
+                value={[army_count]}
                 onValueChange={(newValue: number[]) => {
-                  setArmyCount(newValue[0]);
+                  set_army_count(newValue[0]);
                 }}
               ></Slider>
-              <button
-                onClick={onMoveTroops}
+              <Button
+                onClick={handleMoveTroops}
                 className="flex items-center justify-center h-10 px-2 text-white bg-green-500 rounded hover:bg-green-600 drop-shadow-lg hover:transform hover:-translate-y-1 transition-transform ease-in-out"
               >
                 MOVE
                 <Milestone className="ml-2" />
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={removeSelected}
-                className="absolute top-1 right-1 flex items-center justify-center w-[22px] h-[22px] bg-red-500 text-white rounded-full text-xs"
+                className="absolute top-1 right-1 flex items-center p-1 justify-center w-[22px] h-[22px] bg-red-500 text-white rounded-full text-xs"
               >
                 ✕
-              </button>
+              </Button>
             </div>
           )}
         </>
@@ -214,23 +214,23 @@ const ActionPanel = () => {
                 className="w-32"
                 min={1}
                 max={currentPlayer.supply}
-                value={[armyCount]}
+                value={[army_count]}
                 onValueChange={(newValue: number[]) => {
-                  setArmyCount(newValue[0]);
+                  set_army_count(newValue[0]);
                 }}
               ></Slider>
-              <button
+              <Button
                 onClick={handleSupply}
                 className="flex items-center justify-center h-10 px-2 text-white bg-green-500 rounded hover:bg-green-600 drop-shadow-lg hover:transform hover:-translate-y-1 transition-transform ease-in-out"
               >
                 DEPLOY <ShieldPlus className="ml-2" />
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={removeSelected}
-                className="absolute top-1 right-1 flex items-center justify-center w-[22px] h-[22px] bg-red-500 text-white rounded-full text-xs"
+                className="absolute top-1 right-1 flex items-center p-1 justify-center w-[22px] h-[22px] bg-red-500 text-white rounded-full text-xs"
               >
                 ✕
-              </button>
+              </Button>
             </div>
           )}
         </>

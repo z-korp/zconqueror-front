@@ -1,15 +1,20 @@
 import { Phase } from '../utils/store';
+import { avatars } from '@/utils/pfps';
 import { useMe } from '@/hooks/useMe';
+import { usePhase } from '@/hooks/usePhase';
+import { Button } from './ui/button';
 
 interface StatusPlayerProps {
-  image: string;
-  phase: Phase;
-  supply: number;
   handleNextPhaseClick: () => void;
 }
 
-const StatusPlayer: React.FC<StatusPlayerProps> = ({ image, phase, supply, handleNextPhaseClick }) => {
-  const { isItMyTurn } = useMe();
+const StatusPlayer: React.FC<StatusPlayerProps> = ({ handleNextPhaseClick }) => {
+  const { me: player, isItMyTurn } = useMe();
+  const { phase } = usePhase();
+
+  if (!player) return null;
+
+  const image = avatars[player.index + 1];
 
   return (
     <>
@@ -19,29 +24,45 @@ const StatusPlayer: React.FC<StatusPlayerProps> = ({ image, phase, supply, handl
         </div>
         <div className="flex bg-stone-700 border-x-2 border-t-2 border-stone-900 h-[2.4em] justify-center rounded-t-lg">
           <div className="w-1/6"></div>
-          <div className="w-5/6">
-            <button className={`w-1/3 h-full  ${phase === Phase.DEPLOY && 'bg-stone-900'} border-r-2 border-stone-900`}>
+          <div className="w-5/6 flex">
+            <div
+              className={`w-1/3 h-full flex items-center justify-center ${
+                isItMyTurn && phase === Phase.DEPLOY && 'bg-stone-900'
+              } border-r-2 border-stone-900`}
+            >
               DEPLOY
-            </button>
-            <button className={`w-1/3 h-full  ${phase === Phase.ATTACK && 'bg-stone-900'} border-r-2 border-stone-900`}>
+            </div>
+            <div
+              className={`w-1/3 h-full flex items-center justify-center ${
+                isItMyTurn && phase === Phase.ATTACK && 'bg-stone-900'
+              } border-r-2 border-stone-900`}
+            >
               ATTACK
-            </button>
-            <button className={`w-1/3 h-full ${phase === Phase.FORTIFY && 'bg-stone-900'} `}>MOVE</button>
+            </div>
+            <div
+              className={`w-1/3 flex items-center justify-center h-full ${
+                isItMyTurn && phase === Phase.FORTIFY && 'bg-stone-900'
+              } `}
+            >
+              MOVE
+            </div>
           </div>
         </div>
 
         <div className="flex h-20 bg-stone-700 border-2 border-stone-900 rounded-b-lg">
           <div className="flex w-2/3 justify-center items-center">
-            <div className="h-10 rounded-lg px-4 py-2">{phase === Phase.DEPLOY && `Place: ${supply}`}</div>
+            <div className="h-10 rounded-lg px-4 py-2 ml-5 text-lg">
+              {phase === Phase.DEPLOY && `Supplies available: ${player.supply}`}
+            </div>
           </div>
           <div className="flex w-1/3 justify-center items-center">
             {isItMyTurn && (
-              <button
+              <Button
                 className="h-10 bg-green-500 rounded-lg drop-shadow-lg px-4 py-2 hover:transform hover:-translate-y-1 transition-transform ease-in-out"
                 onClick={handleNextPhaseClick}
               >
                 NEXT
-              </button>
+              </Button>
             )}
           </div>
         </div>

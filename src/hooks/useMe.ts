@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react';
 import { useGetPlayers } from './useGetPlayers';
 import { useDojo } from '@/dojo/useDojo';
 import { useTurn } from './useTurn';
+import { Player } from '@/utils/types';
 
-export function useMe() {
+export function useMe(): { me: Player | null; isItMyTurn: boolean } {
   const {
     setup: {
       account: { account },
@@ -11,7 +12,7 @@ export function useMe() {
   } = useDojo();
   const { turn } = useTurn();
 
-  const [me, setMe] = useState<any | null>(null);
+  const [me, setMe] = useState<Player | null>(null);
 
   const { players } = useGetPlayers();
 
