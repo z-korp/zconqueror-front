@@ -1,33 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import Dice from './Dice/Dice';
-import { useLogs } from '@/hooks/useLogs';
 import { feltToStr } from '@/utils/unpack';
 import { Swords } from 'lucide-react';
 import { Button } from './ui/button';
 
 const OverlayDice: React.FC<{ onClose: () => void }> = ({ onClose }) => {
-  const { lastDefendResult } = useLogs();
-
   const [showDice, setShowDice] = useState(true);
   const [showResult, setShowResult] = useState(false);
   const [diceValue, setDiceValue] = useState([7, 7]);
 
   useEffect(() => {
     if (lastDefendResult) {
-      // After 1 second, set showDice to false to hide the Dice component
       const timer = setTimeout(() => {
-        //setShowDice(false);
         setShowResult(true);
       }, 1000);
 
-      // Clear the timeout when the component unmounts or when lastDefendResult changes
-
       const randomValue = Math.floor(Math.random() * (6 - 2 + 1) + 2);
-      const newRandomValue = Math.floor(Math.random() * (randomValue - 1 + 1) + 1);
+      const newRandomValue = Math.floor(Math.random() * (randomValue - 2 + 1) + 1);
       if (parseInt(lastDefendResult.data[1]) === 1) {
-        setDiceValue([newRandomValue, randomValue]);
-      } else {
         setDiceValue([randomValue, newRandomValue]);
+      } else {
+        setDiceValue([newRandomValue, randomValue]);
       }
 
       setShowDice(true);
@@ -35,6 +28,7 @@ const OverlayDice: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     }
   }, [lastDefendResult]);
 
+  console.log('diceValue', diceValue);
   console.log(lastDefendResult);
 
   return (
@@ -77,7 +71,7 @@ const OverlayDice: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                   <span className="text-6xl font-bold">{feltToStr(lastDefendResult.keys[3])}</span>
                 </span>
                 <div className="mt-6">
-                  {Boolean(parseInt(lastDefendResult.data[1])) ? (
+                  {parseInt(lastDefendResult.data[1]) ? (
                     <div className="text-green-500">A glorious victory !</div>
                   ) : (
                     <div className="text-red-500">A crushing defeat !</div>
