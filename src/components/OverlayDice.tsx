@@ -3,11 +3,13 @@ import Dice from './Dice/Dice';
 import { feltToStr } from '@/utils/unpack';
 import { Swords } from 'lucide-react';
 import { Button } from './ui/button';
+import { useElementStore } from '@/utils/store';
 
 const OverlayDice: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [showDice, setShowDice] = useState(true);
   const [showResult, setShowResult] = useState(false);
   const [diceValue, setDiceValue] = useState([7, 7]);
+  const { lastDefendResult } = useElementStore((state) => state);
 
   useEffect(() => {
     if (lastDefendResult) {

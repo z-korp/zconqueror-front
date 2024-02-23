@@ -56,7 +56,7 @@ const GameRow: React.FC<GameRowProps> = ({ game }) => {
     <TableRow key={game.id}>
       <TableCell>{player ? feltToStr(player.name) : ''}</TableCell>
       <TableCell>{game.id}</TableCell>
-      <TableCell>{`${game.player_count - game.slots} / ${game.player_count}`}</TableCell>
+      <TableCell>{`${game.player_count} / 6`}</TableCell>
       <TableCell>
         <Button onClick={() => joinGame(game.id)}>Join Game</Button>
       </TableCell>

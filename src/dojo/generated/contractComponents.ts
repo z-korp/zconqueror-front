@@ -15,14 +15,13 @@ export function defineContractComponents(world: World) {
           over: RecsType.Boolean,
           seed: RecsType.BigInt,
           player_count: RecsType.Number,
-          slots: RecsType.Number,
           nonce: RecsType.Number,
           price: RecsType.BigInt,
         },
         {
           metadata: {
             name: 'Game',
-            types: ['u32', 'contractaddress', 'bool', 'felt252', 'u8', 'u8', 'u8', 'u256'],
+            types: ['u32', 'felt252', 'bool', 'felt252', 'u8', 'u8', 'u256'],
             customTypes: [],
           },
         }
@@ -44,7 +43,7 @@ export function defineContractComponents(world: World) {
         {
           metadata: {
             name: 'Player',
-            types: ['u32', 'u32', 'contractaddress', 'felt252', 'u32', 'u128', 'bool', 'u8'],
+            types: ['u32', 'u32', 'felt252', 'felt252', 'u32', 'u128', 'bool', 'u8'],
             customTypes: [],
           },
         }
