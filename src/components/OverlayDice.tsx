@@ -17,7 +17,10 @@ const OverlayDice: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         setShowResult(true);
       }, 2600);
 
+      // Generate a random integer within the range [2, 6]
+      // Multiply Math.rand decimal by the range of integers we want (6 - 2 + 1 = 5).
       const randomValue = Math.floor(Math.random() * (6 - 2 + 1) + 2);
+      // Generate a random integer within the range [1, randomValue not included]
       const newRandomValue = Math.floor(Math.random() * (randomValue - 2 + 1) + 1);
       if (parseInt(lastDefendResult.data[1]) === 1) {
         setDiceValue([randomValue, newRandomValue]);
@@ -29,9 +32,6 @@ const OverlayDice: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       return () => clearTimeout(timer);
     }
   }, [lastDefendResult]);
-
-  console.log('diceValue', diceValue);
-  console.log(lastDefendResult);
 
   return (
     <div

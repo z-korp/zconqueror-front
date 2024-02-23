@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { rotations } from '@/utils/rotations';
 import './Dice.css';
 
 interface DiceProps {
@@ -7,41 +8,22 @@ interface DiceProps {
 
 const Dice: React.FC<DiceProps> = ({ desiredResult }) => {
   const [rotate, setRotate] = useState<string>('');
-  const [fadeOut, setFadeOut] = useState<boolean>(false);
 
   useEffect(() => {
     // Calculer les rotations pour stabiliser sur la face désirée
-    const rotations: { [key: number]: string } = {
-      1: 'rotateX(720deg) rotateY(720deg)',
-      2: 'rotateX(900deg) rotateY(720deg)',
-      3: 'rotateX(720deg) rotateY(-810deg)',
-      4: 'rotateX(720deg) rotateY(810deg)',
-      5: 'rotateX(-810deg) rotateY(720deg)',
-      6: 'rotateX(-270deg) rotateY(-270deg)',
-      7: 'rotateX(1440deg) rotateY(1440deg)', // Is a default case
-    };
 
-    // Appliquer la rotation correspondant à la valeur désirée
     const rotationTimeout = setTimeout(() => {
       setRotate(rotations[desiredResult]);
     }, 100);
 
-    // const fadeoutTimeout = setTimeout(() => {
-    //   setFadeOut(true);
-    // }, 3000);
-
     return () => {
       clearTimeout(rotationTimeout);
-      //clearTimeout(fadeoutTimeout);
     };
   }, [desiredResult]);
 
   return (
     <div className="scene dim mt2 mb4 ">
-      <div
-        className={`cube ${fadeOut ? 'transform opacity-0 ease-in-out duration-500' : ''}`}
-        style={{ transform: rotate }}
-      >
+      <div className="cube" style={{ transform: rotate }}>
         <div className="bg-white cube__face cube__face--front front">
           <span className="dot dot1" />
         </div>
