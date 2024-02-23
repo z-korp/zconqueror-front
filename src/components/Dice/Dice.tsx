@@ -18,6 +18,7 @@ const Dice: React.FC<DiceProps> = ({ desiredResult }) => {
       4: 'rotateX(720deg) rotateY(810deg)',
       5: 'rotateX(-810deg) rotateY(720deg)',
       6: 'rotateX(-270deg) rotateY(-270deg)',
+      7: 'rotateX(1440deg) rotateY(1440deg)', // Is a default case
     };
 
     // Appliquer la rotation correspondant à la valeur désirée
@@ -25,13 +26,13 @@ const Dice: React.FC<DiceProps> = ({ desiredResult }) => {
       setRotate(rotations[desiredResult]);
     }, 100);
 
-    const fadeoutTimeout = setTimeout(() => {
-      setFadeOut(true);
-    }, 3000);
+    // const fadeoutTimeout = setTimeout(() => {
+    //   setFadeOut(true);
+    // }, 3000);
 
     return () => {
       clearTimeout(rotationTimeout);
-      clearTimeout(fadeoutTimeout);
+      //clearTimeout(fadeoutTimeout);
     };
   }, [desiredResult]);
 
