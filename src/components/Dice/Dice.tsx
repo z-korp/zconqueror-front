@@ -2,53 +2,38 @@ import React, { useState, useEffect } from 'react';
 import './Dice.css';
 
 interface DiceProps {
-  currentRound: number;
+  desiredResult: number;
 }
 
-const Dice: React.FC<DiceProps> = ({ currentRound }) => {
+const Dice: React.FC<DiceProps> = ({ desiredResult }) => {
   const [rotate, setRotate] = useState<string>('');
   const [fadeOut, setFadeOut] = useState<boolean>(false);
 
   useEffect(() => {
-    if (currentRound === 6) {
-      setRotate('rotate(90deg)');
-    }
-
-    roll();
-    setTimeout(() => {
-      setFadeOut(true);
-    }, 3000);
-  }, [currentRound]);
-
-  const roll = () => {
-    if (currentRound === 6) {
-      //init();
-      return;
-    }
-
-    const calculateResult = (xDeg: number, yDeg: number): number => {
-      const vDict: { [key: number]: number } = { 0: 1, 1: 4, 2: 2, 3: 3 };
-      const hDict: { [key: number]: number[] } = {
-        1: [1, 6, 2, 5],
-        4: [4, 6, 3, 5],
-        2: [2, 6, 1, 5],
-        3: [3, 6, 4, 5],
-      };
-      let xTruns: number = (xDeg % 360) / 90;
-      let yTruns: number = (yDeg % 360) / 90;
-      let result: number = hDict[vDict[yTruns]][xTruns];
-      return result;
+    // Calculer les rotations pour stabiliser sur la face désirée
+    const rotations: { [key: number]: string } = {
+      1: 'rotateX(720deg) rotateY(720deg)',
+      2: 'rotateX(900deg) rotateY(720deg)',
+      3: 'rotateX(720deg) rotateY(-810deg)',
+      4: 'rotateX(720deg) rotateY(810deg)',
+      5: 'rotateX(-810deg) rotateY(720deg)',
+      6: 'rotateX(-270deg) rotateY(-270deg)',
     };
 
-    const min: number = 40;
-    const max: number = 100;
-    const xRand: number = Math.floor(Math.random() * max + min) * 90;
-    const yRand: number = Math.floor(Math.random() * max + min) * 90;
-    const rotate: string = `rotateX(${xRand}deg) rotateY(${yRand}deg)`;
-    const value: number = calculateResult(xRand, yRand);
-    setRotate(rotate);
-    // update scores and round with delay
-  };
+    // Appliquer la rotation correspondant à la valeur désirée
+    const rotationTimeout = setTimeout(() => {
+      setRotate(rotations[desiredResult]);
+    }, 100);
+
+    const fadeoutTimeout = setTimeout(() => {
+      setFadeOut(true);
+    }, 3000);
+
+    return () => {
+      clearTimeout(rotationTimeout);
+      clearTimeout(fadeoutTimeout);
+    };
+  }, [desiredResult]);
 
   return (
     <div className="scene dim mt2 mb4 ">

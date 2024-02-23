@@ -4,8 +4,6 @@ import { useLogs } from '@/hooks/useLogs';
 import { feltToStr } from '@/utils/unpack';
 import { Swords } from 'lucide-react';
 
-const round = 1;
-
 const OverlayDice: React.FC<{}> = () => {
   const { lastDefendResult } = useLogs();
 
@@ -34,10 +32,10 @@ const OverlayDice: React.FC<{}> = () => {
         {showDice && (
           <>
             <div className="absolute" style={{ transform: `translate(50px,-50px)` }}>
-              <Dice currentRound={round} />
+              <Dice desiredResult={2} />
             </div>
             <div className="absolute" style={{ transform: `translate(-50px,50px)` }}>
-              <Dice currentRound={round} />
+              <Dice desiredResult={2} />
             </div>
           </>
         )}
