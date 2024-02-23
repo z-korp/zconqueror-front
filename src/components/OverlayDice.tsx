@@ -15,7 +15,7 @@ const OverlayDice: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     if (lastDefendResult) {
       const timer = setTimeout(() => {
         setShowResult(true);
-      }, 1000);
+      }, 2600);
 
       const randomValue = Math.floor(Math.random() * (6 - 2 + 1) + 2);
       const newRandomValue = Math.floor(Math.random() * (randomValue - 2 + 1) + 1);
@@ -35,9 +35,9 @@ const OverlayDice: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
   return (
     <div
-      className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-70 flex items-center justify-center z-[1000]"
+      className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-80 flex items-center justify-center z-[1000]"
       style={{
-        background: 'radial-gradient(circle, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.9) 100%)',
+        background: 'radial-gradient(circle, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.95) 100%)',
       }}
     >
       <Button
