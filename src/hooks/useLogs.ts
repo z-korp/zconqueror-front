@@ -35,7 +35,8 @@ const generateLogFromEvent = (event: Event): LogType => {
 
 export const useLogs = () => {
   const [logs, setLogs] = useState<LogType[]>([]);
-  const [lastDefendResult, setLastDefendResult] = useState<any>(null);
+  const { setLastDefendResult } = useElementStore((state) => state);
+
   const subscribedRef = useRef(false); // Tracks whether subscriptions have been made
   const {
     setup: {
@@ -106,13 +107,14 @@ export const useLogs = () => {
       await fetchEventsOnce([FORTIFY_EVENT, '0x' + game_id.toString(16)], (event) =>
         setLogs((prevLogs) => [...prevLogs, generateLogFromEvent(event)])
       );
-      await fetchEventsOnce([DEFEND_EVENT, '0x' + game_id.toString(16)], (event) =>
-        setLogs((prevLogs) => [...prevLogs, generateLogFromEvent(event)])
-      );
+      await fetchEventsOnce([DEFEND_EVENT, '0x' + game_id.toString(16)], (event) => {
+        setLogs((prevLogs) => [...prevLogs, generateLogFromEvent(event)]);
+        setLastDefendResult(event);
+      });
     };
 
     if (game_id) fetchEvents();
   }, [game_id]);
 
-  return { logs: logs.sort((a, b) => a.timestamp - b.timestamp), lastDefendResult };
+  return { logs: logs.sort((a, b) => a.timestamp - b.timestamp) };
 };

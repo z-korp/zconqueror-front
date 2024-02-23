@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import Dice from './Dice/Dice';
-import { useLogs } from '@/hooks/useLogs';
 import { feltToStr } from '@/utils/unpack';
 import { Swords } from 'lucide-react';
+import { useElementStore } from '@/utils/store';
 
 const round = 1;
 
-const OverlayDice: React.FC<{}> = () => {
-  const { lastDefendResult } = useLogs();
+const OverlayDice: React.FC = () => {
+  const { lastDefendResult } = useElementStore((state) => state);
 
   const [showDice, setShowDice] = useState(true);
 
@@ -53,7 +53,7 @@ const OverlayDice: React.FC<{}> = () => {
                   <span className="text-6xl font-bold">{feltToStr(lastDefendResult.keys[3])}</span>
                 </span>
                 <div className="mt-6">
-                  {Boolean(parseInt(lastDefendResult.data[1])) ? (
+                  {parseInt(lastDefendResult.data[1]) ? (
                     <div className="text-green-500">A glorious victory !</div>
                   ) : (
                     <div className="text-red-500">A crushing defeat !</div>
