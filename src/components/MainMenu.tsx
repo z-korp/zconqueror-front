@@ -66,6 +66,7 @@ const MainMenu: React.FC = () => {
     [gameEntities, Game]
   );
   console.log('games', games);
+  console.log('gamesLengts', games.length);
   if (!games) return null;
   return (
     <div className="vt323-font">
