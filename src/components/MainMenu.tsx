@@ -58,13 +58,17 @@ const MainMenu: React.FC = () => {
 
   const gameEntities: any = useEntityQuery([HasValue(Game, { seed: BigInt(0) })]);
   const games = useMemo(
-    () => gameEntities.map((id: any) => getComponentValue(Game, id)).sort((a: any, b: any) => b.id - a.id),
+    () =>
+      gameEntities
+        .map((id: any) => getComponentValue(Game, id))
+        .sort((a: any, b: any) => b.id - a.id)
+        .filter((game: any) => game.host !== 0n),
     [gameEntities, Game]
   );
 
   if (!games) return null;
   return (
-    <div>
+    <div className="vt323-font">
       <div className="flex gap-3 mb-4">
         <Input
           className="w-64"
@@ -77,21 +81,23 @@ const MainMenu: React.FC = () => {
       </div>
       <div className="flex justify-center">
         <div className="lg:w-1/2 md:w-3/4">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Host</TableHead>
-                <TableHead>ID</TableHead>
-                <TableHead>Players</TableHead>
-                <TableHead>Join</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {games.map((game: any) => (
-                <GameRow key={game.id} game={game} />
-              ))}
-            </TableBody>
-          </Table>
+          {games.lenght > 0 && (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Host</TableHead>
+                  <TableHead>ID</TableHead>
+                  <TableHead>Players</TableHead>
+                  <TableHead>Join</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {games.map((game: any) => (
+                  <GameRow key={game.id} game={game} />
+                ))}
+              </TableBody>
+            </Table>
+          )}
         </div>
       </div>
     </div>

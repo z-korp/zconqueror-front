@@ -104,6 +104,28 @@ export async function setupWorld(provider: DojoProvider) {
       }
     };
 
+    const transfer = async (account: Account, gameId: number, playerIndex: number) => {
+      try {
+        return await executeAndCheck(account, contractName, 'transfer', [
+          provider.getWorldAddress(),
+          gameId,
+          playerIndex,
+        ]);
+      } catch (error) {
+        console.error('Error executing kick:', error);
+        throw error;
+      }
+    };
+
+    const delete_game = async (account: Account, gameId: number) => {
+      try {
+        return await executeAndCheck(account, contractName, 'delete', [provider.getWorldAddress(), gameId]);
+      } catch (error) {
+        console.error('Error executing delete:', error);
+        throw error;
+      }
+    };
+
     const claim = async (account: Account, gameId: number) => {
       try {
         return await executeAndCheck(account, contractName, 'claim', [provider.getWorldAddress(), gameId]);
@@ -120,6 +142,8 @@ export async function setupWorld(provider: DojoProvider) {
       start,
       claim,
       kick,
+      transfer,
+      delete_game,
     };
   }
 
