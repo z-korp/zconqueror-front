@@ -95,7 +95,10 @@ const MainMenu: React.FC = () => {
               </TableHeader>
               <TableBody>
                 {games.map((game: any) => (
-                  <GameRow key={game.id} game={game} />
+                  <>
+                    <h1>Game</h1>
+                    <GameRow key={game.id} game={game} />
+                  </>
                 ))}
               </TableBody>
             </Table>
