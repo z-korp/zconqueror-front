@@ -65,7 +65,7 @@ const MainMenu: React.FC = () => {
         .filter((game: any) => game.host !== 0n),
     [gameEntities, Game]
   );
-
+  console.log('games', games);
   if (!games) return null;
   return (
     <div className="vt323-font">
