@@ -83,26 +83,26 @@ const MainMenu: React.FC = () => {
       </div>
       <div className="flex justify-center">
         <div className="lg:w-1/2 md:w-3/4">
-          {games.lenght > 0 && (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Host</TableHead>
-                  <TableHead>ID</TableHead>
-                  <TableHead>Players</TableHead>
-                  <TableHead>Join</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {games.map((game: any) => (
-                  <>
-                    <h1>Game</h1>
-                    <GameRow key={game.id} game={game} />
-                  </>
-                ))}
-              </TableBody>
-            </Table>
-          )}
+          {/* {games.lenght > 0 && ( */}
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Host</TableHead>
+                <TableHead>ID</TableHead>
+                <TableHead>Players</TableHead>
+                <TableHead>Join</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {games.map((game: any) => (
+                <>
+                  <h1>Game</h1>
+                  <GameRow key={game.id} game={game} />
+                </>
+              ))}
+            </TableBody>
+          </Table>
+          {/* )} */}
         </div>
       </div>
     </div>
