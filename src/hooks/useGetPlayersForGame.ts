@@ -16,6 +16,7 @@ export function useGetPlayersForGame(gameId: number | undefined) {
     () =>
       playerEntities
         .map((id) => getComponentValue(Player, id))
+        .filter((player) => player.address)
         .sort((a, b) => a.index - b.index)
         .map(sanitizePlayer),
     [playerEntities, Player]

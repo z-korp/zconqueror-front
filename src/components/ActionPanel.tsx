@@ -100,7 +100,7 @@ const ActionPanel = () => {
 
     removeSelected();
 
-    await sleep(5000);
+    await sleep(8000);
     setIsDiceAnimation(false);
   };
 
@@ -126,9 +126,13 @@ const ActionPanel = () => {
     return phase === Phase.FORTIFY;
   };
 
+  const handleCloseDice = () => {
+    setIsDiceAnimation(false);
+  };
+
   return (
     <>
-      {isDiceAnimation && <OverlayDice />}
+      {isDiceAnimation && <OverlayDice onClose={handleCloseDice} />}
       {isAttackTurn() ? (
         current_source &&
         current_target &&

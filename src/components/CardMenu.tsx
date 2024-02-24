@@ -72,7 +72,8 @@ const CardMenu = ({ onClose, cards }: CardMenuProps) => {
         </div>
 
         <div className="flex justify-center space-x-4 mb-4">
-          {cards.map((cardNumber, index) => (
+          {pendingCards.length === 0 && <div className="w-32 h-48 bg-stone-600 rounded-lg shadow-lg"></div>}
+          {pendingCards.map((cardNumber, index) => (
             <div key={index} onClick={() => handleCardSelect(cardNumber)}>
               <GameCard cardNumber={cardNumber} />
             </div>
