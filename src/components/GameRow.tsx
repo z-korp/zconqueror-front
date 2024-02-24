@@ -33,7 +33,7 @@ const GameRow: React.FC<GameRowProps> = ({ game }) => {
   const player = useComponentValue(Player, playerId[0]);
 
   console.log('player', player);
-  console.log(game);
+  console.log('game', game);
   const joinGame = async (gameid: number) => {
     if (!player_name) {
       toast({
