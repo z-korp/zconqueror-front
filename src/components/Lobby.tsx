@@ -8,6 +8,9 @@ import { useToast } from './ui/use-toast';
 import { useGetPlayersForGame } from '@/hooks/useGetPlayersForGame';
 import { useGame } from '@/hooks/useGame';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from './ui/table';
+import { useMe } from '@/hooks/useMe';
+import { FaCrown } from 'react-icons/fa';
+import { Player } from '@/utils/types';
 
 const Lobby: React.FC = () => {
   const {
@@ -23,6 +26,15 @@ const Lobby: React.FC = () => {
   const game = useGame();
 
   const { players } = useGetPlayersForGame(game_id);
+  const { me } = useMe();
+
+  useEffect(() => {
+    if (me) {
+      if (players.findIndex((player) => player.address === me.address) === -1) {
+        set_game_state(GameState.MainMenu);
+      }
+    }
+  }, [players]);
 
   useEffect(() => {
     if (game && Number(game.seed.toString(16)) !== 0) {
@@ -56,7 +68,12 @@ const Lobby: React.FC = () => {
 
   const leaveGame = async (game_id: number) => {
     try {
-      await host.leave(account, game_id);
+      if (isHost(game.host, account.address)) {
+        await host.delete_game(account, game.id);
+      } else {
+        await host.leave(account, game_id);
+      }
+
       set_game_id(0);
       set_game_state(GameState.MainMenu);
     } catch (error: any) {
@@ -67,12 +84,34 @@ const Lobby: React.FC = () => {
     }
   };
 
-  if (!game) {
+  const kickPlayer = async (player_index: number) => {
+    try {
+      await host.kick(account, game_id, player_index);
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        description: <code className="text-white text-xs">{error.message}</code>,
+      });
+    }
+  };
+
+  const transferHost = async (player_index: number) => {
+    try {
+      await host.transfer(account, game_id, player_index);
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        description: <code className="text-white text-xs">{error.message}</code>,
+      });
+    }
+  };
+
+  if (!game || !me || !players) {
     return;
   }
 
   return (
-    <div>
+    <div className="vt323-font">
       <div className="flex gap-3 mb-2 items-center">
         <Button
           onClick={async () => {
@@ -85,11 +124,9 @@ const Lobby: React.FC = () => {
         </Button>
         Lobby
         <h2>Game id: {game.id}</h2>
-        <p>
-          Players: {players.length}/{game.player_count}
-        </p>
+        <p>Players: {players.length}/6</p>
         {isHost(game.host, account.address) && <Button onClick={startGame}>Start</Button>}
-        <h1 className="vt323-font text-white text-6xl fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+        <h1 className="text-white text-6xl fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
           Waiting for the game to start
           <span className="inline-block animate-jump delay-100">.</span>
           <span className="inline-block animate-jump delay-200">.</span>
@@ -99,7 +136,7 @@ const Lobby: React.FC = () => {
       <div className="flex justify-center">
         <div>
           {players.length !== 0 && (
-            <Table>
+            <Table className="text-lg">
               <TableHeader>
                 <TableRow>
                   <TableHead>Name</TableHead>
@@ -107,16 +144,40 @@ const Lobby: React.FC = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {players.map((player: any) => (
+                {players.map((player: Player) => (
                   <TableRow key={player.address}>
-                    <TableCell>{player.name}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        {isHost(game.host, player.address) && <FaCrown />}
+                        {player.name}
+                      </div>
+                    </TableCell>
                     <TableCell>
                       {
                         <div className="flex gap-3 items-center">
                           <span>{player.address} </span>{' '}
-                          <div>
-                            {!isHost(game.host, player.address) && (
-                              <Button onClick={() => console.log(`Kick ${player.name}`)}>Kick</Button>
+                          <div className="flex gap-2">
+                            {isHost(game.host, me.address) && player.address !== me.address && (
+                              <>
+                                <Button
+                                  size="sm"
+                                  variant="secondary"
+                                  onClick={async () => {
+                                    await kickPlayer(player.index);
+                                  }}
+                                >
+                                  Kick
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="secondary"
+                                  onClick={async () => {
+                                    await transferHost(player.index);
+                                  }}
+                                >
+                                  Give Host
+                                </Button>
+                              </>
                             )}
                           </div>
                         </div>

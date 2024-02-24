@@ -22,6 +22,8 @@ interface State {
   setHighlightedRegion: (region: number | null) => void;
   player_name: string;
   setPlayerName: (name: string) => void;
+  lastDefendResult: any;
+  setLastDefendResult: (result: any) => void;
 }
 
 export const useElementStore = create<State>((set) => ({
@@ -39,4 +41,6 @@ export const useElementStore = create<State>((set) => ({
   setHighlightedRegion: (region: number | null) => set(() => ({ highlighted_region: region })),
   player_name: '',
   setPlayerName: (name: string) => set(() => ({ player_name: name })),
+  lastDefendResult: null,
+  setLastDefendResult: (result: any) => set(() => ({ lastDefendResult: result })),
 }));
