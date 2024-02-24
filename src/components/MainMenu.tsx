@@ -65,9 +65,9 @@ const MainMenu: React.FC = () => {
         .filter((game: any) => game.host !== 0n),
     [gameEntities, Game]
   );
-  console.log('games', games);
-  console.log('gamesLengts', games.length);
-  const game1 = games.map((game: any) => console.log('game', game));
+  // console.log('games', games);
+  // console.log('gamesLengts', games.length);
+  // const game1 = games.map((game: any) => console.log('game', game));
   if (!games) return null;
   return (
     <div className="vt323-font">
@@ -83,26 +83,25 @@ const MainMenu: React.FC = () => {
       </div>
       <div className="flex justify-center">
         <div className="lg:w-1/2 md:w-3/4">
-          {/* {games.lenght > 0 && ( */}
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Host</TableHead>
-                <TableHead>ID</TableHead>
-                <TableHead>Players</TableHead>
-                <TableHead>Join</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {games.map((game: any) => (
-                <>
-                  <h1>Game</h1>
-                  <GameRow key={game.id} game={game} />
-                </>
-              ))}
-            </TableBody>
-          </Table>
-          {/* )} */}
+          {games.length > 0 && (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Host</TableHead>
+                  <TableHead>ID</TableHead>
+                  <TableHead>Players</TableHead>
+                  <TableHead>Join</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {games.map((game: any) => (
+                  <>
+                    <GameRow key={game.id} game={game} />
+                  </>
+                ))}
+              </TableBody>
+            </Table>
+          )}
         </div>
       </div>
     </div>
