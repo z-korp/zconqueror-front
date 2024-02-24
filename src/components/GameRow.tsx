@@ -32,8 +32,6 @@ const GameRow: React.FC<GameRowProps> = ({ game }) => {
   const playerId = useEntityQuery([HasValue(Player, { game_id: game.id, index: 0 })], { updateOnValueChange: true });
   const player = useComponentValue(Player, playerId[0]);
 
-  console.log('player', player);
-  console.log('game', game);
   const joinGame = async (gameid: number) => {
     if (!player_name) {
       toast({

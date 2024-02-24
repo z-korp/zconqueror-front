@@ -65,9 +65,7 @@ const MainMenu: React.FC = () => {
         .filter((game: any) => game.host !== 0n),
     [gameEntities, Game]
   );
-  // console.log('games', games);
-  // console.log('gamesLengts', games.length);
-  // const game1 = games.map((game: any) => console.log('game', game));
+
   if (!games) return null;
   return (
     <div className="vt323-font">
