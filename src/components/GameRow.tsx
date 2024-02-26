@@ -56,9 +56,17 @@ const GameRow: React.FC<GameRowProps> = ({ game }) => {
     <TableRow key={game.id}>
       <TableCell>{player ? feltToStr(player.name) : ''}</TableCell>
       <TableCell>{game.id}</TableCell>
-      <TableCell>{`${game.player_count} / 6`}</TableCell>
       <TableCell>
-        <Button onClick={() => joinGame(game.id)}>Join Game</Button>
+        <div className="flex items-center justify-center">
+          <div className="px-2 rounded-full bg-stone-400">{`${game.player_count}/6`}</div>
+        </div>
+      </TableCell>
+      <TableCell>
+        <div className="flex justify-end">
+          <Button variant="tertiary" className="hover:bg-green-600" onClick={() => joinGame(game.id)}>
+            Join Game
+          </Button>
+        </div>
       </TableCell>
     </TableRow>
   );
