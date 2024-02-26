@@ -1,13 +1,13 @@
-import React, { useEffect, useState, useRef } from 'react';
-import ReactDOM from 'react-dom';
-import TroopsMarker from './TroopMarker';
 import { useGetTiles } from '@/hooks/useGetTiles';
 import { usePhase } from '@/hooks/usePhase';
 import { useTurn } from '@/hooks/useTurn';
-import { Phase, useElementStore } from '@/utils/store';
 import { colorPlayer } from '@/utils/colors';
 import { colorTilePlayer, colorTilePlayerHighlight } from '@/utils/customColors';
 import { getNeighbors } from '@/utils/map';
+import { Phase, useElementStore } from '@/utils/store';
+import React, { useEffect, useRef, useState } from 'react';
+import ReactDOM from 'react-dom';
+import TroopsMarker from './TroopMarker';
 
 interface Point {
   x: number;
@@ -15,12 +15,14 @@ interface Point {
 }
 
 interface RegionProps {
+  d: string;
   id: number;
+  region: string;
   containerRef?: React.MutableRefObject<null>;
   onRegionClick: () => void;
 }
 
-const Region: React.FC<RegionProps> = ({ id, containerRef, onRegionClick }) => {
+const RegionOld: React.FC<RegionProps> = ({ d, id, region, containerRef, onRegionClick }: RegionProps) => {
   const { phase } = usePhase();
   const { turn } = useTurn();
   const { current_source, current_target, army_count, highlighted_region } = useElementStore((state) => state);
@@ -58,109 +60,90 @@ const Region: React.FC<RegionProps> = ({ id, containerRef, onRegionClick }) => {
   const colorTileHighLight = tile ? colorTilePlayerHighlight[tile.owner + 1 || 0] : 'white';
 
   const [position, setPosition] = useState<{ x: number; y: number }>();
-
-  const [pathData, setPathData] = useState('');
-  const [colorContinent, setColorContinent] = useState('');
   const pathRef = useRef<SVGPathElement>(null);
 
-  useEffect(() => {
-    const filePath = `/svgs/regions/${id}.svg`;
-    fetch(filePath)
-      .then((response) => response.text())
-      .then((svg) => {
-        const parser = new DOMParser();
-        const xmlDoc = parser.parseFromString(svg, 'image/svg+xml');
-        const path = xmlDoc.getElementsByTagName('path')[0];
-        if (path) {
-          setPathData(path.getAttribute('d') || '');
-          setColorContinent(path.getAttribute('fill') || 'white');
-        }
-      })
-      .catch((error) => console.error('Error fetching SVG:', error));
-  }, [id]);
-
-  function calculateCentroidFromPath(d: string): Point {
-    const commands = d.split(/(?=[LHM])/);
+  function parsePathForPoints(d: string): Point[] {
     const points: Point[] = [];
-    let lastY = 0; // Last Y coordinate for handling "H" commands
+    // Regular expression to match all numbers, including negative numbers
+    const allNumbersRegex = /-?\d+(\.\d+)?/g;
+    // Extract all numbers (coordinates) from the path string
+    const allNumbers = d.match(allNumbersRegex);
+    if (!allNumbers) return points;
 
-    let point;
-    commands.forEach((command: any) => {
-      const type = command[0];
-      const args = command
-        .slice(1)
-        .trim()
-        .split(/\s*,\s*|\s+/);
-      switch (type) {
-        case 'M':
-        case 'L':
-          point = { x: parseFloat(args[0]), y: parseFloat(args[1]) };
-          points.push(point);
-          lastY = point.y;
-          break;
-        case 'H':
-          points.push({ x: parseFloat(args[0]), y: lastY });
-          break;
+    // Iterate over the numbers two by two (x and y coordinates)
+    for (let i = 0; i < allNumbers.length; i += 2) {
+      const x = parseFloat(allNumbers[i]);
+      const y = parseFloat(allNumbers[i + 1]);
+      if (!isNaN(x) && !isNaN(y)) {
+        // Ensure both x and y are valid numbers
+        points.push({ x, y });
       }
-    });
+    }
 
-    let cx = 0,
-      cy = 0,
-      a = 0;
+    return points;
+  }
+
+  function calculateCentroid(points: Point[]): Point {
+    const centroid = { x: 0, y: 0 };
+    let signedArea = 0;
+
+    // Calculate the signed area of the polygon and the contributions of each edge to the centroid
     for (let i = 0; i < points.length - 1; i++) {
-      const xi = points[i].x,
-        yi = points[i].y;
-      const xi1 = points[i + 1].x,
-        yi1 = points[i + 1].y;
-      const cross = xi * yi1 - xi1 * yi;
-      cx += (xi + xi1) * cross;
-      cy += (yi + yi1) * cross;
-      a += cross;
+      const x0 = points[i].x;
+      const y0 = points[i].y;
+      const x1 = points[i + 1].x;
+      const y1 = points[i + 1].y;
+      const a = x0 * y1 - x1 * y0;
+      signedArea += a;
+      centroid.x += (x0 + x1) * a;
+      centroid.y += (y0 + y1) * a;
     }
 
-    // Close the polygon if it's not already closed
-    if (points[0].x !== points[points.length - 1].x || points[0].y !== points[points.length - 1].y) {
-      const xi = points[points.length - 1].x,
-        yi = points[points.length - 1].y;
-      const xi1 = points[0].x,
-        yi1 = points[0].y;
-      const cross = xi * yi1 - xi1 * yi;
-      cx += (xi + xi1) * cross;
-      cy += (yi + yi1) * cross;
-      a += cross;
-    }
+    // Repeat calculation for the edge from the last vertex to the first
+    const x0 = points[points.length - 1].x;
+    const y0 = points[points.length - 1].y;
+    const x1 = points[0].x;
+    const y1 = points[0].y;
+    const a = x0 * y1 - x1 * y0;
+    signedArea += a;
+    centroid.x += (x0 + x1) * a;
+    centroid.y += (y0 + y1) * a;
 
-    a /= 2;
-    cx /= 6 * a;
-    cy /= 6 * a;
+    // Finalize the calculation of the centroid coordinates
+    signedArea *= 0.5;
+    centroid.x /= 6.0 * signedArea;
+    centroid.y /= 6.0 * signedArea;
 
-    return { x: cx, y: cy };
+    return centroid;
   }
 
   useEffect(() => {
     const path = pathRef.current;
-    if (path && pathData) {
-      const centroid = calculateCentroidFromPath(pathData);
+    if (path) {
+      const points = parsePathForPoints(d);
+      if (points.length > 0) {
+        const centroid = calculateCentroid(points);
 
-      const svgElement = path.ownerSVGElement;
-      if (svgElement) {
-        const point = svgElement.createSVGPoint();
-        point.x = centroid.x;
-        point.y = centroid.y;
-        const ctm = svgElement.getScreenCTM();
-        if (!ctm) return;
+        const svgElement = path.ownerSVGElement;
+        if (svgElement) {
+          const point = svgElement.createSVGPoint();
+          point.x = centroid.x;
+          point.y = centroid.y;
+          const ctm = svgElement.getScreenCTM();
+          if (!ctm) return;
 
-        const screenPoint = point.matrixTransform(ctm);
+          const screenPoint = point.matrixTransform(ctm);
 
-        // Adjust for the SVG's position in the viewport
-        const svgRect = svgElement.getBoundingClientRect();
-        const x = screenPoint.x - svgRect.left;
-        const y = screenPoint.y - svgRect.top;
+          // Adjust for the SVG's position in the viewport
+          const svgRect = svgElement.getBoundingClientRect();
+          const x = screenPoint.x - svgRect.left;
+          const y = screenPoint.y - svgRect.top;
 
-        setPosition({ x, y });
+          setPosition({ x, y });
+        }
       }
     }
-  }, [pathData]);
+  }, [d, region]);
 
   useEffect(() => {
     if (phase === Phase.DEPLOY) {
@@ -215,6 +198,8 @@ const Region: React.FC<RegionProps> = ({ id, containerRef, onRegionClick }) => {
 
   const isLogHighlighted = highlighted_region === id;
 
+  //if (id === 2) console.log('hilightedColor', hilightedColor, 'isHilighted', isHilighted);
+
   const determineFillColor = (
     isHighlighted: boolean,
     hilightedColor: string,
@@ -249,16 +234,33 @@ const Region: React.FC<RegionProps> = ({ id, containerRef, onRegionClick }) => {
 
           containerRef.current // render the button directly in the body
         )}
+      <defs>
+        {/*<pattern id="texture" patternUnits="userSpaceOnUse" width="900" height="647">
+          <image href={texture} x="0" y="0" width="900" height="647" />
+        </pattern>*/}
+        <mask id="pathMask">
+          <path d={d} fill="blue" stroke="black" strokeWidth="10" />
+        </mask>
+      </defs>
       <path
         ref={pathRef}
-        d={pathData}
-        fill={determineFillColor(isHilighted, hilightedColor, isLogHighlighted, colorTileHighLight, colorTile)}
+        d={d}
+        //fill={`url(#texture)`}
+        fill={'white'}
         fillOpacity={1.0}
-        stroke="black"
-        strokeWidth="2"
+        stroke={isHilighted ? 'black' : 'gray'}
+        strokeWidth="10"
+      />
+      <path
+        ref={pathRef}
+        d={d}
+        fill={determineFillColor(isHilighted, hilightedColor, isLogHighlighted, colorTileHighLight, colorTile)}
+        stroke={isHilighted ? 'black' : 'gray'}
+        strokeWidth="10"
+        onClick={onRegionClick}
       />
     </>
   );
 };
 
-export default Region;
+export default RegionOld;

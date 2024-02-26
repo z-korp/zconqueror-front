@@ -8,3 +8,14 @@ export interface Player {
   conqueror: boolean;
   rank: number;
 }
+
+export type Tile = {
+  game_id: number;
+  id: number;
+  army: number;
+  owner: number;
+  dispatched: number;
+  to: number;
+  from: number;
+  order: bigint;
+};
