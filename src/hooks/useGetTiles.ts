@@ -1,8 +1,9 @@
+import { useMemo } from 'react';
 import { useDojo } from '@/dojo/useDojo';
 import { useElementStore } from '@/utils/store';
 import { useEntityQuery } from '@dojoengine/react';
 import { Has, HasValue, getComponentValue } from '@dojoengine/recs';
-import { useEffect, useMemo } from 'react';
+import { Tile } from '@/utils/types';
 
 export function useGetTiles() {
   const {
@@ -14,14 +15,10 @@ export function useGetTiles() {
   const { game_id } = useElementStore((state) => state);
   const tileEntities = useEntityQuery([Has(Tile), HasValue(Tile, { game_id: game_id })]);
 
-  const tiles = useMemo(
+  const tiles: Tile[] = useMemo(
     () => tileEntities.map((id) => getComponentValue(Tile, id)).sort((a, b) => a.id - b.id),
     [tileEntities, Tile]
   );
-
-  /*useEffect(() => {
-    console.log('tiles', tiles);
-  }, [tiles]);*/
 
   return {
     tiles,

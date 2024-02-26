@@ -3,23 +3,13 @@ import { usePhase } from '@/hooks/usePhase';
 import { useTurn } from '@/hooks/useTurn';
 import { getNeighbors } from '@/utils/map';
 import { Phase, useElementStore } from '@/utils/store';
-import { Fragment, useRef, useState } from 'react';
-import mapReliefSvg from '../../../public/map_original_relief.svg';
-import mapDataRaw from '../../assets/map/map.json';
-import Region from './Region';
+import { useRef } from 'react';
 import { useMe } from '@/hooks/useMe';
 import { isTest } from '@/utils/test';
-
-const mapData: MapData = mapDataRaw;
-
-interface PathItem {
-  id: number;
-  path: string;
-}
-
-interface MapData {
-  [key: string]: PathItem[];
-}
+import Continents from './Continents';
+import Svg from './Svg';
+import Region from './Region';
+import nameData from '../../assets/map/nameData.json'; // Adjust the path as necessary
 
 const Map = () => {
   const containerRef = useRef(null);
@@ -85,74 +75,29 @@ const Map = () => {
       }
     }
   };
-  const [isZoomed, setIsZoomed] = useState(false);
-  //const [clickPosition, setClickPosition] = useState({ x: 0, y: 0, rectWidth: 0, rectHeight: 0 });
-
-  const toggleZoom = (e: any) => {
-    return;
-    const rect = e.target.getBoundingClientRect();
-    const x = e.clientX; // Position X du clic par rapport à la div
-    const y = e.clientY; // Position Y du clic par rapport à la div
-
-    const rectWidth = rect.width; // Largeur de la div
-    const rectHeight = rect.height; // Hauteur de la div
-
-    console.log(x, y);
-    console.log(rect.left, rect.top, rectWidth, rectHeight);
-
-    setClickPosition({ x, y, rectWidth, rectHeight });
-    setIsZoomed(!isZoomed);
-  };
-
-  const zoomStyle = isZoomed
-    ? {
-        // transform: `scale(1.25) translate(${clickPosition.rectWidth / 2 - clickPosition.x}px, ${
-        //   clickPosition.rectHeight / 2 - clickPosition.y
-        // }px)`,
-        transform: `translate(-1000px,1000px)`,
-        transition: 'transform 1s ease-in-out', // Durée de l'animation
-      }
-    : {};
 
   return (
     <>
       <div className="relative" ref={containerRef}>
-        <div className={`h-[600px] w-full`} onClick={(e) => toggleZoom(e)} style={zoomStyle}>
-          <svg
-            viewBox="0 0 3669 1932" // Ajustez cette valeur en fonction de vos coordonnées
-            className="absolute top-0 left-0 w-full h-full"
-            overflow="visible"
-          >
-            <image
-              href={mapReliefSvg}
-              width="108%"
-              height="108%"
-              x={(3669 - 3669 * 1.08) / 2}
-              y={(1932 - 1932 * 1.08) / 2}
-            />
-            {Object.keys(mapData).map((region) => (
-              <Fragment key={region}>
-                {mapData[region].map((item) => (
-                  <Region
-                    key={item.id}
-                    id={item.id}
-                    region={region}
-                    containerRef={containerRef}
-                    d={`M${item.path} z`}
-                    onRegionClick={() => handleRegionClick(item.id)}
-                  />
-                ))}
-              </Fragment>
+        <div className={`h-[600px] w-full`}>
+          <svg viewBox="0 0 1512 904" className="absolute top-0 left-0 w-full h-full" overflow="visible">
+            <Svg svgPath="/svgs/sea.svg" />
+            <Svg svgPath="/svgs/links.svg" />
+            <Svg svgPath="/svgs/map_shadows.svg" />
+
+            <Continents />
+
+            {Object.keys(nameData).map((key) => (
+              <Region
+                key={key}
+                id={parseInt(key, 10)}
+                containerRef={containerRef}
+                onRegionClick={() => handleRegionClick(parseInt(key, 10))}
+              />
             ))}
           </svg>
         </div>
       </div>
-      {/* <SupplyModal
-        open={supplyModalOpen}
-        player={player}
-        onClose={setSupplyModalOpen}
-        regionId={currentRegionSupplyId}
-      /> */}
     </>
   );
 };

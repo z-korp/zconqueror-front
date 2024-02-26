@@ -81,7 +81,7 @@ const MainMenu: React.FC = () => {
       </div>
       <div className="flex justify-center">
         <div className="lg:w-1/2 md:w-3/4">
-          {games.lenght > 0 && (
+          {games.length > 0 && (
             <Table>
               <TableHeader>
                 <TableRow>
