@@ -30,7 +30,7 @@ const Bubble: React.FC<ComicBubbleProps> = ({ text }) => {
   // Only render the bubble if isVisible is true
   return isVisible ? (
     <div className="vt323-font bubble speech relative max-w-md p-3 border-2 border-black rounded-lg bg-white text-lg">
-      {displayText}
+      {`“${displayText}”`}
     </div>
   ) : null;
 };
