@@ -95,7 +95,7 @@ const CardMenu = ({ onClose, cards }: CardMenuProps) => {
             ) : (
               <div
                 key={index}
-                className="w-32 h-48 bg-stone-600 rounded-lg shadow-lg"
+                className="w-32 h-48 bg-stone-600 rounded-lg shadow-lg border border-white"
                 style={{
                   transform: `rotate(${rotationDegree}deg) translateY(${translateY}px)`,
                   transition: 'transform 0.3s',
