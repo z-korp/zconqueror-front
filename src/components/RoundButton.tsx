@@ -51,7 +51,7 @@ const RoundButton: FC<RoundButtonProps> = ({ color, onClick, children, style, cl
         jumping ? 'animate-jump' : ''
       } border rounded-full w-8 h-7 ${className}`}
       onClick={onClick}
-      style={style}
+      style={selectedColorClass === '' ? { ...style, backgroundColor: color, borderColor: color } : style}
     >
       {children}
     </div>

@@ -3,42 +3,50 @@
     {
       "id": 1,
       "name": "Westfury",
-      "regions": [7, 8, 9, 10, 11, 12, 13, 14]
+      "regions": [7, 8, 9, 10, 11, 12, 13, 14],
+      "supply": 6
     },
     {
       "id": 2,
       "name": "Southguard",
-      "regions": [1, 2, 3, 4, 5, 6]
+      "regions": [1, 2, 3, 4, 5, 6],
+      "supply": 5
     },
     {
       "id": 3,
       "name": "Northern Arch",
-      "regions": [15, 16, 17, 18, 19]
+      "regions": [15, 16, 17, 18, 19],
+      "supply": 5
     },
     {
       "id": 4,
       "name": "Seaheart",
-      "regions": [20, 22, 23, 24, 25, 26]
+      "regions": [20, 22, 23, 24, 25, 26],
+      "supply": 6
     },
     {
       "id": 5,
       "name": "Midland",
-      "regions": [21, 27, 28, 29, 30, 31, 32]
+      "regions": [21, 27, 28, 29, 30, 31, 32],
+      "supply": 7
     },
     {
       "id": 6,
       "name": "Giants' Spit",
-      "regions": [33, 34, 35, 36]
+      "regions": [33, 34, 35, 36],
+      "supply": 3
     },
     {
       "id": 7,
       "name": "Dragon's Crest",
-      "regions": [42, 43, 44, 45, 46, 47, 48, 49, 50]
+      "regions": [42, 43, 44, 45, 46, 47, 48, 49, 50],
+      "supply": 9
     },
     {
       "id": 8,
       "name": "Eastern Shores",
-      "regions": [37, 38, 39, 40, 41]
+      "regions": [37, 38, 39, 40, 41],
+      "supply": 4
     }
   ]
 }

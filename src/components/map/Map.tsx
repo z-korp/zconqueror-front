@@ -10,6 +10,8 @@ import Continents from './Continents';
 import Svg from './Svg';
 import Region from './Region';
 import nameData from '../../assets/map/nameData.json'; // Adjust the path as necessary
+import { Button } from '../ui/button';
+import { FaRegMap } from 'react-icons/fa';
 
 const Map = () => {
   const containerRef = useRef(null);
@@ -18,7 +20,9 @@ const Map = () => {
   const { turn } = useTurn();
   const { phase } = usePhase();
   const { tiles } = useGetTiles();
-  const { current_source, set_current_source, set_current_target } = useElementStore((state) => state);
+  const { current_source, set_current_source, set_current_target, setContinentMode } = useElementStore(
+    (state) => state
+  );
 
   const handleRegionClick = (regionId: number) => {
     if (isTest) console.log('regionId', regionId);
@@ -79,13 +83,21 @@ const Map = () => {
   return (
     <>
       <div className="relative" ref={containerRef}>
+        <Button
+          variant="secondary"
+          className="absolute top-0 right-0 z-50"
+          onMouseEnter={() => setContinentMode(true)} // Activates when the mouse enters the button area
+          onMouseLeave={() => setContinentMode(false)} // Deactivates when the mouse leaves the button area
+        >
+          <FaRegMap />
+        </Button>
         <div className={`h-[600px] w-full`}>
-          <svg viewBox="0 0 1512 904" className="absolute top-0 left-0 w-full h-full" overflow="visible">
+          <svg viewBox="0 0 1512 904" className="absolute top-0 left-0 w-full h-full" overflow="visible" id="map-svg">
             <Svg svgPath="/svgs/sea.svg" />
             <Svg svgPath="/svgs/links.svg" />
             <Svg svgPath="/svgs/map_shadows.svg" />
 
-            <Continents />
+            <Continents containerRef={containerRef} />
 
             {Object.keys(nameData).map((key) => (
               <Region
