@@ -19,3 +19,15 @@ export type Tile = {
   from: number;
   order: bigint;
 };
+
+export type Point = {
+  x: number;
+  y: number;
+};
+
+export type Continent = {
+  id: number;
+  name: string;
+  regions: number[];
+  supply: number;
+};

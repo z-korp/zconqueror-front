@@ -3,8 +3,21 @@ import continentsData from '../../assets/map/continents.json';
 import Continent from './Continent';
 import { useGetTiles } from '@/hooks/useGetTiles';
 import { useMe } from '@/hooks/useMe';
+import { useElementStore } from '@/utils/store';
+import { Continent as ContinentType } from '@/utils/types';
 
-const Continents = () => {
+export interface ContinentsData {
+  continents: ContinentType[];
+}
+
+const data: ContinentsData = continentsData;
+
+interface ContinentsProps {
+  containerRef?: React.MutableRefObject<null>;
+}
+
+const Continents: React.FC<ContinentsProps> = ({ containerRef }) => {
+  const { isContinentMode } = useElementStore((state) => state);
   const { tiles } = useGetTiles();
   const { me } = useMe();
   const [highlightedContinents, setHighlightedContinents] = useState<Set<number>>(new Set());
@@ -23,10 +36,12 @@ const Continents = () => {
 
   return (
     <>
-      {continentsData.continents.map((continent) => (
+      {data.continents.map((continent) => (
         <Continent
           key={continent.id}
-          isVisible={highlightedContinents.has(continent.id)}
+          containerRef={containerRef}
+          continent={continent}
+          isVisible={isContinentMode ? true : highlightedContinents.has(continent.id)}
           svgPath={`/svgs/continents/${continent.id}.svg`}
         />
       ))}
