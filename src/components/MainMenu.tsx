@@ -9,6 +9,8 @@ import { Input } from './ui/input';
 import { HasValue, getComponentValue } from '@dojoengine/recs';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from './ui/table';
 import GameRow from './GameRow';
+import { DialogCreateJoin } from './DialogCreateJoin';
+import { set } from 'date-fns';
 
 const MainMenu: React.FC = () => {
   const { toast } = useToast();
@@ -69,31 +71,34 @@ const MainMenu: React.FC = () => {
   if (!games) return null;
   return (
     <div className="vt323-font">
-      <div className="flex gap-3 mb-4">
-        <Input
-          className="w-64"
-          type="text"
-          placeholder="Pseudo"
-          value={player_name}
-          onChange={(e) => setPlayerName(e.target.value)}
+      <div className="flex flex-col justify-center items-center gap-6">
+        <div className="w-96 rounded-lg uppercase text-white text-4xl bg-stone-500">Zconqueror</div>
+        <DialogCreateJoin
+          onClick={createNewGame}
+          playerName={player_name}
+          setPlayerName={setPlayerName}
+          dialogTitle="Create a new game"
+          buttonText="Create"
+          buttonTextDisplayed="Create a New Game"
         />
-        <Button onClick={createNewGame}>Create a new game</Button>
-      </div>
-      <div className="flex justify-center">
-        <div className="lg:w-1/2 md:w-3/4">
+        <div className="bg-stone-500 p-10 rounded-lg lg:w-1/2 md:w-3/4">
           {games.length > 0 && (
             <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>Host</TableHead>
-                  <TableHead>ID</TableHead>
-                  <TableHead>Players</TableHead>
-                  <TableHead>Join</TableHead>
+                  <TableHead>
+                    <div className="flex justify-center">ID</div>
+                  </TableHead>
+                  <TableHead>
+                    <div className="flex justify-center">Players</div>
+                  </TableHead>
+                  <TableHead></TableHead>
                 </TableRow>
               </TableHeader>
-              <TableBody>
+              <TableBody className="rounded-lg">
                 {games.map((game: any) => (
-                  <GameRow key={game.id} game={game} />
+                  <GameRow key={game.id} game={game} setPlayerName={setPlayerName} />
                 ))}
               </TableBody>
             </Table>

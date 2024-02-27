@@ -3,11 +3,11 @@ import { TableRow, TableCell } from './ui/table';
 import { useComponentValue, useEntityQuery } from '@dojoengine/react';
 import { HasValue } from '@dojoengine/recs';
 import { feltToStr } from '@/utils/unpack';
-import { Button } from './ui/button';
 import { useElementStore } from '@/utils/store';
 import GameState from '@/utils/gamestate';
 import { useDojo } from '@/dojo/useDojo';
 import { toast } from './ui/use-toast';
+import { DialogCreateJoin } from './DialogCreateJoin';
 
 interface GameRowProps {
   game: {
@@ -16,9 +16,10 @@ interface GameRowProps {
     player_count: number;
     slots: number;
   };
+  setPlayerName: (name: string) => void;
 }
 
-const GameRow: React.FC<GameRowProps> = ({ game }) => {
+const GameRow: React.FC<GameRowProps> = ({ game, setPlayerName }) => {
   const {
     setup: {
       client: { host },
@@ -52,13 +53,27 @@ const GameRow: React.FC<GameRowProps> = ({ game }) => {
     }
   };
 
+  console.log('game', game);
   return (
     <TableRow key={game.id}>
       <TableCell>{player ? feltToStr(player.name) : ''}</TableCell>
       <TableCell>{game.id}</TableCell>
-      <TableCell>{`${game.player_count} / 6`}</TableCell>
       <TableCell>
-        <Button onClick={() => joinGame(game.id)}>Join Game</Button>
+        <div className="flex items-center justify-center">
+          <div className="px-2 rounded-full bg-stone-400">{`${game.player_count}/6`}</div>
+        </div>
+      </TableCell>
+      <TableCell>
+        <div className="flex justify-end">
+          <DialogCreateJoin
+            onClick={() => joinGame(game.id)}
+            playerName={player_name}
+            setPlayerName={setPlayerName}
+            dialogTitle={`Join Game ${game.id}`}
+            buttonText="Join Game"
+            buttonTextDisplayed="Join Game"
+          />
+        </div>
       </TableCell>
     </TableRow>
   );
