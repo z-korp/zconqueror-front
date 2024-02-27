@@ -3,7 +3,6 @@ import { TableRow, TableCell } from './ui/table';
 import { useComponentValue, useEntityQuery } from '@dojoengine/react';
 import { HasValue } from '@dojoengine/recs';
 import { feltToStr } from '@/utils/unpack';
-import { Button } from './ui/button';
 import { useElementStore } from '@/utils/store';
 import GameState from '@/utils/gamestate';
 import { useDojo } from '@/dojo/useDojo';
@@ -54,6 +53,7 @@ const GameRow: React.FC<GameRowProps> = ({ game, setPlayerName }) => {
     }
   };
 
+  console.log('game', game);
   return (
     <TableRow key={game.id}>
       <TableCell>{player ? feltToStr(player.name) : ''}</TableCell>
