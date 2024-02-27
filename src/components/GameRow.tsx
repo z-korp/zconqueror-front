@@ -53,7 +53,6 @@ const GameRow: React.FC<GameRowProps> = ({ game, setPlayerName }) => {
     }
   };
 
-  console.log('game', game);
   return (
     <TableRow key={game.id}>
       <TableCell>{player ? feltToStr(player.name) : ''}</TableCell>
