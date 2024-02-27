@@ -1,35 +1,22 @@
 import { FC, useEffect, useState } from 'react';
-import { Shield, Swords } from 'lucide-react';
-import { usePhase } from '@/hooks/usePhase';
-import { Phase, useElementStore } from '@/utils/store';
-import { useMe } from '@/hooks/useMe';
 import RoundButton from '../RoundButton';
-import { colorTilePlayerDark } from '@/utils/customColors';
 
 import '../../styles/Button.css';
-import { useTurn } from '@/hooks/useTurn';
 
-interface TroopsMarkerProps {
+interface ContinentMarkerProps {
   position: { x: number; y: number };
   handlePathClick: () => void;
-  troups: number;
+  supply: number;
   color: string;
-  tile: any;
   containerRef: any;
 }
 
-const TroopsMarker: FC<TroopsMarkerProps> = ({ position, handlePathClick, troups, color, tile, containerRef }) => {
-  const { isItMyTurn } = useMe();
-  const { turn } = useTurn();
-
+const ContinentMarker: FC<ContinentMarkerProps> = ({ position, handlePathClick, supply, color, containerRef }) => {
   const [markerPosition, setMarkerPosition] = useState(position);
 
   const [ratioElement, setRatioElement] = useState(1);
   const [containerWidthInit, setContainerWidthInit] = useState(null);
   const [initialized, setInitialized] = useState(false);
-  const [flip, setFlip] = useState(false);
-  const { phase } = usePhase();
-  const { current_source, current_target } = useElementStore((state) => state);
 
   useEffect(() => {
     const updateContainerWidth = () => {
@@ -79,29 +66,7 @@ const TroopsMarker: FC<TroopsMarkerProps> = ({ position, handlePathClick, troups
     }
   };
 
-  useEffect(() => {
-    // Set up a timer that toggles the `isActive` state every second
-    const interval = setInterval(() => {
-      setFlip((currentFlip) => !currentFlip);
-    }, 2000);
-
-    // Clean up the interval on component unmount
-    return () => clearInterval(interval);
-  }, []);
-
-  const shouldJump = (phase: Phase) => {
-    if (tile.owner !== turn) return false;
-    if (current_source !== null) return false;
-    if (!isItMyTurn) return false;
-
-    if (phase === Phase.ATTACK || phase === Phase.FORTIFY) {
-      if (tile.army > 1) return true;
-    } else if (phase === Phase.DEPLOY) {
-      return true;
-    }
-  };
-
-  if (troups === 0) return null;
+  if (supply === 0) return null;
 
   return (
     <>
@@ -111,26 +76,7 @@ const TroopsMarker: FC<TroopsMarkerProps> = ({ position, handlePathClick, troups
           top: `calc(${markerPosition.y}px - 30px)`,
           left: `calc(${markerPosition.x}px - 30px)`,
         }}
-      >
-        {phase === Phase.ATTACK && current_source === tile.id && (
-          <div className={`blason ${flip ? 'flip' : ''}`} onClick={() => setFlip(!flip)}>
-            <Swords
-              size={60}
-              fill={colorTilePlayerDark[tile.owner + 1 || 0]}
-              stroke={colorTilePlayerDark[tile.owner + 1 || 0]}
-            />
-          </div>
-        )}
-        {phase === Phase.ATTACK && current_target === tile.id && (
-          <div className={`blason ${flip ? 'flip' : ''}`} onClick={() => setFlip(!flip)}>
-            <Shield
-              size={60}
-              fill={colorTilePlayerDark[tile.owner + 1 || 0]}
-              stroke={colorTilePlayerDark[tile.owner + 1 || 0]}
-            />
-          </div>
-        )}
-      </div>
+      ></div>
       <RoundButton
         color={color}
         onClick={handlePathClick}
@@ -139,14 +85,12 @@ const TroopsMarker: FC<TroopsMarkerProps> = ({ position, handlePathClick, troups
           top: `calc(${markerPosition.y}px - 15px)`,
           left: `calc(${markerPosition.x}px - 15px)`,
         }}
-        shouldJump={shouldJump(phase)}
+        shouldJump={false}
       >
-        <span className="vt323-font text-xl text-white text-with-outline" data-text={troups}>
-          {troups}
-        </span>
+        <span className="text-white text-with-outline vt323-font text-xl" data-text={`+${supply}`}>{`+${supply}`}</span>
       </RoundButton>
     </>
   );
 };
 
-export default TroopsMarker;
+export default ContinentMarker;
