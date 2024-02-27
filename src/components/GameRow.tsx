@@ -8,6 +8,7 @@ import { useElementStore } from '@/utils/store';
 import GameState from '@/utils/gamestate';
 import { useDojo } from '@/dojo/useDojo';
 import { toast } from './ui/use-toast';
+import { DialogCreateJoin } from './DialogCreateJoin';
 
 interface GameRowProps {
   game: {
@@ -16,9 +17,10 @@ interface GameRowProps {
     player_count: number;
     slots: number;
   };
+  setPlayerName: (name: string) => void;
 }
 
-const GameRow: React.FC<GameRowProps> = ({ game }) => {
+const GameRow: React.FC<GameRowProps> = ({ game, setPlayerName }) => {
   const {
     setup: {
       client: { host },
@@ -63,9 +65,14 @@ const GameRow: React.FC<GameRowProps> = ({ game }) => {
       </TableCell>
       <TableCell>
         <div className="flex justify-end">
-          <Button variant="tertiary" className="hover:bg-green-600" onClick={() => joinGame(game.id)}>
-            Join Game
-          </Button>
+          <DialogCreateJoin
+            onClick={() => joinGame(game.id)}
+            playerName={player_name}
+            setPlayerName={setPlayerName}
+            dialogTitle={`Join Game ${game.id}`}
+            buttonText="Join Game"
+            buttonTextDisplayed="Join Game"
+          />
         </div>
       </TableCell>
     </TableRow>
