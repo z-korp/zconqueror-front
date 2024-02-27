@@ -36,7 +36,6 @@ const CardMenu = ({ onClose, cards }: CardMenuProps) => {
   const handleCardSelect = (cardNumber: number) => {
     if (selectedCards.includes(cardNumber)) {
       setSelectedCards(selectedCards.filter((c) => c !== cardNumber));
-      setPendingCards([...pendingCards, cardNumber]);
     } else if (selectedCards.length < 3) {
       //logique pour ne pas selectionner une 3 eme carte qui empeche le discard
       if (selectedCards.length == 2) {
@@ -50,7 +49,6 @@ const CardMenu = ({ onClose, cards }: CardMenuProps) => {
         }
       }
       setSelectedCards([...selectedCards, cardNumber]);
-      setPendingCards(pendingCards.filter((c) => c !== cardNumber));
     }
   };
 
@@ -71,24 +69,40 @@ const CardMenu = ({ onClose, cards }: CardMenuProps) => {
           </p>
         </div>
 
-        <div className="flex justify-center space-x-4 mb-4">
-          {pendingCards.length === 0 && <div className="w-32 h-48 bg-stone-600 rounded-lg shadow-lg"></div>}
-          {pendingCards.map((cardNumber, index) => (
-            <div key={index} onClick={() => handleCardSelect(cardNumber)}>
-              <GameCard cardNumber={cardNumber} />
-            </div>
-          ))}
-        </div>
-        <div className="flex justify-center space-x-4 ">
-          {[1, 2, 3].map((index) =>
-            selectedCards.length >= index ? (
-              <div key={index} onClick={() => handleCardSelect(selectedCards[index - 1])}>
-                <GameCard cardNumber={selectedCards[index - 1]} />
+        <div className="flex justify-center  mb-4">
+          {[1, 2, 3, 4, 5].map((index) => {
+            const rotationDegree = (index - 3) * 10; // Adjust rotation degree here
+            const translateY = Math.abs(index - 3) * 20; // Adjust translation here
+            // const translateY = Math.abs(index - 3) * 10; // Adjust translation here
+
+            return pendingCards.length >= index ? (
+              <div
+                key={index}
+                onClick={() => handleCardSelect(pendingCards[index - 1])}
+                style={{
+                  transform: `rotate(${rotationDegree}deg) translateY(${translateY}px)`,
+                  transition: 'transform 0.3s',
+                }}
+                className="transform-gpu"
+              >
+                {selectedCards.includes(pendingCards[index - 1]) && (
+                  <div className="absolute top-0 right-0 p-1 w-5 h-5 m-2 bg-green-500 text-lg text-white rounded-full flex items-center justify-center">
+                    ✓
+                  </div>
+                )}
+                <GameCard cardNumber={pendingCards[index - 1]} />
               </div>
             ) : (
-              <div key={index} className="w-32 h-48 bg-stone-600 rounded-lg shadow-lg"></div>
-            )
-          )}
+              <div
+                key={index}
+                className="w-32 h-48 bg-stone-600 rounded-lg shadow-lg border border-white"
+                style={{
+                  transform: `rotate(${rotationDegree}deg) translateY(${translateY}px)`,
+                  transition: 'transform 0.3s',
+                }}
+              ></div>
+            );
+          })}
         </div>
         <Button
           disabled={selectedCards.length < 3}
