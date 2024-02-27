@@ -100,7 +100,7 @@ const ActionPanel = () => {
 
     removeSelected();
 
-    await sleep(8000);
+    await sleep(5000);
     setIsDiceAnimation(false);
   };
 

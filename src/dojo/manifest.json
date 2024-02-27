@@ -1,7 +1,7 @@
 {
   "world": {
     "name": "dojo::world::world",
-    "address": "0x4daffaec6ca974909b68f7868dd33a99151e11217751b27fef94753db48e9ec",
+    "address": "0x3b7f21e69127c28a69f4fa296384f1b6316a1f64d5861eb514c3e45dfb4c8e5",
     "class_hash": "0x5ac623f0c96059936bd2d0904bdd31799e430fe08a0caff7a5f497260b16497",
     "abi": [
       {
@@ -948,8 +948,8 @@
   "contracts": [
     {
       "name": "zconqueror::systems::host::host",
-      "address": "0x42ba8cd5a81edc1eabc83a50dd2f0e3671ce431b24aa9affec196ed18cf6b5b",
-      "class_hash": "0x5e0feeab84027da4a714d2800a63c844cecb8d5c062b001aec1de8c145820f7",
+      "address": "0x40e9f7b397079d2e4e822c0bdd8bdcfb983022925e454a076d6f774f2fd5286",
+      "class_hash": "0x7e0fdd4675ba593fa0cbc9ebdd665fc2b3d782b9ad42dc99dac4a2768f912f6",
       "abi": [
         {
           "type": "impl",
@@ -1046,6 +1046,62 @@
             },
             {
               "type": "function",
+              "name": "delete",
+              "inputs": [
+                {
+                  "name": "world",
+                  "type": "dojo::world::IWorldDispatcher"
+                },
+                {
+                  "name": "game_id",
+                  "type": "core::integer::u32"
+                }
+              ],
+              "outputs": [],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "kick",
+              "inputs": [
+                {
+                  "name": "world",
+                  "type": "dojo::world::IWorldDispatcher"
+                },
+                {
+                  "name": "game_id",
+                  "type": "core::integer::u32"
+                },
+                {
+                  "name": "index",
+                  "type": "core::integer::u32"
+                }
+              ],
+              "outputs": [],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "transfer",
+              "inputs": [
+                {
+                  "name": "world",
+                  "type": "dojo::world::IWorldDispatcher"
+                },
+                {
+                  "name": "game_id",
+                  "type": "core::integer::u32"
+                },
+                {
+                  "name": "index",
+                  "type": "core::integer::u32"
+                }
+              ],
+              "outputs": [],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
               "name": "start",
               "inputs": [
                 {
@@ -1091,8 +1147,8 @@
     },
     {
       "name": "zconqueror::systems::play::play",
-      "address": "0x257da84810b6e148a0a5a8e0fb0d92a2a76a6d78d6d2d3b2e8e31d084c6b131",
-      "class_hash": "0x68a109aec50a011cd151436e18b76546532a31aa4d2c13677580803c05c70db",
+      "address": "0x24e6f5decca58248f3fb75dc1ff7a442a031d973dbaa9aa04d69d9fe4a0c5cb",
+      "class_hash": "0x3ca32add5a36e1f22402284aeb6f28e72c31c11026f8058d58dc968a34c7025",
       "abi": [
         {
           "type": "impl",
@@ -1407,7 +1463,7 @@
         },
         {
           "name": "host",
-          "type": "ContractAddress",
+          "type": "felt252",
           "key": false
         },
         {
@@ -1426,11 +1482,6 @@
           "key": false
         },
         {
-          "name": "slots",
-          "type": "u8",
-          "key": false
-        },
-        {
           "name": "nonce",
           "type": "u8",
           "key": false
@@ -1441,7 +1492,7 @@
           "key": false
         }
       ],
-      "class_hash": "0x120bf1da38511b4c6c3a33e03f1457c3fdf9f165345e2b3fa05422179143f5a",
+      "class_hash": "0x6b437fcfb571615e218d118bdf44fe987e1fc070b8aa9ba27156101a9db003a",
       "abi": [
         {
           "type": "impl",
@@ -1650,7 +1701,7 @@
             },
             {
               "name": "host",
-              "type": "core::starknet::contract_address::ContractAddress"
+              "type": "core::felt252"
             },
             {
               "name": "over",
@@ -1662,10 +1713,6 @@
             },
             {
               "name": "player_count",
-              "type": "core::integer::u8"
-            },
-            {
-              "name": "slots",
               "type": "core::integer::u8"
             },
             {
@@ -1719,7 +1766,7 @@
         },
         {
           "name": "address",
-          "type": "ContractAddress",
+          "type": "felt252",
           "key": false
         },
         {
@@ -1748,7 +1795,7 @@
           "key": false
         }
       ],
-      "class_hash": "0x7a3e09e6e12ee14091598d15a4c66bdd261b46eb414f933b1ec9835e634292e",
+      "class_hash": "0x55a27d9812c49f248ff29f78a4f360c95a2860f8f8d41731daec39a88e98e3",
       "abi": [
         {
           "type": "impl",
@@ -1947,7 +1994,7 @@
             },
             {
               "name": "address",
-              "type": "core::starknet::contract_address::ContractAddress"
+              "type": "core::felt252"
             },
             {
               "name": "name",
