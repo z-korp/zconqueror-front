@@ -77,28 +77,21 @@ const MainMenu: React.FC = () => {
           value={player_name}
           onChange={(e) => setPlayerName(e.target.value)}
         />
-        <Button variant="tertiary" onClick={createNewGame}>
-          Create a new game
-        </Button>
+        <Button onClick={createNewGame}>Create a new game</Button>
       </div>
-      <div className="flex flex-col justify-center items-center gap-6">
-        <div className="w-96 rounded-lg uppercase text-white text-4xl bg-stone-500">Zconqueror</div>
-        <div className="bg-stone-500 p-10 rounded-lg lg:w-1/2 md:w-3/4">
+      <div className="flex justify-center">
+        <div className="lg:w-1/2 md:w-3/4">
           {games.length > 0 && (
             <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>Host</TableHead>
-                  <TableHead>
-                    <div className="flex justify-center">ID</div>
-                  </TableHead>
-                  <TableHead>
-                    <div className="flex justify-center">Players</div>
-                  </TableHead>
-                  <TableHead></TableHead>
+                  <TableHead>ID</TableHead>
+                  <TableHead>Players</TableHead>
+                  <TableHead>Join</TableHead>
                 </TableRow>
               </TableHeader>
-              <TableBody className="rounded-lg">
+              <TableBody>
                 {games.map((game: any) => (
                   <GameRow key={game.id} game={game} />
                 ))}
