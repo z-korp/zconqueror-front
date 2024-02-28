@@ -1,5 +1,7 @@
 import { validateAndParseAddress } from 'starknet';
 import { feltToStr, unpackU128toNumberArray } from './unpack';
+import { cardTypeFromNumber } from './cards';
+import { Player } from './types';
 
 export const sanitizeGame = (game: any) => {
   return {
@@ -9,11 +11,13 @@ export const sanitizeGame = (game: any) => {
   };
 };
 
-export const sanitizePlayer = (player: any) => {
+export const sanitizePlayer = (player: any): Player => {
   return {
     ...player,
     address: bigIntAddressToString(player.address),
-    cards: unpackU128toNumberArray(player.cards).filter((e: number) => e !== 0),
+    cards: unpackU128toNumberArray(player.cards)
+      .filter((e: number) => e !== 0)
+      .map((c) => cardTypeFromNumber(c)),
     name: feltToStr(player.name),
   };
 };

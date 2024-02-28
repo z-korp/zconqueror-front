@@ -5,9 +5,10 @@ import { useMe } from '@/hooks/useMe';
 import continentsData from '../assets/map/continents.json';
 import { useElementStore } from '@/utils/store';
 import { useEffect, useState } from 'react';
+import { CardType } from '@/utils/cards';
 
 interface EndTurnPopupProps {
-  cards: number[];
+  cards: CardType[];
   onClose: () => void;
 }
 
@@ -51,7 +52,7 @@ const EndTurnPopup: React.FC<EndTurnPopupProps> = ({ cards, onClose }) => {
         </div>
 
         <div className="flex justify-center space-x-4">
-          {cards.length > 0 && <GameCard cardNumber={cards[cards.length - 1]} />}
+          {cards.length > 0 && <GameCard card={cards[cards.length - 1]} />}
         </div>
         {continentNames.length > 0 && (
           <div className="text-lg mt-4">

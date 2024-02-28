@@ -3,9 +3,10 @@ import GameCard from './GameCard';
 import { useDojo } from '@/dojo/useDojo';
 import { useEffect, useState } from 'react';
 import { Button } from './ui/button';
+import { CardType } from '@/utils/cards';
 
 interface CardMenuProps {
-  cards: number[];
+  cards: CardType[];
   onClose: () => void;
 }
 
@@ -33,22 +34,22 @@ const CardMenu = ({ onClose, cards }: CardMenuProps) => {
     }
   };
 
-  const handleCardSelect = (cardNumber: number) => {
-    if (selectedCards.includes(cardNumber)) {
-      setSelectedCards(selectedCards.filter((c) => c !== cardNumber));
+  const handleCardSelect = (card: CardType) => {
+    if (selectedCards.includes(card)) {
+      setSelectedCards(selectedCards.filter((c) => c !== card));
     } else if (selectedCards.length < 3) {
-      //logique pour ne pas selectionner une 3 eme carte qui empeche le discard
+      // logique pour ne pas selectionner une 3 eme carte qui empeche le discard
       if (selectedCards.length == 2) {
-        const card1 = (selectedCards[0] % 3) + 1;
-        const card2 = (selectedCards[1] % 3) + 1;
-        const card3 = (cardNumber % 3) + 1;
+        const card1 = selectedCards[0];
+        const card2 = selectedCards[1];
+        const card3 = card;
         if (card1 == card2) {
           if (card1 != card3) return;
         } else {
           if (card1 == card3 || card2 == card3) return;
         }
       }
-      setSelectedCards([...selectedCards, cardNumber]);
+      setSelectedCards([...selectedCards, card]);
     }
   };
 
@@ -90,7 +91,7 @@ const CardMenu = ({ onClose, cards }: CardMenuProps) => {
                     ✓
                   </div>
                 )}
-                <GameCard cardNumber={pendingCards[index - 1]} />
+                <GameCard card={pendingCards[index - 1]} />
               </div>
             ) : (
               <div

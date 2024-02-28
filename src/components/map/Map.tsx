@@ -20,7 +20,7 @@ const Map = () => {
   const { turn } = useTurn();
   const { phase } = usePhase();
   const { tiles } = useGetTiles();
-  const { current_source, set_current_source, set_current_target, setContinentMode } = useElementStore(
+  const { current_source, set_current_source, set_current_target, setContinentMode, isContinentMode } = useElementStore(
     (state) => state
   );
 
@@ -91,6 +91,12 @@ const Map = () => {
         >
           <FaRegMap />
         </Button>
+        {isContinentMode && (
+          <div className="vt323-font text-xl absolute top-0 left-1/2 transform -translate-x-1/2 z-50">
+            <div>Controlling a full continent awards supply bonuses.</div>
+            <div>Here are the bonuses for each continent.</div>
+          </div>
+        )}
         <div className={`h-[600px] w-full`}>
           <svg viewBox="0 0 1512 904" className="absolute top-0 left-0 w-full h-full" overflow="visible" id="map-svg">
             <Svg svgPath="/svgs/sea.svg" />
