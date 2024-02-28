@@ -35,7 +35,7 @@ const generateLogFromEvent = (event: Event): LogType => {
 
 export const useLogs = () => {
   const [logs, setLogs] = useState<LogType[]>([]);
-  const { setLastDefendResult } = useElementStore((state) => state);
+  const { setLastDefendResult, tilesConqueredThisTurn, setTilesConqueredThisTurn } = useElementStore((state) => state);
 
   const subscribedRef = useRef(false); // Tracks whether subscriptions have been made
   const {
@@ -68,8 +68,12 @@ export const useLogs = () => {
 
           defendObservable.subscribe((event) => {
             if (event) {
-              setLogs((prevLogs) => [...prevLogs, generateLogFromEvent(event)]);
+              const log = generateLogFromEvent(event);
+              setLogs((prevLogs) => [...prevLogs, log]);
               setLastDefendResult(event);
+              if (log.log[log.log.length - 1] === 'Result: win' && log.regionTo) {
+                setTilesConqueredThisTurn([...tilesConqueredThisTurn, log.regionTo]);
+              }
             }
           }),
 
