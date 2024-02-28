@@ -1,8 +1,9 @@
+import { CardType } from '@/utils/cards';
 import GameCard from './GameCard';
 import { Button } from './ui/button';
 
 interface CardsPopupProps {
-  cards: number[];
+  cards: CardType[];
   onClose: () => void;
 }
 
@@ -26,7 +27,7 @@ const CardsPopup: React.FC<CardsPopupProps> = ({ cards, onClose }) => {
         </div>
 
         <div className="flex justify-center space-x-4">
-          {cards.length > 0 && <GameCard cardNumber={cards[cards.length - 1]} />}
+          {cards.length > 0 && <GameCard card={cards[cards.length - 1]} />}
         </div>
       </div>
     </div>

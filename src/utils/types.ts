@@ -1,10 +1,12 @@
+import { CardType } from './cards';
+
 export interface Player {
   game_id: number;
   index: number;
   address: string;
   name: string;
   supply: number;
-  cards: number[];
+  cards: CardType[];
   conqueror: boolean;
   rank: number;
 }

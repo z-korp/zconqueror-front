@@ -13,6 +13,8 @@ import { useGame } from '@/hooks/useGame';
 import { useMe } from '@/hooks/useMe';
 import CardPanelButton from './CardPanelButton';
 import Bubble from './Bubble';
+import { canBeExchanged } from '@/utils/cards';
+import { toast } from './ui/use-toast';
 
 const PlayPanel = () => {
   const {
@@ -84,15 +86,17 @@ const PlayPanel = () => {
 
   const [showBubble, setShowBubble] = useState(false);
   const [hasSourceChanged, setHasSourceChanged] = useState(false);
-  const [text, setText] = useState('');
+  const [texts, setTexts] = useState<string[]>([]);
 
   useEffect(() => {
     if (isItMyTurn && phase === Phase.DEPLOY) {
-      setText('It is now your turn, my Lord!');
+      if (player && canBeExchanged(player.cards)) {
+        setTexts(['It is now your turn, my Lord!', 'You can exchange cards if you want.']);
+      }
       setShowBubble(true); // Show the Bubble at the start of the turn
       setHasSourceChanged(false); // Reset on new turn
     } else {
-      setText('');
+      setTexts([]);
       setShowBubble(false); // Hide the Bubble otherwise
     }
   }, [isItMyTurn, phase]);
@@ -112,7 +116,24 @@ const PlayPanel = () => {
     setShowBubble(false);
 
     if (phase < 2) {
-      play.finish(account, game.id);
+      if (player.cards.length === 5) {
+        setTexts(['My Lord, exchange your cards first!']);
+        setShowBubble(true);
+        return;
+      } else if (player.supply !== 0) {
+        setTexts(['My Lord, deploy your armies first!']);
+        setShowBubble(true);
+        return;
+      }
+      try {
+        await play.finish(account, game.id);
+      } catch (error: any) {
+        toast({
+          variant: 'destructive',
+          description: <code className="text-white text-xs">{error.message}</code>,
+        });
+      }
+
       setOverlayText(getPhaseName(phase + 1));
       if (player.supply === 0) setShowOverlay(true);
     } else {
@@ -146,7 +167,7 @@ const PlayPanel = () => {
           </div>
           {showBubble && !hasSourceChanged && (
             <div className="w-auto ">
-              <Bubble text={text} />
+              <Bubble texts={texts} />
             </div>
           )}
 
