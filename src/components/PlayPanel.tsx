@@ -5,7 +5,7 @@ import { Phase, useElementStore } from '../utils/store';
 import { getPhaseName } from '@/utils/textState';
 import ActionPanel from './ActionPanel';
 import CardMenu from './CardMenu';
-import CardsPopup from './CardsPopup';
+import EndTurnPopup from './EndTurnPopup';
 import OverlayWithText from './OverlayWithText';
 import StatusPlayer from './StatusPlayer';
 import { useDojo } from '@/dojo/useDojo';
@@ -28,7 +28,7 @@ const PlayPanel = () => {
   const { turn } = useTurn();
   const { phase } = usePhase();
 
-  const { current_source } = useElementStore((state) => state);
+  const { current_source, setTilesConqueredThisTurn } = useElementStore((state) => state);
 
   const game = useGame();
 
@@ -79,6 +79,7 @@ const PlayPanel = () => {
     if (showCardsPopup) {
       timer = setTimeout(() => {
         setShowCardsPopup(false);
+        setTilesConqueredThisTurn([]);
       }, 6000);
     }
     return () => clearTimeout(timer);
@@ -153,7 +154,7 @@ const PlayPanel = () => {
 
   return (
     <>
-      {showCardsPopup && <CardsPopup cards={cards} onClose={() => setShowCardsPopup(false)} />}
+      {showCardsPopup && <EndTurnPopup cards={cards} onClose={() => setShowCardsPopup(false)} />}
       <div className="pointer-events-none fixed bottom-0 left-0 right-0 flex justify-center items-end p-4">
         {showOverlay && <OverlayWithText text={overlayText} />}
         {/* Section du panneau de jeu */}
