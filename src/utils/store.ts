@@ -26,6 +26,8 @@ interface State {
   setPlayerName: (name: string) => void;
   lastDefendResult: any;
   setLastDefendResult: (result: any) => void;
+  tilesConqueredThisTurn: number[];
+  setTilesConqueredThisTurn: (tile: number[]) => void;
 }
 
 export const useElementStore = create<State>((set) => ({
@@ -47,4 +49,6 @@ export const useElementStore = create<State>((set) => ({
   setPlayerName: (name: string) => set(() => ({ player_name: name })),
   lastDefendResult: null,
   setLastDefendResult: (result: any) => set(() => ({ lastDefendResult: result })),
+  tilesConqueredThisTurn: [],
+  setTilesConqueredThisTurn: (tile: number[]) => set(() => ({ tilesConqueredThisTurn: tile })),
 }));
