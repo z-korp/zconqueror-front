@@ -114,7 +114,7 @@ const PlayPanel = () => {
     if (phase < 2) {
       play.finish(account, game.id);
       setOverlayText(getPhaseName(phase + 1));
-      setShowOverlay(true);
+      if (player.supply === 0) setShowOverlay(true);
     } else {
       await play.finish(account, game.id);
     }
