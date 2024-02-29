@@ -11,8 +11,10 @@ import {
   parseSupplyEvent,
 } from '@/utils/events';
 import { useElementStore } from '@/utils/store';
+import { Player } from '@/utils/types';
 import { useEffect, useRef, useState } from 'react';
 import { Subscription } from 'rxjs';
+import { useGetPlayers } from './useGetPlayers';
 
 export enum EventType {
   Supply,
@@ -22,14 +24,14 @@ export enum EventType {
 
 export type LogType = { timestamp: number; log: string[]; regionFrom?: number; regionTo?: number; type: EventType };
 
-const generateLogFromEvent = (event: Event): LogType => {
+const generateLogFromEvent = (event: Event, playerList: Player[]): LogType => {
   if (event.keys[0] === SUPPLY_EVENT) {
-    return createSupplyLog(parseSupplyEvent(event));
+    return createSupplyLog(parseSupplyEvent(event), playerList);
   } else if (event.keys[0] === DEFEND_EVENT) {
-    return createDefendLog(parseDefendEvent(event));
+    return createDefendLog(parseDefendEvent(event), playerList);
   } // (event.keys[0] === FORTIFY_EVENT)
   else {
-    return createFortifyLog(parseFortifyEvent(event));
+    return createFortifyLog(parseFortifyEvent(event), playerList);
   }
 };
 
@@ -47,6 +49,7 @@ export const useLogs = () => {
   } = useDojo();
 
   const { game_id } = useElementStore((state) => state);
+  const { players } = useGetPlayers();
 
   // Subscribe to events
   useEffect(() => {
@@ -62,13 +65,13 @@ export const useLogs = () => {
         subscriptions.push(
           supplyObservable.subscribe((event) => {
             if (event) {
-              setLogs((prevLogs) => [...prevLogs, generateLogFromEvent(event)]);
+              setLogs((prevLogs) => [...prevLogs, generateLogFromEvent(event, players)]);
             }
           }),
 
           defendObservable.subscribe((event) => {
             if (event) {
-              const log = generateLogFromEvent(event);
+              const log = generateLogFromEvent(event, players);
               setLogs((prevLogs) => [...prevLogs, log]);
               setLastDefendResult(event);
               if (log.log[log.log.length - 1] === 'Result: win' && log.regionTo) {
@@ -79,7 +82,7 @@ export const useLogs = () => {
 
           fortifyObservable.subscribe((event) => {
             if (event) {
-              setLogs((prevLogs) => [...prevLogs, generateLogFromEvent(event)]);
+              setLogs((prevLogs) => [...prevLogs, generateLogFromEvent(event, players)]);
             }
           })
         );
@@ -106,13 +109,13 @@ export const useLogs = () => {
     const fetchEvents = async () => {
       // Assuming fetchEventsOnce is defined elsewhere and handles fetching events based on the provided arguments
       await fetchEventsOnce([SUPPLY_EVENT, '0x' + game_id.toString(16)], (event: Event) => {
-        setLogs((prevLogs) => [...prevLogs, generateLogFromEvent(event)]);
+        setLogs((prevLogs) => [...prevLogs, generateLogFromEvent(event, players)]);
       });
       await fetchEventsOnce([FORTIFY_EVENT, '0x' + game_id.toString(16)], (event) =>
-        setLogs((prevLogs) => [...prevLogs, generateLogFromEvent(event)])
+        setLogs((prevLogs) => [...prevLogs, generateLogFromEvent(event, players)])
       );
       await fetchEventsOnce([DEFEND_EVENT, '0x' + game_id.toString(16)], (event) => {
-        setLogs((prevLogs) => [...prevLogs, generateLogFromEvent(event)]);
+        setLogs((prevLogs) => [...prevLogs, generateLogFromEvent(event, players)]);
         setLastDefendResult(event);
       });
     };
