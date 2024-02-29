@@ -91,8 +91,10 @@ const PlayPanel = () => {
 
   useEffect(() => {
     if (isItMyTurn && phase === Phase.DEPLOY) {
-      if (player && canBeExchanged(player.cards)) {
-        setTexts(['It is now your turn, my Lord!', 'You can exchange cards if you want.']);
+      if (player) {
+        if (canBeExchanged(player.cards))
+          setTexts(['It is now your turn, my Lord!', 'You can exchange cards if you want.']);
+        else setTexts(['It is now your turn, my Lord!']);
       }
       setShowBubble(true); // Show the Bubble at the start of the turn
       setHasSourceChanged(false); // Reset on new turn
@@ -155,8 +157,8 @@ const PlayPanel = () => {
   return (
     <>
       {showCardsPopup && <EndTurnPopup cards={cards} onClose={() => setShowCardsPopup(false)} />}
+      {showOverlay && <OverlayWithText text={overlayText} />}
       <div className="pointer-events-none fixed bottom-0 left-0 right-0 flex justify-center items-end p-4">
-        {showOverlay && <OverlayWithText text={overlayText} />}
         {/* Section du panneau de jeu */}
         <CardPanelButton cards={cards} toggleCardMenu={toggleCardMenu} />
 

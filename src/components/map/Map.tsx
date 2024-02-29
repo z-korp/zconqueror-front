@@ -85,7 +85,7 @@ const Map = () => {
       <div className="relative" ref={containerRef}>
         <Button
           variant="secondary"
-          className="absolute top-0 right-0 z-50"
+          className="absolute top-0 right-0 z-10"
           onMouseEnter={() => setContinentMode(true)} // Activates when the mouse enters the button area
           onMouseLeave={() => setContinentMode(false)} // Deactivates when the mouse leaves the button area
         >
