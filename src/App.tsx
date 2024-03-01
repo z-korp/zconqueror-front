@@ -14,11 +14,14 @@ import PlayersPanel from './components/PlayersPanel';
 import { DebugPanel } from './components/DebugPanel';
 import OverlayEndGame from './components/OverlayEndGame';
 import { useMe } from './hooks/useMe';
+import OverlayTuto from './components/OverlayTuto';
+import { useState } from 'react';
 
 function App() {
   // const { id } = useParams<{ id?: string }>();
 
   const { game_state } = useElementStore((state) => state);
+  const [isTuto, setIsTuto] = useState(true);
 
   // useEffect(() => {
   //   console.log('URL ID:', id);
@@ -40,9 +43,14 @@ function App() {
   const { players } = useGetPlayers();
   const { me } = useMe();
 
+  const handleCloseDice = () => {
+    setIsTuto(false);
+  };
+
   return (
     <>
       <Toaster />
+      {isTuto && <OverlayTuto text={'hello'} onClose={handleCloseDice} top={400} left={600} />}
       <div className="fixed top-0 left-0 z-[1000]">
         <DebugPanel />
       </div>
