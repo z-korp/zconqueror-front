@@ -16,6 +16,7 @@ import OverlayEndGame from './components/OverlayEndGame';
 import { useMe } from './hooks/useMe';
 import OverlayTuto from './components/OverlayTuto';
 import { useState } from 'react';
+import { useTutorialStateMachine, TutorialSteps } from './hooks/useTutorialStateMachine';
 
 function App() {
   // const { id } = useParams<{ id?: string }>();
@@ -41,7 +42,11 @@ function App() {
   // }, [account]);
 
   const { players } = useGetPlayers();
-  const { me } = useMe();
+  const { me, isItMyTurn } = useMe();
+
+  const gameState = 'STATE_1'; // Vous devez définir votre état de jeu ici
+
+  const { currentStep, nextStep, resetTutorial } = useTutorialStateMachine(gameState);
 
   const handleCloseTuto = () => {
     setIsTuto(false);
@@ -51,16 +56,49 @@ function App() {
     setIsTuto(true);
   };
 
+  const handleNextStep = () => {
+    nextStep(); // Advance to the next step of the tutorial
+  };
+
   return (
     <>
       <Toaster />
-      {isTuto && (
-        <OverlayTuto
-          texts={['Un bon hello world est un hello world muet']}
-          onClose={handleCloseTuto}
-          top={400}
-          left={600}
-        />
+      {isItMyTurn && isTuto && (
+        <>
+          {currentStep === TutorialSteps.STEP_1 && (
+            // Affichez le tutoriel correspondant à l'étape 1
+            <OverlayTuto
+              texts={['Here, you can view your opponents, the tiles they control, their cards, and their army size.']}
+              onClose={handleCloseTuto}
+              top={70}
+              left={73}
+              width={27}
+              height={40}
+              radius={7}
+              handleNextStep={handleNextStep}
+            />
+          )}
+          {currentStep === TutorialSteps.STEP_2 && (
+            // Affichez le tutoriel correspondant à l'étape 2
+            <OverlayTuto
+              texts={['Étape 2 du tutoriel']}
+              onClose={handleCloseTuto}
+              top={400}
+              left={600}
+              handleNextStep={handleNextStep}
+            />
+          )}
+          {currentStep === TutorialSteps.STEP_3 && (
+            // Affichez le tutoriel correspondant à l'étape 3
+            <OverlayTuto
+              texts={['Étape 3 du tutoriel']}
+              onClose={handleCloseTuto}
+              top={400}
+              left={600}
+              handleNextStep={handleNextStep}
+            />
+          )}
+        </>
       )}
       <div className="fixed top-0 left-0 z-[1000]">
         <DebugPanel />

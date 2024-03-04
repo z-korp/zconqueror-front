@@ -9,9 +9,22 @@ interface OverlayTutoProps {
   onClose: () => void;
   top: number;
   left: number;
+  height: number;
+  width: number;
+  radius: number;
+  handleNextStep: () => void;
 }
 
-const OverlayTuto: React.FC<OverlayTutoProps> = ({ texts, onClose, top, left }) => {
+const OverlayTuto: React.FC<OverlayTutoProps> = ({
+  texts,
+  onClose,
+  top,
+  left,
+  width,
+  height,
+  radius,
+  handleNextStep,
+}) => {
   const { me } = useMe();
   const [showOverlay, setShowOverlay] = useState<boolean>(true);
 
@@ -25,9 +38,10 @@ const OverlayTuto: React.FC<OverlayTutoProps> = ({ texts, onClose, top, left }) 
     }
   }, []);
 
-  const arrowTop = top - 80;
-  const arrowLeft = left + 20 / 2; // Arrow width / 2
+  const arrowTop = top - 0;
+  const arrowLeft = left + width / 2 - 2.5; // width div transparent /2 - semi size % of arrow
 
+  console.log('width', width);
   let image = null;
   if (me !== null && me.index + 1 < avatars.length) {
     image = avatars[me.index + 1];
@@ -40,19 +54,24 @@ const OverlayTuto: React.FC<OverlayTutoProps> = ({ texts, onClose, top, left }) 
           <div
             className={`absolute z-50`}
             style={{
-              top: `${top}px`,
-              left: `${left}px`,
-              width: '100px',
-              height: '100px',
+              top: `${top}%`,
+              left: `${left}%`,
+              width: `${width}%`,
+              height: `${height}%`,
               backgroundColor: 'transparent',
               boxShadow: '0 0 0 2000px rgba(0, 0, 0, 0.9)',
-              borderRadius: '50%',
+              borderRadius: `${radius}%`,
             }}
           />
           <div
             className={`absolute z-50 animate-arrow-bounce`}
-            style={{ top: `${arrowTop}px`, left: `${arrowLeft}px` }}
+            style={{
+              position: 'absolute',
+              top: `${top - 10}%`, // Positionnez légèrement au-dessus de la première div
+              left: `${arrowLeft}% `, // Centrez en axe x
+            }}
           >
+            {/* Votre icône ou contenu de la deuxième div ici */}
             <ArrowBigDown fill="white" stroke="white" className="w-20 h-20" />
           </div>
           <button
@@ -67,6 +86,9 @@ const OverlayTuto: React.FC<OverlayTutoProps> = ({ texts, onClose, top, left }) 
             </div>
             <Bubble texts={texts} variant="speechLeft" />
           </div>
+          <button className="z-50 bg-white" onClick={handleNextStep}>
+            Next Step
+          </button>
         </div>
       )}
     </>

@@ -14,10 +14,10 @@ import { Button } from '../ui/button';
 import { BadgeHelp, Map as MapLucid } from 'lucide-react';
 
 interface MapProps {
-  hanleClickTuto;
+  handleClickTuto: () => void;
 }
 
-const Map = ({ handleClickTuto }) => {
+const Map: React.FC<MapProps> = ({ handleClickTuto }) => {
   const containerRef = useRef(null);
   const { isItMyTurn } = useMe();
 
