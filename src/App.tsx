@@ -81,20 +81,93 @@ function App() {
           {currentStep === TutorialSteps.STEP_2 && (
             // Affichez le tutoriel correspondant à l'étape 2
             <OverlayTuto
-              texts={['Étape 2 du tutoriel']}
+              texts={[
+                'The initial phase is the supply phase, during which you must distribute all your cards to the tiles you control according to your chosen strategy.',
+              ]}
               onClose={handleCloseTuto}
-              top={400}
-              left={600}
+              top={40}
+              left={30}
+              width={15}
+              height={20}
+              radius={50}
               handleNextStep={handleNextStep}
             />
           )}
           {currentStep === TutorialSteps.STEP_3 && (
-            // Affichez le tutoriel correspondant à l'étape 3
             <OverlayTuto
-              texts={['Étape 3 du tutoriel']}
+              texts={['Once all troops have been deployed, proceed to the next phase.']}
               onClose={handleCloseTuto}
-              top={400}
-              left={600}
+              top={91}
+              left={56}
+              width={5}
+              height={7}
+              radius={50}
+              handleNextStep={handleNextStep}
+            />
+          )}
+          {currentStep === TutorialSteps.STEP_4 && (
+            <OverlayTuto
+              texts={[
+                'The second phase is the attack phase. Click on one of your tiles and an adjacent enemy tile to open the attack planning panel.',
+              ]}
+              onClose={handleCloseTuto}
+              top={40}
+              left={30}
+              width={15}
+              height={20}
+              radius={50}
+              handleNextStep={handleNextStep}
+            />
+          )}
+          {currentStep === TutorialSteps.STEP_5 && (
+            <OverlayTuto
+              texts={['In the final phase, you can strategically reposition your troops between your owned tiles.']}
+              onClose={handleCloseTuto}
+              top={40}
+              left={30}
+              width={15}
+              height={20}
+              radius={50}
+              handleNextStep={handleNextStep}
+            />
+          )}
+          {currentStep === TutorialSteps.STEP_6 && (
+            <OverlayTuto
+              texts={["If you control an entire region, you'll receive additional troop reinforcements every turn."]}
+              onClose={handleCloseTuto}
+              top={2}
+              left={74.5}
+              width={5}
+              height={7}
+              radius={50}
+              handleNextStep={handleNextStep}
+            />
+          )}
+          {currentStep === TutorialSteps.STEP_7 && (
+            <OverlayTuto
+              texts={[
+                'This is the log window, where you can track game events. Hover over underlined text for additional details.',
+              ]}
+              onClose={handleCloseTuto}
+              top={80}
+              left={0}
+              width={27}
+              height={40}
+              radius={7}
+              handleNextStep={handleNextStep}
+            />
+          )}
+          {currentStep === TutorialSteps.STEP_8 && (
+            <OverlayTuto
+              texts={[
+                'Each turn, conquering a territory earns you a card. Combine three cards for extra troops just before the deployment phase. You need to use them when you have five cards.',
+              ]}
+              onClose={handleCloseTuto}
+              top={89}
+              left={36.5}
+              width={5}
+              height={10}
+              radius={40}
               handleNextStep={handleNextStep}
             />
           )}
