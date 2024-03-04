@@ -10,7 +10,8 @@ interface OverlayTutoProps {
 }
 
 const OverlayTuto: React.FC<OverlayTutoProps> = ({ text, onClose, top, left }) => {
-  const arrowTop = top - 100;
+  const arrowTop = top - 80;
+  const arrowLeft = left + 20 / 2; // Arrow width /2
   return (
     <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-10 flex items-center justify-center z-[40]">
       <div
@@ -25,7 +26,7 @@ const OverlayTuto: React.FC<OverlayTutoProps> = ({ text, onClose, top, left }) =
           borderRadius: '50%',
         }}
       />
-      <div className={`absolute z-50 animate-arrow-bounce`} style={{ top: `${arrowTop}px`, left: `${left}px` }}>
+      <div className={`absolute z-50 animate-arrow-bounce`} style={{ top: `${arrowTop}px`, left: `${arrowLeft}px` }}>
         <ArrowBigDown fill="white" stroke="white" className="w-20 h-20" />
       </div>
       <button
@@ -34,7 +35,7 @@ const OverlayTuto: React.FC<OverlayTutoProps> = ({ text, onClose, top, left }) =
       >
         ✕
       </button>
-      <span className="text-white text-6xl font-bold z-0">{text}</span>
+      <span className="text-white text-6xl font-bold z-50">{text}</span>
     </div>
   );
 };
