@@ -43,14 +43,25 @@ function App() {
   const { players } = useGetPlayers();
   const { me } = useMe();
 
-  const handleCloseDice = () => {
+  const handleCloseTuto = () => {
     setIsTuto(false);
+  };
+
+  const handleClickTuto = () => {
+    setIsTuto(true);
   };
 
   return (
     <>
       <Toaster />
-      {isTuto && <OverlayTuto text={'hello'} onClose={handleCloseDice} top={400} left={600} />}
+      {isTuto && (
+        <OverlayTuto
+          texts={['Un bon hello world est un hello world muet']}
+          onClose={handleCloseTuto}
+          top={400}
+          left={600}
+        />
+      )}
       <div className="fixed top-0 left-0 z-[1000]">
         <DebugPanel />
       </div>
@@ -60,7 +71,7 @@ function App() {
         <>
           <div className="flex">
             <div className="w-full">
-              <Map />
+              <Map handleClickTuto={handleClickTuto} />
             </div>
           </div>
           <div className="fixed bottom-0 left-0 w-1/4 p-1">

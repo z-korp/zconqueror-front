@@ -11,9 +11,13 @@ import Svg from './Svg';
 import Region from './Region';
 import nameData from '../../assets/map/nameData.json'; // Adjust the path as necessary
 import { Button } from '../ui/button';
-import { FaRegMap } from 'react-icons/fa';
+import { BadgeHelp, Map as MapLucid } from 'lucide-react';
 
-const Map = () => {
+interface MapProps {
+  hanleClickTuto;
+}
+
+const Map = ({ handleClickTuto }) => {
   const containerRef = useRef(null);
   const { isItMyTurn } = useMe();
 
@@ -83,14 +87,18 @@ const Map = () => {
   return (
     <>
       <div className="relative" ref={containerRef}>
-        <Button
-          variant="secondary"
-          className="absolute top-0 right-0 z-10"
-          onMouseEnter={() => setContinentMode(true)} // Activates when the mouse enters the button area
-          onMouseLeave={() => setContinentMode(false)} // Deactivates when the mouse leaves the button area
-        >
-          <FaRegMap />
-        </Button>
+        <div className="absolute top-0 right-0 z-10 gap-2 flex">
+          <Button
+            variant="secondary"
+            onMouseEnter={() => setContinentMode(true)} // Activates when the mouse enters the button area
+            onMouseLeave={() => setContinentMode(false)} // Deactivates when the mouse leaves the button area
+          >
+            <MapLucid />
+          </Button>
+          <Button variant="secondary" onClick={handleClickTuto}>
+            <BadgeHelp />
+          </Button>
+        </div>
         {isContinentMode && (
           <div className="vt323-font text-xl absolute top-0 left-1/2 transform -translate-x-1/2 z-50">
             <div>Controlling a full continent awards supply bonuses.</div>

@@ -48,7 +48,7 @@
 
 .speechLeft:after {
   left: -15px;
-  bottom: 30px;
+  bottom: 15px;
   border-width: 10px 15px 10px 0;
   border-color: transparent #fff transparent transparent;
 }
