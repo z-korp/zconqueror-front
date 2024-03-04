@@ -170,7 +170,7 @@ const PlayPanel = () => {
           </div>
           {showBubble && !hasSourceChanged && (
             <div className="w-auto ">
-              <Bubble texts={texts} />
+              <Bubble texts={texts} variant="speech" />
             </div>
           )}
 

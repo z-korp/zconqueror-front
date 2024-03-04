@@ -1,6 +1,8 @@
 import React from 'react';
-import { Button } from './ui/button';
 import { ArrowBigDown } from 'lucide-react';
+import { useMe } from '@/hooks/useMe';
+import { avatars } from '@/utils/pfps';
+import Bubble from './Bubble';
 
 interface OverlayTutoProps {
   text: string;
@@ -10,8 +12,17 @@ interface OverlayTutoProps {
 }
 
 const OverlayTuto: React.FC<OverlayTutoProps> = ({ text, onClose, top, left }) => {
+  const { me } = useMe();
+
+  console.log('me', me);
   const arrowTop = top - 80;
-  const arrowLeft = left + 20 / 2; // Arrow width /2
+  const arrowLeft = left + 20 / 2; // Arrow width / 2
+
+  let image = null;
+  if (me !== null && me.index + 1 < avatars.length) {
+    image = avatars[me.index + 1];
+  }
+
   return (
     <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-10 flex items-center justify-center z-[40]">
       <div
@@ -35,7 +46,12 @@ const OverlayTuto: React.FC<OverlayTutoProps> = ({ text, onClose, top, left }) =
       >
         ✕
       </button>
-      <span className="text-white text-6xl font-bold z-50">{text}</span>
+      <div className="absolute flex justify-center items-center gap-6 top-6 z-50">
+        <div className="w-32 h-32">
+          <img src={image} alt="player" className="rounded-full object-cover w-full h-full mt-1" />
+        </div>
+        <Bubble texts={['To start a new Battle you need first to deploy your troups']} variant="speechLeft" />
+      </div>
     </div>
   );
 };
