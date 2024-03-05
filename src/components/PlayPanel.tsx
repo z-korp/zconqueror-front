@@ -145,7 +145,7 @@ const PlayPanel = () => {
 
     const timer = setTimeout(() => {
       setShowOverlay(false);
-    }, 2000);
+    }, 1000);
 
     return () => clearTimeout(timer);
   };
@@ -158,6 +158,7 @@ const PlayPanel = () => {
     <>
       {showCardsPopup && <EndTurnPopup cards={cards} onClose={() => setShowCardsPopup(false)} />}
       {showOverlay && <OverlayWithText text={overlayText} />}
+
       <div className="pointer-events-none fixed bottom-0 left-0 right-0 flex justify-center items-end p-4">
         {/* Section du panneau de jeu */}
         <CardPanelButton cards={cards} toggleCardMenu={toggleCardMenu} />
