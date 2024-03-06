@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode, FC } from 'react';
+import { createContext, useContext, useState, ReactNode, FC, useEffect } from 'react';
 
 interface TutorialContextType {
   showTuto: boolean;
@@ -29,14 +29,28 @@ export const TutorialProvider: FC<TutorialProviderProps> = ({ children }) => {
   const [showTuto, setShowTuto] = useState<boolean>(true);
   const [currentStep, setCurrentStep] = useState<TutorialStep>('STEP_1');
 
+  const completeTutorial = () => {
+    localStorage.setItem('tutorialCompleted', 'true');
+    setShowTuto(false); // Cache le tutoriel
+  };
+
   const nextStep = () => {
     const currentIndex = tutorialSteps.indexOf(currentStep);
     const nextIndex = (currentIndex + 1) % tutorialSteps.length; // Cela permet de revenir au début après la dernière étape
     setCurrentStep(tutorialSteps[nextIndex]);
     if (currentStep === 'STEP_8') {
-      setShowTuto(false);
+      completeTutorial();
     }
   };
+
+  useEffect(() => {
+    const tutorialCompleted = localStorage.getItem('tutorialCompleted');
+    if (tutorialCompleted === 'true') {
+      setShowTuto(false); // Ne montre pas le tutoriel si déjà complété
+    } else {
+      setShowTuto(true); // Montre le tutoriel si non complété
+    }
+  }, []);
 
   return (
     <TutorialContext.Provider value={{ showTuto, setShowTuto, currentStep, setCurrentStep, nextStep }}>
