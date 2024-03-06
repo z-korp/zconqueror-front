@@ -12,17 +12,28 @@ import Region from './Region';
 import nameData from '../../assets/map/nameData.json'; // Adjust the path as necessary
 import { Button } from '../ui/button';
 import { FaRegMap } from 'react-icons/fa';
+import { useDojo } from '@/dojo/useDojo';
+import { Flag } from 'lucide-react';
 
 const Map = () => {
+  const {
+    setup: {
+      client: { play },
+    },
+    account: { account },
+  } = useDojo();
   const containerRef = useRef(null);
   const { isItMyTurn } = useMe();
 
   const { turn } = useTurn();
   const { phase } = usePhase();
   const { tiles } = useGetTiles();
-  const { current_source, set_current_source, set_current_target, setContinentMode, isContinentMode } = useElementStore(
-    (state) => state
-  );
+  const { current_source, set_current_source, set_current_target, setContinentMode, isContinentMode, game_id } =
+    useElementStore((state) => state);
+
+  const surrender = async () => {
+    await play.surrender(account, game_id);
+  };
 
   const handleRegionClick = (regionId: number) => {
     if (isTest) console.log('regionId', regionId);
@@ -91,6 +102,10 @@ const Map = () => {
         >
           <FaRegMap />
         </Button>
+        <Button variant="secondary" className="absolute top-0 right-12 z-10" onClick={() => surrender()}>
+          <Flag />
+        </Button>
+
         {isContinentMode && (
           <div className="vt323-font text-xl absolute top-0 left-1/2 transform -translate-x-1/2 z-50">
             <div>Controlling a full continent awards supply bonuses.</div>
