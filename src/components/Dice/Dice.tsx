@@ -10,8 +10,6 @@ const Dice: React.FC<DiceProps> = ({ desiredResult }) => {
   const [rotate, setRotate] = useState<string>('');
 
   useEffect(() => {
-    // Calculer les rotations pour stabiliser sur la face désirée
-
     const rotationTimeout = setTimeout(() => {
       setRotate(rotations[desiredResult]);
     }, 100);
