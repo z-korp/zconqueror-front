@@ -33,6 +33,9 @@ export const TutorialProvider: FC<TutorialProviderProps> = ({ children }) => {
     const currentIndex = tutorialSteps.indexOf(currentStep);
     const nextIndex = (currentIndex + 1) % tutorialSteps.length; // Cela permet de revenir au début après la dernière étape
     setCurrentStep(tutorialSteps[nextIndex]);
+    if (currentStep === 'STEP_8') {
+      setShowTuto(false);
+    }
   };
 
   return (
