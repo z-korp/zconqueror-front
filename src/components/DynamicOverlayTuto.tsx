@@ -4,12 +4,13 @@ import ReactDOM from 'react-dom';
 import Bubble from './Bubble';
 import { useMe } from '@/hooks/useMe';
 import { avatars } from '@/utils/pfps';
+import { useTutorial } from '../contexts/TutorialContext';
 
 const DynamicOverlayTuto = ({ onClose, children, texts }) => {
   const childRef = useRef(null);
   const [overlayStyle, setOverlayStyle] = useState({});
-  const [showOverlay, setShowOverlay] = useState(true);
   const { me } = useMe();
+  const { showTuto, setShowTuto } = useTutorial();
 
   useEffect(() => {
     const updateOverlayStyle = () => {
@@ -42,8 +43,7 @@ const DynamicOverlayTuto = ({ onClose, children, texts }) => {
   }, [children]);
 
   function handleClose() {
-    setShowOverlay(false);
-    console.log('close');
+    setShowTuto(false);
   }
 
   let image = null;
@@ -51,7 +51,7 @@ const DynamicOverlayTuto = ({ onClose, children, texts }) => {
     image = avatars[me.index + 1];
   }
 
-  const overlayContent = showOverlay && (
+  const overlayContent = showTuto && (
     <>
       <div
         className="fixed inset-0 z-40"
