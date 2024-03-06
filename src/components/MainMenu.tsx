@@ -46,7 +46,7 @@ const MainMenu: React.FC = () => {
 
     try {
       // TBD get the id from here?
-      await host.create(account, player_name, /* price */ BigInt(0));
+      await host.create(account, player_name, /* price */ BigInt(0), /* penalty*/ 120);
     } catch (error: any) {
       toast({
         variant: 'destructive',

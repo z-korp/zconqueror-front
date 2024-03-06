@@ -1,7 +1,7 @@
 /* previously called generated.ts */
 
 import { DojoProvider } from '@dojoengine/core';
-import { Account, RevertedTransactionReceiptResponse } from 'starknet';
+import { Account, RevertedTransactionReceiptResponse, cairo } from 'starknet';
 
 const tryBetterErrorMsg = (msg: string): string => {
   const failureReasonIndex = msg.indexOf('Failure reason');
@@ -54,13 +54,13 @@ export async function setupWorld(provider: DojoProvider) {
 
   function host() {
     const contractName = 'zconqueror::systems::host::host';
-    const create = async (account: Account, playerName: string, price: bigint) => {
+    const create = async (account: Account, playerName: string, price: bigint, penalty: number) => {
       try {
         return await executeAndCheck(account, contractName, 'create', [
           provider.getWorldAddress(),
           playerName,
-          price,
-          price,
+          cairo.uint256(price),
+          penalty,
         ]);
       } catch (error) {
         console.error('Error executing create:', error);
@@ -171,6 +171,24 @@ export async function setupWorld(provider: DojoProvider) {
       }
     };
 
+    const surrender = async (account: Account, gameId: number) => {
+      try {
+        return await executeAndCheck(account, contractName, 'surrender', [provider.getWorldAddress(), gameId]);
+      } catch (error) {
+        console.error('Error executing surrender:', error);
+        throw error;
+      }
+    };
+
+    const banish = async (account: Account, gameId: number) => {
+      try {
+        return await executeAndCheck(account, contractName, 'banish', [provider.getWorldAddress(), gameId]);
+      } catch (error) {
+        console.error('Error executing banish:', error);
+        throw error;
+      }
+    };
+
     const defend = async (account: Account, gameId: number, attackerIndex: number, defenderIndex: number) => {
       try {
         return await executeAndCheck(account, contractName, 'defend', [
@@ -251,6 +269,8 @@ export async function setupWorld(provider: DojoProvider) {
       finish,
       transfer,
       supply,
+      surrender,
+      banish,
     };
   }
   return {
