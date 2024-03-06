@@ -3,7 +3,7 @@ import { usePhase } from '@/hooks/usePhase';
 import { useTurn } from '@/hooks/useTurn';
 import { getNeighbors } from '@/utils/map';
 import { Phase, useElementStore } from '@/utils/store';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useMe } from '@/hooks/useMe';
 import { isTest } from '@/utils/test';
 import Continents from './Continents';
@@ -12,12 +12,10 @@ import Region from './Region';
 import nameData from '../../assets/map/nameData.json'; // Adjust the path as necessary
 import { Button } from '../ui/button';
 import { BadgeHelp, Map as MapLucid } from 'lucide-react';
+import { useTutorial } from '../../contexts/TutorialContext';
+import DynamicOverlayTuto from '../DynamicOverlayTuto';
 
-interface MapProps {
-  handleClickTuto: () => void;
-}
-
-const Map: React.FC<MapProps> = ({ handleClickTuto }) => {
+const Map = () => {
   const containerRef = useRef(null);
   const { isItMyTurn } = useMe();
 
@@ -27,6 +25,8 @@ const Map: React.FC<MapProps> = ({ handleClickTuto }) => {
   const { current_source, set_current_source, set_current_target, setContinentMode, isContinentMode } = useElementStore(
     (state) => state
   );
+
+  const { setShowTuto } = useTutorial();
 
   const handleRegionClick = (regionId: number) => {
     if (isTest) console.log('regionId', regionId);
@@ -84,18 +84,28 @@ const Map: React.FC<MapProps> = ({ handleClickTuto }) => {
     }
   };
 
+  function handleShowTuto() {
+    console.log('handleShowTuto');
+    setShowTuto(true);
+  }
+
   return (
     <>
       <div className="relative" ref={containerRef}>
-        <div className="absolute top-0 right-0 z-10 gap-2 flex">
-          <Button
-            variant="secondary"
-            onMouseEnter={() => setContinentMode(true)} // Activates when the mouse enters the button area
-            onMouseLeave={() => setContinentMode(false)} // Deactivates when the mouse leaves the button area
+        <div className="absolute z-20 top-0 right-0 gap-2 flex">
+          <DynamicOverlayTuto
+            tutorialStep="STEP_6"
+            texts={["If you control an entire region, you'll receive additional troop reinforcements every turn."]}
           >
-            <MapLucid />
-          </Button>
-          <Button variant="secondary" onClick={handleClickTuto}>
+            <Button
+              variant="secondary"
+              onMouseEnter={() => setContinentMode(true)} // Activates when the mouse enters the button area
+              onMouseLeave={() => setContinentMode(false)} // Deactivates when the mouse leaves the button area
+            >
+              <MapLucid />
+            </Button>
+          </DynamicOverlayTuto>
+          <Button variant="secondary" onClick={handleShowTuto}>
             <BadgeHelp />
           </Button>
         </div>

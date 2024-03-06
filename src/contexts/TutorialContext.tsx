@@ -3,7 +3,13 @@ import { createContext, useContext, useState, ReactNode, FC } from 'react';
 interface TutorialContextType {
   showTuto: boolean;
   setShowTuto: (show: boolean) => void;
+  currentStep: TutorialStep;
+  setCurrentStep: (step: TutorialStep) => void;
+  nextStep: () => void;
 }
+type TutorialStep = 'STEP_1' | 'STEP_2' | 'STEP_3' | 'STEP_4' | 'STEP_5' | 'STEP_6' | 'STEP_7' | 'STEP_8'; // Énumérez vos étapes ici
+
+const tutorialSteps: TutorialStep[] = ['STEP_1', 'STEP_2', 'STEP_3', 'STEP_4', 'STEP_5', 'STEP_6', 'STEP_7', 'STEP_8'];
 
 const TutorialContext = createContext<TutorialContextType | undefined>(undefined);
 
@@ -21,6 +27,17 @@ interface TutorialProviderProps {
 
 export const TutorialProvider: FC<TutorialProviderProps> = ({ children }) => {
   const [showTuto, setShowTuto] = useState<boolean>(true);
+  const [currentStep, setCurrentStep] = useState<TutorialStep>('STEP_1');
 
-  return <TutorialContext.Provider value={{ showTuto, setShowTuto }}>{children}</TutorialContext.Provider>;
+  const nextStep = () => {
+    const currentIndex = tutorialSteps.indexOf(currentStep);
+    const nextIndex = (currentIndex + 1) % tutorialSteps.length; // Cela permet de revenir au début après la dernière étape
+    setCurrentStep(tutorialSteps[nextIndex]);
+  };
+
+  return (
+    <TutorialContext.Provider value={{ showTuto, setShowTuto, currentStep, setCurrentStep, nextStep }}>
+      {children}
+    </TutorialContext.Provider>
+  );
 };

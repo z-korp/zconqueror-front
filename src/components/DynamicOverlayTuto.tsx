@@ -1,22 +1,36 @@
 import { ArrowBigDown } from 'lucide-react';
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, ReactNode, FC } from 'react';
 import ReactDOM from 'react-dom';
 import Bubble from './Bubble';
 import { useMe } from '@/hooks/useMe';
 import { avatars } from '@/utils/pfps';
 import { useTutorial } from '../contexts/TutorialContext';
 
-const DynamicOverlayTuto = ({ onClose, children, texts }) => {
+interface DynamicOverlayTutoProps {
+  children: ReactNode;
+  texts: string[];
+  tutorialStep: string;
+  paddingProps?: number;
+}
+
+const DynamicOverlayTuto: FC<DynamicOverlayTutoProps> = ({ tutorialStep, children, texts, paddingProps = 10 }) => {
   const childRef = useRef(null);
   const [overlayStyle, setOverlayStyle] = useState({});
   const { me } = useMe();
-  const { showTuto, setShowTuto } = useTutorial();
+  const { showTuto, setShowTuto, currentStep, nextStep } = useTutorial();
+
+  const handleNextStep = () => {
+    nextStep();
+  };
+
+  console.log('currentStep', currentStep);
+  console.log('tutorialStep', tutorialStep);
 
   useEffect(() => {
     const updateOverlayStyle = () => {
       if (childRef.current) {
         const { top, left, width, height } = childRef.current.getBoundingClientRect();
-        const padding = 10;
+        const padding = paddingProps;
         const borderRadius = 10;
         setOverlayStyle({
           top: top - padding + window.scrollY,
@@ -51,7 +65,7 @@ const DynamicOverlayTuto = ({ onClose, children, texts }) => {
     image = avatars[me.index + 1];
   }
 
-  const overlayContent = showTuto && (
+  const overlayContent = showTuto && currentStep === tutorialStep && (
     <>
       <div
         className="fixed inset-0 z-40"
@@ -88,7 +102,9 @@ const DynamicOverlayTuto = ({ onClose, children, texts }) => {
           </div>
           <Bubble texts={texts} variant="speechLeft" />
         </div>
-        <button className="bg-white">Next Step</button>
+        <button className="bg-white" onClick={handleNextStep}>
+          Next Step
+        </button>
       </div>
     </>
   );
