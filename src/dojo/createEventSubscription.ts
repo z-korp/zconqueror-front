@@ -19,6 +19,7 @@ export async function createEventSubscription(keys: string[]): Promise<Observabl
             keys
             data
             createdAt
+            transactionHash
           }
         }
       `,

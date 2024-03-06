@@ -40,6 +40,8 @@ export interface BattleEvent {
   battleId: number;
   defenderIndex: number;
   defenderValue: number;
+  attackerTroops: number;
+  defenderTroops: number;
   duelId: number;
   gameId: number;
   nonce: number;
@@ -59,7 +61,7 @@ export interface Battle {
   attackerName: string;
   defenderIndex: number;
   defenderName: string;
-  attackerTroups: number;
-  defenderTroups: number;
+  attackerTroops: number;
+  defenderTroops: number;
   rounds: Duel[][];
 }

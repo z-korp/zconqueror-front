@@ -3,9 +3,7 @@ import { Battle, BattleEvent, Duel } from './types';
 export function getBattleFromBattleEvents(
   duelEvents: BattleEvent[],
   attackerName: string,
-  attackerTroups: number,
-  defenderName: string,
-  defenderTroups: number
+  defenderName: string
 ): Battle {
   const attackerIndex = duelEvents[0].attackerIndex;
   const defenderIndex = duelEvents[0].defenderIndex;
@@ -26,8 +24,8 @@ export function getBattleFromBattleEvents(
     attackerName,
     defenderIndex,
     defenderName,
-    attackerTroups,
-    defenderTroups,
+    attackerTroops: duelEvents[0].attackerTroops,
+    defenderTroops: duelEvents[0].defenderTroops,
     rounds: groupDuelByIndex(duels),
   };
 }
@@ -50,8 +48,8 @@ export function groupDuelByIndex(duels: Duel[]): Duel[][] {
 }
 
 export function displayAttack(battle: Battle): void {
-  let att = battle.attackerTroups;
-  let def = battle.defenderTroups;
+  let att = battle.attackerTroops;
+  let def = battle.defenderTroops;
   const attackerName = battle.attackerName;
   const defenderName = battle.defenderName;
   const duelGroups = battle.rounds;

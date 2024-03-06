@@ -7,12 +7,11 @@ interface BattleRoundProps {
 }
 
 const BattleRound: React.FC<BattleRoundProps> = ({ battle, round }) => {
-  console.log(battle.rounds[round]);
   const attackerDices = battle.rounds[round].map((duel) => duel.attackerValue).filter((value) => value !== 0);
   const defenderDices = battle.rounds[round].map((duel) => duel.defenderValue).filter((value) => value !== 0);
 
   return (
-    <div>
+    <div className="text-white">
       <div className="relative flex flex-col items-center">
         <div className="font-bold absolute left-0">[Round {round + 1}]</div>
         <div className="flex gap-4">
@@ -26,16 +25,12 @@ const BattleRound: React.FC<BattleRoundProps> = ({ battle, round }) => {
       <div className="flex flex-row gap-6">
         <div className="flex flex-col gap-2">
           {attackerDices.map((d, index) => (
-            <div className="w-64 h-64">
-              <Dice key={`attacker-${round}-${index}`} desiredResult={d} />
-            </div>
+            <Dice key={`attacker-${round}-${index}`} desiredResult={d} />
           ))}
         </div>
         <div className="flex flex-col gap-2">
           {defenderDices.map((d, index) => (
-            <div className="w-64 h-64">
-              <Dice key={`defender-${round}-${index}`} desiredResult={d} />
-            </div>
+            <Dice key={`defender-${round}-${index}`} desiredResult={d} />
           ))}
         </div>
       </div>

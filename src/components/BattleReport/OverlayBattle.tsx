@@ -25,7 +25,7 @@ const OverlayBattle: React.FC<{ onClose: () => void; battle: Battle }> = ({ onCl
         ✕
       </Button>
 
-      <div className="flex flex-col text-white">
+      <div className="flex flex-col ">
         {currentRound < battle.rounds.length ? (
           <BattleRound battle={battle} round={currentRound} />
         ) : (

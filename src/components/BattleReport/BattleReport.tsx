@@ -16,14 +16,14 @@ const dices: { [key: number]: string } = {
 };
 
 const BattleReport: React.FC<BattleReportProps> = ({ battle }) => {
-  let att = battle.attackerTroups;
-  let def = battle.defenderTroups;
+  let att = battle.attackerTroops;
+  let def = battle.defenderTroops;
 
   let attackerLostTotal = 0;
   let defenderLostTotal = 0;
 
   return (
-    <div className="w-96">
+    <div className="w-96 vt323-font text-white">
       <div className="relative">
         <div className="font-bold absolute left-0">[Battle]</div>
         <div>{`${battle.attackerName} - ${battle.defenderName}`}</div>
@@ -78,9 +78,9 @@ const BattleReport: React.FC<BattleReportProps> = ({ battle }) => {
 
       <div className="flex flex-row justify-center relative">
         <div className="font-bold absolute left-0">INIT</div>
-        <span className="w-3 text-right">{`${battle.attackerTroups}`}</span>
+        <span className="w-3 text-right">{`${battle.attackerTroops}`}</span>
         <Separator orientation="vertical" className="mx-2 h-6 opacity-30" />
-        <span className="w-3 text-left">{`${battle.defenderTroups}`}</span>
+        <span className="w-3 text-left">{`${battle.defenderTroops}`}</span>
       </div>
 
       <div className="flex flex-row justify-center relative">

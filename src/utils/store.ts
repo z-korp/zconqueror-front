@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import GameState from './gamestate';
+import { Battle } from './types';
 
 export enum Phase {
   DEPLOY,
@@ -8,7 +9,7 @@ export enum Phase {
 }
 
 interface State {
-  game_id: number; // 0 = no game
+  game_id: number | undefined;
   set_game_id: (game_id: number) => void;
   game_state: GameState;
   set_game_state: (game_state: GameState) => void;
@@ -22,6 +23,8 @@ interface State {
   set_army_count: (count: number) => void;
   highlighted_region: number | null;
   setHighlightedRegion: (region: number | null) => void;
+  battleReport: Battle | null;
+  setBattleReport: (report: Battle | null) => void;
   player_name: string;
   setPlayerName: (name: string) => void;
   lastDefendResult: any;
@@ -45,6 +48,8 @@ export const useElementStore = create<State>((set) => ({
   set_army_count: (count: number) => set(() => ({ army_count: count })),
   highlighted_region: null,
   setHighlightedRegion: (region: number | null) => set(() => ({ highlighted_region: region })),
+  battleReport: null,
+  setBattleReport: (report: Battle | null) => set(() => ({ battleReport: report })),
   player_name: '',
   setPlayerName: (name: string) => set(() => ({ player_name: name })),
   lastDefendResult: null,

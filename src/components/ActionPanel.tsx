@@ -102,8 +102,8 @@ const ActionPanel = () => {
     }
 
     try {
-      const attackerTroups = tiles[current_source - 1].army - 1;
-      const defenderTroups = tiles[current_target - 1].army;
+      const attackerTroops = tiles[current_source - 1].army - 1;
+      const defenderTroops = tiles[current_target - 1].army;
 
       await play.attack(account, game_id, current_source, current_target, army_count);
       setIsDiceAnimation(true);
@@ -111,24 +111,18 @@ const ActionPanel = () => {
       await sleep(100);
       const ret = await play.defend(account, game_id, current_source, current_target);
 
-      console.log('---------');
-      console.log(attackerTroups, defenderTroups);
+      //console.log('---------');
+      console.log(attackerTroops, defenderTroops);
       console.log('qqqqq', ret.events);
       const battleEvents: BattleEvent[] = ret.events
         .filter((e) => e.keys[0] === BATTLE_EVENT)
         .map((event) => parseBattleEvent(event));
-      console.log('qqqqq', battleEvents);
+      //console.log('qqqqq', battleEvents);
 
       const attackerName = players[battleEvents[0].attackerIndex].name;
       const defenderName = players[battleEvents[0].defenderIndex].name;
-      const battle = getBattleFromBattleEvents(
-        battleEvents,
-        attackerName,
-        attackerTroups,
-        defenderName,
-        defenderTroups
-      );
-      console.log('======> ATTACK', battle);
+      const battle = getBattleFromBattleEvents(battleEvents, attackerName, defenderName);
+      //console.log('======> ATTACK', battle);
       setBattle(battle);
       /*const battle: Duel[] = [];
       await fetchEventsOnce([BATTLE_EVENT, '0x' + game_id.toString(16), '0x' + game.nonce.toString(16)], (event) =>

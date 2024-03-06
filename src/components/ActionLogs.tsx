@@ -1,6 +1,7 @@
 import { EventType, useLogs } from '@/hooks/useLogs';
 import { getIdFromName } from '@/utils/events';
 import { useElementStore } from '@/utils/store';
+import { Battle } from '@/utils/types';
 import { format } from 'date-fns';
 import React, { useEffect, useRef, useState } from 'react';
 import { animated, useSpring } from 'react-spring';
@@ -14,7 +15,7 @@ const ActionLogs: React.FC = () => {
 
   const [isCollapsed, setIsCollapsed] = useState(false);
 
-  const { setHighlightedRegion } = useElementStore((state) => state);
+  const { setHighlightedRegion, setBattleReport } = useElementStore((state) => state);
   // Dynamically calculate content height for animation
   const [contentHeight, setContentHeight] = useState(0);
 
@@ -34,6 +35,14 @@ const ActionLogs: React.FC = () => {
     setHighlightedRegion(null);
   }
 
+  function handleMouseOverOnBattle(battle: Battle | undefined) {
+    setBattleReport(battle ? battle : null);
+  }
+
+  function handleMouseLeaveOnBattle() {
+    setBattleReport(null);
+  }
+
   // Animate the container height
   const springProps = useSpring({
     to: {
@@ -48,6 +57,8 @@ const ActionLogs: React.FC = () => {
       logsRef.current.scrollTop = logsRef.current.scrollHeight;
     }
   }, [logs]);
+
+  console.log('logs', logs);
 
   return (
     <div className="max-w-xl w-full border-2 rounded-lg bg-stone-700 border-stone-900 text-white vt323-font">
@@ -87,7 +98,18 @@ const ActionLogs: React.FC = () => {
                     >
                       {log.log[1]}
                     </span>
-                    <span> {log.log[2]}</span>
+                    <span>{` - `} </span>
+                    {log.battle ? (
+                      <span
+                        className="underline cursor-pointer hover:text-yellow-500"
+                        onMouseOver={() => handleMouseOverOnBattle(log.battle)}
+                        onMouseLeave={handleMouseLeaveOnBattle}
+                      >
+                        {log.log[2]}
+                      </span>
+                    ) : (
+                      <span>{log.log[2]}</span>
+                    )}
                   </>
                 )}
                 {log.type === EventType.Fortify && (

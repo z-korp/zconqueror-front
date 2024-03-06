@@ -14,11 +14,12 @@ import PlayersPanel from './components/PlayersPanel';
 import { DebugPanel } from './components/DebugPanel';
 import OverlayEndGame from './components/OverlayEndGame';
 import { useMe } from './hooks/useMe';
+import BattleReport from './components/BattleReport/BattleReport';
 
 function App() {
   // const { id } = useParams<{ id?: string }>();
 
-  const { game_state } = useElementStore((state) => state);
+  const { game_state, battleReport } = useElementStore((state) => state);
 
   // useEffect(() => {
   //   console.log('URL ID:', id);
@@ -54,6 +55,13 @@ function App() {
             <div className="w-full">
               <Map />
             </div>
+            {battleReport && (
+              <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[1001]">
+                <div className="p-4 bg-stone-900 rounded-lg opacity-95">
+                  <BattleReport battle={battleReport} />
+                </div>
+              </div>
+            )}
           </div>
           <div className="fixed bottom-0 left-0 w-1/4 p-1">
             <ActionLogs />
