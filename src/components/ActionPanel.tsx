@@ -9,10 +9,11 @@ import { useDojo } from '@/dojo/useDojo';
 import { Button } from './ui/button';
 import { toast } from './ui/use-toast';
 import { BATTLE_EVENT } from '@/constants';
-import { useGame } from '@/hooks/useGame';
 import { parseBattleEvent } from '@/utils/events';
 import { useGetPlayers } from '@/hooks/useGetPlayers';
-import { Battle, Duel } from '@/utils/types';
+import { Battle, BattleEvent } from '@/utils/types';
+import { sleep } from '@/utils/time';
+import { getBattleFromBattleEvents } from '@/utils/battle';
 import OverlayBattle from './BattleReport/OverlayBattle';
 
 const ActionPanel = () => {
@@ -35,7 +36,6 @@ const ActionPanel = () => {
 
   const { phase } = usePhase();
   const { players } = useGetPlayers();
-  const game = useGame();
   const { currentPlayer } = useGetCurrentPlayer();
   const [sourceTile, setSourceTile] = useState<any | null>(null);
   const [targetTile, setTargetTile] = useState<any | null>(null);
@@ -89,68 +89,6 @@ const ActionPanel = () => {
     removeSelected();
   };
 
-  function groupDuelsByIndex(duels: Duel[]): Duel[][] {
-    // Use a Map to group duels by their battleId for more flexible handling
-    const duelGroups = new Map<number, Duel[]>();
-
-    duels.forEach((duel) => {
-      if (!duelGroups.has(duel.battleId)) {
-        duelGroups.set(duel.battleId, []);
-      }
-      duelGroups.get(duel.battleId)?.push(duel);
-    });
-
-    // Convert the Map into an array of duel arrays
-    // Assuming battleIds start at 0 and are continuous
-    const result: Duel[][] = Array.from(duelGroups.values());
-
-    return result;
-  }
-
-  function displayDuels(duelGroups: Duel[][], attackerTroups: number, defendTroups: number): void {
-    let att = attackerTroups;
-    let def = defendTroups;
-    const attackerName = players[duelGroups[0][0].attackerIndex].name;
-    const defenderName = players[duelGroups[0][0].defenderIndex].name;
-
-    console.log('duels', duelGroups);
-    console.log(`-------------------------------------------------`);
-    console.log(`[Battle] - ${attackerName} (${att}) vs (${def}) ${defenderName} `);
-    console.log(`-------------------------------------------------`);
-    duelGroups.forEach((duels, index) => {
-      const attackerDices = duels.map((duel) => duel.attackerValue).filter((value) => value !== 0);
-      const defenderDices = duels.map((duel) => duel.defenderValue).filter((value) => value !== 0);
-
-      console.log(`[Round ${index}] - ${Math.min(att, 3)} vs ${Math.min(def, 2)}`);
-
-      console.log(
-        `    [Dices]  ${attackerName} [${attackerDices.join(', ')}] vs [${defenderDices.join(', ')}] ${defenderName}`
-      );
-
-      duels.forEach((duel, duelIndex) => {
-        let attackerLost = 0;
-        let defenderLost = 0;
-        if (duel.attackerValue * duel.defenderValue !== 0) {
-          if (duel.attackerValue > duel.defenderValue) defenderLost++;
-          else attackerLost++;
-
-          console.log(
-            `    [Duel ${duelIndex}]  ${attackerName} [${duel.attackerValue}] (-${attackerLost}) vs (-${defenderLost}) [${duel.defenderValue}] - ${defenderName}`
-          );
-        }
-
-        att -= attackerLost;
-        def -= defenderLost;
-      });
-      if (att === 0) {
-        console.log(`Defender ${defenderName} wins -> ${att} vs ${def}`);
-      } else {
-        console.log(`Attacker ${attackerName} wins -> ${att} vs ${def}`);
-      }
-      console.log(`-------------------------------------------------\n`);
-    });
-  }
-
   const handleAttack = async () => {
     if (current_source === null || current_target === null) return;
 
@@ -170,35 +108,28 @@ const ActionPanel = () => {
       await play.attack(account, game_id, current_source, current_target, army_count);
       setIsDiceAnimation(true);
 
-      const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
       await sleep(100);
       const ret = await play.defend(account, game_id, current_source, current_target);
 
       console.log('---------');
       console.log(attackerTroups, defenderTroups);
       console.log('qqqqq', ret.events);
-      const battle: Duel[] = ret.events
+      const battleEvents: BattleEvent[] = ret.events
         .filter((e) => e.keys[0] === BATTLE_EVENT)
         .map((event) => parseBattleEvent(event));
-      console.log('qqqqq', battle);
-      console.log('qqqqq', groupDuelsByIndex(battle));
-      console.log('---------');
-      displayDuels(groupDuelsByIndex(battle), attackerTroups, defenderTroups);
+      console.log('qqqqq', battleEvents);
 
-      const duelGroups = groupDuelsByIndex(battle);
-      const attackerName = players[duelGroups[0][0].attackerIndex].name;
-      const defenderName = players[duelGroups[0][0].defenderIndex].name;
-      const battle2: Battle = {
-        attacker: duelGroups[0][0].attackerIndex,
+      const attackerName = players[battleEvents[0].attackerIndex].name;
+      const defenderName = players[battleEvents[0].defenderIndex].name;
+      const battle = getBattleFromBattleEvents(
+        battleEvents,
         attackerName,
-        defender: duelGroups[0][0].defenderIndex,
-        defenderName,
         attackerTroups,
-        defenderTroups,
-        duels: duelGroups,
-      };
-      setBattle(battle2);
+        defenderName,
+        defenderTroups
+      );
+      console.log('======> ATTACK', battle);
+      setBattle(battle);
       /*const battle: Duel[] = [];
       await fetchEventsOnce([BATTLE_EVENT, '0x' + game_id.toString(16), '0x' + game.nonce.toString(16)], (event) =>
         battle.push(parseBattleEvent(event))
@@ -243,10 +174,14 @@ const ActionPanel = () => {
     setIsDiceAnimation(false);
   };
 
+  const handleCloseAttackReport = () => {
+    setBattle(null);
+  };
+
   return (
     <>
       {/*isDiceAnimation && <OverlayDice onClose={handleCloseDice} />*/}
-      {battle && <OverlayBattle battle={battle} onClose={handleCloseDice} />}
+      {battle && <OverlayBattle battle={battle} onClose={handleCloseAttackReport} />}
       {isAttackTurn() ? (
         current_source &&
         current_target &&

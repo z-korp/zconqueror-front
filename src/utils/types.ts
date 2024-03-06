@@ -34,7 +34,7 @@ export type Continent = {
   supply: number;
 };
 
-export interface Duel {
+export interface BattleEvent {
   attackerIndex: number;
   attackerValue: number;
   battleId: number;
@@ -45,12 +45,21 @@ export interface Duel {
   nonce: number;
 }
 
+export interface Duel {
+  battleId: number;
+  duelId: number;
+  attackerValue: number;
+  defenderValue: number;
+}
+
 export interface Battle {
-  attacker: number;
+  gameId: number;
+  nonce: number;
+  attackerIndex: number;
   attackerName: string;
-  defender: number;
+  defenderIndex: number;
   defenderName: string;
   attackerTroups: number;
   defenderTroups: number;
-  duels: Duel[][];
+  rounds: Duel[][];
 }

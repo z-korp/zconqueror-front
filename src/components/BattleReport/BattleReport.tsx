@@ -30,9 +30,9 @@ const BattleReport: React.FC<BattleReportProps> = ({ battle }) => {
         <div>{`${att} vs ${def}`}</div>
       </div>
       <Separator className="my-2" />
-      {battle.duels.map((duels, index) => {
-        const attackerDices = duels.map((duel) => duel.attackerValue).filter((value) => value !== 0);
-        const defenderDices = duels.map((duel) => duel.defenderValue).filter((value) => value !== 0);
+      {battle.rounds.map((round, index) => {
+        const attackerDices = round.map((duel) => duel.attackerValue).filter((value) => value !== 0);
+        const defenderDices = round.map((duel) => duel.defenderValue).filter((value) => value !== 0);
 
         return (
           <div key={index}>
@@ -40,7 +40,7 @@ const BattleReport: React.FC<BattleReportProps> = ({ battle }) => {
               <div className="font-bold absolute left-0">[Round {index + 1}]</div>
               {Math.min(att, 3)} vs {Math.min(def, 2)}
             </div>
-            {duels.map((duel, duelIndex) => {
+            {round.map((duel, duelIndex) => {
               let attackerLost = 0;
               let defenderLost = 0;
               if (duel.attackerValue && duel.defenderValue) {
@@ -75,23 +75,33 @@ const BattleReport: React.FC<BattleReportProps> = ({ battle }) => {
         <div className="font-bold absolute left-0">[Result]</div>
         <div>{`${battle.attackerName} - ${battle.defenderName}`}</div>
       </div>
+
       <div className="flex flex-row justify-center relative">
         <div className="font-bold absolute left-0">INIT</div>
-        <span>{`${battle.attackerTroups}`}</span>
+        <span className="w-3 text-right">{`${battle.attackerTroups}`}</span>
         <Separator orientation="vertical" className="mx-2 h-6 opacity-30" />
-        <span>{`${battle.defenderTroups}`}</span>
+        <span className="w-3 text-left">{`${battle.defenderTroups}`}</span>
       </div>
+
       <div className="flex flex-row justify-center relative">
         <div className="font-bold absolute left-0">LOST</div>
-        <span className="text-red-500">{`-${attackerLostTotal}`}</span>
+        {attackerLostTotal === 0 ? (
+          <span className="w-3 text-right">0</span>
+        ) : (
+          <span className="text-red-500 w-3 text-right">{`-${attackerLostTotal} `}</span>
+        )}
         <Separator orientation="vertical" className="mx-2 h-6 opacity-30" />
-        <span className="text-red-500">{`-${defenderLostTotal}`}</span>
+        {defenderLostTotal === 0 ? (
+          <span className="w-3 text-left">0</span>
+        ) : (
+          <span className="text-red-500 w-3 text-left">{`-${defenderLostTotal}`}</span>
+        )}
       </div>
       <div className="flex flex-row justify-center relative">
         <div className="font-bold absolute left-0">REMAINING</div>
-        <span className="text-green-500">{`${att}`}</span>
+        <span className="text-green-500 w-3 text-right">{`${att}`}</span>
         <Separator orientation="vertical" className="mx-2 h-6 opacity-30" />
-        <span className="text-green-500">{`${def}`}</span>
+        <span className="text-green-500 w-3 text-left">{`${def}`}</span>
       </div>
     </div>
   );
