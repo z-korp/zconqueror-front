@@ -39,6 +39,20 @@
   border-color: #fff transparent transparent #fff;
 }
 
+.speechLeft:before {
+  left: -18px;
+  bottom: -7px;
+  border-width: 12px 18px 12px 0;
+  border-color: transparent black transparent transparent;
+}
+
+.speechLeft:after {
+  left: -15px;
+  bottom: 15px;
+  border-width: 10px 15px 10px 0;
+  border-color: transparent #fff transparent transparent;
+}
+
 .thought:before,
 .thought:after {
   left: 10px;

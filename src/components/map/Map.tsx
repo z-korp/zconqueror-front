@@ -11,7 +11,9 @@ import Svg from './Svg';
 import Region from './Region';
 import nameData from '../../assets/map/nameData.json'; // Adjust the path as necessary
 import { Button } from '../ui/button';
-import { FaRegMap } from 'react-icons/fa';
+import { BadgeHelp, Map as MapLucid } from 'lucide-react';
+import { useTutorial } from '../../contexts/TutorialContext';
+import DynamicOverlayTuto from '../DynamicOverlayTuto';
 
 const Map = () => {
   const containerRef = useRef(null);
@@ -23,6 +25,8 @@ const Map = () => {
   const { current_source, set_current_source, set_current_target, setContinentMode, isContinentMode } = useElementStore(
     (state) => state
   );
+
+  const { setShowTuto } = useTutorial();
 
   const handleRegionClick = (regionId: number) => {
     if (isTest) console.log('regionId', regionId);
@@ -80,17 +84,30 @@ const Map = () => {
     }
   };
 
+  function handleShowTuto() {
+    setShowTuto(true);
+  }
+
   return (
     <>
       <div className="relative" ref={containerRef}>
-        <Button
-          variant="secondary"
-          className="absolute top-0 right-0 z-10"
-          onMouseEnter={() => setContinentMode(true)} // Activates when the mouse enters the button area
-          onMouseLeave={() => setContinentMode(false)} // Deactivates when the mouse leaves the button area
-        >
-          <FaRegMap />
-        </Button>
+        <div className="absolute z-20 top-0 right-0 gap-2 flex">
+          <DynamicOverlayTuto
+            tutorialStep="STEP_6"
+            texts={["If you control an entire region, you'll receive additional troop reinforcements every turn."]}
+          >
+            <Button
+              variant="secondary"
+              onMouseEnter={() => setContinentMode(true)} // Activates when the mouse enters the button area
+              onMouseLeave={() => setContinentMode(false)} // Deactivates when the mouse leaves the button area
+            >
+              <MapLucid />
+            </Button>
+          </DynamicOverlayTuto>
+          <Button variant="secondary" onClick={handleShowTuto}>
+            <BadgeHelp />
+          </Button>
+        </div>
         {isContinentMode && (
           <div className="vt323-font text-xl absolute top-0 left-1/2 transform -translate-x-1/2 z-50">
             <div>Controlling a full continent awards supply bonuses.</div>
