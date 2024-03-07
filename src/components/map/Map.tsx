@@ -3,7 +3,7 @@ import { usePhase } from '@/hooks/usePhase';
 import { useTurn } from '@/hooks/useTurn';
 import { getNeighbors } from '@/utils/map';
 import { Phase, useElementStore } from '@/utils/store';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { useMe } from '@/hooks/useMe';
 import { isTest } from '@/utils/test';
 import Continents from './Continents';
@@ -16,8 +16,15 @@ import { BadgeHelp, Flag, Map as MapLucid } from 'lucide-react';
 import { useTutorial } from '../../contexts/TutorialContext';
 import DynamicOverlayTuto from '../DynamicOverlayTuto';
 import tutorialData from '../../data/tutorialSteps.json';
-import { Dialog, DialogClose, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { DialogFooter, DialogHeader } from '../ui/dialog';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+  DialogHeader,
+} from '@/components/ui/dialog';
 
 const Map = () => {
   const {
@@ -128,7 +135,7 @@ const Map = () => {
                 <DialogFooter className="sm:justify-center">
                   <DialogClose asChild>
                     <Button variant="destructive" className="m-4 gap-2" onClick={surrender}>
-                      Yes I'm sure
+                      Yes I want to surrender !
                       <Flag />
                     </Button>
                   </DialogClose>
