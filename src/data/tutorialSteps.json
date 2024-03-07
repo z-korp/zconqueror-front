@@ -1,0 +1,13 @@
+{
+  "1": ["Here, you can view your opponents, the tiles they control, their cards, and their army size."],
+  "2": [
+    "The initial phase is the supply phase, during which you must distribute all your cards to the tiles you control according to your chosen strategy."
+  ],
+  "3": ["Once all troops have been deployed, proceed to the next phase."],
+  "4": [
+    "The second phase is the attack phase. Click on one of your tiles and an adjacent enemy tile to open the attack planning panel."
+  ],
+  "5": ["In the final phase, you can strategically reposition your troops between your owned tiles."],
+  "6": ["If you control an entire region, you'll receive additional troop reinforcements every turn."],
+  "7": ["This is the log window, where you can track game events. Hover over underlined text for additional details."]
+}

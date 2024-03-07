@@ -3,6 +3,7 @@ import ActionLogs from './components/ActionLogs';
 import PlayPanel from './components/PlayPanel';
 import Map from './components/map/Map';
 import { Toaster } from './components/ui/toaster';
+import tutorialData from './data/tutorialSteps.json';
 
 import GameState from './utils/gamestate';
 import MainMenu from './components/MainMenu';
@@ -58,22 +59,9 @@ function App() {
           <>
             <div className="flex">
               <div className="w-full">
-                <DynamicOverlayTuto
-                  tutorialStep="STEP_5"
-                  texts={['In the final phase, you can strategically reposition your troops between your owned tiles.']}
-                >
-                  <DynamicOverlayTuto
-                    tutorialStep="STEP_4"
-                    texts={[
-                      'The second phase is the attack phase. Click on one of your tiles and an adjacent enemy tile to open the attack planning panel.',
-                    ]}
-                  >
-                    <DynamicOverlayTuto
-                      tutorialStep="STEP_2"
-                      texts={[
-                        'The initial phase is the supply phase, during which you must distribute all your cards to the tiles you control according to your chosen strategy.',
-                      ]}
-                    >
+                <DynamicOverlayTuto tutorialStep="5" texts={tutorialData['5']}>
+                  <DynamicOverlayTuto tutorialStep="4" texts={tutorialData['4']}>
+                    <DynamicOverlayTuto tutorialStep="2" texts={tutorialData['2']}>
                       <Map />
                     </DynamicOverlayTuto>
                   </DynamicOverlayTuto>
@@ -81,20 +69,12 @@ function App() {
               </div>
             </div>
             <div className="fixed bottom-0 left-0 w-1/4 p-1">
-              <DynamicOverlayTuto
-                tutorialStep="STEP_7"
-                texts={[
-                  'This is the log window, where you can track game events. Hover over underlined text for additional details.',
-                ]}
-              >
+              <DynamicOverlayTuto tutorialStep="7" texts={tutorialData['7']}>
                 <ActionLogs />
               </DynamicOverlayTuto>
             </div>
             <div className="fixed bottom-0 right-0 w-1/4 pb-1 pr-1">
-              <DynamicOverlayTuto
-                tutorialStep="STEP_1"
-                texts={['Here, you can view your opponents, the tiles they control, their cards, and their army size.']}
-              >
+              <DynamicOverlayTuto tutorialStep="1" texts={tutorialData['1']}>
                 <PlayersPanel players={players} />
               </DynamicOverlayTuto>
             </div>

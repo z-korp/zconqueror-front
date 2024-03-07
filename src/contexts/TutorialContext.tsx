@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, ReactNode, FC, useEffect } from 'react';
+import tutorialData from '../data/tutorialSteps.json';
 
 interface TutorialContextType {
   showTuto: boolean;
@@ -7,14 +8,16 @@ interface TutorialContextType {
   setCurrentStep: (step: TutorialStep) => void;
   nextStep: () => void;
 }
-type TutorialStep = 'STEP_1' | 'STEP_2' | 'STEP_3' | 'STEP_4' | 'STEP_5' | 'STEP_6' | 'STEP_7' | 'STEP_8'; // Énumérez vos étapes ici
 
-const tutorialSteps: TutorialStep[] = ['STEP_1', 'STEP_2', 'STEP_3', 'STEP_4', 'STEP_5', 'STEP_6', 'STEP_7', 'STEP_8'];
+type TutorialStep = string;
+
+const tutorialSteps: string[] = Object.keys(tutorialData);
 
 const TutorialContext = createContext<TutorialContextType | undefined>(undefined);
 
 export const useTutorial = (): TutorialContextType => {
   const context = useContext(TutorialContext);
+  console.log('context', context);
   if (!context) {
     throw new Error('useTutorial must be used within a TutorialProvider');
   }
@@ -27,7 +30,7 @@ interface TutorialProviderProps {
 
 export const TutorialProvider: FC<TutorialProviderProps> = ({ children }) => {
   const [showTuto, setShowTuto] = useState<boolean>(true);
-  const [currentStep, setCurrentStep] = useState<TutorialStep>('STEP_1');
+  const [currentStep, setCurrentStep] = useState<TutorialStep>('1');
 
   const completeTutorial = () => {
     localStorage.setItem('tutorialCompleted', 'true');
@@ -38,7 +41,7 @@ export const TutorialProvider: FC<TutorialProviderProps> = ({ children }) => {
     const currentIndex = tutorialSteps.indexOf(currentStep);
     const nextIndex = (currentIndex + 1) % tutorialSteps.length; // Cela permet de revenir au début après la dernière étape
     setCurrentStep(tutorialSteps[nextIndex]);
-    if (currentStep === 'STEP_8') {
+    if (currentStep === tutorialSteps[tutorialSteps.length - 1]) {
       completeTutorial();
     }
   };
