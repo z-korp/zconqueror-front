@@ -3,11 +3,11 @@ import { rotations } from '@/utils/rotations';
 import './Dice.css';
 
 interface DiceProps {
-  desiredResult: number;
-  scale: number;
+  desiredResult?: number;
+  scale?: number;
 }
 
-const Dice: React.FC<DiceProps> = ({ desiredResult, scale }) => {
+const Dice: React.FC<DiceProps> = ({ desiredResult = 3, scale = 1 }) => {
   const [rotate, setRotate] = useState<string>('');
 
   useEffect(() => {
