@@ -15,9 +15,7 @@ export const sanitizePlayer = (player: any): Player => {
   return {
     ...player,
     address: bigIntAddressToString(player.address),
-    cards: unpackU128toNumberArray(player.cards)
-      .filter((e: number) => e !== 0)
-      .map((c) => cardTypeFromNumber(c)),
+    cards: unpackU128toNumberArray(player.cards).filter((e: number) => e !== 0),
     name: feltToStr(player.name),
   };
 };
