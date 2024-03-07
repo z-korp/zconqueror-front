@@ -3,7 +3,7 @@ import { usePhase } from '@/hooks/usePhase';
 import { useTurn } from '@/hooks/useTurn';
 import { getNeighbors } from '@/utils/map';
 import { Phase, useElementStore } from '@/utils/store';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useMe } from '@/hooks/useMe';
 import { isTest } from '@/utils/test';
 import Continents from './Continents';
@@ -24,6 +24,8 @@ const Map = () => {
   } = useDojo();
   const containerRef = useRef(null);
   const { isItMyTurn } = useMe();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { turn } = useTurn();
   const { phase } = usePhase();
@@ -102,7 +104,7 @@ const Map = () => {
         >
           <FaRegMap />
         </Button>
-        <Button variant="secondary" className="absolute top-0 right-12 z-10" onClick={() => surrender()}>
+        <Button variant="secondary" className="absolute top-0 right-12 z-10" onClick={() => setIsModalOpen(true)}>
           <Flag />
         </Button>
 
@@ -130,6 +132,19 @@ const Map = () => {
             ))}
           </svg>
         </div>
+        {isModalOpen && (
+          <div className="fixed inset-0 flex items-center justify-center z-100">
+            <div className="modal  bg-stone-700 border-stone-900 border-2 w-56 vt323-font rounded-md shadow-2xl text-lg z-10 text-white">
+              <h2>Do you confirm you want to surrender?</h2>
+              <Button variant="tertiary" className="m-4" onClick={surrender}>
+                OK
+              </Button>
+              <Button variant="tertiary" onClick={() => setIsModalOpen(false)}>
+                Cancel
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );
