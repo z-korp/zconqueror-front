@@ -3,7 +3,7 @@ import { usePhase } from '@/hooks/usePhase';
 import { useTurn } from '@/hooks/useTurn';
 import { getNeighbors } from '@/utils/map';
 import { Phase, useElementStore } from '@/utils/store';
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { useMe } from '@/hooks/useMe';
 import { isTest } from '@/utils/test';
 import Continents from './Continents';
@@ -85,7 +85,6 @@ const Map = () => {
   };
 
   function handleShowTuto() {
-    console.log('handleShowTuto');
     setShowTuto(true);
   }
 
