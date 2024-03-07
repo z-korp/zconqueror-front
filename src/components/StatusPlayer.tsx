@@ -3,7 +3,6 @@ import { avatars } from '@/utils/pfps';
 import { useMe } from '@/hooks/useMe';
 import { usePhase } from '@/hooks/usePhase';
 import { Button } from './ui/button';
-import DynamicOverlayTuto from './DynamicOverlayTuto';
 
 interface StatusPlayerProps {
   handleNextPhaseClick: () => void;
@@ -57,19 +56,14 @@ const StatusPlayer: React.FC<StatusPlayerProps> = ({ handleNextPhaseClick }) => 
             </div>
           </div>
           <div className="flex w-1/3 justify-center items-center">
-            <DynamicOverlayTuto
-              tutorialStep="STEP_3"
-              texts={['Once all troops have been deployed, proceed to the next phase.']}
-            >
-              {isItMyTurn && (
-                <Button
-                  className="h-10 bg-green-500 rounded-lg drop-shadow-lg px-4 py-2 hover:transform hover:-translate-y-1 transition-transform ease-in-out"
-                  onClick={handleNextPhaseClick}
-                >
-                  NEXT
-                </Button>
-              )}
-            </DynamicOverlayTuto>
+            {isItMyTurn && (
+              <Button
+                className="h-10 bg-green-500 rounded-lg drop-shadow-lg px-4 py-2 hover:transform hover:-translate-y-1 transition-transform ease-in-out"
+                onClick={handleNextPhaseClick}
+              >
+                NEXT
+              </Button>
+            )}
           </div>
         </div>
       </div>

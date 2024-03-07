@@ -63,15 +63,10 @@ module.exports = {
           from: { height: 'var(--radix-accordion-content-height)' },
           to: { height: 0 },
         },
-        'arrow-bounce': {
-          '0%, 100%': { transform: 'translateY(0)' },
-          '50%': { transform: 'translateY(-20px)' },
-        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
-        'arrow-bounce': 'arrow-bounce 2s ease-in-out infinite',
       },
       fontFamily: {
         'space-mono': ['Space Mono', 'monospace'],
