@@ -13,9 +13,17 @@ interface DynamicOverlayTutoProps {
   paddingProps?: number;
 }
 
+interface OverlayStyle {
+  top: number;
+  left: number;
+  width: number;
+  height: number;
+  borderRadius: number;
+}
+
 const DynamicOverlayTuto: FC<DynamicOverlayTutoProps> = ({ tutorialStep, children, texts, paddingProps = 10 }) => {
-  const childRef = useRef(null);
-  const [overlayStyle, setOverlayStyle] = useState({});
+  const childRef = useRef<HTMLDivElement | null>(null);
+  const [overlayStyle, setOverlayStyle] = useState<OverlayStyle>({});
   const { me } = useMe();
   const { showTuto, setShowTuto, currentStep, nextStep } = useTutorial();
 
@@ -25,7 +33,7 @@ const DynamicOverlayTuto: FC<DynamicOverlayTutoProps> = ({ tutorialStep, childre
 
   useEffect(() => {
     const updateOverlayStyle = () => {
-      if (childRef.current) {
+      if (childRef.current instanceof HTMLDivElement) {
         const { top, left, width, height } = childRef.current.getBoundingClientRect();
         const padding = paddingProps;
         const borderRadius = 10;
@@ -57,7 +65,7 @@ const DynamicOverlayTuto: FC<DynamicOverlayTutoProps> = ({ tutorialStep, childre
     setShowTuto(false);
   }
 
-  let image = null;
+  let image = undefined;
   if (me !== null && me.index + 1 < avatars.length) {
     image = avatars[me.index + 1];
   }

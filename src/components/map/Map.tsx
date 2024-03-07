@@ -12,9 +12,10 @@ import Region from './Region';
 import nameData from '../../assets/map/nameData.json'; // Adjust the path as necessary
 import { Button } from '../ui/button';
 import { useDojo } from '@/dojo/useDojo';
-import { BadgeHelp, Flag ,Map as MapLucid } from 'lucide-react';
+import { BadgeHelp, Flag, Map as MapLucid } from 'lucide-react';
 import { useTutorial } from '../../contexts/TutorialContext';
 import DynamicOverlayTuto from '../DynamicOverlayTuto';
+import tutorialData from '../../data/tutorialSteps.json';
 
 const Map = () => {
   const {
@@ -104,10 +105,7 @@ const Map = () => {
     <>
       <div className="relative" ref={containerRef}>
         <div className="absolute z-20 top-0 right-0 gap-2 flex">
-          <DynamicOverlayTuto
-            tutorialStep="STEP_6"
-            texts={["If you control an entire region, you'll receive additional troop reinforcements every turn."]}
-          >
+          <DynamicOverlayTuto tutorialStep="6" texts={tutorialData['6']}>
             <Button
               variant="secondary"
               onMouseEnter={() => setContinentMode(true)} // Activates when the mouse enters the button area
@@ -116,7 +114,7 @@ const Map = () => {
               <MapLucid />
             </Button>
           </DynamicOverlayTuto>
-          <Button variant="secondary" className="absolute top-0 right-12 z-10" onClick={() => setIsModalOpen(true)}>
+          <Button variant="secondary" onClick={() => setIsModalOpen(true)}>
             <Flag />
           </Button>
           <Button variant="secondary" onClick={handleShowTuto}>
