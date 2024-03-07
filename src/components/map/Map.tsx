@@ -3,7 +3,7 @@ import { usePhase } from '@/hooks/usePhase';
 import { useTurn } from '@/hooks/useTurn';
 import { getNeighbors } from '@/utils/map';
 import { Phase, useElementStore } from '@/utils/store';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useMe } from '@/hooks/useMe';
 import { isTest } from '@/utils/test';
 import Continents from './Continents';
@@ -11,18 +11,36 @@ import Svg from './Svg';
 import Region from './Region';
 import nameData from '../../assets/map/nameData.json'; // Adjust the path as necessary
 import { Button } from '../ui/button';
-import { FaRegMap } from 'react-icons/fa';
+import { useDojo } from '@/dojo/useDojo';
+import { BadgeHelp, Flag, Map as MapLucid } from 'lucide-react';
+import { useTutorial } from '../../contexts/TutorialContext';
+import DynamicOverlayTuto from '../DynamicOverlayTuto';
+import tutorialData from '../../data/tutorialSteps.json';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 
 const Map = () => {
+  const {
+    setup: {
+      client: { play },
+    },
+    account: { account },
+  } = useDojo();
   const containerRef = useRef(null);
   const { isItMyTurn } = useMe();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { turn } = useTurn();
   const { phase } = usePhase();
   const { tiles } = useGetTiles();
-  const { current_source, set_current_source, set_current_target, setContinentMode, isContinentMode } = useElementStore(
-    (state) => state
-  );
+  const { current_source, set_current_source, set_current_target, setContinentMode, isContinentMode, game_id } =
+    useElementStore((state) => state);
+
+  const surrender = async () => {
+    if (game_id) await play.surrender(account, game_id);
+  };
+
+  const { setShowTuto } = useTutorial();
 
   const handleRegionClick = (regionId: number) => {
     if (isTest) console.log('regionId', regionId);
@@ -80,17 +98,47 @@ const Map = () => {
     }
   };
 
+  function handleShowTuto() {
+    setShowTuto(true);
+  }
+
   return (
     <>
-      <div className="relative z-0" ref={containerRef}>
-        <Button
-          variant="secondary"
-          className="absolute top-0 right-0 z-10"
-          onMouseEnter={() => setContinentMode(true)} // Activates when the mouse enters the button area
-          onMouseLeave={() => setContinentMode(false)} // Deactivates when the mouse leaves the button area
-        >
-          <FaRegMap />
-        </Button>
+      <div className="relative" ref={containerRef}>
+        <div className="absolute z-20 top-0 right-0 gap-2 flex">
+          <DynamicOverlayTuto tutorialStep="6" texts={tutorialData['6']}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="secondary"
+                  onMouseEnter={() => setContinentMode(true)} // Activates when the mouse enters the button area
+                  onMouseLeave={() => setContinentMode(false)} // Deactivates when the mouse leaves the button area
+                >
+                  <MapLucid />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Regions</TooltipContent>
+            </Tooltip>
+          </DynamicOverlayTuto>
+
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="secondary" onClick={() => setIsModalOpen(true)}>
+                <Flag />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Surrender</TooltipContent>
+          </Tooltip>
+
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="secondary" onClick={handleShowTuto}>
+                <BadgeHelp />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Tutorial</TooltipContent>
+          </Tooltip>
+        </div>
         {isContinentMode && (
           <div className="vt323-font text-xl absolute top-0 left-1/2 transform -translate-x-1/2 z-50">
             <div>Controlling a full continent awards supply bonuses.</div>
@@ -115,6 +163,19 @@ const Map = () => {
             ))}
           </svg>
         </div>
+        {isModalOpen && (
+          <div className="fixed inset-0 flex items-center justify-center z-100">
+            <div className="modal  bg-stone-700 border-stone-900 border-2 w-56 vt323-font rounded-md shadow-2xl text-lg z-10 text-white">
+              <h2>Do you confirm you want to surrender?</h2>
+              <Button variant="tertiary" className="m-4" onClick={surrender}>
+                OK
+              </Button>
+              <Button variant="tertiary" onClick={() => setIsModalOpen(false)}>
+                Cancel
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );

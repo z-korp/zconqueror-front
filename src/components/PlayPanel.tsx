@@ -15,6 +15,8 @@ import CardPanelButton from './CardPanelButton';
 import Bubble from './Bubble';
 import { canBeExchanged } from '@/utils/cards';
 import { toast } from './ui/use-toast';
+import DynamicOverlayTuto from './DynamicOverlayTuto';
+import tutorialData from '../data/tutorialSteps.json';
 
 const PlayPanel = () => {
   const {
@@ -161,7 +163,9 @@ const PlayPanel = () => {
 
       <div className="pointer-events-none fixed bottom-0 left-0 right-0 flex justify-center items-end p-4">
         {/* Section du panneau de jeu */}
-        <CardPanelButton cards={cards} toggleCardMenu={toggleCardMenu} />
+        <DynamicOverlayTuto tutorialStep="8" texts={tutorialData['8']}>
+          <CardPanelButton cards={cards} toggleCardMenu={toggleCardMenu} />
+        </DynamicOverlayTuto>
 
         {/* Menu des cartes */}
         {showCardMenu && <CardMenu cards={cards} onClose={() => setShowCardMenu(false)} />}
@@ -171,7 +175,7 @@ const PlayPanel = () => {
           </div>
           {showBubble && !hasSourceChanged && (
             <div className="w-auto ">
-              <Bubble texts={texts} />
+              <Bubble texts={texts} variant="speech" />
             </div>
           )}
 
