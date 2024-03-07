@@ -29,8 +29,6 @@ const Map = () => {
   const containerRef = useRef(null);
   const { isItMyTurn } = useMe();
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   const { turn } = useTurn();
   const { phase } = usePhase();
   const { tiles } = useGetTiles();
