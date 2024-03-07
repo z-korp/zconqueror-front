@@ -10,6 +10,17 @@ interface DiceProps {
 const Dice: React.FC<DiceProps> = ({ desiredResult = 3, scale = 1 }) => {
   const [rotate, setRotate] = useState<string>('');
 
+  const initialSize = 200;
+  const newSize = initialSize * scale;
+
+  const containerStyles = {
+    width: `${newSize}px`,
+    height: `${newSize}px`,
+    transform: `scale(${scale})`,
+    transformOrigin: 'center',
+    margin: '1rem',
+  };
+
   useEffect(() => {
     const rotationTimeout = setTimeout(() => {
       setRotate(rotations[desiredResult]);
@@ -21,7 +32,7 @@ const Dice: React.FC<DiceProps> = ({ desiredResult = 3, scale = 1 }) => {
   }, [desiredResult]);
 
   return (
-    <div className="inline-flex origin-center m-20" style={{ transform: `scale(${scale})` }}>
+    <div className="inline-flex justify-center items-center" style={containerStyles}>
       <div className="scene mt2 mb4">
         <div className="cube" style={{ transform: rotate }}>
           <div className="bg-white cube__face cube__face--front front">
