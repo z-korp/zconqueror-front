@@ -1,6 +1,6 @@
 import { BATTLE_EVENT, DEFEND_EVENT, FORTIFY_EVENT, SUPPLY_EVENT } from '@/constants';
 import { useDojo } from '@/dojo/useDojo';
-import { fetchEventsOnce, fetchEventsTxHash } from '@/services/fetchEvents';
+import { fetchEventsOnce } from '@/services/fetchEvents';
 import {
   Event,
   createBattleLog,
@@ -102,10 +102,15 @@ export const useLogs = () => {
 
                 // let's fetch all battle events for this defend event
                 const battleEvents: BattleEvent[] = [];
-                await fetchEventsTxHash(
-                  [BATTLE_EVENT, '0x' + game_id.toString(16), '0x' + game.nonce.toString(16)],
-                  event.transactionHash,
-                  (event) => {
+                await fetchEventsOnce(
+                  [
+                    BATTLE_EVENT,
+                    '0x' + game_id.toString(16),
+                    '0x' + game.nonce.toString(16),
+                    '*',
+                    event.transactionHash,
+                  ],
+                  async (event) => {
                     const battleEvent = parseBattleEvent(event);
                     battleEvents.push(battleEvent);
                   }
@@ -168,10 +173,9 @@ export const useLogs = () => {
 
         // let's fetch all battle events for this defend event
         const battleEvents: BattleEvent[] = [];
-        await fetchEventsTxHash(
-          [BATTLE_EVENT, '0x' + gameId.toString(16), '0x' + game.nonce.toString(16)],
-          event.transactionHash,
-          (event) => {
+        await fetchEventsOnce(
+          [BATTLE_EVENT, '0x' + gameId.toString(16), '0x' + game.nonce.toString(16), '*', event.transactionHash],
+          async (event) => {
             const battleEvent = parseBattleEvent(event);
             battleEvents.push(battleEvent);
           }
@@ -181,6 +185,7 @@ export const useLogs = () => {
           const attackerName = players[battleEvents[0].attackerIndex].name;
           const defenderName = players[battleEvents[0].defenderIndex].name;
           const battle = getBattleFromBattleEvents(battleEvents, attackerName, defenderName);
+          console.log('battle', battle);
 
           log.battle = battle;
         }

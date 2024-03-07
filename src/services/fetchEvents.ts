@@ -23,9 +23,11 @@ type getEventsQuery = {
 export const fetchEventsOnce = async (keys: string[], processResults: (event: Event) => Promise<void>) => {
   const formattedKeys = keys.map((key) => `"${key}"`).join(',');
 
+  console.log('Fetching events for keys:', formattedKeys);
+
   const query = `
   query events {
-    events(keys: [${formattedKeys}]) {
+    events(keys: [${formattedKeys}], first: 100) {
       edges {
         node {
           id
@@ -42,36 +44,4 @@ export const fetchEventsOnce = async (keys: string[], processResults: (event: Ev
 
   // Process each event
   await Promise.all(events.edges.map((edge) => processResults(edge.node)));
-};
-
-export const fetchEventsTxHash = async (
-  keys: string[],
-  transactionHash: string,
-  processResults: (event: Event) => void
-) => {
-  const formattedKeys = keys.map((key) => `"${key}"`).join(',');
-
-  const query = `
-  query events {
-    events(keys: [${formattedKeys}]) {
-      edges {
-        node {
-          id
-          keys
-          data
-          createdAt
-          transactionHash
-        }
-      }
-    }
-  }`;
-
-  const { events }: getEventsQuery = await client.request(query);
-
-  // Process each event
-  events.edges
-    .filter((e) => e.node.transactionHash === transactionHash)
-    .forEach((edge) => {
-      processResults(edge.node);
-    });
 };
