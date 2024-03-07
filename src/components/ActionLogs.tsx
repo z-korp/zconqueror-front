@@ -4,7 +4,6 @@ import { useElementStore } from '@/utils/store';
 import { format } from 'date-fns';
 import React, { useEffect, useRef, useState } from 'react';
 import { animated, useSpring } from 'react-spring';
-import DynamicOverlayTuto from './DynamicOverlayTuto';
 
 // TODO: add swap de cards
 

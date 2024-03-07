@@ -61,7 +61,7 @@ const GameRow: React.FC<GameRowProps> = ({ game, setPlayerName }) => {
       <TableCell>{game.id}</TableCell>
       <TableCell>
         <div className="flex items-center justify-center">
-          <div className="px-2 rounded-full bg-stone-400">{`${players.length}/${game.player_count}`}</div>
+          <div className="px-2 rounded-full bg-stone-400">{`${players.length}/6`}</div>
         </div>
       </TableCell>
       <TableCell>
