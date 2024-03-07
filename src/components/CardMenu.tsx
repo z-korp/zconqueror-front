@@ -3,7 +3,7 @@ import GameCard from './GameCard';
 import { useDojo } from '@/dojo/useDojo';
 import { useEffect, useState } from 'react';
 import { Button } from './ui/button';
-import { CardType } from '@/utils/cards';
+import { CardType, cardTypeFromNumber } from '@/utils/cards';
 
 interface CardMenuProps {
   cards: CardType[];
@@ -18,7 +18,7 @@ const CardMenu = ({ onClose, cards }: CardMenuProps) => {
     account: { account },
   } = useDojo();
 
-  const { game } = useGame();
+  const game = useGame();
 
   const [selectedCards, setSelectedCards] = useState<number[]>([]);
   const [pendingCards, setPendingCards] = useState<number[]>([]);
@@ -91,7 +91,7 @@ const CardMenu = ({ onClose, cards }: CardMenuProps) => {
                     ✓
                   </div>
                 )}
-                <GameCard card={pendingCards[index - 1]} />
+                <GameCard card={cardTypeFromNumber(pendingCards[index - 1])} />
               </div>
             ) : (
               <div

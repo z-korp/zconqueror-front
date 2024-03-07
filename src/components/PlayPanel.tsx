@@ -13,7 +13,7 @@ import { useGame } from '@/hooks/useGame';
 import { useMe } from '@/hooks/useMe';
 import CardPanelButton from './CardPanelButton';
 import Bubble from './Bubble';
-import { canBeExchanged } from '@/utils/cards';
+import { canBeExchanged, cardTypeFromNumber } from '@/utils/cards';
 import { toast } from './ui/use-toast';
 import DynamicOverlayTuto from './DynamicOverlayTuto';
 import tutorialData from '../data/tutorialSteps.json';
@@ -94,7 +94,7 @@ const PlayPanel = () => {
   useEffect(() => {
     if (isItMyTurn && phase === Phase.DEPLOY) {
       if (player) {
-        if (canBeExchanged(player.cards))
+        if (canBeExchanged(player.cards.map((c) => cardTypeFromNumber(c))))
           setTexts(['It is now your turn, my Lord!', 'You can exchange cards if you want.']);
         else setTexts(['It is now your turn, my Lord!']);
       }
@@ -158,7 +158,9 @@ const PlayPanel = () => {
 
   return (
     <>
-      {showCardsPopup && <EndTurnPopup cards={cards} onClose={() => setShowCardsPopup(false)} />}
+      {showCardsPopup && (
+        <EndTurnPopup cards={cards.map((c) => cardTypeFromNumber(c))} onClose={() => setShowCardsPopup(false)} />
+      )}
       {showOverlay && <OverlayWithText text={overlayText} />}
       <div className="pointer-events-none fixed bottom-0 left-0 right-0 flex justify-center items-end p-4">
         {/* Section du panneau de jeu */}
