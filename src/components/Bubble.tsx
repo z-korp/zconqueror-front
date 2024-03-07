@@ -3,9 +3,10 @@ import '../styles/Bubble.css';
 
 interface ComicBubbleProps {
   texts: string[];
+  variant: string;
 }
 
-const Bubble: React.FC<ComicBubbleProps> = ({ texts }) => {
+const Bubble: React.FC<ComicBubbleProps> = ({ texts, variant }) => {
   const [displayText, setDisplayText] = useState('');
   const [charIndex, setCharIndex] = useState(0);
   const [textIndex, setTextIndex] = useState(0);
@@ -46,7 +47,9 @@ const Bubble: React.FC<ComicBubbleProps> = ({ texts }) => {
   }, [charIndex, textIndex, texts]);
 
   return isVisible ? (
-    <div className="vt323-font bubble speech relative max-w-md p-3 border-2 border-black rounded-lg bg-white text-lg">
+    <div
+      className={`vt323-font bubble ${variant} relative max-w-md p-3 border-2 border-black rounded-lg bg-white text-lg`}
+    >
       {`“${displayText}”`}
     </div>
   ) : null;

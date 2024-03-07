@@ -15,6 +15,7 @@ import CardPanelButton from './CardPanelButton';
 import Bubble from './Bubble';
 import { canBeExchanged } from '@/utils/cards';
 import { toast } from './ui/use-toast';
+import DynamicOverlayTuto from './DynamicOverlayTuto';
 
 const PlayPanel = () => {
   const {
@@ -160,7 +161,14 @@ const PlayPanel = () => {
       {showOverlay && <OverlayWithText text={overlayText} />}
       <div className="pointer-events-none fixed bottom-0 left-0 right-0 flex justify-center items-end p-4">
         {/* Section du panneau de jeu */}
-        <CardPanelButton cards={cards} toggleCardMenu={toggleCardMenu} />
+        <DynamicOverlayTuto
+          tutorialStep="STEP_8"
+          texts={[
+            'Each turn, conquering a territory earns you a card. Combine three cards for extra troops just before the deployment phase. You need to use them when you have five cards.',
+          ]}
+        >
+          <CardPanelButton cards={cards} toggleCardMenu={toggleCardMenu} />
+        </DynamicOverlayTuto>
 
         {/* Menu des cartes */}
         {showCardMenu && <CardMenu cards={cards} onClose={() => setShowCardMenu(false)} />}
@@ -170,7 +178,7 @@ const PlayPanel = () => {
           </div>
           {showBubble && !hasSourceChanged && (
             <div className="w-auto ">
-              <Bubble texts={texts} />
+              <Bubble texts={texts} variant="speech" />
             </div>
           )}
 
