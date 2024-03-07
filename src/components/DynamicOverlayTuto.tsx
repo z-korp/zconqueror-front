@@ -23,9 +23,6 @@ const DynamicOverlayTuto: FC<DynamicOverlayTutoProps> = ({ tutorialStep, childre
     nextStep();
   };
 
-  console.log('currentStep', currentStep);
-  console.log('tutorialStep', tutorialStep);
-
   useEffect(() => {
     const updateOverlayStyle = () => {
       if (childRef.current) {
