@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { animated, useSpring } from 'react-spring';
 import SidePlayerInfo from './SidePlayerInfo';
 import { useMe } from '@/hooks/useMe';
@@ -7,6 +7,7 @@ import { useGetCurrentPlayer } from '@/hooks/useGetCurrentPlayer';
 import { Player } from '@/utils/types';
 import { useGame } from '@/hooks/useGame';
 import { useDojo } from '@/dojo/useDojo';
+import { Button } from './ui/button';
 
 type PlayersPanelProps = {
   players: Player[];
@@ -87,14 +88,14 @@ const PlayersPanel = ({ players }: PlayersPanelProps) => {
               <div className="absolute -left-24 mt-4 flex justify-center items-center h-14 w-24 rounded-l-lg bg-stone-900 text-stone-500 flex-col">
                 <span className="vt323-font text-white">{phaseName} ▶︎</span>
                 {timeLeft > 0 ? (
-                  <span className="vt323-font text-white ml-2 mb-1">{timeLeft}</span>
+                  <span className="vt323-font text-white mb-1">{timeLeft}</span>
                 ) : (
-                  <button
-                    className="vt323-font text-white ml-2 px-1 border-white border-[1px] rounded-lg"
+                  <Button
+                    className="vt323-font text-white px-3 py-1 text-xs h-fit border-white border-[1px] rounded-lg"
                     onClick={banPlayer}
                   >
                     BAN
-                  </button>
+                  </Button>
                 )}
               </div>
             )}

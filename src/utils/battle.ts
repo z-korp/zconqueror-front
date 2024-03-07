@@ -40,6 +40,11 @@ export function groupDuelByIndex(duels: Duel[]): Duel[][] {
     duelGroups.get(duel.battleId)?.push(duel);
   });
 
+  // Sort each group of duels by duelId in increasing order
+  duelGroups.forEach((group) => {
+    group.sort((a, b) => a.duelId - b.duelId);
+  });
+
   // Convert the Map into an array of duel arrays
   // Assuming battleIds start at 0 and are continuous
   const result: Duel[][] = Array.from(duelGroups.values());

@@ -67,7 +67,6 @@ export const fetchEventsTxHash = async (
   }`;
 
   const { events }: getEventsQuery = await client.request(query);
-  console.log('------> events', events);
 
   // Process each event
   events.edges

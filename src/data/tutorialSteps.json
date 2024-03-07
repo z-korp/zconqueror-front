@@ -9,5 +9,8 @@
   ],
   "5": ["In the final phase, you can strategically reposition your troops between your owned tiles."],
   "6": ["If you control an entire region, you'll receive additional troop reinforcements every turn."],
-  "7": ["This is the log window, where you can track game events. Hover over underlined text for additional details."]
+  "7": ["This is the log window, where you can track game events. Hover over underlined text for additional details."],
+  "8": [
+    "Each turn, conquering a territory earns you a card. Combine three cards for extra troops just before the deployment phase. You need to use them when you have five cards."
+  ]
 }

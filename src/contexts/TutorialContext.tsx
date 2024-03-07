@@ -17,7 +17,6 @@ const TutorialContext = createContext<TutorialContextType | undefined>(undefined
 
 export const useTutorial = (): TutorialContextType => {
   const context = useContext(TutorialContext);
-  console.log('context', context);
   if (!context) {
     throw new Error('useTutorial must be used within a TutorialProvider');
   }

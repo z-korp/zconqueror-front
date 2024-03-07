@@ -8,12 +8,7 @@ import { Slider } from './ui/slider';
 import { useDojo } from '@/dojo/useDojo';
 import { Button } from './ui/button';
 import { toast } from './ui/use-toast';
-import { BATTLE_EVENT } from '@/constants';
-import { parseBattleEvent } from '@/utils/events';
-import { useGetPlayers } from '@/hooks/useGetPlayers';
-import { Battle, BattleEvent } from '@/utils/types';
 import { sleep } from '@/utils/time';
-import { getBattleFromBattleEvents } from '@/utils/battle';
 import OverlayBattle from './BattleReport/OverlayBattle';
 
 const ActionPanel = () => {
@@ -32,15 +27,15 @@ const ActionPanel = () => {
     game_id,
     set_army_count,
     army_count,
+    lastBattleResult,
+    setLastBattleResult,
   } = useElementStore((state) => state);
 
   const { phase } = usePhase();
-  const { players } = useGetPlayers();
   const { currentPlayer } = useGetCurrentPlayer();
   const [sourceTile, setSourceTile] = useState<any | null>(null);
   const [targetTile, setTargetTile] = useState<any | null>(null);
   const [isActionSelected, setIsActionSelected] = useState(false);
-  const [battle, setBattle] = useState<Battle | null>(null);
 
   useEffect(() => {
     set_army_count(0);
@@ -104,17 +99,8 @@ const ActionPanel = () => {
       await play.attack(account, game_id, current_source, current_target, army_count);
 
       await sleep(100);
-      const ret = await play.defend(account, game_id, current_source, current_target);
+      await play.defend(account, game_id, current_source, current_target);
 
-      const battleEvents: BattleEvent[] = ret.events
-        .filter((e) => e.keys[0] === BATTLE_EVENT)
-        .map((event) => parseBattleEvent(event));
-
-      const attackerName = players[battleEvents[0].attackerIndex].name;
-      const defenderName = players[battleEvents[0].defenderIndex].name;
-      const battle = getBattleFromBattleEvents(battleEvents, attackerName, defenderName);
-
-      setBattle(battle);
       removeSelected();
     } catch (error: any) {
       toast({
@@ -147,12 +133,14 @@ const ActionPanel = () => {
   };
 
   const handleCloseAttackReport = () => {
-    setBattle(null);
+    setLastBattleResult(null);
   };
+
+  console.log('lastBattleResult', lastBattleResult);
 
   return (
     <>
-      {battle && <OverlayBattle battle={battle} onClose={handleCloseAttackReport} />}
+      {lastBattleResult && <OverlayBattle battle={lastBattleResult} onClose={handleCloseAttackReport} />}
       {isAttackTurn() ? (
         current_source &&
         current_target &&
@@ -237,15 +225,17 @@ const ActionPanel = () => {
                 'border-2 rounded-lg border-primary bg-black bg-opacity-30 backdrop-blur-md drop-shadow-lg'
               } `}
             >
-              <Slider
-                className="w-32"
-                min={1}
-                max={currentPlayer.supply}
-                value={[army_count]}
-                onValueChange={(newValue: number[]) => {
-                  set_army_count(newValue[0]);
-                }}
-              ></Slider>
+              {currentPlayer.supply > 1 && (
+                <Slider
+                  className="w-32"
+                  min={1}
+                  max={currentPlayer.supply}
+                  value={[army_count]}
+                  onValueChange={(newValue: number[]) => {
+                    set_army_count(newValue[0]);
+                  }}
+                ></Slider>
+              )}
               <Button
                 onClick={handleSupply}
                 className="flex items-center justify-center h-10 px-2 text-white bg-green-500 rounded hover:bg-green-600 drop-shadow-lg hover:transform hover:-translate-y-1 transition-transform ease-in-out"

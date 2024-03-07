@@ -59,8 +59,6 @@ const ActionLogs: React.FC = () => {
     }
   }, [logs]);
 
-  console.log('logs', logs);
-
   return (
     <div className="max-w-xl w-full border-2 rounded-lg bg-stone-700 border-stone-900 text-white vt323-font">
       <div

@@ -44,7 +44,6 @@ const generateLogFromEvent = (event: Event, playerList: Player[]): LogType => {
   } else if (event.keys[0] === FORTIFY_EVENT) {
     return createFortifyLog(parseFortifyEvent(event), playerList);
   } else {
-    console.log('qqqqqqqqqqqqq', event);
     // if (event.keys[0] === BATTLE_EVENT)
     return createBattleLog(parseBattleEvent(event), playerList);
   }
@@ -52,13 +51,14 @@ const generateLogFromEvent = (event: Event, playerList: Player[]): LogType => {
 
 export const useLogs = () => {
   const [logs, setLogs] = useState<LogType[]>([]);
-  const { setLastDefendResult, tilesConqueredThisTurn, setTilesConqueredThisTurn } = useElementStore((state) => state);
+  const { setLastDefendResult, tilesConqueredThisTurn, setTilesConqueredThisTurn, setLastBattleResult } =
+    useElementStore((state) => state);
 
   const subscribedRef = useRef(false); // Tracks whether subscriptions have been made
   const {
     setup: {
       updates: {
-        eventUpdates: { createSupplyEvents, createDefendEvents, createFortifyEvents, createBattleEvents },
+        eventUpdates: { createSupplyEvents, createDefendEvents, createFortifyEvents },
       },
     },
   } = useDojo();
@@ -118,8 +118,10 @@ export const useLogs = () => {
                   log.battle = battle;
                 }
 
+                console.log('log', log);
                 addLogIfUnique(log);
                 setLastDefendResult(event);
+                setLastBattleResult(log.battle ? log.battle : null);
                 if (log.log[log.log.length - 1] === 'Result: win' && log.regionTo) {
                   setTilesConqueredThisTurn([...tilesConqueredThisTurn, log.regionTo]);
                 }

@@ -18,9 +18,7 @@
   transform-style: preserve-3d;
   transition: transform 2s;
 }
-.cube:hover {
-  cursor: pointer;
-}
+
 .dot {
   display: block;
   position: absolute;
