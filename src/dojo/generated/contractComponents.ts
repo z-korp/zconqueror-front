@@ -17,11 +17,13 @@ export function defineContractComponents(world: World) {
           player_count: RecsType.Number,
           nonce: RecsType.Number,
           price: RecsType.BigInt,
+          clock: RecsType.Number,
+          penalty: RecsType.Number,
         },
         {
           metadata: {
             name: 'Game',
-            types: ['u32', 'felt252', 'bool', 'felt252', 'u8', 'u8', 'u256'],
+            types: ['u32', 'felt252', 'bool', 'felt252', 'u8', 'u8', 'u256', 'u64', 'u64'],
             customTypes: [],
           },
         }
