@@ -5,6 +5,7 @@ import Bubble from './Bubble';
 import { useMe } from '@/hooks/useMe';
 import { avatars } from '@/utils/pfps';
 import { useTutorial } from '../contexts/TutorialContext';
+import { Button } from './ui/button';
 
 interface DynamicOverlayTutoProps {
   children: ReactNode;
@@ -21,9 +22,17 @@ interface OverlayStyle {
   borderRadius: number;
 }
 
+const initialStyle: OverlayStyle = {
+  top: 0,
+  left: 0,
+  width: 0,
+  height: 0,
+  borderRadius: 0,
+};
+
 const DynamicOverlayTuto: FC<DynamicOverlayTutoProps> = ({ tutorialStep, children, texts, paddingProps = 10 }) => {
   const childRef = useRef<HTMLDivElement | null>(null);
-  const [overlayStyle, setOverlayStyle] = useState<OverlayStyle>({});
+  const [overlayStyle, setOverlayStyle] = useState<OverlayStyle>(initialStyle);
   const { me } = useMe();
   const { showTuto, setShowTuto, currentStep, nextStep } = useTutorial();
 
@@ -107,9 +116,9 @@ const DynamicOverlayTuto: FC<DynamicOverlayTutoProps> = ({ tutorialStep, childre
           </div>
           <Bubble texts={texts} variant="speechLeft" />
         </div>
-        <button className="bg-white" onClick={handleNextStep}>
+        <Button size="lg" variant="tertiary" className="bg-green-500" onClick={handleNextStep}>
           Next Step
-        </button>
+        </Button>
       </div>
     </>
   );

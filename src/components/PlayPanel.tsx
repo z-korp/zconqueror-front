@@ -41,6 +41,8 @@ const PlayPanel = () => {
   const [showOverlay, setShowOverlay] = useState(false);
   const [overlayText, setOverlayText] = useState('');
 
+  const tutorialCompleted = localStorage.getItem('tutorialCompleted');
+
   useEffect(() => {
     if (player?.conqueror) {
       setConqueredThisTurn(true);
@@ -159,7 +161,7 @@ const PlayPanel = () => {
   return (
     <>
       {showCardsPopup && <EndTurnPopup cards={cards} onClose={() => setShowCardsPopup(false)} />}
-      {showOverlay && <OverlayWithText text={overlayText} />}
+      {showOverlay && tutorialCompleted && <OverlayWithText text={overlayText} />}
       <div className="pointer-events-none fixed bottom-0 left-0 right-0 flex justify-center items-end p-4">
         {/* Section du panneau de jeu */}
         <DynamicOverlayTuto tutorialStep="8" texts={tutorialData['8']}>
