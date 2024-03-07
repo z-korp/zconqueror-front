@@ -51,6 +51,7 @@ export const parseSupplyEvent = (event: Event): SupplyEventResult => {
 export const createSupplyLog = (result: SupplyEventResult, playerList: Player[]): LogType => {
   const date = parse(result.timestamp, 'yyyy-MM-dd HH:mm:ss', new Date());
   return {
+    key: `${result.timestamp}-supply`,
     timestamp: date.getTime(),
     log: [
       `${playerList[result.playerIndex].name} supplied ${result.troops} troops to region`,
@@ -90,6 +91,7 @@ export const parseDefendEvent = (event: Event): DefendEventResult => {
 export const createDefendLog = (result: DefendEventResult, playerList: Player[]): LogType => {
   const date = parse(result.timestamp, 'yyyy-MM-dd HH:mm:ss', new Date());
   return {
+    key: `${result.timestamp}-defend`,
     timestamp: date.getTime(),
     log: [
       `${playerList[result.attackerIndex].name} attacked ${playerList[result.defenderIndex].name} at region`,
@@ -130,6 +132,7 @@ export const parseFortifyEvent = (event: Event): FortifyEventResult => {
 export const createFortifyLog = (result: FortifyEventResult, playerList: Player[]): LogType => {
   const date = parse(result.timestamp, 'yyyy-MM-dd HH:mm:ss', new Date());
   return {
+    key: `${result.timestamp}-fortify`,
     timestamp: date.getTime(),
     log: [
       `${playerList[result.playerIndex].name} moved ${result.troops} from region `,
@@ -191,6 +194,7 @@ export const parseBattleEvent = (event: Event): BattleEventResult => {
 export const createBattleLog = (result: BattleEventResult, playerList: Player[]): LogType => {
   const date = parse(result.timestamp, 'yyyy-MM-dd HH:mm:ss', new Date());
   return {
+    key: `${result.timestamp}-battle`,
     timestamp: date.getTime(),
     log: [`${playerList[result.attackerIndex].name} battle battle`],
     type: EventType.Fortify,

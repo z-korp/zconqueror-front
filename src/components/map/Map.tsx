@@ -104,7 +104,7 @@ const Map = () => {
 
   return (
     <>
-      <div className="relative" ref={containerRef}>
+      <div className="relative z-0" ref={containerRef}>
         <div className="absolute z-20 top-0 right-0 gap-2 flex">
           <DynamicOverlayTuto tutorialStep="6" texts={tutorialData['6']}>
             <Tooltip>

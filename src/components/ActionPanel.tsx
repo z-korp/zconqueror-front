@@ -40,7 +40,6 @@ const ActionPanel = () => {
   const [sourceTile, setSourceTile] = useState<any | null>(null);
   const [targetTile, setTargetTile] = useState<any | null>(null);
   const [isActionSelected, setIsActionSelected] = useState(false);
-  const [isDiceAnimation, setIsDiceAnimation] = useState(false);
   const [battle, setBattle] = useState<Battle | null>(null);
 
   useEffect(() => {
@@ -102,38 +101,21 @@ const ActionPanel = () => {
     }
 
     try {
-      const attackerTroops = tiles[current_source - 1].army - 1;
-      const defenderTroops = tiles[current_target - 1].army;
-
       await play.attack(account, game_id, current_source, current_target, army_count);
-      setIsDiceAnimation(true);
 
       await sleep(100);
       const ret = await play.defend(account, game_id, current_source, current_target);
 
-      //console.log('---------');
-      console.log(attackerTroops, defenderTroops);
-      console.log('qqqqq', ret.events);
       const battleEvents: BattleEvent[] = ret.events
         .filter((e) => e.keys[0] === BATTLE_EVENT)
         .map((event) => parseBattleEvent(event));
-      //console.log('qqqqq', battleEvents);
 
       const attackerName = players[battleEvents[0].attackerIndex].name;
       const defenderName = players[battleEvents[0].defenderIndex].name;
       const battle = getBattleFromBattleEvents(battleEvents, attackerName, defenderName);
-      //console.log('======> ATTACK', battle);
+
       setBattle(battle);
-      /*const battle: Duel[] = [];
-      await fetchEventsOnce([BATTLE_EVENT, '0x' + game_id.toString(16), '0x' + game.nonce.toString(16)], (event) =>
-        battle.push(parseBattleEvent(event))
-      );
-      console.log('qqqqq', groupDuelsByBattleId(battle));*/
-
       removeSelected();
-
-      await sleep(5000);
-      setIsDiceAnimation(false);
     } catch (error: any) {
       toast({
         variant: 'destructive',
@@ -164,17 +146,12 @@ const ActionPanel = () => {
     return phase === Phase.FORTIFY;
   };
 
-  const handleCloseDice = () => {
-    setIsDiceAnimation(false);
-  };
-
   const handleCloseAttackReport = () => {
     setBattle(null);
   };
 
   return (
     <>
-      {/*isDiceAnimation && <OverlayDice onClose={handleCloseDice} />*/}
       {battle && <OverlayBattle battle={battle} onClose={handleCloseAttackReport} />}
       {isAttackTurn() ? (
         current_source &&

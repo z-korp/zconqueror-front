@@ -27,6 +27,7 @@ export enum EventType {
 }
 
 export type LogType = {
+  key: string;
   timestamp: number;
   log: string[];
   regionFrom?: number;
@@ -66,6 +67,15 @@ export const useLogs = () => {
   const { game_id } = useElementStore((state) => state);
   const { players } = useGetPlayers();
 
+  const addLogIfUnique = (newLog: LogType) => {
+    setLogs((prevLogs) => {
+      // Check if the log with the same key already exists
+      const exists = prevLogs.some((log) => log.key === newLog.key);
+      // If it doesn't exist, add it to the logs array
+      return exists ? prevLogs : [...prevLogs, newLog];
+    });
+  };
+
   // Subscribe to events
   useEffect(() => {
     if (game && game_id !== undefined && players.length !== 0) {
@@ -82,7 +92,7 @@ export const useLogs = () => {
           subscriptions.push(
             supplyObservable.subscribe((event) => {
               if (event) {
-                setLogs((prevLogs) => [...prevLogs, generateLogFromEvent(event, players)]);
+                addLogIfUnique(generateLogFromEvent(event, players));
               }
             }),
 
@@ -108,7 +118,7 @@ export const useLogs = () => {
                   log.battle = battle;
                 }
 
-                setLogs((prevLogs) => [...prevLogs, log]);
+                addLogIfUnique(log);
                 setLastDefendResult(event);
                 if (log.log[log.log.length - 1] === 'Result: win' && log.regionTo) {
                   setTilesConqueredThisTurn([...tilesConqueredThisTurn, log.regionTo]);
@@ -118,16 +128,9 @@ export const useLogs = () => {
 
             fortifyObservable.subscribe((event) => {
               if (event) {
-                setLogs((prevLogs) => [...prevLogs, generateLogFromEvent(event, players)]);
+                addLogIfUnique(generateLogFromEvent(event, players));
               }
             })
-
-            /*battleObservable.subscribe((event) => {
-        if (event) {
-          console.log('battle event', event);
-          setLogs((prevLogs) => [...prevLogs, generateLogFromEvent(event, players)]);
-        }
-      })*/
           );
 
           subscribedRef.current = true; // Mark as subscribed
@@ -153,10 +156,10 @@ export const useLogs = () => {
 
     const fetchEvents = async (gameId: number) => {
       await fetchEventsOnce([SUPPLY_EVENT, '0x' + gameId.toString(16)], async (event: Event) => {
-        setLogs((prevLogs) => [...prevLogs, generateLogFromEvent(event, players)]);
+        addLogIfUnique(generateLogFromEvent(event, players));
       });
       await fetchEventsOnce([FORTIFY_EVENT, '0x' + gameId.toString(16)], async (event) =>
-        setLogs((prevLogs) => [...prevLogs, generateLogFromEvent(event, players)])
+        addLogIfUnique(generateLogFromEvent(event, players))
       );
       await fetchEventsOnce([DEFEND_EVENT, '0x' + gameId.toString(16)], async (event) => {
         const log = generateLogFromEvent(event, players);
@@ -180,8 +183,7 @@ export const useLogs = () => {
           log.battle = battle;
         }
 
-        console.log('log', log);
-        setLogs((prevLogs) => [...prevLogs, log]);
+        addLogIfUnique(log);
         setLastDefendResult(event);
       });
     };
