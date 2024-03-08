@@ -1,7 +1,7 @@
 .scene {
   width: 200px;
   height: 200px;
-  margin: 30px;
+  margin: 0px;
   perspective: 1000px;
 }
 
@@ -18,9 +18,7 @@
   transform-style: preserve-3d;
   transition: transform 2s;
 }
-.cube:hover {
-  cursor: pointer;
-}
+
 .dot {
   display: block;
   position: absolute;
@@ -142,7 +140,7 @@
   font-weight: bold;
   color: white;
   text-align: center;
-  opacity: 0.91;
+  opacity: 0.99;
 }
 
 /* .cube__face--front {

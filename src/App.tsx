@@ -4,11 +4,9 @@ import PlayPanel from './components/PlayPanel';
 import Map from './components/map/Map';
 import { Toaster } from './components/ui/toaster';
 import tutorialData from './data/tutorialSteps.json';
-
 import GameState from './utils/gamestate';
 import MainMenu from './components/MainMenu';
 import Lobby from './components/Lobby';
-
 import { TutorialProvider } from './contexts/TutorialContext';
 import { useGetPlayers } from './hooks/useGetPlayers';
 import { useElementStore } from './utils/store';
@@ -16,12 +14,13 @@ import PlayersPanel from './components/PlayersPanel';
 import { DebugPanel } from './components/DebugPanel';
 import OverlayEndGame from './components/OverlayEndGame';
 import { useMe } from './hooks/useMe';
+import BattleReport from './components/BattleReport/BattleReport';
 import DynamicOverlayTuto from './components/DynamicOverlayTuto';
 
 function App() {
   // const { id } = useParams<{ id?: string }>();
 
-  const { game_state } = useElementStore((state) => state);
+  const { game_state, battleReport } = useElementStore((state) => state);
 
   // useEffect(() => {
   //   console.log('URL ID:', id);
@@ -41,16 +40,13 @@ function App() {
   // }, [account]);
 
   const { players } = useGetPlayers();
-  const { me, isItMyTurn } = useMe();
+  const { me } = useMe();
 
   return (
     <>
       <TutorialProvider>
         <Toaster />
-        <div
-          className="fixed top-0 left-0 z-30
-      "
-        >
+        <div className="fixed top-0 left-0 z-30">
           <DebugPanel />
         </div>
         {game_state === GameState.MainMenu && <MainMenu />}
@@ -69,6 +65,13 @@ function App() {
               </div>
             </div>
             <div className="fixed bottom-0 left-0 w-1/4 p-1">
+              {battleReport && (
+                <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[1001]">
+                  <div className="p-4 bg-stone-900 rounded-lg opacity-95">
+                    <BattleReport battle={battleReport} />
+                  </div>
+                </div>
+              )}
               <DynamicOverlayTuto tutorialStep="7" texts={tutorialData['7']}>
                 <ActionLogs />
               </DynamicOverlayTuto>

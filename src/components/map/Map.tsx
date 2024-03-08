@@ -16,6 +16,7 @@ import { BadgeHelp, Flag, Map as MapLucid } from 'lucide-react';
 import { useTutorial } from '../../contexts/TutorialContext';
 import DynamicOverlayTuto from '../DynamicOverlayTuto';
 import tutorialData from '../../data/tutorialSteps.json';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 import {
   Dialog,
   DialogClose,
@@ -43,7 +44,7 @@ const Map = () => {
     useElementStore((state) => state);
 
   const surrender = async () => {
-    await play.surrender(account, game_id);
+    if (game_id) await play.surrender(account, game_id);
   };
 
   const { setShowTuto } = useTutorial();
@@ -110,23 +111,33 @@ const Map = () => {
 
   return (
     <>
-      <div className="relative" ref={containerRef}>
+      <div className="relative z-0" ref={containerRef}>
         <div className="absolute z-20 top-0 right-0 gap-2 flex">
           <DynamicOverlayTuto tutorialStep="6" texts={tutorialData['6']}>
-            <Button
-              variant="secondary"
-              onMouseEnter={() => setContinentMode(true)} // Activates when the mouse enters the button area
-              onMouseLeave={() => setContinentMode(false)} // Deactivates when the mouse leaves the button area
-            >
-              <MapLucid />
-            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="secondary"
+                  onMouseEnter={() => setContinentMode(true)} // Activates when the mouse enters the button area
+                  onMouseLeave={() => setContinentMode(false)} // Deactivates when the mouse leaves the button area
+                >
+                  <MapLucid />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Regions</TooltipContent>
+            </Tooltip>
           </DynamicOverlayTuto>
           <div>
             <Dialog>
               <DialogTrigger asChild>
-                <Button variant="secondary">
-                  <Flag />
-                </Button>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="secondary">
+                      <Flag />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Surrender</TooltipContent>
+                </Tooltip>
               </DialogTrigger>
               <DialogContent className="sm:max-w-md bg-stone-700 border-2 border-black">
                 <DialogHeader>
@@ -143,9 +154,14 @@ const Map = () => {
               </DialogContent>
             </Dialog>
           </div>
-          <Button variant="secondary" onClick={handleShowTuto}>
-            <BadgeHelp />
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="secondary" onClick={handleShowTuto}>
+                <BadgeHelp />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Tutorial</TooltipContent>
+          </Tooltip>
         </div>
         {isContinentMode && (
           <div className="vt323-font text-xl absolute top-0 left-1/2 transform -translate-x-1/2 z-50">

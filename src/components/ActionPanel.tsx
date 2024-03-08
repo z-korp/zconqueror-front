@@ -6,8 +6,10 @@ import { Milestone, ShieldPlus, Swords } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Slider } from './ui/slider';
 import { useDojo } from '@/dojo/useDojo';
-import OverlayDice from './OverlayDice';
 import { Button } from './ui/button';
+import { toast } from './ui/use-toast';
+import { sleep } from '@/utils/time';
+import OverlayBattle from './BattleReport/OverlayBattle';
 
 const ActionPanel = () => {
   const {
@@ -25,13 +27,15 @@ const ActionPanel = () => {
     game_id,
     set_army_count,
     army_count,
+    lastBattleResult,
+    setLastBattleResult,
   } = useElementStore((state) => state);
+
   const { phase } = usePhase();
   const { currentPlayer } = useGetCurrentPlayer();
   const [sourceTile, setSourceTile] = useState<any | null>(null);
   const [targetTile, setTargetTile] = useState<any | null>(null);
   const [isActionSelected, setIsActionSelected] = useState(false);
-  const [isDiceAnimation, setIsDiceAnimation] = useState(false);
 
   useEffect(() => {
     set_army_count(0);
@@ -90,18 +94,20 @@ const ActionPanel = () => {
       alert('Not enough attack');
       return;
     }
-    setIsDiceAnimation(true);
 
-    await play.attack(account, game_id, current_source, current_target, army_count);
+    try {
+      await play.attack(account, game_id, current_source, current_target, army_count);
 
-    const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-    await sleep(100);
-    play.defend(account, game_id, current_source, current_target);
+      await sleep(100);
+      await play.defend(account, game_id, current_source, current_target);
 
-    removeSelected();
-
-    await sleep(5000);
-    setIsDiceAnimation(false);
+      removeSelected();
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        description: <code className="text-white text-xs">{error.message}</code>,
+      });
+    }
   };
 
   const handleMoveTroops = async () => {
@@ -126,13 +132,15 @@ const ActionPanel = () => {
     return phase === Phase.FORTIFY;
   };
 
-  const handleCloseDice = () => {
-    setIsDiceAnimation(false);
+  const handleCloseAttackReport = () => {
+    setLastBattleResult(null);
   };
+
+  console.log('lastBattleResult', lastBattleResult);
 
   return (
     <>
-      {isDiceAnimation && <OverlayDice onClose={handleCloseDice} />}
+      {lastBattleResult && <OverlayBattle battle={lastBattleResult} onClose={handleCloseAttackReport} />}
       {isAttackTurn() ? (
         current_source &&
         current_target &&
@@ -217,15 +225,17 @@ const ActionPanel = () => {
                 'border-2 rounded-lg border-primary bg-black bg-opacity-30 backdrop-blur-md drop-shadow-lg'
               } `}
             >
-              <Slider
-                className="w-32"
-                min={1}
-                max={currentPlayer.supply}
-                value={[army_count]}
-                onValueChange={(newValue: number[]) => {
-                  set_army_count(newValue[0]);
-                }}
-              ></Slider>
+              {currentPlayer.supply > 1 && (
+                <Slider
+                  className="w-32"
+                  min={1}
+                  max={currentPlayer.supply}
+                  value={[army_count]}
+                  onValueChange={(newValue: number[]) => {
+                    set_army_count(newValue[0]);
+                  }}
+                ></Slider>
+              )}
               <Button
                 onClick={handleSupply}
                 className="flex items-center justify-center h-10 px-2 text-white bg-green-500 rounded hover:bg-green-600 drop-shadow-lg hover:transform hover:-translate-y-1 transition-transform ease-in-out"
