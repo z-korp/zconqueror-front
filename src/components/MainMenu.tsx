@@ -1,16 +1,13 @@
 import { useElementStore } from '@/utils/store';
-import { Button } from './ui/button';
 import GameState from '@/utils/gamestate';
 import { useEffect, useMemo } from 'react';
 import { useDojo } from '@/dojo/useDojo';
 import { useToast } from './ui/use-toast';
 import { useComponentValue, useEntityQuery } from '@dojoengine/react';
-import { Input } from './ui/input';
 import { HasValue, getComponentValue } from '@dojoengine/recs';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from './ui/table';
 import GameRow from './GameRow';
 import { DialogCreateJoin } from './DialogCreateJoin';
-import { set } from 'date-fns';
 
 const MainMenu: React.FC = () => {
   const { toast } = useToast();
@@ -49,7 +46,7 @@ const MainMenu: React.FC = () => {
 
     try {
       // TBD get the id from here?
-      await host.create(account, player_name, /* price */ BigInt(0));
+      await host.create(account, player_name, /* price */ BigInt(0), /* penalty*/ 120);
     } catch (error: any) {
       toast({
         variant: 'destructive',
@@ -81,8 +78,8 @@ const MainMenu: React.FC = () => {
           buttonText="Create"
           buttonTextDisplayed="Create a New Game"
         />
-        <div className="bg-stone-500 p-10 rounded-lg lg:w-1/2 md:w-3/4">
-          {games.length > 0 && (
+        {games.length > 0 && (
+          <div className="bg-stone-500 p-10 rounded-lg lg:w-1/2 md:w-3/4">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -102,8 +99,8 @@ const MainMenu: React.FC = () => {
                 ))}
               </TableBody>
             </Table>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );

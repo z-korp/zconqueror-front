@@ -3,15 +3,25 @@ import { rotations } from '@/utils/rotations';
 import './Dice.css';
 
 interface DiceProps {
-  desiredResult: number;
+  desiredResult?: number;
+  scale?: number;
 }
 
-const Dice: React.FC<DiceProps> = ({ desiredResult }) => {
+const Dice: React.FC<DiceProps> = ({ desiredResult = 3, scale = 1 }) => {
   const [rotate, setRotate] = useState<string>('');
 
-  useEffect(() => {
-    // Calculer les rotations pour stabiliser sur la face désirée
+  const initialSize = 200;
+  const newSize = initialSize * scale;
 
+  const containerStyles = {
+    width: `${newSize}px`,
+    height: `${newSize}px`,
+    transform: `scale(${scale})`,
+    transformOrigin: 'center',
+    margin: '1rem',
+  };
+
+  useEffect(() => {
     const rotationTimeout = setTimeout(() => {
       setRotate(rotations[desiredResult]);
     }, 100);
@@ -22,40 +32,42 @@ const Dice: React.FC<DiceProps> = ({ desiredResult }) => {
   }, [desiredResult]);
 
   return (
-    <div className="scene dim mt2 mb4 ">
-      <div className="cube" style={{ transform: rotate }}>
-        <div className="bg-white cube__face cube__face--front front">
-          <span className="dot dot1" />
-        </div>
-        <div className="bg-white cube__face cube__face--back back">
-          <span className="dot dot1" />
-          <span className="dot dot2" />
-        </div>
-        <div className="bg-white cube__face cube__face--right right">
-          <span className="dot dot1" />
-          <span className="dot dot2" />
-          <span className="dot dot3" />
-        </div>
-        <div className="bg-white cube__face cube__face--left left">
-          <span className="dot dot1" />
-          <span className="dot dot2" />
-          <span className="dot dot3" />
-          <span className="dot dot4" />
-        </div>
-        <div className="bg-white cube__face cube__face--top top">
-          <span className="dot dot1" />
-          <span className="dot dot2" />
-          <span className="dot dot3" />
-          <span className="dot dot4" />
-          <span className="dot dot5" />
-        </div>
-        <div className="bg-white cube__face cube__face--bottom bottom">
-          <span className="dot dot1" />
-          <span className="dot dot2" />
-          <span className="dot dot3" />
-          <span className="dot dot4" />
-          <span className="dot dot5" />
-          <span className="dot dot6" />
+    <div className="inline-flex justify-center items-center" style={containerStyles}>
+      <div className="scene mt2 mb4">
+        <div className="cube" style={{ transform: rotate }}>
+          <div className="bg-white cube__face cube__face--front front">
+            <span className="dot dot1" />
+          </div>
+          <div className="bg-white cube__face cube__face--back back">
+            <span className="dot dot1" />
+            <span className="dot dot2" />
+          </div>
+          <div className="bg-white cube__face cube__face--right right">
+            <span className="dot dot1" />
+            <span className="dot dot2" />
+            <span className="dot dot3" />
+          </div>
+          <div className="bg-white cube__face cube__face--left left">
+            <span className="dot dot1" />
+            <span className="dot dot2" />
+            <span className="dot dot3" />
+            <span className="dot dot4" />
+          </div>
+          <div className="bg-white cube__face cube__face--top top">
+            <span className="dot dot1" />
+            <span className="dot dot2" />
+            <span className="dot dot3" />
+            <span className="dot dot4" />
+            <span className="dot dot5" />
+          </div>
+          <div className="bg-white cube__face cube__face--bottom bottom">
+            <span className="dot dot1" />
+            <span className="dot dot2" />
+            <span className="dot dot3" />
+            <span className="dot dot4" />
+            <span className="dot dot5" />
+            <span className="dot dot6" />
+          </div>
         </div>
       </div>
     </div>

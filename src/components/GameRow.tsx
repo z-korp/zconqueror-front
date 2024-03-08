@@ -8,6 +8,7 @@ import GameState from '@/utils/gamestate';
 import { useDojo } from '@/dojo/useDojo';
 import { toast } from './ui/use-toast';
 import { DialogCreateJoin } from './DialogCreateJoin';
+import { useGetPlayersForGame } from '@/hooks/useGetPlayersForGame';
 
 interface GameRowProps {
   game: {
@@ -32,6 +33,7 @@ const GameRow: React.FC<GameRowProps> = ({ game, setPlayerName }) => {
 
   const playerId = useEntityQuery([HasValue(Player, { game_id: game.id, index: 0 })], { updateOnValueChange: true });
   const player = useComponentValue(Player, playerId[0]);
+  const { players } = useGetPlayersForGame(game.id);
 
   const joinGame = async (gameid: number) => {
     if (!player_name) {
@@ -59,7 +61,7 @@ const GameRow: React.FC<GameRowProps> = ({ game, setPlayerName }) => {
       <TableCell>{game.id}</TableCell>
       <TableCell>
         <div className="flex items-center justify-center">
-          <div className="px-2 rounded-full bg-stone-400">{`${game.player_count}/6`}</div>
+          <div className="px-2 rounded-full bg-stone-400">{`${players.length}/6`}</div>
         </div>
       </TableCell>
       <TableCell>
