@@ -129,16 +129,16 @@ const Map = () => {
           </DynamicOverlayTuto>
           <div>
             <Dialog>
-              <DialogTrigger asChild>
-                <Tooltip>
-                  <TooltipTrigger asChild>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <DialogTrigger asChild>
                     <Button variant="secondary">
                       <Flag />
                     </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>Surrender</TooltipContent>
-                </Tooltip>
-              </DialogTrigger>
+                  </DialogTrigger>
+                </TooltipTrigger>
+                <TooltipContent>Surrender</TooltipContent>
+              </Tooltip>
               <DialogContent className="sm:max-w-md bg-stone-700 border-2 border-black">
                 <DialogHeader>
                   <DialogTitle className="text-white text-xl">Do you confirm you want to surrender?</DialogTitle>
