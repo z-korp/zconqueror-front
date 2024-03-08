@@ -130,15 +130,15 @@ const Map = () => {
           <div>
             <Dialog>
               <DialogTrigger asChild>
-                 <Tooltip>
-            <TooltipTrigger asChild>
-                <Button variant="secondary">
-                  <Flag />
-                </Button>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="secondary">
+                      <Flag />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Surrender</TooltipContent>
+                </Tooltip>
               </DialogTrigger>
-                 
-            <TooltipContent>Surrender</TooltipContent>
-          </Tooltip>
               <DialogContent className="sm:max-w-md bg-stone-700 border-2 border-black">
                 <DialogHeader>
                   <DialogTitle className="text-white text-xl">Do you confirm you want to surrender?</DialogTitle>
@@ -154,12 +154,12 @@ const Map = () => {
               </DialogContent>
             </Dialog>
           </div>
-            <Tooltip>
+          <Tooltip>
             <TooltipTrigger asChild>
-          <Button variant="secondary" onClick={handleShowTuto}>
-            <BadgeHelp />
-          </Button>
-              </TooltipTrigger>
+              <Button variant="secondary" onClick={handleShowTuto}>
+                <BadgeHelp />
+              </Button>
+            </TooltipTrigger>
             <TooltipContent>Tutorial</TooltipContent>
           </Tooltip>
         </div>
