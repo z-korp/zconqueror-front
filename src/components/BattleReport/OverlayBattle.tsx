@@ -3,6 +3,7 @@ import { Button } from '../ui/button';
 import BattleRound from './BattleRound';
 import { Battle } from '@/utils/types';
 import BattleReport from './BattleReport';
+import { SkipForward, StepForward } from 'lucide-react';
 
 const OverlayBattle: React.FC<{ onClose: () => void; battle: Battle }> = ({ onClose, battle }) => {
   const [currentRound, setCurrentRound] = useState(0);
@@ -25,7 +26,7 @@ const OverlayBattle: React.FC<{ onClose: () => void; battle: Battle }> = ({ onCl
         ✕
       </Button>
 
-      <div className="flex flex-col ">
+      <div className="flex flex-col p-4 bg-stone-700 border-stone-900 rounded-lg shadow-lg">
         {currentRound < battle.rounds.length ? (
           <BattleRound battle={battle} round={currentRound} />
         ) : (
@@ -34,11 +35,13 @@ const OverlayBattle: React.FC<{ onClose: () => void; battle: Battle }> = ({ onCl
 
         {currentRound < battle.rounds.length && (
           <div className="flex mt-4 gap-4 self-end">
-            <Button onClick={nextRound} className="w-fit ">
+            <Button onClick={nextRound} className="w-fit flex gap-2">
               Next Round
+              <StepForward size={15} />
             </Button>
-            <Button className="w-fit" onClick={() => setCurrentRound(battle.rounds.length)}>
+            <Button className="w-fit flex gap-2" onClick={() => setCurrentRound(battle.rounds.length)}>
               Skip to Result
+              <SkipForward size={15} />
             </Button>
           </div>
         )}

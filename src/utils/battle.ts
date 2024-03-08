@@ -26,7 +26,7 @@ export function getBattleFromBattleEvents(
     defenderName,
     attackerTroops: duelEvents[0].attackerTroops,
     defenderTroops: duelEvents[0].defenderTroops,
-    rounds: groupDuelByIndex(duels),
+    rounds: groupDuelByIndex(duels).sort((a, b) => a[0].battleId - b[0].battleId),
   };
 }
 

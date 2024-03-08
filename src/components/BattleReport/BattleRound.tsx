@@ -21,13 +21,17 @@ const BattleRound: React.FC<BattleRoundProps> = ({ battle, round }) => {
   const [showPenalty, setShowPenalty] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowPenalty(true), 3000);
+    setShowPenalty(false);
+    const timer = setTimeout(() => {
+      setShowPenalty(true);
+    }, 3000);
+
     return () => clearTimeout(timer); // Cleanup the timer on component unmount or before running the effect again
-  }, [battle, round]); // Depend on battle and round so it resets when these change
+  }, [battle, round]);
 
   return (
-    <div className="text-white">
-      <div className="relative flex flex-col items-center">
+    <div className="text-white w-96 flex flex-col items-center ">
+      <div className="relative flex flex-col items-center w-full">
         <div className="font-bold absolute left-0">[Round {round + 1}]</div>
         <div className="flex w-full">
           <div className="flex-1 text-right mr-1">
@@ -41,19 +45,27 @@ const BattleRound: React.FC<BattleRoundProps> = ({ battle, round }) => {
           {attackerDices.length} vs {defenderDices.length}
         </div>
       </div>
-      <div className="flex flex-row ">
+      <div className="flex flex-row h-[288px]">
         <div className="flex flex-col gap-2">
           {attackerDices.slice(0, dicesBattle).map((d, index) => (
-            <div className="flex items-center" key={`attacker-${round}-${index}`}>
+            <div className="flex items-center justify-end" key={`attacker-${round}-${index}`}>
               {!attackerWon[index] && <span className="text-red-500 w-6">{`${showPenalty ? '-1' : ''}`}</span>}
               <Dice scale={0.3} desiredResult={d} />
-              <Swords className="w-8 h-8 text-white" />
             </div>
           ))}
+
           {attackerDices.slice(dicesBattle).map((d, index) => (
             <div className="flex items-center" key={`attacker-${round}-${index + dicesBattle}`}>
               <span className="w-6"></span>
               <Dice scale={0.3} desiredResult={d} />
+            </div>
+          ))}
+        </div>
+
+        <div className="flex flex-col gap-2">
+          {attackerDices.slice(0, dicesBattle).map(() => (
+            <div className="h-[92px] flex items-center">
+              <Swords className="w-8 h-8 text-white" />
             </div>
           ))}
         </div>

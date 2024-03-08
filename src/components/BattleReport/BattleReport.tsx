@@ -23,7 +23,7 @@ const BattleReport: React.FC<BattleReportProps> = ({ battle }) => {
   let defenderLostTotal = 0;
 
   return (
-    <div className="w-96 vt323-font text-white max-h-96">
+    <div className="w-96 vt323-font text-white max-h-96 overflow-y-auto scrollbar-custom">
       <div className="relative">
         <div className="font-bold absolute left-0">[Battle]</div>
         <div className="flex w-full">

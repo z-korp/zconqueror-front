@@ -3,8 +3,9 @@ import { getIdFromName } from '@/utils/events';
 import { useElementStore } from '@/utils/store';
 import { Battle } from '@/utils/types';
 import { format } from 'date-fns';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { animated, useSpring } from 'react-spring';
+import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 
 // TODO: add swap de cards
 
@@ -15,7 +16,7 @@ const ActionLogs: React.FC = () => {
 
   const [isCollapsed, setIsCollapsed] = useState(false);
 
-  const { setHighlightedRegion, setBattleReport } = useElementStore((state) => state);
+  const { setHighlightedRegion, setBattleReport, battleReport } = useElementStore((state) => state);
   // Dynamically calculate content height for animation
   const [contentHeight, setContentHeight] = useState(0);
 
@@ -35,13 +36,14 @@ const ActionLogs: React.FC = () => {
     setHighlightedRegion(null);
   }
 
-  function handleMouseOverOnBattle(battle: Battle | undefined) {
-    setBattleReport(battle ? battle : null);
-  }
-
-  function handleMouseLeaveOnBattle() {
-    setBattleReport(null);
-  }
+  const handleMouseOverOnBattle = useCallback(
+    (battle: Battle | undefined) => {
+      if (!battleReport) {
+        setBattleReport(battle ? battle : null);
+      }
+    },
+    [battleReport, setBattleReport]
+  );
 
   // Animate the container height
   const springProps = useSpring({
@@ -98,13 +100,17 @@ const ActionLogs: React.FC = () => {
                     </span>
                     <span>{` - `} </span>
                     {log.battle ? (
-                      <span
-                        className="underline cursor-pointer hover:text-yellow-500"
-                        onMouseOver={() => handleMouseOverOnBattle(log.battle)}
-                        onMouseLeave={handleMouseLeaveOnBattle}
-                      >
-                        {log.log[2]}
-                      </span>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span
+                            className="underline cursor-pointer hover:text-yellow-500"
+                            onClick={() => handleMouseOverOnBattle(log.battle)}
+                          >
+                            {log.log[2]}
+                          </span>
+                        </TooltipTrigger>
+                        <TooltipContent>View Report</TooltipContent>
+                      </Tooltip>
                     ) : (
                       <span>{log.log[2]}</span>
                     )}

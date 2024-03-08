@@ -14,7 +14,6 @@ const tryBetterErrorMsg = (msg: string): string => {
     const matches = betterMsg.match(regex);
 
     if (matches && matches.length > 1) {
-      console.log(matches[1]);
       return matches[1];
     } else {
       return betterMsg;

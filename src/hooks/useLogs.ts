@@ -123,7 +123,6 @@ export const useLogs = () => {
                   log.battle = battle;
                 }
 
-                console.log('log', log);
                 addLogIfUnique(log);
                 setLastDefendResult(event);
                 setLastBattleResult(log.battle ? log.battle : null);
@@ -180,12 +179,13 @@ export const useLogs = () => {
             battleEvents.push(battleEvent);
           }
         );
-        console.log('battleEvents', battleEvents);
+
         if (battleEvents.length !== 0) {
+          //console.log('battleEvents', battleEvents);
           const attackerName = players[battleEvents[0].attackerIndex].name;
           const defenderName = players[battleEvents[0].defenderIndex].name;
           const battle = getBattleFromBattleEvents(battleEvents, attackerName, defenderName);
-          console.log('battle', battle);
+          //console.log('battle', battle);
 
           log.battle = battle;
         }

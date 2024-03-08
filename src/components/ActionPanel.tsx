@@ -136,8 +136,6 @@ const ActionPanel = () => {
     setLastBattleResult(null);
   };
 
-  console.log('lastBattleResult', lastBattleResult);
-
   return (
     <>
       {lastBattleResult && <OverlayBattle battle={lastBattleResult} onClose={handleCloseAttackReport} />}
