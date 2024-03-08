@@ -3,7 +3,7 @@ import { usePhase } from '@/hooks/usePhase';
 import { useTurn } from '@/hooks/useTurn';
 import { getNeighbors } from '@/utils/map';
 import { Phase, useElementStore } from '@/utils/store';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { useMe } from '@/hooks/useMe';
 import { isTest } from '@/utils/test';
 import Continents from './Continents';
@@ -17,6 +17,15 @@ import { useTutorial } from '../../contexts/TutorialContext';
 import DynamicOverlayTuto from '../DynamicOverlayTuto';
 import tutorialData from '../../data/tutorialSteps.json';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+  DialogHeader,
+} from '@/components/ui/dialog';
 
 const Map = () => {
   const {
@@ -27,8 +36,6 @@ const Map = () => {
   } = useDojo();
   const containerRef = useRef(null);
   const { isItMyTurn } = useMe();
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { turn } = useTurn();
   const { phase } = usePhase();
@@ -120,22 +127,39 @@ const Map = () => {
               <TooltipContent>Regions</TooltipContent>
             </Tooltip>
           </DynamicOverlayTuto>
-
-          <Tooltip>
+          <div>
+            <Dialog>
+              <DialogTrigger asChild>
+                 <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="secondary" onClick={() => setIsModalOpen(true)}>
-                <Flag />
-              </Button>
-            </TooltipTrigger>
+                <Button variant="secondary">
+                  <Flag />
+                </Button>
+              </DialogTrigger>
+                 
             <TooltipContent>Surrender</TooltipContent>
           </Tooltip>
-
-          <Tooltip>
+              <DialogContent className="sm:max-w-md bg-stone-700 border-2 border-black">
+                <DialogHeader>
+                  <DialogTitle className="text-white text-xl">Do you confirm you want to surrender?</DialogTitle>
+                </DialogHeader>
+                <DialogFooter className="sm:justify-center">
+                  <DialogClose asChild>
+                    <Button variant="destructive" className="m-4 gap-2" onClick={surrender}>
+                      Yes I want to surrender !
+                      <Flag />
+                    </Button>
+                  </DialogClose>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </div>
+            <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="secondary" onClick={handleShowTuto}>
-                <BadgeHelp />
-              </Button>
-            </TooltipTrigger>
+          <Button variant="secondary" onClick={handleShowTuto}>
+            <BadgeHelp />
+          </Button>
+              </TooltipTrigger>
             <TooltipContent>Tutorial</TooltipContent>
           </Tooltip>
         </div>
@@ -163,19 +187,6 @@ const Map = () => {
             ))}
           </svg>
         </div>
-        {isModalOpen && (
-          <div className="fixed inset-0 flex items-center justify-center z-100">
-            <div className="modal  bg-stone-700 border-stone-900 border-2 w-56 vt323-font rounded-md shadow-2xl text-lg z-10 text-white">
-              <h2>Do you confirm you want to surrender?</h2>
-              <Button variant="tertiary" className="m-4" onClick={surrender}>
-                OK
-              </Button>
-              <Button variant="tertiary" onClick={() => setIsModalOpen(false)}>
-                Cancel
-              </Button>
-            </div>
-          </div>
-        )}
       </div>
     </>
   );
