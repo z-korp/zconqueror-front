@@ -215,7 +215,7 @@ const ActionPanel = () => {
 
   return (
     <>
-      {false && lastBattleResult && <OverlayBattle battle={lastBattleResult} onClose={handleCloseAttackReport} />}
+      {lastBattleResult && <OverlayBattle battle={lastBattleResult} onClose={handleCloseAttackReport} />}
       {isAttackTurn() ? (
         current_source &&
         current_target &&
