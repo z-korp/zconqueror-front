@@ -19,9 +19,7 @@ interface RegionProps {
 const Region: React.FC<RegionProps> = ({ id, containerRef, onRegionClick }) => {
   const { phase } = usePhase();
   const { turn } = useTurn();
-  const { current_source, current_target, army_count, highlighted_region, isContinentMode } = useElementStore(
-    (state) => state
-  );
+  const { current_source, current_target, highlighted_region, isContinentMode } = useElementStore((state) => state);
 
   const [isHilighted, setIsHighlighted] = useState(false);
   const [hilightedColor, setHilightedColor] = useState('yellow');
@@ -29,27 +27,6 @@ const Region: React.FC<RegionProps> = ({ id, containerRef, onRegionClick }) => {
 
   const tile = tiles[id - 1];
   const tileArmy = tile ? tile.army : 0;
-  const [troups, setTroups] = useState(0);
-
-  useEffect(() => {
-    let newTroups = tileArmy;
-    if (phase === Phase.DEPLOY) {
-      if (id === current_source) {
-        newTroups = tileArmy + army_count;
-      }
-    } else if (phase === Phase.ATTACK) {
-      if (id === current_source && current_target !== null) {
-        newTroups = tileArmy - army_count;
-      }
-    } else if (phase === Phase.FORTIFY) {
-      if (id === current_target) {
-        newTroups = tileArmy + army_count;
-      } else if (id === current_source && current_target !== null) {
-        newTroups = tileArmy - army_count;
-      }
-    }
-    setTroups(newTroups);
-  }, [army_count, tileArmy, current_source, current_target]);
 
   const color = tile ? colorPlayer[tile.owner + 1 || 0] : 'white';
   const colorTile = tile ? colorTilePlayer[tile.owner + 1 || 0] : 'white';
@@ -172,14 +149,13 @@ const Region: React.FC<RegionProps> = ({ id, containerRef, onRegionClick }) => {
     <>
       {isContinentMode === false &&
         position &&
-        troups !== undefined &&
         containerRef &&
         containerRef.current &&
         ReactDOM.createPortal(
           <TroopsMarker
             position={{ x: position.x, y: position.y }}
             handlePathClick={onRegionClick}
-            troups={troups}
+            troups={tileArmy}
             color={color}
             tile={tile}
             containerRef={containerRef}
