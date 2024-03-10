@@ -19,8 +19,6 @@ interface State {
   set_current_target: (target: number | null) => void;
   isContinentMode: boolean;
   setContinentMode: (mode: boolean) => void;
-  army_count: number;
-  set_army_count: (count: number) => void;
   highlighted_region: number | null;
   setHighlightedRegion: (region: number | null) => void;
   battleReport: Battle | null;
@@ -46,8 +44,6 @@ export const useElementStore = create<State>((set) => ({
   set_current_target: (target: number | null) => set(() => ({ current_target: target })),
   isContinentMode: false,
   setContinentMode: (mode: boolean) => set(() => ({ isContinentMode: mode })),
-  army_count: 0,
-  set_army_count: (count: number) => set(() => ({ army_count: count })),
   highlighted_region: null,
   setHighlightedRegion: (region: number | null) => set(() => ({ highlighted_region: region })),
   battleReport: null,

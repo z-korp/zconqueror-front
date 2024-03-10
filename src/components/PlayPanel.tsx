@@ -122,7 +122,7 @@ const PlayPanel = () => {
     if (game.id == null || game.id == undefined) return;
     setShowBubble(false);
 
-    if (phase < 2) {
+    if (phase === Phase.DEPLOY || phase === Phase.FORTIFY) {
       if (player.cards.length === 5) {
         setTexts(['My Lord, exchange your cards first!']);
         setShowBubble(true);
