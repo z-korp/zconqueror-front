@@ -77,7 +77,6 @@ const Map = () => {
         }
       }
     } else if (phase == Phase.FORTIFY) {
-      console.log('phase fortify');
       // if clicked tile is owned by the player
       if (tile.owner === turn) {
         if (current_source) {
