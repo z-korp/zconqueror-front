@@ -98,7 +98,7 @@ const ActionPanel = () => {
     try {
       await play.attack(account, game_id, current_source, current_target, army_count);
 
-      await sleep(100);
+      await sleep(500);
       await play.defend(account, game_id, current_source, current_target);
 
       removeSelected();
