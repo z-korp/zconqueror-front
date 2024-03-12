@@ -10,11 +10,19 @@ import { Button } from './ui/button';
 import { toast } from './ui/use-toast';
 import { sleep } from '@/utils/time';
 import OverlayBattle from './BattleReport/OverlayBattle';
+import { uuid } from '@latticexyz/utils';
+import { Entity } from '@/graphql/generated/graphql';
+
+const SLEEP_TIME = 600; // ms
+
+const ovIdSource = uuid();
+const ovIdTarget = uuid();
 
 const ActionPanel = () => {
   const {
     setup: {
       client: { play },
+      clientComponents: { Tile },
     },
     account: { account },
   } = useDojo();
@@ -25,8 +33,6 @@ const ActionPanel = () => {
     current_target,
     set_current_target,
     game_id,
-    set_army_count,
-    army_count,
     lastBattleResult,
     setLastBattleResult,
   } = useElementStore((state) => state);
@@ -35,51 +41,105 @@ const ActionPanel = () => {
   const { currentPlayer } = useGetCurrentPlayer();
   const [sourceTile, setSourceTile] = useState<any | null>(null);
   const [targetTile, setTargetTile] = useState<any | null>(null);
+  const [sourceEntity, setSourceEntity] = useState<Entity | null>(null);
+  const [targetEntity, setTargetEntity] = useState<Entity | null>(null);
   const [isActionSelected, setIsActionSelected] = useState(false);
 
+  const [armySelected, setArmySelected] = useState(0);
+
   useEffect(() => {
-    set_army_count(0);
-    set_current_source(null);
-    set_current_target(null);
+    removeSelected();
   }, [phase]);
 
-  const { tiles } = useGetTiles();
+  const { tiles, tilesEntities } = useGetTiles();
 
   useEffect(() => {
     if (current_source !== null) {
-      const sourceTileData = tiles[current_source - 1];
-      setSourceTile(sourceTileData);
-      if (sourceTileData && sourceTileData.army) {
+      const tile = tiles[current_source - 1];
+      setSourceTile(tile);
+      setSourceEntity(tilesEntities[current_source - 1]);
+      if (tile && tile.army) {
         if (phase === Phase.DEPLOY) {
-          set_army_count(currentPlayer.supply);
+          setArmySelected(currentPlayer.supply);
         } else {
-          set_army_count(sourceTileData.army - 1);
+          setArmySelected(tile.army - 1);
         }
       }
       setIsActionSelected(true);
     } else {
       setSourceTile(null);
+      setSourceEntity(null);
       setIsActionSelected(false);
     }
+  }, [current_source, phase]);
 
+  useEffect(() => {
     if (current_target !== null) {
-      const targetTileData = tiles[current_target - 1];
-      setTargetTile(targetTileData);
+      const tile = tiles[current_target - 1];
+      setTargetTile(tile);
+      setTargetEntity(tilesEntities[current_target - 1]);
     } else {
       setTargetTile(null);
+      setTargetEntity(null);
     }
-  }, [current_source, current_target, phase]);
+  }, [current_target, phase]);
+
+  useEffect(() => {
+    if (sourceTile === null) return;
+    let sourceArmy = 0;
+    if (phase === Phase.ATTACK || phase === Phase.FORTIFY) {
+      if (sourceTile !== null && targetTile !== null) {
+        sourceArmy = sourceTile.army - armySelected;
+      } else {
+        sourceArmy = sourceTile.army;
+      }
+    } else if (phase === Phase.DEPLOY) {
+      sourceArmy = sourceTile.army + armySelected;
+    }
+
+    Tile.addOverride(ovIdSource, {
+      entity: sourceEntity,
+      value: {
+        army: sourceArmy,
+      },
+    });
+
+    if (targetTile === null) return;
+    let targetArmy = targetTile.army;
+    if (phase === Phase.FORTIFY || phase === Phase.DEPLOY) {
+      targetArmy = targetTile.army + armySelected;
+    }
+    Tile.addOverride(ovIdTarget, {
+      entity: targetEntity,
+      value: {
+        army: targetArmy,
+      },
+    });
+  }, [armySelected, targetTile]);
 
   const handleSupply = async () => {
     if (game_id == null || game_id == undefined) return;
     if (current_source === null) return;
-    if (currentPlayer && currentPlayer.supply < army_count) {
-      // todo put toast here
-      console.log('Not enough supply', currentPlayer.supply, army_count);
+    if (currentPlayer && currentPlayer.supply < armySelected) {
+      toast({
+        variant: 'destructive',
+        description: <code className="text-white text-xs">Not enough supply</code>,
+      });
       return;
     }
 
-    await play.supply(account, game_id, current_source, army_count);
+    try {
+      await play.supply(account, game_id, current_source, armySelected);
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        description: <code className="text-white text-xs">{error.message}</code>,
+      });
+    } finally {
+      await sleep(SLEEP_TIME); // otherwise value blink on tile
+      Tile.removeOverride(ovIdSource);
+    }
+
     removeSelected();
   };
 
@@ -89,25 +149,29 @@ const ActionPanel = () => {
     if (game_id == null || game_id == undefined) return;
 
     // todo adapt to compare to source.supply
-    if (currentPlayer && currentPlayer.attack < army_count) {
+    if (currentPlayer && currentPlayer.attack < armySelected) {
       //todo put toast here
       alert('Not enough attack');
       return;
     }
 
     try {
-      await play.attack(account, game_id, current_source, current_target, army_count);
+      await play.attack(account, game_id, current_source, current_target, armySelected);
 
       await sleep(500);
       await play.defend(account, game_id, current_source, current_target);
-
-      removeSelected();
     } catch (error: any) {
       toast({
         variant: 'destructive',
         description: <code className="text-white text-xs">{error.message}</code>,
       });
+    } finally {
+      await sleep(SLEEP_TIME); // otherwise value blink on tile
+      Tile.removeOverride(ovIdSource);
+      Tile.removeOverride(ovIdTarget);
     }
+
+    removeSelected();
   };
 
   const handleMoveTroops = async () => {
@@ -115,13 +179,26 @@ const ActionPanel = () => {
 
     if (game_id == null || game_id == undefined) return;
 
-    await play.transfer(account, game_id, current_source, current_target, army_count);
+    try {
+      await play.transfer(account, game_id, current_source, current_target, armySelected);
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        description: <code className="text-white text-xs">{error.message}</code>,
+      });
+    } finally {
+      await sleep(SLEEP_TIME); // otherwise value blink on tile
+      Tile.removeOverride(ovIdSource);
+      Tile.removeOverride(ovIdTarget);
+    }
+
     removeSelected();
   };
 
   const removeSelected = (): void => {
     set_current_source(null);
     set_current_target(null);
+    setArmySelected(0);
   };
 
   const isAttackTurn = () => {
@@ -155,9 +232,9 @@ const ActionPanel = () => {
                 className="w-32"
                 min={1}
                 max={sourceTile ? sourceTile.army - 1 : Infinity}
-                value={[army_count]}
+                value={[armySelected]}
                 onValueChange={(newValue: number[]) => {
-                  set_army_count(newValue[0]);
+                  setArmySelected(newValue[0]);
                 }}
                 color="red"
               ></Slider>
@@ -192,9 +269,9 @@ const ActionPanel = () => {
                 className="w-32"
                 min={1}
                 max={sourceTile.army - 1}
-                value={[army_count]}
+                value={[armySelected]}
                 onValueChange={(newValue: number[]) => {
-                  set_army_count(newValue[0]);
+                  setArmySelected(newValue[0]);
                 }}
               ></Slider>
               <Button
@@ -228,9 +305,9 @@ const ActionPanel = () => {
                   className="w-32"
                   min={1}
                   max={currentPlayer.supply}
-                  value={[army_count]}
+                  value={[armySelected]}
                   onValueChange={(newValue: number[]) => {
-                    set_army_count(newValue[0]);
+                    setArmySelected(newValue[0]);
                   }}
                 ></Slider>
               )}

@@ -63,8 +63,8 @@ const BattleRound: React.FC<BattleRoundProps> = ({ battle, round }) => {
         </div>
 
         <div className="flex flex-col gap-2">
-          {attackerDices.slice(0, dicesBattle).map(() => (
-            <div className="h-[92px] flex items-center">
+          {attackerDices.slice(0, dicesBattle).map((_, index) => (
+            <div className="h-[92px] flex items-center" key={`sword-${index}`}>
               <Swords className="w-8 h-8 text-white" />
             </div>
           ))}
