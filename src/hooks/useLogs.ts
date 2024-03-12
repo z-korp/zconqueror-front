@@ -17,7 +17,6 @@ import { Battle, BattleEvent, Player } from '@/utils/types';
 import { useEffect, useRef, useState } from 'react';
 import { Subscription } from 'rxjs';
 import { useGetPlayers } from './useGetPlayers';
-import { useGame } from './useGame';
 import { getBattleFromBattleEvents } from '@/utils/battle';
 
 export enum EventType {
@@ -54,6 +53,10 @@ export const useLogs = () => {
   const { setLastDefendResult, tilesConqueredThisTurn, setTilesConqueredThisTurn, setLastBattleResult } =
     useElementStore((state) => state);
 
+  /*useEffect(() => {
+    console.log('Logs', logs);
+  }, [logs]);*/
+
   const subscribedRef = useRef(false); // Tracks whether subscriptions have been made
   const {
     setup: {
@@ -63,7 +66,6 @@ export const useLogs = () => {
     },
   } = useDojo();
 
-  const game = useGame();
   const { game_id } = useElementStore((state) => state);
   const { players } = useGetPlayers();
 
@@ -103,13 +105,7 @@ export const useLogs = () => {
                 // let's fetch all battle events for this defend event
                 const battleEvents: BattleEvent[] = [];
                 await fetchEventsOnce(
-                  [
-                    BATTLE_EVENT,
-                    '0x' + game_id.toString(16),
-                    '0x' + game.nonce.toString(16),
-                    '*',
-                    event.transactionHash,
-                  ],
+                  [BATTLE_EVENT, '0x' + game_id.toString(16), '*', '*', event.transactionHash],
                   async (event) => {
                     const battleEvent = parseBattleEvent(event);
                     battleEvents.push(battleEvent);
