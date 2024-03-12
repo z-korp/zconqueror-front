@@ -80,7 +80,7 @@ export const useLogs = () => {
 
   // Subscribe to events
   useEffect(() => {
-    if (game && game_id !== undefined && players.length !== 0) {
+    if (game_id !== undefined && players.length !== 0) {
       // Check if already subscribed to prevent duplication due to HMR
       if (!subscribedRef.current) {
         const subscriptions: Subscription[] = [];
@@ -149,7 +149,7 @@ export const useLogs = () => {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [game, players, game_id]);
+  }, [game_id]);
 
   // Fetch events history (before subscription)
   useEffect(() => {
