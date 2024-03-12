@@ -53,9 +53,9 @@ export const useLogs = () => {
   const { setLastDefendResult, tilesConqueredThisTurn, setTilesConqueredThisTurn, setLastBattleResult } =
     useElementStore((state) => state);
 
-  /*useEffect(() => {
-    console.log('Logs', logs);
-  }, [logs]);*/
+  useEffect(() => {
+    console.log('logs', logs);
+  }, [logs]);
 
   const subscribedRef = useRef(false); // Tracks whether subscriptions have been made
   const {
@@ -119,6 +119,7 @@ export const useLogs = () => {
                   log.battle = battle;
                 }
 
+                console.log('push log', log);
                 addLogIfUnique(log);
                 setLastDefendResult(event);
                 setLastBattleResult(log.battle ? log.battle : null);
