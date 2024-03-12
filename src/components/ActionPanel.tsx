@@ -11,6 +11,11 @@ import { toast } from './ui/use-toast';
 import { sleep } from '@/utils/time';
 import OverlayBattle from './BattleReport/OverlayBattle';
 import { uuid } from '@latticexyz/utils';
+import { getBattleFromBattleEvents } from '@/utils/battle';
+import { parseBattleEvent } from '@/utils/events';
+import { Battle, BattleEvent } from '@/utils/types';
+import { useGetPlayers } from '@/hooks/useGetPlayers';
+import { BATTLE_EVENT } from '@/constants';
 import { Entity } from '@/graphql/generated/graphql';
 
 const SLEEP_TIME = 600; // ms
@@ -26,6 +31,8 @@ const ActionPanel = () => {
     },
     account: { account },
   } = useDojo();
+
+  const { players } = useGetPlayers();
 
   const {
     current_source,
@@ -44,6 +51,7 @@ const ActionPanel = () => {
   const [sourceEntity, setSourceEntity] = useState<Entity | null>(null);
   const [targetEntity, setTargetEntity] = useState<Entity | null>(null);
   const [isActionSelected, setIsActionSelected] = useState(false);
+  const [battleResult, setBattleResult] = useState<Battle | null>(null);
 
   const [armySelected, setArmySelected] = useState(0);
 
@@ -158,8 +166,25 @@ const ActionPanel = () => {
     try {
       await play.attack(account, game_id, current_source, current_target, armySelected);
 
-      await sleep(100);
-      await play.defend(account, game_id, current_source, current_target);
+      await sleep(500);
+      const ret = await play.defend(account, game_id, current_source, current_target);
+
+      const battleEvents: BattleEvent[] = [];
+      ret.events
+        .filter((e) => e.keys[0] === BATTLE_EVENT)
+        .forEach((event) => {
+          const battleEvent = parseBattleEvent(event);
+          battleEvents.push(battleEvent);
+        });
+
+      if (battleEvents.length !== 0) {
+        const attackerName = players[battleEvents[0].attackerIndex].name;
+        const defenderName = players[battleEvents[0].defenderIndex].name;
+        const battle = getBattleFromBattleEvents(battleEvents, attackerName, defenderName);
+        setBattleResult(battle);
+      }
+
+      removeSelected();
     } catch (error: any) {
       toast({
         variant: 'destructive',
@@ -215,7 +240,8 @@ const ActionPanel = () => {
 
   return (
     <>
-      {lastBattleResult && <OverlayBattle battle={lastBattleResult} onClose={handleCloseAttackReport} />}
+      {/*lastBattleResult && <OverlayBattle battle={lastBattleResult} onClose={handleCloseAttackReport} />*/}
+      {battleResult && <OverlayBattle battle={battleResult} onClose={() => setBattleResult(null)} />}
       {isAttackTurn() ? (
         current_source &&
         current_target &&

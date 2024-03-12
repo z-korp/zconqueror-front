@@ -169,7 +169,7 @@ export const useLogs = () => {
         // let's fetch all battle events for this defend event
         const battleEvents: BattleEvent[] = [];
         await fetchEventsOnce(
-          [BATTLE_EVENT, '0x' + gameId.toString(16), '0x' + game.nonce.toString(16), '*', event.transactionHash],
+          [BATTLE_EVENT, '0x' + gameId.toString(16), '*', '*', event.transactionHash],
           async (event) => {
             const battleEvent = parseBattleEvent(event);
             battleEvents.push(battleEvent);
