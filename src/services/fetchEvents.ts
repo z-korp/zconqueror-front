@@ -23,7 +23,7 @@ type getEventsQuery = {
 export const fetchEventsOnce = async (keys: string[], processResults: (event: Event) => Promise<void>) => {
   const formattedKeys = keys.map((key) => `"${key}"`).join(',');
 
-  console.log('Fetching events for keys:', formattedKeys);
+  //console.log('Fetching events for keys:', formattedKeys);
 
   const query = `
   query events {
