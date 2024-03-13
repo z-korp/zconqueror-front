@@ -4,7 +4,7 @@ import { useDojo } from '@/dojo/useDojo';
 import { useTurn } from './useTurn';
 import { Player } from '@/utils/types';
 
-export function useMe(): { me: Player | null; isItMyTurn: boolean } {
+export function useMe(): { me: Player | null; isItMyTurn: boolean; setMe: any } {
   const {
     setup: {
       account: { account },
@@ -17,7 +17,7 @@ export function useMe(): { me: Player | null; isItMyTurn: boolean } {
   const { players } = useGetPlayers();
 
   useEffect(() => {
-    if (players.length > 0 && account.address) {
+    if (players && players.length > 0 && account.address) {
       const me = players.find((p) => p.address === account.address);
       if (!me) return;
       setMe(me);
@@ -27,5 +27,6 @@ export function useMe(): { me: Player | null; isItMyTurn: boolean } {
   return {
     me,
     isItMyTurn: me?.index === turn,
+    setMe,
   };
 }

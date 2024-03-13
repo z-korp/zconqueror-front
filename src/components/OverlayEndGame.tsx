@@ -2,6 +2,9 @@ import { Medal, Trophy } from 'lucide-react';
 import React, { useState } from 'react';
 import { avatars } from '../utils/pfps';
 import { Button } from './ui/button';
+import { useElementStore } from '@/utils/store';
+import GameState from '@/utils/gamestate';
+import { useMe } from '@/hooks/useMe';
 
 interface OverlayEndGameProps {
   players: any;
@@ -11,7 +14,8 @@ interface OverlayEndGameProps {
 const OverlayEndGame: React.FC<OverlayEndGameProps> = ({ me, players }) => {
   const text = 'Game Over';
   const [showOverlay, setShowOverlay] = useState(true);
-
+  const { set_game_state, set_game_id } = useElementStore((state) => state);
+  const { setMe } = useMe();
   const getColorRGB = (colorName: string) => {
     switch (colorName) {
       case 'bronze':
@@ -22,6 +26,13 @@ const OverlayEndGame: React.FC<OverlayEndGameProps> = ({ me, players }) => {
   };
 
   const handleCloseOverlay = () => {
+    setShowOverlay(false);
+  };
+
+  const handleGoMenu = () => {
+    set_game_id(undefined);
+    set_game_state(GameState.MainMenu);
+    // setMe(undefined);
     setShowOverlay(false);
   };
 
@@ -66,6 +77,9 @@ const OverlayEndGame: React.FC<OverlayEndGameProps> = ({ me, players }) => {
                   </div>
                 ))}
             </div>
+            <Button className="mt-4" onClick={handleGoMenu}>
+              Back to lobby
+            </Button>
           </div>
         </div>
       )}

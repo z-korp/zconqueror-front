@@ -10,7 +10,7 @@ export enum Phase {
 
 interface State {
   game_id: number | undefined;
-  set_game_id: (game_id: number) => void;
+  set_game_id: (game_id: number | undefined) => void;
   game_state: GameState;
   set_game_state: (game_state: GameState) => void;
   current_source: number | null;
@@ -34,8 +34,8 @@ interface State {
 }
 
 export const useElementStore = create<State>((set) => ({
-  game_id: 0,
-  set_game_id: (game_id: number) => set(() => ({ game_id })),
+  game_id: undefined,
+  set_game_id: (game_id: number | undefined) => set(() => ({ game_id })),
   game_state: GameState.MainMenu,
   set_game_state: (game_state: GameState) => set(() => ({ game_state })),
   current_source: null,

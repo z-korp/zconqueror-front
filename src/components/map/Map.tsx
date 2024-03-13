@@ -44,7 +44,7 @@ const Map = () => {
     useElementStore((state) => state);
 
   const surrender = async () => {
-    if (game_id) await play.surrender(account, game_id);
+    if (game_id !== undefined && game_id !== null) await play.surrender(account, game_id);
   };
 
   const { setShowTuto } = useTutorial();

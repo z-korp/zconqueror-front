@@ -74,7 +74,7 @@ const Lobby: React.FC = () => {
         await host.leave(account, game_id);
       }
 
-      set_game_id(0);
+      set_game_id(undefined);
       set_game_state(GameState.MainMenu);
     } catch (error: any) {
       toast({
@@ -86,7 +86,9 @@ const Lobby: React.FC = () => {
 
   const kickPlayer = async (player_index: number) => {
     try {
-      await host.kick(account, game_id, player_index);
+      if (game_id) {
+        await host.kick(account, game_id, player_index);
+      }
     } catch (error: any) {
       toast({
         variant: 'destructive',
@@ -97,7 +99,9 @@ const Lobby: React.FC = () => {
 
   const transferHost = async (player_index: number) => {
     try {
-      await host.transfer(account, game_id, player_index);
+      if (game_id) {
+        await host.transfer(account, game_id, player_index);
+      }
     } catch (error: any) {
       toast({
         variant: 'destructive',

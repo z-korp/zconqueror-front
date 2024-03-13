@@ -26,14 +26,21 @@ const MainMenu: React.FC = () => {
 
   // if player is host of a game, go to the lobby
   useEffect(() => {
+    console.log(game);
+    console.log(player);
+    console.log(account.address);
+
+    if ((game && game.over == 1) || (player && player.rank != 0)) {
+      return;
+    }
     if (player) {
       set_game_id(player.game_id);
       set_game_state(GameState.Lobby);
-    } else if (game) {
+    } else if (game && game.over != 1) {
       set_game_id(game.id);
       set_game_state(GameState.Lobby);
     }
-  }, [game, player]);
+  }, [game, player, account]);
 
   const createNewGame = async () => {
     if (!player_name) {
