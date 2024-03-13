@@ -32,7 +32,7 @@ const ActionPanel = () => {
     account: { account },
   } = useDojo();
 
-  const { players } = useGetPlayers();
+  const { playerNames } = useGetPlayers();
 
   const {
     current_source,
@@ -178,8 +178,8 @@ const ActionPanel = () => {
         });
 
       if (battleEvents.length !== 0) {
-        const attackerName = players[battleEvents[0].attackerIndex].name;
-        const defenderName = players[battleEvents[0].defenderIndex].name;
+        const attackerName = playerNames[battleEvents[0].attackerIndex];
+        const defenderName = playerNames[battleEvents[0].defenderIndex];
         const battle = getBattleFromBattleEvents(battleEvents, attackerName, defenderName);
         setBattleResult(battle);
       }

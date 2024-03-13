@@ -6,7 +6,7 @@ import { useEntityQuery } from '@dojoengine/react';
 import { Has, HasValue, getComponentValue } from '@dojoengine/recs';
 import { useMemo } from 'react';
 
-export function useGetPlayers(): { players: Player[] } {
+export function useGetPlayers(): { players: Player[]; playerNames: string[] } {
   const {
     setup: {
       clientComponents: { Player },
@@ -25,7 +25,13 @@ export function useGetPlayers(): { players: Player[] } {
     [playerEntities, Player]
   );
 
+  const playerNames = useMemo(() => {
+    return players.map((player) => player.name);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [players.map((player) => player.name).toString()]);
+
   return {
     players,
+    playerNames,
   };
 }

@@ -90,7 +90,6 @@ const PlayPanel = () => {
   }, [showCardsPopup]);
 
   const [showBubble, setShowBubble] = useState(false);
-  const [hasSourceChanged, setHasSourceChanged] = useState(false);
   const [texts, setTexts] = useState<string[]>([]);
 
   useEffect(() => {
@@ -101,7 +100,6 @@ const PlayPanel = () => {
         else setTexts(['It is now your turn, my Lord!']);
       }
       setShowBubble(true); // Show the Bubble at the start of the turn
-      setHasSourceChanged(false); // Reset on new turn
     } else {
       setTexts([]);
       setShowBubble(false); // Hide the Bubble otherwise
@@ -110,7 +108,6 @@ const PlayPanel = () => {
 
   useEffect(() => {
     if (current_source !== null) {
-      setHasSourceChanged(true);
       setShowBubble(false);
     }
   }, [current_source]);
@@ -128,7 +125,7 @@ const PlayPanel = () => {
         setShowBubble(true);
         return;
       } else if (player.supply !== 0) {
-        setTexts(['My Lord, deploy your armies first!']);
+        setTexts([`You have ${player.supply} supplies to deploy first!`]);
         setShowBubble(true);
         return;
       }
@@ -176,7 +173,7 @@ const PlayPanel = () => {
           <div className="mb-8 vt323-font">
             <ActionPanel />
           </div>
-          {showBubble && !hasSourceChanged && (
+          {showBubble && (
             <div className="w-auto ">
               <Bubble texts={texts} variant="speech" />
             </div>

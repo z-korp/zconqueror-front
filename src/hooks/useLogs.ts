@@ -35,16 +35,16 @@ export type LogType = {
   type: EventType;
 };
 
-const generateLogFromEvent = (event: Event, playerList: Player[]): LogType => {
+const generateLogFromEvent = (event: Event, playerNames: string[]): LogType => {
   if (event.keys[0] === SUPPLY_EVENT) {
-    return createSupplyLog(parseSupplyEvent(event), playerList);
+    return createSupplyLog(parseSupplyEvent(event), playerNames);
   } else if (event.keys[0] === DEFEND_EVENT) {
-    return createDefendLog(parseDefendEvent(event), playerList);
+    return createDefendLog(parseDefendEvent(event), playerNames);
   } else if (event.keys[0] === FORTIFY_EVENT) {
-    return createFortifyLog(parseFortifyEvent(event), playerList);
+    return createFortifyLog(parseFortifyEvent(event), playerNames);
   } else {
     // if (event.keys[0] === BATTLE_EVENT)
-    return createBattleLog(parseBattleEvent(event), playerList);
+    return createBattleLog(parseBattleEvent(event), playerNames);
   }
 };
 
@@ -67,7 +67,7 @@ export const useLogs = () => {
   } = useDojo();
 
   const { game_id } = useElementStore((state) => state);
-  const { players } = useGetPlayers();
+  const { playerNames } = useGetPlayers();
 
   const addLogIfUnique = (newLog: LogType) => {
     setLogs((prevLogs) => {
@@ -78,9 +78,58 @@ export const useLogs = () => {
     });
   };
 
+  // Fetch events history (before subscription)
+  useEffect(() => {
+    console.log('Fetch events history (before subscription)', game_id);
+    // Clear logs when game changes
+    setLogs([]);
+
+    const fetchEvents = async (gameId: number) => {
+      await fetchEventsOnce([SUPPLY_EVENT, '0x' + gameId.toString(16)], async (event: Event) => {
+        addLogIfUnique(generateLogFromEvent(event, playerNames));
+      });
+      await fetchEventsOnce([FORTIFY_EVENT, '0x' + gameId.toString(16)], async (event) =>
+        addLogIfUnique(generateLogFromEvent(event, playerNames))
+      );
+      await fetchEventsOnce([DEFEND_EVENT, '0x' + gameId.toString(16)], async (event) => {
+        const log = generateLogFromEvent(event, playerNames);
+
+        // let's fetch all battle events for this defend event
+        const battleEvents: BattleEvent[] = [];
+        await fetchEventsOnce(
+          [BATTLE_EVENT, '0x' + gameId.toString(16), '*', '*', event.transactionHash],
+          async (event) => {
+            const battleEvent = parseBattleEvent(event);
+            battleEvents.push(battleEvent);
+          }
+        );
+
+        if (battleEvents.length !== 0) {
+          //console.log('battleEvents', battleEvents);
+          const attackerName = playerNames[battleEvents[0].attackerIndex];
+          const defenderName = playerNames[battleEvents[0].defenderIndex];
+          const battle = getBattleFromBattleEvents(battleEvents, attackerName, defenderName);
+          //console.log('battle', battle);
+
+          log.battle = battle;
+        }
+
+        addLogIfUnique(log);
+        setLastDefendResult(event);
+      });
+    };
+
+    if (game_id !== undefined) {
+      (async () => {
+        await fetchEvents(game_id);
+      })();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [game_id]);
+
   // Subscribe to events
   useEffect(() => {
-    if (game_id !== undefined && players.length !== 0) {
+    if (game_id !== undefined && playerNames.length !== 0) {
       // Check if already subscribed to prevent duplication due to HMR
       if (!subscribedRef.current) {
         const subscriptions: Subscription[] = [];
@@ -89,18 +138,19 @@ export const useLogs = () => {
           const supplyObservable = await createSupplyEvents(0);
           const defendObservable = await createDefendEvents(0);
           const fortifyObservable = await createFortifyEvents(0);
-          //const battleObservable = await createBattleEvents(0);
 
           subscriptions.push(
             supplyObservable.subscribe((event) => {
+              console.log('supply event', event);
               if (event) {
-                addLogIfUnique(generateLogFromEvent(event, players));
+                addLogIfUnique(generateLogFromEvent(event, playerNames));
               }
             }),
 
             defendObservable.subscribe(async (event) => {
+              console.log('defend event', event);
               if (event) {
-                const log = generateLogFromEvent(event, players);
+                const log = generateLogFromEvent(event, playerNames);
 
                 // let's fetch all battle events for this defend event
                 const battleEvents: BattleEvent[] = [];
@@ -112,8 +162,8 @@ export const useLogs = () => {
                   }
                 );
                 if (battleEvents.length !== 0) {
-                  const attackerName = players[battleEvents[0].attackerIndex].name;
-                  const defenderName = players[battleEvents[0].defenderIndex].name;
+                  const attackerName = playerNames[battleEvents[0].attackerIndex];
+                  const defenderName = playerNames[battleEvents[0].defenderIndex];
                   const battle = getBattleFromBattleEvents(battleEvents, attackerName, defenderName);
 
                   log.battle = battle;
@@ -130,8 +180,9 @@ export const useLogs = () => {
             }),
 
             fortifyObservable.subscribe((event) => {
+              console.log('fortify event', event);
               if (event) {
-                addLogIfUnique(generateLogFromEvent(event, players));
+                addLogIfUnique(generateLogFromEvent(event, playerNames));
               }
             })
           );
@@ -140,6 +191,7 @@ export const useLogs = () => {
         };
 
         subscribeToEvents();
+        console.log('Subscribed to all events');
 
         // Cleanup function to unsubscribe
         return () => {
@@ -151,50 +203,6 @@ export const useLogs = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [game_id]);
-
-  // Fetch events history (before subscription)
-  useEffect(() => {
-    // Clear logs when game changes
-    setLogs([]);
-
-    const fetchEvents = async (gameId: number) => {
-      await fetchEventsOnce([SUPPLY_EVENT, '0x' + gameId.toString(16)], async (event: Event) => {
-        addLogIfUnique(generateLogFromEvent(event, players));
-      });
-      await fetchEventsOnce([FORTIFY_EVENT, '0x' + gameId.toString(16)], async (event) =>
-        addLogIfUnique(generateLogFromEvent(event, players))
-      );
-      await fetchEventsOnce([DEFEND_EVENT, '0x' + gameId.toString(16)], async (event) => {
-        const log = generateLogFromEvent(event, players);
-
-        // let's fetch all battle events for this defend event
-        const battleEvents: BattleEvent[] = [];
-        await fetchEventsOnce(
-          [BATTLE_EVENT, '0x' + gameId.toString(16), '*', '*', event.transactionHash],
-          async (event) => {
-            const battleEvent = parseBattleEvent(event);
-            battleEvents.push(battleEvent);
-          }
-        );
-
-        if (battleEvents.length !== 0) {
-          //console.log('battleEvents', battleEvents);
-          const attackerName = players[battleEvents[0].attackerIndex].name;
-          const defenderName = players[battleEvents[0].defenderIndex].name;
-          const battle = getBattleFromBattleEvents(battleEvents, attackerName, defenderName);
-          //console.log('battle', battle);
-
-          log.battle = battle;
-        }
-
-        addLogIfUnique(log);
-        setLastDefendResult(event);
-      });
-    };
-
-    if (game_id !== undefined) fetchEvents(game_id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [game_id, players]);
 
   return { logs: logs.sort((a, b) => a.timestamp - b.timestamp) };
 };
