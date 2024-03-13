@@ -122,7 +122,7 @@ const PlayPanel = () => {
     if (game.id == null || game.id == undefined) return;
     setShowBubble(false);
 
-    if (phase === Phase.DEPLOY || phase === Phase.FORTIFY) {
+    if (phase === Phase.DEPLOY) {
       if (player.cards.length === 5) {
         setTexts(['My Lord, exchange your cards first!']);
         setShowBubble(true);
@@ -140,11 +140,13 @@ const PlayPanel = () => {
           description: <code className="text-white text-xs">{error.message}</code>,
         });
       }
-
-      setOverlayText(getPhaseName(phase + 1));
-      if (player.supply === 0) setShowOverlay(true);
     } else {
       await play.finish(account, game.id);
+    }
+
+    setOverlayText(getPhaseName(phase + 1));
+    if (!(phase === Phase.FORTIFY && conqueredThisTurn) && player.supply === 0) {
+      setShowOverlay(true);
     }
 
     const timer = setTimeout(() => {

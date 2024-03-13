@@ -6,6 +6,7 @@ export enum Phase {
   DEPLOY,
   ATTACK,
   FORTIFY,
+  ENDTURN,
 }
 
 interface State {
