@@ -26,6 +26,7 @@ import {
   DialogFooter,
   DialogHeader,
 } from '@/components/ui/dialog';
+import Music from '../Music';
 
 const Map = () => {
   const {
@@ -123,7 +124,7 @@ const Map = () => {
                   <MapLucid />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Regions</TooltipContent>
+              <TooltipContent>Continents</TooltipContent>
             </Tooltip>
           </DynamicOverlayTuto>
           <div>
@@ -160,6 +161,12 @@ const Map = () => {
               </Button>
             </TooltipTrigger>
             <TooltipContent>Tutorial</TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Music></Music>
+            </TooltipTrigger>
+            <TooltipContent>Toggle music</TooltipContent>
           </Tooltip>
         </div>
         {isContinentMode && (
