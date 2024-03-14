@@ -129,9 +129,13 @@ const Lobby: React.FC = () => {
         </div>
 
         <div className="w-5/6 max-w-4xl flex flex-col bg-stone-500 p-8 rounded-lg">
-          <div className="flex justify-between">
-            <h1 className="text-white text-4xl">{`Game ${game.id}`}</h1>
-            <p className="text-white text-4xl">Players: {players.length}/6</p>
+          <div className="flex items-center w-full relative justify-center">
+            <div className="flex-grow"></div> {/* Left spacer */}
+            <h1 className="flex-grow-0 flex-shrink mx-auto text-white text-4xl">{`Game ${game.id}`}</h1>
+            <div className="flex-grow h-fit">
+              <p className="text-white absolute text-xl right-0 top-2">Players: {players.length}/6</p>
+            </div>
+            {/* Right spacer */}
           </div>
 
           {players.length !== 0 && (
