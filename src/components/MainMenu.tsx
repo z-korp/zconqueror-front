@@ -70,16 +70,9 @@ const MainMenu: React.FC = () => {
     <div className="vt323-font">
       <div className="flex flex-col justify-center items-center gap-6">
         <div className="w-96 rounded-lg uppercase text-white text-4xl bg-stone-500">Zconqueror</div>
-        <DialogCreateJoin
-          onClick={createNewGame}
-          playerName={player_name}
-          setPlayerName={setPlayerName}
-          dialogTitle="Create a new game"
-          buttonText="Create"
-          buttonTextDisplayed="Create a New Game"
-        />
+
         {games.length > 0 && (
-          <div className="bg-stone-500 p-10 rounded-lg lg:w-1/2 md:w-3/4">
+          <div className="w-2/3 max-w-4xl bg-stone-500 p-7 rounded-lg">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -99,6 +92,16 @@ const MainMenu: React.FC = () => {
                 ))}
               </TableBody>
             </Table>
+            <div className="mt-7 w-full flex justify-end">
+              <DialogCreateJoin
+                onClick={createNewGame}
+                playerName={player_name}
+                setPlayerName={setPlayerName}
+                dialogTitle="Create a new game"
+                buttonText="Create"
+                buttonTextDisplayed="Create a New Game"
+              />
+            </div>
           </div>
         )}
       </div>
