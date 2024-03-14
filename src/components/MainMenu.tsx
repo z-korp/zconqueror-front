@@ -8,6 +8,7 @@ import { HasValue, getComponentValue } from '@dojoengine/recs';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from './ui/table';
 import GameRow from './GameRow';
 import { DialogCreateJoin } from './DialogCreateJoin';
+import { Button } from './ui/button';
 
 const MainMenu: React.FC = () => {
   const { toast } = useToast();
@@ -70,10 +71,19 @@ const MainMenu: React.FC = () => {
     <div className="vt323-font">
       <div className="flex flex-col justify-center items-center gap-6">
         <div className="w-96 rounded-lg uppercase text-white text-4xl bg-stone-500">Zconqueror</div>
-
+        {games.length === 0 && (
+          <DialogCreateJoin
+            onClick={createNewGame}
+            playerName={player_name}
+            setPlayerName={setPlayerName}
+            dialogTitle="Create a new game"
+            buttonText="Create"
+            buttonTextDisplayed="Create a New Game"
+          />
+        )}
         {games.length > 0 && (
-          <div className="w-2/3 max-w-4xl bg-stone-500 p-7 rounded-lg">
-            <Table>
+          <div className="flex flex-col w-5/6 max-w-4xl bg-stone-500 p-7 pt-4 rounded-lg">
+            <Table className="text-lg">
               <TableHeader>
                 <TableRow>
                   <TableHead>Host</TableHead>
@@ -92,7 +102,8 @@ const MainMenu: React.FC = () => {
                 ))}
               </TableBody>
             </Table>
-            <div className="mt-7 w-full flex justify-end">
+
+            <div className="w-fit mt-8 self-end">
               <DialogCreateJoin
                 onClick={createNewGame}
                 playerName={player_name}

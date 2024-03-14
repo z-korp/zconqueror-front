@@ -116,6 +116,7 @@ const Lobby: React.FC = () => {
         <div className="flex justify-center w-full">
           <Button
             className="mr-auto"
+            variant="tertiary"
             onClick={async () => {
               if (game.id !== undefined) {
                 await leaveGame(game.id);
@@ -127,7 +128,7 @@ const Lobby: React.FC = () => {
           <div className="mr-auto w-96 rounded-lg uppercase text-white text-4xl bg-stone-500">zConqueror</div>
         </div>
 
-        <div className="w-2/3 max-w-4xl flex flex-col bg-stone-500 p-8 rounded-lg">
+        <div className="w-5/6 max-w-4xl flex flex-col bg-stone-500 p-8 rounded-lg">
           <div className="flex justify-between">
             <h1 className="text-white text-4xl">{`Game ${game.id}`}</h1>
             <p className="text-white text-4xl">Players: {players.length}/6</p>
@@ -159,7 +160,7 @@ const Lobby: React.FC = () => {
                               <>
                                 <Button
                                   size="sm"
-                                  variant="secondary"
+                                  variant="tertiary"
                                   className="hover:bg-red-600 hover:text-white drop-shadow-lg hover:transform hover:-translate-y-1 transition-transform ease-in-out"
                                   onClick={async () => {
                                     await kickPlayer(player.index, game.id);
@@ -189,7 +190,7 @@ const Lobby: React.FC = () => {
             </Table>
           )}
           {isHost(game.host, account.address) && (
-            <Button className="mt-8 self-end w-fit" onClick={startGame}>
+            <Button className="mt-8 self-end w-fit" variant="tertiary" onClick={startGame}>
               Start the Game
             </Button>
           )}

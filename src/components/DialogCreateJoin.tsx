@@ -53,7 +53,7 @@ export function DialogCreateJoin({
         </div>
         <DialogFooter className="sm:justify-center">
           <DialogClose asChild>
-            <Button type="button" onClick={onClick} variant="tertiary" className="hover:bg-green-500">
+            <Button onClick={onClick} variant="tertiary" className="hover:bg-green-500">
               {buttonText}
             </Button>
           </DialogClose>
