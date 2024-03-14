@@ -44,7 +44,6 @@ export interface BattleEvent {
   defenderTroops: number;
   duelId: number;
   gameId: number;
-  nonce: number;
 }
 
 export interface Duel {
