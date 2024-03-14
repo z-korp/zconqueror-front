@@ -157,7 +157,7 @@ const Lobby: React.FC = () => {
                     </TableCell>
                     <TableCell>
                       {
-                        <div className="flex gap-8 items-center">
+                        <div className="flex gap-8 items-center justify-between">
                           <span>{player.address} </span>{' '}
                           <div className="flex gap-6">
                             {isHost(game.host, me.address) && player.address !== me.address && (
@@ -165,7 +165,7 @@ const Lobby: React.FC = () => {
                                 <Button
                                   size="sm"
                                   variant="tertiary"
-                                  className="hover:bg-red-600 hover:text-white drop-shadow-lg hover:transform hover:-translate-y-1 transition-transform ease-in-out"
+                                  className="hover:bg-red-600"
                                   onClick={async () => {
                                     await kickPlayer(player.index, game.id);
                                   }}
@@ -175,7 +175,7 @@ const Lobby: React.FC = () => {
                                 <Button
                                   size="sm"
                                   variant="tertiary"
-                                  className="hover:bg-green-600 drop-shadow-lg hover:transform hover:-translate-y-1 transition-transform ease-in-out"
+                                  className="hover:bg-green-600"
                                   onClick={async () => {
                                     await transferHost(player.index, game.id);
                                   }}
@@ -194,7 +194,7 @@ const Lobby: React.FC = () => {
             </Table>
           )}
           {isHost(game.host, account.address) && (
-            <Button className="mt-8 self-end w-fit" variant="tertiary" onClick={startGame}>
+            <Button className="mt-8 self-end w-fit hover:bg-green-600" variant="tertiary" onClick={startGame}>
               Start the Game
             </Button>
           )}
