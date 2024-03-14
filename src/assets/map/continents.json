@@ -39,13 +39,13 @@
     {
       "id": 7,
       "name": "Dragon's Crest",
-      "regions": [42, 43, 44, 45, 46, 47, 48, 49, 50],
+      "regions": [43, 44, 45, 46, 47, 48, 49, 50],
       "supply": 9
     },
     {
       "id": 8,
       "name": "Eastern Shores",
-      "regions": [37, 38, 39, 40, 41],
+      "regions": [37, 38, 39, 40, 41, 42],
       "supply": 4
     }
   ]
