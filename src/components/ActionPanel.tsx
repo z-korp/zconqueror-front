@@ -94,6 +94,23 @@ const ActionPanel = () => {
 
   useEffect(() => {
     if (sourceTile === null) return;
+    Tile.removeOverride(ovIdSource);
+    setSourceOverride();
+
+    if (targetTile === null) return;
+    let targetArmy = targetTile.army;
+    if (phase === Phase.FORTIFY || phase === Phase.DEPLOY) {
+      targetArmy = targetTile.army + armySelected;
+    }
+    Tile.addOverride(ovIdTarget, {
+      entity: targetEntity,
+      value: {
+        army: targetArmy,
+      },
+    });
+  }, [armySelected, targetTile]);
+
+  function setSourceOverride() {
     let sourceArmy = 0;
     if (phase === Phase.ATTACK || phase === Phase.FORTIFY) {
       if (sourceTile !== null && targetTile !== null) {
@@ -111,19 +128,7 @@ const ActionPanel = () => {
         army: sourceArmy,
       },
     });
-
-    if (targetTile === null) return;
-    let targetArmy = targetTile.army;
-    if (phase === Phase.FORTIFY || phase === Phase.DEPLOY) {
-      targetArmy = targetTile.army + armySelected;
-    }
-    Tile.addOverride(ovIdTarget, {
-      entity: targetEntity,
-      value: {
-        army: targetArmy,
-      },
-    });
-  }, [armySelected, targetTile]);
+  }
 
   const handleSupply = async () => {
     if (game_id == null || game_id == undefined) return;
