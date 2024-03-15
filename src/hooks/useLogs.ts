@@ -13,9 +13,9 @@ import {
   parseSupplyEvent,
 } from '@/utils/events';
 import { useElementStore } from '@/utils/store';
-import { Battle, BattleEvent, Player } from '@/utils/types';
+import { Battle, BattleEvent } from '@/utils/types';
 import { useEffect, useRef, useState } from 'react';
-import { Subscription } from 'rxjs';
+import { Subscription, filter, mergeMap } from 'rxjs';
 import { useGetPlayers } from './useGetPlayers';
 import { getBattleFromBattleEvents } from '@/utils/battle';
 
@@ -96,13 +96,10 @@ export const useLogs = () => {
 
         // let's fetch all battle events for this defend event
         const battleEvents: BattleEvent[] = [];
-        await fetchEventsOnce(
-          [BATTLE_EVENT, '0x' + gameId.toString(16), '*', '*', event.transactionHash],
-          async (event) => {
-            const battleEvent = parseBattleEvent(event);
-            battleEvents.push(battleEvent);
-          }
-        );
+        await fetchEventsOnce([BATTLE_EVENT, '0x' + gameId.toString(16), event.transactionHash], async (event) => {
+          const battleEvent = parseBattleEvent(event);
+          battleEvents.push(battleEvent);
+        });
 
         if (battleEvents.length !== 0) {
           //console.log('battleEvents', battleEvents);
@@ -127,6 +124,18 @@ export const useLogs = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [game_id]);
 
+  const fetchBattleEvents = async (gameId: number, transactionHash: string) => {
+    const battleEvents: BattleEvent[] = [];
+    console.log('fetching battle events for defend event', transactionHash);
+    await fetchEventsOnce([BATTLE_EVENT, '0x' + gameId.toString(16), transactionHash], async (event) => {
+      const battleEvent = parseBattleEvent(event);
+      battleEvents.push(battleEvent);
+    });
+    console.log('battleEvents', battleEvents);
+
+    return battleEvents;
+  };
+
   // Subscribe to events
   useEffect(() => {
     if (game_id !== undefined && playerNames.length !== 0) {
@@ -147,37 +156,42 @@ export const useLogs = () => {
               }
             }),
 
-            defendObservable.subscribe(async (event) => {
-              console.log('defend event', event);
-              if (event) {
-                const log = generateLogFromEvent(event, playerNames);
+            defendObservable
+              .pipe(
+                mergeMap(async (event) => {
+                  if (!event) return null; // Skip if event is null or undefined
 
-                // let's fetch all battle events for this defend event
-                const battleEvents: BattleEvent[] = [];
-                await fetchEventsOnce(
-                  [BATTLE_EVENT, '0x' + game_id.toString(16), '*', '*', event.transactionHash],
-                  async (event) => {
-                    const battleEvent = parseBattleEvent(event);
-                    battleEvents.push(battleEvent);
+                  console.log('defend event', event);
+                  const log = generateLogFromEvent(event, playerNames);
+                  console.log('fetching battle events for defend event', event.transactionHash);
+
+                  const battleEvents = await fetchBattleEvents(game_id, event.transactionHash);
+
+                  if (battleEvents.length !== 0) {
+                    const attackerName = playerNames[battleEvents[0].attackerIndex];
+                    const defenderName = playerNames[battleEvents[0].defenderIndex];
+                    const battle = getBattleFromBattleEvents(battleEvents, attackerName, defenderName);
+
+                    log.battle = battle;
                   }
-                );
-                if (battleEvents.length !== 0) {
-                  const attackerName = playerNames[battleEvents[0].attackerIndex];
-                  const defenderName = playerNames[battleEvents[0].defenderIndex];
-                  const battle = getBattleFromBattleEvents(battleEvents, attackerName, defenderName);
 
-                  log.battle = battle;
-                }
+                  return { log, event };
+                }),
+                // Filter out null results if event was skipped
+                filter((result) => result !== null)
+              )
+              .subscribe((ret) => {
+                if (ret === null) return;
 
+                const { log, event } = ret;
                 console.log('push log', log);
                 addLogIfUnique(log);
-                setLastDefendResult(event);
+                setLastDefendResult(event); // Directly using the event from the merged object
                 setLastBattleResult(log.battle ? log.battle : null);
                 if (log.log[log.log.length - 1] === 'Result: win' && log.regionTo) {
                   setTilesConqueredThisTurn([...tilesConqueredThisTurn, log.regionTo]);
                 }
-              }
-            }),
+              }),
 
             fortifyObservable.subscribe((event) => {
               console.log('fortify event', event);
