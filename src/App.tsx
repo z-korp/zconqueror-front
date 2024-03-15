@@ -16,7 +16,7 @@ import OverlayEndGame from './components/OverlayEndGame';
 import { useMe } from './hooks/useMe';
 import DynamicOverlayTuto from './components/DynamicOverlayTuto';
 import OverlayBattleReport from './components/BattleReport/OverlayBattleReport';
-import { SpeedInsights } from '@vercel/speed-insights/next';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 function App() {
   // const { id } = useParams<{ id?: string }>();
