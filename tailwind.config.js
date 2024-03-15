@@ -67,11 +67,16 @@ module.exports = {
           '0%, 100%': { transform: 'translateY(0)' },
           '50%': { transform: 'translateY(-20px)' },
         },
+        spin: {
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(360deg)' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
         'arrow-bounce': 'arrow-bounce 2s ease-in-out infinite',
+        'spin-slow': 'spin 2s linear infinite',
       },
       fontFamily: {
         'space-mono': ['Space Mono', 'monospace'],
