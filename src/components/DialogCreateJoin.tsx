@@ -31,7 +31,9 @@ export function DialogCreateJoin({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="tertiary">{buttonTextDisplayed}</Button>
+        <Button variant="tertiary" className="hover:bg-green-600">
+          {buttonTextDisplayed}
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
@@ -53,7 +55,7 @@ export function DialogCreateJoin({
         </div>
         <DialogFooter className="sm:justify-center">
           <DialogClose asChild>
-            <Button type="button" onClick={onClick} variant="tertiary" className="hover:bg-green-500">
+            <Button onClick={onClick} variant="tertiary" className="hover:bg-green-600">
               {buttonText}
             </Button>
           </DialogClose>

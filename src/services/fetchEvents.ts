@@ -27,7 +27,7 @@ export const fetchEventsOnce = async (keys: string[], processResults: (event: Ev
 
   const query = `
   query events {
-    events(keys: [${formattedKeys}], first: 100) {
+    events(keys: [${formattedKeys}], first: 1000) {
       edges {
         node {
           id
@@ -40,8 +40,12 @@ export const fetchEventsOnce = async (keys: string[], processResults: (event: Ev
     }
   }`;
 
-  const { events }: getEventsQuery = await client.request(query);
+  try {
+    const { events }: getEventsQuery = await client.request(query);
+    await Promise.all(events.edges.map((edge) => processResults(edge.node)));
+  } catch (error) {
+    console.error('Failed to fetch events:', error);
 
-  // Process each event
-  await Promise.all(events.edges.map((edge) => processResults(edge.node)));
+    throw error;
+  }
 };

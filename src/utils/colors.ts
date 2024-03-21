@@ -31,9 +31,10 @@ export const colorPlayer = [
   'green',
   'yellow',
   'purple',
+  'teal',
+
   'pink',
   'orange',
   'cyan',
   'indigo',
-  'teal',
 ];

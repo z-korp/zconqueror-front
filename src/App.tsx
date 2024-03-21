@@ -16,6 +16,7 @@ import OverlayEndGame from './components/OverlayEndGame';
 import { useMe } from './hooks/useMe';
 import DynamicOverlayTuto from './components/DynamicOverlayTuto';
 import OverlayBattleReport from './components/BattleReport/OverlayBattleReport';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 function App() {
   // const { id } = useParams<{ id?: string }>();
@@ -82,6 +83,7 @@ function App() {
         )}
         {me && me.rank !== 0 && <OverlayEndGame me={me} players={players} />}
       </TutorialProvider>
+      <SpeedInsights />
     </>
   );
 }

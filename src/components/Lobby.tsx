@@ -84,7 +84,7 @@ const Lobby: React.FC = () => {
     }
   };
 
-  const kickPlayer = async (player_index: number) => {
+  const kickPlayer = async (player_index: number, game_id: number) => {
     try {
       await host.kick(account, game_id, player_index);
     } catch (error: any) {
@@ -95,7 +95,7 @@ const Lobby: React.FC = () => {
     }
   };
 
-  const transferHost = async (player_index: number) => {
+  const transferHost = async (player_index: number, game_id: number) => {
     try {
       await host.transfer(account, game_id, player_index);
     } catch (error: any) {
@@ -112,24 +112,32 @@ const Lobby: React.FC = () => {
 
   return (
     <div className="vt323-font">
-      <div className="flex gap-3 mb-2 items-center">
-        <Button
-          onClick={async () => {
-            if (game.id !== undefined) {
-              await leaveGame(game.id);
-            }
-          }}
-        >
-          Back
-        </Button>
-        Lobby
-        <h2>Game id: {game.id}</h2>
-        <p>Players: {players.length}/6</p>
-        {isHost(game.host, account.address) && <Button onClick={startGame}>Start</Button>}
-      </div>
       <div className="flex flex-col justify-center items-center gap-6">
-        <div className="w-96 rounded-lg uppercase text-white text-4xl bg-stone-500">Zconqueror</div>
-        <div className="bg-stone-500 p-10 rounded-lg">
+        <div className="flex justify-center w-full">
+          <Button
+            className="mr-auto"
+            variant="tertiary"
+            onClick={async () => {
+              if (game.id !== undefined) {
+                await leaveGame(game.id);
+              }
+            }}
+          >
+            Back
+          </Button>
+          <div className="mr-auto w-96 rounded-lg uppercase text-white text-4xl bg-stone-500">zConqueror</div>
+        </div>
+
+        <div className="w-5/6 max-w-4xl flex flex-col bg-stone-500 p-8 rounded-lg">
+          <div className="flex items-center w-full relative justify-center">
+            <div className="flex-grow"></div> {/* Left spacer */}
+            <h1 className="flex-grow-0 flex-shrink mx-auto text-white text-4xl">{`Game ${game.id}`}</h1>
+            <div className="flex-grow h-fit">
+              <p className="text-white absolute text-xl right-0 top-2">Players: {players.length}/6</p>
+            </div>
+            {/* Right spacer */}
+          </div>
+
           {players.length !== 0 && (
             <Table className="text-lg">
               <TableHeader>
@@ -149,17 +157,17 @@ const Lobby: React.FC = () => {
                     </TableCell>
                     <TableCell>
                       {
-                        <div className="flex gap-8 items-center">
+                        <div className="flex gap-8 items-center justify-between">
                           <span>{player.address} </span>{' '}
                           <div className="flex gap-6">
                             {isHost(game.host, me.address) && player.address !== me.address && (
                               <>
                                 <Button
                                   size="sm"
-                                  variant="secondary"
-                                  className="hover:bg-red-600 hover:text-white drop-shadow-lg hover:transform hover:-translate-y-1 transition-transform ease-in-out"
+                                  variant="tertiary"
+                                  className="hover:bg-red-600"
                                   onClick={async () => {
-                                    await kickPlayer(player.index);
+                                    await kickPlayer(player.index, game.id);
                                   }}
                                 >
                                   Kick
@@ -167,9 +175,9 @@ const Lobby: React.FC = () => {
                                 <Button
                                   size="sm"
                                   variant="tertiary"
-                                  className="hover:bg-green-600 drop-shadow-lg hover:transform hover:-translate-y-1 transition-transform ease-in-out"
+                                  className="hover:bg-green-600"
                                   onClick={async () => {
-                                    await transferHost(player.index);
+                                    await transferHost(player.index, game.id);
                                   }}
                                 >
                                   Give Host
@@ -185,13 +193,20 @@ const Lobby: React.FC = () => {
               </TableBody>
             </Table>
           )}
+          {isHost(game.host, account.address) && (
+            <Button className="mt-8 self-end w-fit hover:bg-green-600" variant="tertiary" onClick={startGame}>
+              Start the Game
+            </Button>
+          )}
         </div>
-        <h1 className="mt-4 text-white text-6xl">
-          Waiting for the game to start
-          <span className="inline-block animate-jump delay-100">.</span>
-          <span className="inline-block animate-jump delay-200">.</span>
-          <span className="inline-block animate-jump delay-300">.</span>
-        </h1>
+        {!isHost(game.host, account.address) && (
+          <h1 className="mt-4 text-white text-6xl">
+            Waiting for the game to start
+            <span className="inline-block animate-jump delay-100">.</span>
+            <span className="inline-block animate-jump delay-200">.</span>
+            <span className="inline-block animate-jump delay-300">.</span>
+          </h1>
+        )}
       </div>
     </div>
   );
