@@ -7,7 +7,7 @@ import { useTurn } from '@/hooks/useTurn';
 import { Phase, useElementStore } from '@/utils/store';
 import { colorPlayer } from '@/utils/colors';
 import { colorTilePlayer, colorTilePlayerHighlight } from '@/utils/customColors';
-import { getNeighbors } from '@/utils/map';
+import { getAllConnectedTiles, getNeighbors } from '@/utils/map';
 import { calculateCentroidFromPath, transformPointFromSVGToScreen } from '@/utils/svg';
 
 interface RegionProps {
@@ -73,56 +73,46 @@ const Region: React.FC<RegionProps> = ({ id, containerRef, onRegionClick }) => {
     }
   }, [pathData]);
 
+  const highlightConnectedTiles = () => {
+    const connectedTiles = getAllConnectedTiles(current_source, tiles, turn); // Cette fonction doit être implémentée
+    return connectedTiles.includes(id);
+  };
+
   useEffect(() => {
+    const isSourceTile = current_source === id;
+    const isTargetTile = current_target === id;
+    let highlightColor = '';
+    let shouldHighlight = false;
+
     if (phase === Phase.DEPLOY) {
-      if (current_source === id) {
-        setHilightedColor('black');
-        setIsHighlighted(true);
-      } else {
-        setIsHighlighted(false);
-      }
+      shouldHighlight = isSourceTile;
     } else if (phase === Phase.ATTACK || phase === Phase.FORTIFY) {
-      if (current_source !== null) {
-        //if (id === 2) console.log('current_source', current_source, id);
-        if (current_target === null) {
-          // if there is no target
-          if (current_source !== id) {
-            // if the current tile is not the source
-            const neighbors = getNeighbors(current_source);
-            if (neighbors.includes(id)) {
-              // if the current tile is a neighbor of the source
-              if ((phase === Phase.FORTIFY && tile.owner === turn) || (phase === Phase.ATTACK && tile.owner !== turn)) {
-                setHilightedColor('black');
-                setIsHighlighted(true);
-              } else {
-                setIsHighlighted(false);
-              }
-            } else setIsHighlighted(false);
-          } else {
-            // if the current tile is the source
-            setHilightedColor('yellow');
-            setIsHighlighted(true);
-          }
-        } else if (current_target !== null) {
-          //if (id === 2) console.log('bbbbb');
-          //if (id === 2) console.log('current_target', current_target);
-          if (current_target === id) {
-            // if the current tile is the target
-            setHilightedColor('black');
-            setIsHighlighted(true);
-          } else if (current_source === id) {
-            // if the current tile is the source
-            setHilightedColor('yellow');
-            setIsHighlighted(true);
-          }
-        } else {
-          setIsHighlighted(false);
+      if (current_source !== null && current_target === null) {
+        const neighbors = getNeighbors(current_source);
+        const isNeighborTile = neighbors.includes(id);
+        const isConnectedTile = highlightConnectedTiles(); // Appel de la fonction pour vérifier si la case est connectée
+        if (isSourceTile) {
+          shouldHighlight = true;
+          highlightColor = 'yellow';
+        } else if (
+          (isNeighborTile && phase === Phase.ATTACK && tile.owner !== turn) ||
+          (isConnectedTile && phase === Phase.FORTIFY)
+        ) {
+          // Pour Phase.FORTIFY, utilise isConnectedTile pour mettre en avant toutes les cases connectées
+          shouldHighlight = true;
+          highlightColor = 'black'; // Ou toute autre couleur représentative pour les cases connectées
         }
-      } else {
-        setIsHighlighted(false);
+      } else if (isTargetTile || isSourceTile) {
+        shouldHighlight = true;
+        highlightColor = 'black';
       }
     }
-  }, [current_source, phase, current_target, id]);
+
+    setIsHighlighted(shouldHighlight);
+    if (shouldHighlight) {
+      setHilightedColor(highlightColor);
+    }
+  }, [current_source, phase, current_target, id, tile.owner, turn, tiles]);
 
   const isLogHighlighted = highlighted_region === id;
 
