@@ -40,6 +40,7 @@ const PlayPanel = () => {
   const [showCardMenu, setShowCardMenu] = useState(false);
   const [showOverlay, setShowOverlay] = useState(false);
   const [overlayText, setOverlayText] = useState('');
+  const [isBtnNextPhaseDisabled, setIsBtnNextPhaseDisabled] = useState(false);
 
   const tutorialCompleted = localStorage.getItem('tutorialCompleted');
 
@@ -117,16 +118,19 @@ const PlayPanel = () => {
 
   const handleNextPhaseClick = async () => {
     if (game.id == null || game.id == undefined) return;
+    setIsBtnNextPhaseDisabled(true);
     setShowBubble(false);
 
     if (phase === Phase.DEPLOY) {
       if (player.cards.length === 5) {
         setTexts(['My Lord, exchange your cards first!']);
         setShowBubble(true);
+        setIsBtnNextPhaseDisabled(false);
         return;
       } else if (player.supply !== 0) {
         setTexts([`You have ${player.supply} supplies to deploy first!`]);
         setShowBubble(true);
+        setIsBtnNextPhaseDisabled(false);
         return;
       }
       try {
@@ -136,9 +140,20 @@ const PlayPanel = () => {
           variant: 'destructive',
           description: <code className="text-white text-xs">{error.message}</code>,
         });
+      } finally {
+        setIsBtnNextPhaseDisabled(false);
       }
     } else {
-      await play.finish(account, game.id);
+      try {
+        await play.finish(account, game.id);
+      } catch (error: any) {
+        toast({
+          variant: 'destructive',
+          description: <code className="text-white text-xs">{error.message}</code>,
+        });
+      } finally {
+        setIsBtnNextPhaseDisabled(false);
+      }
     }
 
     setOverlayText(getPhaseName(phase + 1));
@@ -149,6 +164,8 @@ const PlayPanel = () => {
     const timer = setTimeout(() => {
       setShowOverlay(false);
     }, 1000);
+
+    setIsBtnNextPhaseDisabled(false);
 
     return () => clearTimeout(timer);
   };
@@ -182,7 +199,7 @@ const PlayPanel = () => {
           )}
 
           {/* Barre d'état du joueur */}
-          <StatusPlayer handleNextPhaseClick={handleNextPhaseClick} />
+          <StatusPlayer handleNextPhaseClick={handleNextPhaseClick} isBtnNextPhaseDisabled={isBtnNextPhaseDisabled} />
         </div>
       </div>
     </>

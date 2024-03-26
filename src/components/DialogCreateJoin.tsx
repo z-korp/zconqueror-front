@@ -45,6 +45,7 @@ export function DialogCreateJoin({
               nickname
             </Label>
             <Input
+              id="nickname"
               className="w-full"
               type="text"
               placeholder="Enter Player Name"
