@@ -50,8 +50,12 @@ const generateLogFromEvent = (event: Event): LogType => {
 
 export const useLogs = () => {
   const [logs, setLogs] = useState<LogType[]>([]);
-  const { setLastDefendResult, tilesConqueredThisTurn, setTilesConqueredThisTurn, setLastBattleResult } =
+  const { setLastDefendResult, tilesConqueredThisTurn, setTilesConqueredThisTurn, setLastBattleResult, set_last_log } =
     useElementStore((state) => state);
+
+  useEffect(() => {
+    // console.log('logs', logs);
+  }, [logs]);
 
   const subscribedRef = useRef(false); // Tracks whether subscriptions have been made
   const {
@@ -108,6 +112,7 @@ export const useLogs = () => {
         }
 
         addLogIfUnique(log);
+        set_last_log(log);
         setLastDefendResult(event);
       });
     };
@@ -147,6 +152,7 @@ export const useLogs = () => {
             supplyObservable.subscribe((event) => {
               if (event) {
                 addLogIfUnique(generateLogFromEvent(event));
+                set_last_log(generateLogFromEvent(event));
               }
             }),
 
@@ -173,6 +179,7 @@ export const useLogs = () => {
                 if (ret === null) return;
 
                 const { log, event } = ret;
+                set_last_log(log);
 
                 addLogIfUnique(log);
                 setLastDefendResult(event); // Directly using the event from the merged object
@@ -186,6 +193,7 @@ export const useLogs = () => {
             fortifyObservable.subscribe((event) => {
               if (event) {
                 addLogIfUnique(generateLogFromEvent(event));
+                set_last_log(generateLogFromEvent(event));
               }
             })
           );

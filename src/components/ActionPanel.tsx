@@ -49,6 +49,7 @@ const ActionPanel = () => {
   const [targetEntity, setTargetEntity] = useState<Entity | null>(null);
   const [isActionSelected, setIsActionSelected] = useState(false);
   const [battleResult, setBattleResult] = useState<Battle | null>(null);
+  const [isBtnActionDisabled, setIsBtnActionDisabled] = useState(false);
 
   const [armySelected, setArmySelected] = useState(0);
 
@@ -138,6 +139,9 @@ const ActionPanel = () => {
       return;
     }
 
+    // Disable all the btn using tx call
+    setIsBtnActionDisabled(true);
+
     try {
       await play.supply(account, game_id, current_source, armySelected);
     } catch (error: any) {
@@ -148,14 +152,17 @@ const ActionPanel = () => {
     } finally {
       await sleep(SLEEP_TIME); // otherwise value blink on tile
       Tile.removeOverride(ovIdSource);
+      // Disable btn if there is an error to avoid stuck state
+      setIsBtnActionDisabled(false);
     }
 
     removeSelected();
+    // Tx is done enable btn
+    setIsBtnActionDisabled(false);
   };
 
   const handleAttack = async () => {
     if (current_source === null || current_target === null) return;
-
     if (game_id == null || game_id == undefined) return;
 
     // todo adapt to compare to source.supply
@@ -164,6 +171,9 @@ const ActionPanel = () => {
       alert('Not enough attack');
       return;
     }
+
+    // Disable all the btn using tx call
+    setIsBtnActionDisabled(true);
 
     try {
       await play.attack(account, game_id, current_source, current_target, armySelected);
@@ -194,15 +204,21 @@ const ActionPanel = () => {
       await sleep(SLEEP_TIME); // otherwise value blink on tile
       Tile.removeOverride(ovIdSource);
       Tile.removeOverride(ovIdTarget);
+      // Disable btn if there is an error to avoid stuck state
+      setIsBtnActionDisabled(false);
     }
 
     removeSelected();
+    // Tx is done enable btn
+    setIsBtnActionDisabled(false);
   };
 
   const handleMoveTroops = async () => {
     if (current_source === null || current_target === null) return;
-
     if (game_id == null || game_id == undefined) return;
+
+    // Disable all the btn using tx call
+    setIsBtnActionDisabled(true);
 
     try {
       await play.transfer(account, game_id, current_source, current_target, armySelected);
@@ -215,9 +231,13 @@ const ActionPanel = () => {
       await sleep(SLEEP_TIME); // otherwise value blink on tile
       Tile.removeOverride(ovIdSource);
       Tile.removeOverride(ovIdTarget);
+      // Disable btn if there is an error to avoid stuck state
+      setIsBtnActionDisabled(false);
     }
 
     removeSelected();
+    // Tx is done enable btn
+    setIsBtnActionDisabled(false);
   };
 
   const removeSelected = (): void => {
@@ -263,6 +283,8 @@ const ActionPanel = () => {
             )}
             <>
               <Button
+                isLoading={isBtnActionDisabled}
+                isDisabled={isBtnActionDisabled}
                 onClick={handleAttack}
                 className="flex items-center justify-center h-10 px-2 text-white bg-red-500 rounded hover:bg-red-600 drop-shadow-lg hover:transform hover:-translate-y-1 transition-transform ease-in-out"
               >
@@ -297,6 +319,8 @@ const ActionPanel = () => {
                 }}
               ></Slider>
               <Button
+                isLoading={isBtnActionDisabled}
+                isDisabled={isBtnActionDisabled}
                 onClick={handleMoveTroops}
                 className="flex items-center justify-center h-10 px-2 text-white bg-green-500 rounded hover:bg-green-600 drop-shadow-lg hover:transform hover:-translate-y-1 transition-transform ease-in-out"
               >
@@ -334,6 +358,8 @@ const ActionPanel = () => {
                 ></Slider>
               )}
               <Button
+                isLoading={isBtnActionDisabled}
+                isDisabled={isBtnActionDisabled}
                 onClick={handleSupply}
                 className="flex items-center justify-center h-10 px-2 text-white bg-green-500 rounded hover:bg-green-600 drop-shadow-lg hover:transform hover:-translate-y-1 transition-transform ease-in-out"
               >
