@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from './ui/button';
 import { Music as MusicIcon } from 'lucide-react';
 
-const Music = () => {
+const MusicButton = () => {
   const [isPlaying, setIsPlaying] = useState(true);
   const audioRef = useRef(new Audio('/music/lords_sounds.mp3'));
 
@@ -23,12 +23,10 @@ const Music = () => {
   };
 
   return (
-    <div>
-      <Button onClick={togglePlay} variant="secondary">
-        <MusicIcon />
-      </Button>
-    </div>
+    <Button onClick={togglePlay} variant="secondary">
+      <MusicIcon />
+    </Button>
   );
 };
 
-export default Music;
+export default MusicButton;

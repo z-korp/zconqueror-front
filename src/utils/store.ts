@@ -32,9 +32,13 @@ interface State {
   setLastBattleResult: (battle: Battle | null) => void;
   tilesConqueredThisTurn: number[];
   setTilesConqueredThisTurn: (tile: number[]) => void;
+  last_log: any;
+  set_last_log: (last_log: any) => void;
 }
 
 export const useElementStore = create<State>((set) => ({
+  last_log: null,
+  set_last_log: (last_log: any) => set(() => ({ last_log })),
   game_id: 0,
   set_game_id: (game_id: number) => set(() => ({ game_id })),
   game_state: GameState.MainMenu,

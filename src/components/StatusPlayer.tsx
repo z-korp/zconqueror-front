@@ -8,9 +8,10 @@ import tutorialData from '../data/tutorialSteps.json';
 
 interface StatusPlayerProps {
   handleNextPhaseClick: () => void;
+  isBtnNextPhaseDisabled: boolean;
 }
 
-const StatusPlayer: React.FC<StatusPlayerProps> = ({ handleNextPhaseClick }) => {
+const StatusPlayer: React.FC<StatusPlayerProps> = ({ handleNextPhaseClick, isBtnNextPhaseDisabled }) => {
   const { me: player, isItMyTurn } = useMe();
   const { phase } = usePhase();
 
@@ -63,6 +64,8 @@ const StatusPlayer: React.FC<StatusPlayerProps> = ({ handleNextPhaseClick }) => 
                 <Button
                   className="h-10 bg-green-500 rounded-lg drop-shadow-lg px-4 py-2 hover:transform hover:-translate-y-1 transition-transform ease-in-out"
                   onClick={handleNextPhaseClick}
+                  isLoading={isBtnNextPhaseDisabled}
+                  disabled={isBtnNextPhaseDisabled}
                 >
                   NEXT
                 </Button>

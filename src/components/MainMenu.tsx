@@ -8,7 +8,6 @@ import { HasValue, getComponentValue } from '@dojoengine/recs';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from './ui/table';
 import GameRow from './GameRow';
 import { DialogCreateJoin } from './DialogCreateJoin';
-import { Button } from './ui/button';
 
 const MainMenu: React.FC = () => {
   const { toast } = useToast();
