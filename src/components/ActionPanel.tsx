@@ -17,7 +17,6 @@ import { Battle, BattleEvent } from '@/utils/types';
 import { useGetPlayers } from '@/hooks/useGetPlayers';
 import { BATTLE_EVENT } from '@/constants';
 import { Entity } from '@/graphql/generated/graphql';
-import { set } from 'date-fns';
 
 const SLEEP_TIME = 600; // ms
 
