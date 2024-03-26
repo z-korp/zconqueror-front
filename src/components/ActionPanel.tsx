@@ -12,9 +12,8 @@ import { sleep } from '@/utils/time';
 import OverlayBattle from './BattleReport/OverlayBattle';
 import { uuid } from '@latticexyz/utils';
 import { getBattleFromBattleEvents } from '@/utils/battle';
-import { parseBattleEvent } from '@/utils/events';
-import { Battle, BattleEvent } from '@/utils/types';
-import { useGetPlayers } from '@/hooks/useGetPlayers';
+import { BattleEvent, parseBattleEvent } from '@/utils/events';
+import { Battle } from '@/utils/types';
 import { BATTLE_EVENT } from '@/constants';
 import { Entity } from '@/graphql/generated/graphql';
 
@@ -31,8 +30,6 @@ const ActionPanel = () => {
     },
     account: { account },
   } = useDojo();
-
-  const { playerNames } = useGetPlayers();
 
   const {
     current_source,
@@ -183,9 +180,7 @@ const ActionPanel = () => {
         });
 
       if (battleEvents.length !== 0) {
-        const attackerName = playerNames[battleEvents[0].attackerIndex];
-        const defenderName = playerNames[battleEvents[0].defenderIndex];
-        const battle = getBattleFromBattleEvents(battleEvents, attackerName, defenderName);
+        const battle = getBattleFromBattleEvents(battleEvents);
         setBattleResult(battle);
       }
 
@@ -237,10 +232,6 @@ const ActionPanel = () => {
 
   const isFortifyTurn = () => {
     return phase === Phase.FORTIFY;
-  };
-
-  const handleCloseAttackReport = () => {
-    setLastBattleResult(null);
   };
 
   return (

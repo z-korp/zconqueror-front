@@ -2,6 +2,7 @@ import { Battle } from '@/utils/types';
 import Dice from '../Dice/Dice';
 import { Swords } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { useGetPlayers } from '@/hooks/useGetPlayers';
 
 interface BattleRoundProps {
   battle: Battle;
@@ -9,6 +10,8 @@ interface BattleRoundProps {
 }
 
 const BattleRound: React.FC<BattleRoundProps> = ({ battle, round }) => {
+  const { playerNames } = useGetPlayers();
+
   const attackerDices = battle.rounds[round].map((duel) => duel.attackerValue).filter((value) => value !== 0);
   const defenderDices = battle.rounds[round].map((duel) => duel.defenderValue).filter((value) => value !== 0);
 
@@ -35,10 +38,10 @@ const BattleRound: React.FC<BattleRoundProps> = ({ battle, round }) => {
         <div className="font-bold absolute left-0">[Round {round + 1}]</div>
         <div className="flex w-full">
           <div className="flex-1 text-right mr-1">
-            <span>{battle.attackerName}</span>
+            <span>{playerNames[battle.attackerIndex]}</span>
           </div>
           <div className="flex-1 text-left ml-1">
-            <span>{battle.defenderName}</span>
+            <span>{playerNames[battle.defenderIndex]}</span>
           </div>
         </div>
         <div>

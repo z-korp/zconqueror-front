@@ -4,7 +4,7 @@ import { useElementStore } from '@/utils/store';
 import { Player } from '@/utils/types';
 import { useEntityQuery } from '@dojoengine/react';
 import { Has, HasValue, getComponentValue } from '@dojoengine/recs';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 export function useGetPlayers(): { players: Player[]; playerNames: string[] } {
   const {
@@ -14,6 +14,8 @@ export function useGetPlayers(): { players: Player[]; playerNames: string[] } {
   } = useDojo();
 
   const { game_id } = useElementStore((state) => state);
+
+  const [playerHash, setPlayerHash] = useState<string>('');
 
   const playerEntities = useEntityQuery([Has(Player), HasValue(Player, { game_id: game_id })]);
   const players = useMemo(
@@ -25,10 +27,12 @@ export function useGetPlayers(): { players: Player[]; playerNames: string[] } {
     [playerEntities, Player]
   );
 
+  const playerHashString = useMemo(() => players.map((player) => player.name).toString(), [players]);
+
   const playerNames = useMemo(() => {
     return players.map((player) => player.name);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [players.map((player) => player.name).toString()]);
+  }, [playerHashString]);
 
   return {
     players,
