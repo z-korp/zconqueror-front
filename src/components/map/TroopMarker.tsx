@@ -33,8 +33,6 @@ const TroopsMarker: FC<TroopsMarkerProps> = ({ position, handlePathClick, troups
   const { current_source, current_target, last_log } = useElementStore((state) => state);
   const [shouldAnimate, setShouldAnimate] = useState(false);
   useEffect(() => {
-    // console.log('LAST LOG');
-    // console.log(last_log);
     setShouldAnimate(false);
     if (isItMyTurn || !last_log) {
       return;
