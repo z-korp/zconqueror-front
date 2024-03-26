@@ -8,6 +8,8 @@ export const getPhaseName = (phase: Phase): string => {
       return 'Attacking';
     case Phase.FORTIFY:
       return 'Fortifying';
+    case Phase.ENDTURN:
+      return 'End Turn';
     default:
       return 'Unknown';
   }
