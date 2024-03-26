@@ -1,6 +1,7 @@
 import React from 'react';
 import { Battle } from '@/utils/types';
 import { Separator } from '../ui/separator';
+import { useGetPlayers } from '@/hooks/useGetPlayers';
 
 interface BattleReportProps {
   battle: Battle;
@@ -16,6 +17,8 @@ const dices: { [key: number]: string } = {
 };
 
 const BattleReport: React.FC<BattleReportProps> = ({ battle }) => {
+  const { playerNames } = useGetPlayers();
+
   let att = battle.attackerTroops;
   let def = battle.defenderTroops;
 
@@ -28,10 +31,10 @@ const BattleReport: React.FC<BattleReportProps> = ({ battle }) => {
         <div className="font-bold absolute left-0">[Battle]</div>
         <div className="flex w-full">
           <div className="flex-1 text-right mr-1">
-            <span>{battle.attackerName}</span>
+            <span>{playerNames[battle.attackerIndex]}</span>
           </div>
           <div className="flex-1 text-left ml-1">
-            <span>{battle.defenderName}</span>
+            <span>{playerNames[battle.defenderIndex]}</span>
           </div>
         </div>
         <div>{`${battle.attackerTroops} vs ${battle.defenderTroops}`}</div>
@@ -77,10 +80,10 @@ const BattleReport: React.FC<BattleReportProps> = ({ battle }) => {
         <div className="font-bold absolute left-0">[Result]</div>
         <div className="flex w-full">
           <div className="flex-1 text-right mr-1">
-            <span>{battle.attackerName}</span>
+            <span>{playerNames[battle.attackerIndex]}</span>
           </div>
           <div className="flex-1 text-left ml-1">
-            <span>{battle.defenderName}</span>
+            <span>{playerNames[battle.defenderIndex]}</span>
           </div>
         </div>
       </div>

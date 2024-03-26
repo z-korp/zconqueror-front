@@ -2,8 +2,11 @@ import { BATTLE_EVENT, DEFEND_EVENT, FORTIFY_EVENT, SUPPLY_EVENT } from '@/const
 import { useDojo } from '@/dojo/useDojo';
 import { fetchEventsOnce } from '@/services/fetchEvents';
 import {
+  BattleEvent,
+  DefendEvent,
   Event,
-  createBattleLog,
+  FortifyEvent,
+  SupplyEvent,
   createDefendLog,
   createFortifyLog,
   createSupplyLog,
@@ -13,11 +16,12 @@ import {
   parseSupplyEvent,
 } from '@/utils/events';
 import { useElementStore } from '@/utils/store';
-import { Battle, BattleEvent } from '@/utils/types';
+import { Battle } from '@/utils/types';
 import { useEffect, useRef, useState } from 'react';
 import { Subscription, filter, mergeMap } from 'rxjs';
 import { useGetPlayers } from './useGetPlayers';
 import { getBattleFromBattleEvents } from '@/utils/battle';
+import { useGame } from './useGame';
 
 export enum EventType {
   Supply,
@@ -28,23 +32,19 @@ export enum EventType {
 export type LogType = {
   key: string;
   timestamp: number;
-  log: string[];
-  regionFrom?: number;
-  regionTo?: number;
-  battle?: Battle;
   type: EventType;
+  log: SupplyEvent | DefendEvent | FortifyEvent;
+  battle?: Battle;
 };
 
-const generateLogFromEvent = (event: Event, playerNames: string[]): LogType => {
+const generateLogFromEvent = (event: Event): LogType => {
   if (event.keys[0] === SUPPLY_EVENT) {
-    return createSupplyLog(parseSupplyEvent(event), playerNames);
+    return createSupplyLog(parseSupplyEvent(event));
   } else if (event.keys[0] === DEFEND_EVENT) {
-    return createDefendLog(parseDefendEvent(event), playerNames);
-  } else if (event.keys[0] === FORTIFY_EVENT) {
-    return createFortifyLog(parseFortifyEvent(event), playerNames);
+    return createDefendLog(parseDefendEvent(event));
   } else {
-    // if (event.keys[0] === BATTLE_EVENT)
-    return createBattleLog(parseBattleEvent(event), playerNames);
+    // if (event.keys[0] === FORTIFY_EVENT) {
+    return createFortifyLog(parseFortifyEvent(event));
   }
 };
 
@@ -52,10 +52,6 @@ export const useLogs = () => {
   const [logs, setLogs] = useState<LogType[]>([]);
   const { setLastDefendResult, tilesConqueredThisTurn, setTilesConqueredThisTurn, setLastBattleResult, set_last_log } =
     useElementStore((state) => state);
-
-  useEffect(() => {
-    // console.log('logs', logs);
-  }, [logs]);
 
   const subscribedRef = useRef(false); // Tracks whether subscriptions have been made
   const {
@@ -68,6 +64,7 @@ export const useLogs = () => {
 
   const { game_id } = useElementStore((state) => state);
   const { playerNames } = useGetPlayers();
+  const { game } = useGame();
 
   const addLogIfUnique = (newLog: LogType) => {
     setLogs((prevLogs) => {
@@ -85,14 +82,15 @@ export const useLogs = () => {
     setLogs([]);
 
     const fetchEvents = async (gameId: number) => {
+      //console.log('-----------> Fetch events', game_id);
       await fetchEventsOnce([SUPPLY_EVENT, '0x' + gameId.toString(16)], async (event: Event) => {
-        addLogIfUnique(generateLogFromEvent(event, playerNames));
+        addLogIfUnique(generateLogFromEvent(event));
       });
       await fetchEventsOnce([FORTIFY_EVENT, '0x' + gameId.toString(16)], async (event) =>
-        addLogIfUnique(generateLogFromEvent(event, playerNames))
+        addLogIfUnique(generateLogFromEvent(event))
       );
       await fetchEventsOnce([DEFEND_EVENT, '0x' + gameId.toString(16)], async (event) => {
-        const log = generateLogFromEvent(event, playerNames);
+        const log = generateLogFromEvent(event);
 
         // let's fetch all battle events for this defend event
         const battleEvents: BattleEvent[] = [];
@@ -103,9 +101,7 @@ export const useLogs = () => {
 
         if (battleEvents.length !== 0) {
           //console.log('battleEvents', battleEvents);
-          const attackerName = playerNames[battleEvents[0].attackerIndex];
-          const defenderName = playerNames[battleEvents[0].defenderIndex];
-          const battle = getBattleFromBattleEvents(battleEvents, attackerName, defenderName);
+          const battle = getBattleFromBattleEvents(battleEvents);
           //console.log('battle', battle);
 
           log.battle = battle;
@@ -132,14 +128,13 @@ export const useLogs = () => {
       const battleEvent = parseBattleEvent(event);
       battleEvents.push(battleEvent);
     });
-    console.log('battleEvents', battleEvents);
 
     return battleEvents;
   };
 
   // Subscribe to events
   useEffect(() => {
-    if (game_id !== undefined && playerNames.length !== 0) {
+    if (game_id !== undefined && game?.seed !== 0 && playerNames.length !== 0) {
       // Check if already subscribed to prevent duplication due to HMR
       if (!subscribedRef.current) {
         const subscriptions: Subscription[] = [];
@@ -151,10 +146,9 @@ export const useLogs = () => {
 
           subscriptions.push(
             supplyObservable.subscribe((event) => {
-              // console.log('supply event', event);
               if (event) {
-                addLogIfUnique(generateLogFromEvent(event, playerNames));
-                set_last_log(generateLogFromEvent(event, playerNames));
+                addLogIfUnique(generateLogFromEvent(event));
+                set_last_log(generateLogFromEvent(event));
               }
             }),
 
@@ -163,16 +157,11 @@ export const useLogs = () => {
                 mergeMap(async (event) => {
                   if (!event) return null; // Skip if event is null or undefined
 
-                  console.log('defend event', event);
-                  const log = generateLogFromEvent(event, playerNames);
-                  console.log('fetching battle events for defend event', event.transactionHash);
-
+                  const log = generateLogFromEvent(event);
                   const battleEvents = await fetchBattleEvents(game_id, event.transactionHash);
 
                   if (battleEvents.length !== 0) {
-                    const attackerName = playerNames[battleEvents[0].attackerIndex];
-                    const defenderName = playerNames[battleEvents[0].defenderIndex];
-                    const battle = getBattleFromBattleEvents(battleEvents, attackerName, defenderName);
+                    const battle = getBattleFromBattleEvents(battleEvents);
 
                     log.battle = battle;
                   }
@@ -186,21 +175,21 @@ export const useLogs = () => {
                 if (ret === null) return;
 
                 const { log, event } = ret;
-                console.log('push log', log);
                 set_last_log(log);
+
                 addLogIfUnique(log);
                 setLastDefendResult(event); // Directly using the event from the merged object
                 setLastBattleResult(log.battle ? log.battle : null);
-                if (log.log[log.log.length - 1] === 'Result: win' && log.regionTo) {
-                  setTilesConqueredThisTurn([...tilesConqueredThisTurn, log.regionTo]);
+                const logDefend = log.log as DefendEvent;
+                if (logDefend.result === true) {
+                  setTilesConqueredThisTurn([...tilesConqueredThisTurn, logDefend.targetTile]);
                 }
               }),
 
             fortifyObservable.subscribe((event) => {
-              console.log('fortify event', event);
               if (event) {
-                addLogIfUnique(generateLogFromEvent(event, playerNames));
-                set_last_log(generateLogFromEvent(event, playerNames));
+                addLogIfUnique(generateLogFromEvent(event));
+                set_last_log(generateLogFromEvent(event));
               }
             })
           );
@@ -220,7 +209,7 @@ export const useLogs = () => {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [game_id]);
+  }, [game_id, game?.seed]);
 
   return { logs: logs.sort((a, b) => a.timestamp - b.timestamp) };
 };

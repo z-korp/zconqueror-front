@@ -1,7 +1,6 @@
 import { EventType, LogType } from '@/hooks/useLogs';
 import { parse } from 'date-fns';
 import nameData from '../assets/map/nameData.json';
-import { Player } from './types';
 
 export type Event = {
   id: string;
@@ -11,30 +10,20 @@ export type Event = {
   transactionHash: string;
 };
 
-function getNameFromId(id: number): string {
+export function getNameFromId(id: number): string {
   return (nameData as Record<string, string>)[id.toString()];
-}
-
-export function getIdFromName(name: string): number | null {
-  const entries = Object.entries(nameData as Record<string, string>);
-  for (const [id, storedName] of entries) {
-    if (storedName === name) {
-      return parseInt(id);
-    }
-  }
-  return null; // return null if no matching name is found
 }
 
 //---------------------------------------------------------------------
 // Supply event
-interface SupplyEventResult {
+export interface SupplyEvent {
   timestamp: string;
   playerIndex: number;
   troops: number;
   region: number;
 }
 
-export const parseSupplyEvent = (event: Event): SupplyEventResult => {
+export const parseSupplyEvent = (event: Event): SupplyEvent => {
   //console.log('-------> Supply event', event);
   const troops = parseInt(event.data[0]);
   const region = parseInt(event.data[1]);
@@ -48,23 +37,19 @@ export const parseSupplyEvent = (event: Event): SupplyEventResult => {
   };
 };
 
-export const createSupplyLog = (result: SupplyEventResult, playerNames: string[]): LogType => {
+export const createSupplyLog = (result: SupplyEvent): LogType => {
   const date = parse(result.timestamp, 'yyyy-MM-dd HH:mm:ss', new Date());
   return {
     key: `${result.timestamp}-supply`,
     timestamp: date.getTime(),
-    log: [
-      `${playerNames[result.playerIndex]} supplied ${result.troops} troops to region`,
-      getNameFromId(result.region),
-    ],
-    regionFrom: result.region,
+    log: result,
     type: EventType.Supply,
   };
 };
 
 //---------------------------------------------------------------------
 // Defend event
-interface DefendEventResult {
+export interface DefendEvent {
   timestamp: string;
   attackerIndex: number;
   defenderIndex: number;
@@ -72,7 +57,7 @@ interface DefendEventResult {
   result: boolean;
 }
 
-export const parseDefendEvent = (event: Event): DefendEventResult => {
+export const parseDefendEvent = (event: Event): DefendEvent => {
   //console.log('-------> Defend event', event);
   const targetTile = parseInt(event.data[0]);
   const result = Boolean(parseInt(event.data[1]));
@@ -88,24 +73,19 @@ export const parseDefendEvent = (event: Event): DefendEventResult => {
   };
 };
 
-export const createDefendLog = (result: DefendEventResult, playerNames: string[]): LogType => {
+export const createDefendLog = (result: DefendEvent): LogType => {
   const date = parse(result.timestamp, 'yyyy-MM-dd HH:mm:ss', new Date());
   return {
     key: `${result.timestamp}-defend`,
     timestamp: date.getTime(),
-    log: [
-      `${playerNames[result.attackerIndex]} attacked ${playerNames[result.defenderIndex]} at region`,
-      getNameFromId(result.targetTile),
-      `Result: ${result.result ? 'win' : 'lost'}`,
-    ],
-    regionTo: result.targetTile,
+    log: result,
     type: EventType.Defend,
   };
 };
 
 //---------------------------------------------------------------------
 // Fortify event
-interface FortifyEventResult {
+export interface FortifyEvent {
   timestamp: string;
   playerIndex: number;
   fromTile: number;
@@ -113,7 +93,7 @@ interface FortifyEventResult {
   troops: number;
 }
 
-export const parseFortifyEvent = (event: Event): FortifyEventResult => {
+export const parseFortifyEvent = (event: Event): FortifyEvent => {
   //console.log('-------> Fortify event', event);
   const playerIndex = parseInt(event.keys[2]);
   const fromTile = parseInt(event.data[0]);
@@ -129,26 +109,19 @@ export const parseFortifyEvent = (event: Event): FortifyEventResult => {
   };
 };
 
-export const createFortifyLog = (result: FortifyEventResult, playerNames: string[]): LogType => {
+export const createFortifyLog = (result: FortifyEvent): LogType => {
   const date = parse(result.timestamp, 'yyyy-MM-dd HH:mm:ss', new Date());
   return {
     key: `${result.timestamp}-fortify`,
     timestamp: date.getTime(),
-    log: [
-      `${playerNames[result.playerIndex]} moved ${result.troops} from region `,
-      getNameFromId(result.fromTile),
-      `to region `,
-      getNameFromId(result.toTile),
-    ],
-    regionFrom: result.fromTile,
-    regionTo: result.toTile,
+    log: result,
     type: EventType.Fortify,
   };
 };
 
 //---------------------------------------------------------------------
 // Battle event
-interface BattleEventResult {
+export interface BattleEvent {
   timestamp: string;
   gameId: number;
   txHash: string;
@@ -162,7 +135,7 @@ interface BattleEventResult {
   defenderValue: number;
 }
 
-export const parseBattleEvent = (event: Event): BattleEventResult => {
+export const parseBattleEvent = (event: Event): BattleEvent => {
   //console.log('-------> Battle event', event);
   const gameId = parseInt(event.keys[1]);
   const txHash = event.keys[2];
@@ -188,15 +161,5 @@ export const parseBattleEvent = (event: Event): BattleEventResult => {
     defenderValue,
     attackerTroops,
     defenderTroops,
-  };
-};
-
-export const createBattleLog = (result: BattleEventResult, playerNames: string[]): LogType => {
-  const date = parse(result.timestamp, 'yyyy-MM-dd HH:mm:ss', new Date());
-  return {
-    key: `${result.timestamp}-battle`,
-    timestamp: date.getTime(),
-    log: [`${playerNames[result.attackerIndex]} battle battle`],
-    type: EventType.Fortify,
   };
 };

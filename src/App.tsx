@@ -1,5 +1,4 @@
 import './App.css';
-import ActionLogs from './components/ActionLogs';
 import PlayPanel from './components/PlayPanel';
 import Map from './components/map/Map';
 import { Toaster } from './components/ui/toaster';
@@ -17,6 +16,7 @@ import { useMe } from './hooks/useMe';
 import DynamicOverlayTuto from './components/DynamicOverlayTuto';
 import OverlayBattleReport from './components/BattleReport/OverlayBattleReport';
 import { SpeedInsights } from '@vercel/speed-insights/react';
+import ActionLogs from './components/ActionLogs/ActionLogs';
 
 function App() {
   // const { id } = useParams<{ id?: string }>();
