@@ -8,12 +8,22 @@ interface RoundButtonProps {
   style?: CSSProperties;
   className?: string;
   shouldJump?: boolean;
+  shouldAnimate?: boolean;
 }
 
-const RoundButton: FC<RoundButtonProps> = ({ color, onClick, children, style, className, shouldJump }) => {
+const RoundButton: FC<RoundButtonProps> = ({
+  color,
+  onClick,
+  children,
+  style,
+  className,
+  shouldJump,
+  shouldAnimate,
+}) => {
   const buttonRef = useRef(null);
 
   const [jumping, setJumping] = useState(false);
+  const [animated, setAnimated] = useState(false);
 
   useEffect(() => {
     let interval: any;
@@ -28,6 +38,20 @@ const RoundButton: FC<RoundButtonProps> = ({ color, onClick, children, style, cl
 
     return () => clearInterval(interval);
   }, [shouldJump]);
+
+  useEffect(() => {
+    let interval: any;
+
+    if (shouldAnimate) {
+      interval = setInterval(() => {
+        setAnimated((prevAnimated) => !prevAnimated);
+      }, 200);
+    } else {
+      setAnimated(false);
+    }
+
+    return () => clearInterval(interval);
+  }, [shouldAnimate]);
 
   const colorClasses: any = {
     red: 'bg-customRed-500 border-customRed-700',
@@ -49,7 +73,7 @@ const RoundButton: FC<RoundButtonProps> = ({ color, onClick, children, style, cl
       ref={buttonRef}
       className={`flex justify-center items-center cursor-pointer drop-shadow-lg ${selectedColorClass} ${
         jumping ? 'animate-jump' : ''
-      } border rounded-full w-8 h-7 ${className}`}
+      } ${animated ? 'animate-highlight' : ''} border rounded-full w-8 h-7 ${className}`}
       onClick={onClick}
       style={selectedColorClass === '' ? { ...style, backgroundColor: color, borderColor: color } : style}
     >

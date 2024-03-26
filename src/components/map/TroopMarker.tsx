@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { Shield, Swords } from 'lucide-react';
 import { usePhase } from '@/hooks/usePhase';
 import { Phase, useElementStore } from '@/utils/store';
@@ -20,8 +20,9 @@ interface TroopsMarkerProps {
 
 const TroopsMarker: FC<TroopsMarkerProps> = ({ position, handlePathClick, troups, color, tile, containerRef }) => {
   const { isItMyTurn } = useMe();
-  const { turn } = useTurn();
 
+  const { turn } = useTurn();
+  const [displayedTroups, setDisplayedTroups] = useState<number>(troups);
   const [markerPosition, setMarkerPosition] = useState(position);
 
   const [ratioElement, setRatioElement] = useState(1);
@@ -29,7 +30,47 @@ const TroopsMarker: FC<TroopsMarkerProps> = ({ position, handlePathClick, troups
   const [initialized, setInitialized] = useState(false);
   const [flip, setFlip] = useState(false);
   const { phase } = usePhase();
-  const { current_source, current_target } = useElementStore((state) => state);
+  const { current_source, current_target, last_log } = useElementStore((state) => state);
+  const [shouldAnimate, setShouldAnimate] = useState(false);
+  useEffect(() => {
+    // console.log('LAST LOG');
+    // console.log(last_log);
+    setShouldAnimate(false);
+    if (isItMyTurn || !last_log) {
+      return;
+    }
+
+    if (tile.id === last_log.regionFrom) {
+      setShouldAnimate(true);
+    }
+    if (tile.id === last_log.regionTo) {
+      setShouldAnimate(true);
+    }
+  }, [last_log, isItMyTurn]);
+
+  const displayedTroupsRef = useRef(displayedTroups); // Add this line
+
+  useEffect(() => {
+    const duration = 2000; // 3 seconds
+    const stepTime = 16; // approx. 60fps
+    const steps = duration / stepTime;
+    const increment = (troups - displayedTroupsRef.current) / steps; // Use the ref here
+    let currentStep = 0;
+
+    const interval = setInterval(() => {
+      currentStep++;
+      if (currentStep <= steps) {
+        displayedTroupsRef.current += increment; // Update the ref here
+        setDisplayedTroups(Math.round(displayedTroupsRef.current)); // Use the ref here
+      } else {
+        displayedTroupsRef.current = troups; // Update the ref here
+        setDisplayedTroups(troups);
+        clearInterval(interval);
+      }
+    }, stepTime);
+
+    return () => clearInterval(interval); // cleanup on unmount or if component updates
+  }, [troups]);
 
   useEffect(() => {
     const updateContainerWidth = () => {
@@ -101,8 +142,6 @@ const TroopsMarker: FC<TroopsMarkerProps> = ({ position, handlePathClick, troups
     }
   };
 
-  if (troups === 0) return null;
-
   return (
     <>
       <div
@@ -140,9 +179,10 @@ const TroopsMarker: FC<TroopsMarkerProps> = ({ position, handlePathClick, troups
           left: `calc(${markerPosition.x}px - 15px)`,
         }}
         shouldJump={shouldJump(phase)}
+        shouldAnimate={shouldAnimate}
       >
-        <span className="vt323-font text-xl text-white text-with-outline" data-text={troups}>
-          {troups}
+        <span className="vt323-font text-xl text-white text-with-outline" data-text={displayedTroups}>
+          {displayedTroups}
         </span>
       </RoundButton>
     </>
