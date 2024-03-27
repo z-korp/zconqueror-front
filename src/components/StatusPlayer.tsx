@@ -5,6 +5,7 @@ import { usePhase } from '@/hooks/usePhase';
 import { Button } from './ui/button';
 import DynamicOverlayTuto from './DynamicOverlayTuto';
 import tutorialData from '../data/tutorialSteps.json';
+import EmoteWheel from './EmoteWheel';
 
 interface StatusPlayerProps {
   handleNextPhaseClick: () => void;
@@ -19,11 +20,19 @@ const StatusPlayer: React.FC<StatusPlayerProps> = ({ handleNextPhaseClick, isBtn
 
   const image = avatars[player.index + 1];
 
+  const handleEmoteSelect = (emote: string) => {
+    console.log(emote);
+  };
+
   return (
     <>
       <div className="relative w-auto h-100 flex flex-col vt323-font text-white rounded-lg drop-shadow-lg">
         <div className="absolute -top-6 -left-5 w-24 h-24">
-          <img src={image} alt="player" className="rounded-full border-4 border-stone-900" />
+          <EmoteWheel onSelect={handleEmoteSelect}>
+            <button>
+              <img src={image} alt="player" className="rounded-full border-4 border-stone-900" />
+            </button>
+          </EmoteWheel>
         </div>
         <div className="flex bg-stone-700 border-x-2 border-t-2 border-stone-900 h-[2.4em] justify-center rounded-t-lg">
           <div className="w-1/6"></div>
