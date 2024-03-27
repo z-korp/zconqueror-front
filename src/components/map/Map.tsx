@@ -1,7 +1,7 @@
 import { useGetTiles } from '@/hooks/useGetTiles';
 import { usePhase } from '@/hooks/usePhase';
 import { useTurn } from '@/hooks/useTurn';
-import { getNeighbors } from '@/utils/map';
+import { getAllConnectedTiles, getNeighbors } from '@/utils/map';
 import { Phase, useElementStore } from '@/utils/store';
 import { useRef } from 'react';
 import { useMe } from '@/hooks/useMe';
@@ -82,7 +82,7 @@ const Map = () => {
       if (tile.owner === turn) {
         if (current_source) {
           // if a source is already selected
-          if (getNeighbors(current_source).includes(regionId)) {
+          if (getAllConnectedTiles(current_source, tiles, turn).includes(regionId)) {
             // and the clicked tile is a neighbor
             // then we set the target
             if (regionId !== current_source) {
