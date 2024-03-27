@@ -85,7 +85,9 @@ const Map = () => {
           if (getNeighbors(current_source).includes(regionId)) {
             // and the clicked tile is a neighbor
             // then we set the target
-            set_current_target(regionId);
+            if (regionId !== current_source) {
+              set_current_target(regionId);
+            }
           } else {
             // otherwise we set the source
             if (tile.army > 1) {

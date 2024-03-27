@@ -109,15 +109,15 @@ const ActionPanel = () => {
   }, [armySelected, targetTile]);
 
   function setSourceOverride() {
-    let sourceArmy = 0;
-    if (phase === Phase.ATTACK || phase === Phase.FORTIFY) {
+    let sourceArmy = sourceTile.army;
+    if (phase === Phase.FORTIFY) {
       if (sourceTile !== null && targetTile !== null) {
-        sourceArmy = sourceTile.army - armySelected;
+        sourceArmy = sourceArmy - armySelected;
       } else {
         sourceArmy = sourceTile.army;
       }
     } else if (phase === Phase.DEPLOY) {
-      sourceArmy = sourceTile.army + armySelected;
+      sourceArmy = sourceArmy + armySelected;
     }
 
     Tile.addOverride(ovIdSource, {
