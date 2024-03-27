@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import GameState from './gamestate';
 import { Battle } from './types';
+import { LogType } from '@/hooks/useLogs';
+import { Event } from './events';
 
 export enum Phase {
   DEPLOY,
@@ -26,19 +28,19 @@ interface State {
   setBattleReport: (report: Battle | null) => void;
   player_name: string;
   setPlayerName: (name: string) => void;
-  lastDefendResult: any;
-  setLastDefendResult: (result: any) => void;
+  lastDefendResult: Event | null;
+  setLastDefendResult: (result: Event | null) => void;
   lastBattleResult: Battle | null;
   setLastBattleResult: (battle: Battle | null) => void;
   tilesConqueredThisTurn: number[];
   setTilesConqueredThisTurn: (tile: number[]) => void;
-  last_log: any;
-  set_last_log: (last_log: any) => void;
+  last_log: LogType | null;
+  set_last_log: (last_log: LogType | null) => void;
 }
 
 export const useElementStore = create<State>((set) => ({
   last_log: null,
-  set_last_log: (last_log: any) => set(() => ({ last_log })),
+  set_last_log: (last_log: LogType | null) => set(() => ({ last_log })),
   game_id: 0,
   set_game_id: (game_id: number) => set(() => ({ game_id })),
   game_state: GameState.MainMenu,
@@ -56,7 +58,7 @@ export const useElementStore = create<State>((set) => ({
   player_name: '',
   setPlayerName: (name: string) => set(() => ({ player_name: name })),
   lastDefendResult: null,
-  setLastDefendResult: (result: any) => set(() => ({ lastDefendResult: result })),
+  setLastDefendResult: (result: Event | null) => set(() => ({ lastDefendResult: result })),
   lastBattleResult: null,
   setLastBattleResult: (battle: Battle | null) => set(() => ({ lastBattleResult: battle })),
   tilesConqueredThisTurn: [],
