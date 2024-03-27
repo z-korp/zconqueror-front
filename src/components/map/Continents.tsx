@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import continentsData from '../../assets/map/continents.json';
 import Continent from './Continent';
 import { useGetTiles } from '@/hooks/useGetTiles';
-import { useMe } from '@/hooks/useMe';
 import { useElementStore } from '@/utils/store';
 import { Continent as ContinentType } from '@/utils/types';
 import { useGetPlayers } from '@/hooks/useGetPlayers';
