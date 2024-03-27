@@ -85,7 +85,12 @@ const Region: React.FC<RegionProps> = ({ id, containerRef, onRegionClick }) => {
     let shouldHighlight = false;
 
     if (phase === Phase.DEPLOY) {
-      shouldHighlight = isSourceTile;
+      if (current_source === id) {
+        setHilightedColor('black');
+        setIsHighlighted(true);
+      } else {
+        setIsHighlighted(false);
+      }
     } else if (phase === Phase.ATTACK || phase === Phase.FORTIFY) {
       if (current_source !== null && current_target === null) {
         const neighbors = getNeighbors(current_source);
