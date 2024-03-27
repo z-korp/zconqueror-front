@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Button } from './ui/button';
-import { Music as MusicIcon } from 'lucide-react';
+import { Volume2, VolumeX } from 'lucide-react';
 
 const MusicButton = () => {
   const [isPlaying, setIsPlaying] = useState(true);
@@ -24,7 +24,7 @@ const MusicButton = () => {
 
   return (
     <Button onClick={togglePlay} variant="secondary">
-      <MusicIcon />
+      {isPlaying ? <Volume2 /> : <VolumeX />}
     </Button>
   );
 };
