@@ -25,12 +25,14 @@ const SidePlayerInfo: React.FC<SidePlayerInfoProps> = ({ index, player }) => {
   const game = useGame();
   const { emote } = useEmotes();
   const [showEmote, setShowEmote] = useState(false);
+  const [currentEmote, setCurrentEmote] = useState<string | undefined>(undefined);
   const emotes = ['🙅', '😂', '😡', '😈', '😎'];
 
   useEffect(() => {
     // Vérifier si l'emote reçu correspond au joueur actuel
     if (emote !== undefined && parseInt(emote[0]) === player.index) {
       setShowEmote(true);
+      setCurrentEmote(emotes[parseInt(emote[1])]);
     }
     const timeout = setTimeout(() => {
       setShowEmote(false);
@@ -57,7 +59,7 @@ const SidePlayerInfo: React.FC<SidePlayerInfoProps> = ({ index, player }) => {
           {/* Player Image */}
           <div className="w-14 h-14 flex-none">
             {showEmote ? (
-              <div className="text-5xl shake">{emotes[parseInt(emote[1])]}</div>
+              <div className="text-5xl shake">{currentEmote}</div>
             ) : (
               <img src={image} alt="player" className="rounded-full object-cover w-full h-full mt-1" />
             )}
