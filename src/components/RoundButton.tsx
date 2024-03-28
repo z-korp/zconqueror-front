@@ -31,7 +31,7 @@ const RoundButton: FC<RoundButtonProps> = ({
     if (shouldJump) {
       interval = setInterval(() => {
         setJumping((prevJumping) => !prevJumping);
-      }, 2500); // ajustez la fréquence du saut
+      }, 2500);
     } else {
       setJumping(false);
     }

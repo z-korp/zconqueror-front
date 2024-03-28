@@ -8,6 +8,8 @@ import { colorTilePlayerDark } from '@/utils/customColors';
 
 import '../../styles/Button.css';
 import { useTurn } from '@/hooks/useTurn';
+import { EventType } from '@/hooks/useLogs';
+import { DefendEvent, FortifyEvent, SupplyEvent } from '@/utils/events';
 
 interface TroopsMarkerProps {
   position: { x: number; y: number };
@@ -38,11 +40,24 @@ const TroopsMarker: FC<TroopsMarkerProps> = ({ position, handlePathClick, troups
       return;
     }
 
-    if (tile.id === last_log.regionFrom) {
-      setShouldAnimate(true);
-    }
-    if (tile.id === last_log.regionTo) {
-      setShouldAnimate(true);
+    if (last_log.type === EventType.Supply) {
+      const log = last_log.log as SupplyEvent;
+      if (tile.id === log.region) {
+        setShouldAnimate(true);
+      }
+    } else if (last_log.type === EventType.Defend) {
+      const log = last_log.log as DefendEvent;
+      if (tile.id === log.targetTile) {
+        setShouldAnimate(true);
+      }
+    } else {
+      const log = last_log.log as FortifyEvent;
+      if (tile.id === log.fromTile) {
+        setShouldAnimate(true);
+      }
+      if (tile.id === log.toTile) {
+        setShouldAnimate(true);
+      }
     }
   }, [last_log, isItMyTurn]);
 
