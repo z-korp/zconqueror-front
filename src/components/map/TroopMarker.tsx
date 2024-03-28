@@ -65,7 +65,7 @@ const TroopsMarker: FC<TroopsMarkerProps> = ({ position, handlePathClick, troups
   const displayedTroupsRef = useRef(displayedTroups); // Add this line
 
   useEffect(() => {
-    const duration = 2000; // 3 seconds
+    const duration = 1500; // 3 seconds
     const stepTime = 16; // approx. 60fps
     const steps = duration / stepTime;
     const increment = (troups - displayedTroupsRef.current) / steps; // Use the ref here
