@@ -19,13 +19,13 @@ export function getNameFromId(id: number): string {
 export interface EmoteEvent {
   timestamp: string;
   playerIndex: number;
-  emote: string;
+  emote: number;
 }
 
 export const parseEmoteEvent = (event: Event): EmoteEvent => {
-  //console.log('-------> Emote event', event);
+  console.log('-------> Emote event', event);
   const playerIndex = parseInt(event.data[0]);
-  const emote = event.data[1];
+  const emote = parseInt(event.data[1]);
 
   return {
     timestamp: event.createdAt,

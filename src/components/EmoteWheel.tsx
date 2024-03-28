@@ -4,7 +4,7 @@ import { Button } from './ui/button';
 const emotes = ['🙅', '😂', '😡', '😈', '😎'];
 
 interface EmoteWheelProps {
-  onSelect: (emote: string) => void;
+  onSelect: (emote: number) => void;
   children: React.ReactNode;
 }
 
@@ -29,7 +29,7 @@ const EmoteWheel: React.FC<EmoteWheelProps> = ({ onSelect, children }) => {
                 style={{
                   transform: `rotate(${angle}deg) translate(100px) rotate(${-angle}deg) translateY(-80px)`,
                 }}
-                onClick={() => onSelect(emote)}
+                onClick={() => onSelect(index)}
               >
                 <Button variant="tertiary" className="w-10 h-10 rounded-xl">
                   {emote}

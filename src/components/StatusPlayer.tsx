@@ -22,21 +22,23 @@ const StatusPlayer: React.FC<StatusPlayerProps> = ({ handleNextPhaseClick, isBtn
     account: { account },
   } = useDojo();
 
-  const { game_id } = useElementStore();
+  const { game_id, current_source } = useElementStore();
 
   const { me: player, isItMyTurn } = useMe();
   const { phase } = usePhase();
-  const [selectedEmote, setSelectedEmote] = useState('');
+  const [selectedEmote, setSelectedEmote] = useState<number>(0);
 
   if (!player) return null;
 
   const image = avatars[player.index + 1];
 
-  const handleEmoteSelect = (emote: string) => {
+  const handleEmoteSelect = (emote: number) => {
     setSelectedEmote(emote);
+    console.log('selected emote', selectedEmote);
     if (game_id == null || game_id == undefined) return;
-    play.emote(account, game_id, emote);
-    console.log('selected emote', emote);
+    if (current_source == null || current_source == undefined) return;
+    play.emote(account, game_id, current_source, selectedEmote);
+    console.log('selected emote 2', selectedEmote);
   };
 
   return (
