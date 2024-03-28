@@ -22,7 +22,7 @@ const StatusPlayer: React.FC<StatusPlayerProps> = ({ handleNextPhaseClick, isBtn
     account: { account },
   } = useDojo();
 
-  const { game_id, current_source } = useElementStore();
+  const { game_id } = useElementStore((state) => state);
 
   const { me: player, isItMyTurn } = useMe();
   const { phase } = usePhase();
@@ -34,10 +34,8 @@ const StatusPlayer: React.FC<StatusPlayerProps> = ({ handleNextPhaseClick, isBtn
 
   const handleEmoteSelect = (emote: number) => {
     setSelectedEmote(emote);
-    console.log('selected emote', selectedEmote);
     if (game_id == null || game_id == undefined) return;
-    if (current_source == null || current_source == undefined) return;
-    play.emote(account, game_id, current_source, selectedEmote);
+    play.emote(account, game_id, player.index, selectedEmote);
     console.log('selected emote 2', selectedEmote);
   };
 
