@@ -35,6 +35,7 @@ const TroopsMarker: FC<TroopsMarkerProps> = ({ position, handlePathClick, troups
   const { current_source, current_target, last_log } = useElementStore((state) => state);
   const [shouldAnimate, setShouldAnimate] = useState(false);
   useEffect(() => {
+    if (!tile) return;
     setShouldAnimate(false);
     if (isItMyTurn || !last_log) {
       return;
@@ -59,7 +60,7 @@ const TroopsMarker: FC<TroopsMarkerProps> = ({ position, handlePathClick, troups
         setShouldAnimate(true);
       }
     }
-  }, [last_log, isItMyTurn]);
+  }, [last_log, isItMyTurn, tile]);
 
   const displayedTroupsRef = useRef(displayedTroups); // Add this line
 
@@ -144,6 +145,7 @@ const TroopsMarker: FC<TroopsMarkerProps> = ({ position, handlePathClick, troups
   }, []);
 
   const shouldJump = (phase: Phase) => {
+    if (!tile) return false;
     if (tile.owner !== turn) return false;
     if (current_source !== null) return false;
     if (!isItMyTurn) return false;
