@@ -117,7 +117,7 @@ const Region: React.FC<RegionProps> = ({ id, containerRef, onRegionClick }) => {
     if (shouldHighlight) {
       setHilightedColor(highlightColor);
     }
-  }, [current_source, phase, current_target, id, tile.owner, turn, tiles]);
+  }, [current_source, phase, current_target, id, tile, turn, tiles]);
 
   const isLogHighlighted = highlighted_region === id;
 
