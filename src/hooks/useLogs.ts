@@ -1,4 +1,4 @@
-import { BATTLE_EVENT, DEFEND_EVENT, FORTIFY_EVENT, SUPPLY_EVENT } from '@/constants';
+import { BATTLE_EVENT, DEFEND_EVENT, FORTIFY_EVENT, SUPPLY_EVENT, EMOTE_EVENT } from '@/constants';
 import { useDojo } from '@/dojo/useDojo';
 import { fetchEventsOnce } from '@/services/fetchEvents';
 import {
@@ -27,6 +27,7 @@ export enum EventType {
   Supply,
   Defend,
   Fortify,
+  Emote,
 }
 
 export type LogType = {
@@ -57,7 +58,7 @@ export const useLogs = () => {
   const {
     setup: {
       updates: {
-        eventUpdates: { createSupplyEvents, createDefendEvents, createFortifyEvents },
+        eventUpdates: { createSupplyEvents, createDefendEvents, createFortifyEvents, createEmoteEvents },
       },
     },
   } = useDojo();
@@ -83,6 +84,9 @@ export const useLogs = () => {
 
     const fetchEvents = async (gameId: number) => {
       //console.log('-----------> Fetch events', game_id);
+      await fetchEventsOnce([EMOTE_EVENT, '0x' + gameId.toString(16)], async (event: Event) => {
+        addLogIfUnique(generateLogFromEvent(event));
+      });
       await fetchEventsOnce([SUPPLY_EVENT, '0x' + gameId.toString(16)], async (event: Event) => {
         addLogIfUnique(generateLogFromEvent(event));
       });
@@ -143,6 +147,7 @@ export const useLogs = () => {
           const supplyObservable = await createSupplyEvents(0);
           const defendObservable = await createDefendEvents(0);
           const fortifyObservable = await createFortifyEvents(0);
+          const emoteObservable = await createEmoteEvents(0);
 
           subscriptions.push(
             supplyObservable.subscribe((event) => {
@@ -187,6 +192,12 @@ export const useLogs = () => {
               }),
 
             fortifyObservable.subscribe((event) => {
+              if (event) {
+                addLogIfUnique(generateLogFromEvent(event));
+                set_last_log(generateLogFromEvent(event));
+              }
+            }),
+            emoteObservable.subscribe((event) => {
               if (event) {
                 addLogIfUnique(generateLogFromEvent(event));
                 set_last_log(generateLogFromEvent(event));

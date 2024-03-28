@@ -1,4 +1,4 @@
-import { Phase } from '../utils/store';
+import { Phase, useElementStore } from '../utils/store';
 import { avatars } from '@/utils/pfps';
 import { useMe } from '@/hooks/useMe';
 import { usePhase } from '@/hooks/usePhase';
@@ -6,6 +6,8 @@ import { Button } from './ui/button';
 import DynamicOverlayTuto from './DynamicOverlayTuto';
 import tutorialData from '../data/tutorialSteps.json';
 import EmoteWheel from './EmoteWheel';
+import { useState } from 'react';
+import { useDojo } from '@/dojo/useDojo';
 
 interface StatusPlayerProps {
   handleNextPhaseClick: () => void;
@@ -13,15 +15,28 @@ interface StatusPlayerProps {
 }
 
 const StatusPlayer: React.FC<StatusPlayerProps> = ({ handleNextPhaseClick, isBtnNextPhaseDisabled }) => {
+  const {
+    setup: {
+      client: { play },
+    },
+    account: { account },
+  } = useDojo();
+
+  const { game_id } = useElementStore();
+
   const { me: player, isItMyTurn } = useMe();
   const { phase } = usePhase();
+  const [selectedEmote, setSelectedEmote] = useState('');
 
   if (!player) return null;
 
   const image = avatars[player.index + 1];
 
   const handleEmoteSelect = (emote: string) => {
-    console.log(emote);
+    setSelectedEmote(emote);
+    if (game_id == null || game_id == undefined) return;
+    play.emote(account, game_id, emote);
+    console.log('selected emote', emote);
   };
 
   return (

@@ -261,6 +261,15 @@ export async function setupWorld(provider: DojoProvider) {
       }
     };
 
+    const emote = async (account: Account, gameId: number, emote: string) => {
+      try {
+        return await executeAndCheck(account, contractName, 'emote', [provider.getWorldAddress(), gameId, emote]);
+      } catch (error) {
+        console.error('Error executing emote:', error);
+        throw error;
+      }
+    };
+
     return {
       attack,
       defend,
@@ -268,6 +277,7 @@ export async function setupWorld(provider: DojoProvider) {
       finish,
       transfer,
       supply,
+      emote,
       surrender,
       banish,
     };

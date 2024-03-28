@@ -3,7 +3,12 @@ import { Button } from './ui/button';
 
 const emotes = ['🙅', '😂', '😡', '😈', '😎'];
 
-const EmoteWheel = ({ onSelect, children }) => {
+interface EmoteWheelProps {
+  onSelect: (emote: string) => void;
+  children: React.ReactNode;
+}
+
+const EmoteWheel: React.FC<EmoteWheelProps> = ({ onSelect, children }) => {
   const [isVisible, setIsVisible] = useState(false);
 
   const toggleVisibility = () => setIsVisible(!isVisible);

@@ -15,6 +15,26 @@ export function getNameFromId(id: number): string {
 }
 
 //---------------------------------------------------------------------
+// Emote event
+export interface EmoteEvent {
+  timestamp: string;
+  playerIndex: number;
+  emote: string;
+}
+
+export const parseEmoteEvent = (event: Event): EmoteEvent => {
+  //console.log('-------> Emote event', event);
+  const playerIndex = parseInt(event.data[0]);
+  const emote = event.data[1];
+
+  return {
+    timestamp: event.createdAt,
+    playerIndex,
+    emote,
+  };
+};
+
+//---------------------------------------------------------------------
 // Supply event
 export interface SupplyEvent {
   timestamp: string;
