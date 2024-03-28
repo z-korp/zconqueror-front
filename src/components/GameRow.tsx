@@ -73,6 +73,7 @@ const GameRow: React.FC<GameRowProps> = ({ game, setPlayerName }) => {
             dialogTitle={`Join Game ${game.id}`}
             buttonText="Join Game"
             buttonTextDisplayed="Join Game"
+            isCreating={false}
           />
         </div>
       </TableCell>
