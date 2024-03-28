@@ -22,6 +22,7 @@ interface DialogCreateJoinProps {
   setHours?: (hours: number) => void;
   minutes?: number;
   setMinutes?: (minutes: number) => void;
+  isCreating: boolean;
 }
 
 export function DialogCreateJoin({
@@ -35,6 +36,7 @@ export function DialogCreateJoin({
   setHours,
   minutes,
   setMinutes,
+  isCreating,
 }: DialogCreateJoinProps) {
   return (
     <Dialog>
@@ -60,7 +62,7 @@ export function DialogCreateJoin({
               value={playerName}
               onChange={(e) => setPlayerName(e.target.value)}
             />
-            {hours !== null && minutes && setHours && setMinutes && (
+            {isCreating && (
               <>
                 <Label htmlFor="timeToPlay" className="text-sm font-semibold text-white my-2 ml-3">
                   Time to Play
@@ -71,8 +73,8 @@ export function DialogCreateJoin({
                     className="w-full"
                     type="number"
                     placeholder="Hours"
-                    value={hours}
-                    onChange={(e) => setHours(Number(e.target.value))}
+                    value={hours !== null ? hours : ''}
+                    onChange={(e) => setHours && setHours(Number(e.target.value))}
                   />
                   <Input
                     id="minutes"
@@ -80,7 +82,7 @@ export function DialogCreateJoin({
                     type="number"
                     placeholder="Minutes"
                     value={minutes}
-                    onChange={(e) => setMinutes(Number(e.target.value))}
+                    onChange={(e) => setMinutes && setMinutes(Number(e.target.value))}
                   />
                 </div>
               </>

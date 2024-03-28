@@ -85,6 +85,7 @@ const MainMenu: React.FC = () => {
             setHours={(value: number | null) => setHours(value)}
             minutes={minutes}
             setMinutes={setMinutes}
+            isCreating={true}
           />
         )}
         {games.length > 0 && (
@@ -121,6 +122,7 @@ const MainMenu: React.FC = () => {
                 setHours={setHours}
                 minutes={minutes}
                 setMinutes={setMinutes}
+                isCreating={true}
               />
             </div>
           </div>
