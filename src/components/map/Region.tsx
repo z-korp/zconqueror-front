@@ -100,7 +100,7 @@ const Region: React.FC<RegionProps> = ({ id, containerRef, onRegionClick }) => {
           shouldHighlight = true;
           highlightColor = 'yellow';
         } else if (
-          (isNeighborTile && phase === Phase.ATTACK && tile.owner !== turn) ||
+          (isNeighborTile && phase === Phase.ATTACK && tile && tile.owner !== turn) ||
           (isConnectedTile && phase === Phase.FORTIFY)
         ) {
           // Pour Phase.FORTIFY, utilise isConnectedTile pour mettre en avant toutes les cases connectées
@@ -117,7 +117,7 @@ const Region: React.FC<RegionProps> = ({ id, containerRef, onRegionClick }) => {
     if (shouldHighlight) {
       setHilightedColor(highlightColor);
     }
-  }, [current_source, phase, current_target, id, tile.owner, turn, tiles]);
+  }, [current_source, phase, current_target, id, tile, turn, tiles]);
 
   const isLogHighlighted = highlighted_region === id;
 
