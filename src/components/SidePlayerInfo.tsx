@@ -7,6 +7,8 @@ import { useGame } from '@/hooks/useGame';
 import { shortAddress } from '@/utils/sanitizer';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 import { Player } from '@/utils/types';
+import { useEmotes } from '@/hooks/useEmotes';
+import { useEffect, useState } from 'react';
 
 interface SidePlayerInfoProps {
   index: number;
@@ -21,6 +23,19 @@ const SidePlayerInfo: React.FC<SidePlayerInfoProps> = ({ index, player }) => {
   } = useDojo();
 
   const game = useGame();
+  const { emote } = useEmotes();
+  const [showEmote, setShowEmote] = useState(false);
+  const emotes = ['🙅', '😂', '😡', '😈', '😎'];
+
+  useEffect(() => {
+    // Vérifier si l'emote reçu correspond au joueur actuel
+    if (emote !== undefined && parseInt(emote[0]) === player.index) {
+      setShowEmote(true);
+    }
+    const timeout = setTimeout(() => {
+      setShowEmote(false);
+    }, 2000);
+  }, [emote]);
 
   if (player === undefined || game === undefined) return null;
 
@@ -41,7 +56,11 @@ const SidePlayerInfo: React.FC<SidePlayerInfoProps> = ({ index, player }) => {
         <div className="flex items-center">
           {/* Player Image */}
           <div className="w-14 h-14 flex-none">
-            <img src={image} alt="player" className="rounded-full object-cover w-full h-full mt-1" />
+            {showEmote ? (
+              <div className="text-5xl shake">{emotes[parseInt(emote[1])]}</div>
+            ) : (
+              <img src={image} alt="player" className="rounded-full object-cover w-full h-full mt-1" />
+            )}
           </div>
           {/* Player Name, Address, and Icons */}
           <div className="flex flex-col justify-center ml-4 text-left w-full">

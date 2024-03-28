@@ -24,12 +24,13 @@ const EmoteWheel: React.FC<EmoteWheelProps> = ({ onSelect, children }) => {
             const angle = index * 30 - 150;
             return (
               <div
+                id={index.toString()}
                 key={index}
                 className="absolute"
                 style={{
                   transform: `rotate(${angle}deg) translate(100px) rotate(${-angle}deg) translateY(-80px)`,
                 }}
-                onClick={() => onSelect(index)}
+                onClick={(e) => onSelect(e.currentTarget.id as unknown as number)}
               >
                 <Button variant="tertiary" className="w-10 h-10 rounded-xl">
                   {emote}

@@ -8,6 +8,7 @@ import tutorialData from '../data/tutorialSteps.json';
 import EmoteWheel from './EmoteWheel';
 import { useState } from 'react';
 import { useDojo } from '@/dojo/useDojo';
+import { useEmotes } from '@/hooks/useEmotes';
 
 interface StatusPlayerProps {
   handleNextPhaseClick: () => void;
@@ -26,17 +27,15 @@ const StatusPlayer: React.FC<StatusPlayerProps> = ({ handleNextPhaseClick, isBtn
 
   const { me: player, isItMyTurn } = useMe();
   const { phase } = usePhase();
-  const [selectedEmote, setSelectedEmote] = useState<number>(0);
 
   if (!player) return null;
 
   const image = avatars[player.index + 1];
 
   const handleEmoteSelect = (emote: number) => {
-    setSelectedEmote(emote);
     if (game_id == null || game_id == undefined) return;
-    play.emote(account, game_id, player.index, selectedEmote);
-    console.log('selected emote 2', selectedEmote);
+    play.emote(account, game_id, player.index, emote);
+    console.log('selected emote 2', emote);
   };
 
   return (

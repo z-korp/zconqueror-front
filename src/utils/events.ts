@@ -22,18 +22,6 @@ export interface EmoteEvent {
   emote: number;
 }
 
-export const parseEmoteEvent = (event: Event): EmoteEvent => {
-  console.log('-------> Emote event', event);
-  const playerIndex = parseInt(event.data[0]);
-  const emote = parseInt(event.data[1]);
-
-  return {
-    timestamp: event.createdAt,
-    playerIndex,
-    emote,
-  };
-};
-
 //---------------------------------------------------------------------
 // Supply event
 export interface SupplyEvent {
