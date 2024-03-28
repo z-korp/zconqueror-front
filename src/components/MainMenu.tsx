@@ -1,6 +1,6 @@
 import { useElementStore } from '@/utils/store';
 import GameState from '@/utils/gamestate';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useDojo } from '@/dojo/useDojo';
 import { useToast } from './ui/use-toast';
 import { useComponentValue, useEntityQuery } from '@dojoengine/react';
@@ -24,6 +24,9 @@ const MainMenu: React.FC = () => {
   const game = useComponentValue(Game, useEntityQuery([HasValue(Game, { host: BigInt(account.address) })]));
   const player = useComponentValue(Player, useEntityQuery([HasValue(Player, { address: BigInt(account.address) })]));
 
+  const [hours, setHours] = useState<number | null>(null);
+  const [minutes, setMinutes] = useState(2);
+
   // if player is host of a game, go to the lobby
   useEffect(() => {
     if (player) {
@@ -45,8 +48,8 @@ const MainMenu: React.FC = () => {
     }
 
     try {
-      // TBD get the id from here?
-      await host.create(account, player_name, /* price */ BigInt(0), /* penalty*/ 120);
+      const totalSeconds = hours ? hours * 3600 + minutes * 60 : minutes * 60;
+      await host.create(account, player_name, /* price */ BigInt(0), /* penalty*/ totalSeconds);
     } catch (error: any) {
       toast({
         variant: 'destructive',
@@ -78,6 +81,10 @@ const MainMenu: React.FC = () => {
             dialogTitle="Create a new game"
             buttonText="Create"
             buttonTextDisplayed="Create a New Game"
+            hours={hours}
+            setHours={(value: number | null) => setHours(value)}
+            minutes={minutes}
+            setMinutes={setMinutes}
           />
         )}
         {games.length > 0 && (
@@ -110,6 +117,10 @@ const MainMenu: React.FC = () => {
                 dialogTitle="Create a new game"
                 buttonText="Create"
                 buttonTextDisplayed="Create a New Game"
+                hours={hours}
+                setHours={setHours}
+                minutes={minutes}
+                setMinutes={setMinutes}
               />
             </div>
           </div>

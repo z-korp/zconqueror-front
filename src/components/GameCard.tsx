@@ -8,7 +8,7 @@ const cardImages: { [key: number]: string } = {
   1: infantry,
   2: cavalry,
   3: artilery,
-  4: joker,
+  0: joker,
 };
 
 const GameCard = ({ card }: { card: CardType }) => {
