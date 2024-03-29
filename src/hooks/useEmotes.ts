@@ -21,10 +21,6 @@ export const useEmotes = () => {
   const subscribedRef = useRef(false);
   const [emote, setEmote] = useState<string[]>([]);
 
-  useEffect(() => {
-    console.log('emote a été mis à jour :', emote);
-  }, [emote]);
-
   // Subscribe to events
   useEffect(() => {
     if (game_id !== undefined && game?.seed !== 0 && playerNames.length !== 0) {
@@ -37,7 +33,6 @@ export const useEmotes = () => {
           subscriptions.push(
             emoteObservable.subscribe((event) => {
               if (event) {
-                console.log('==================>', event.data);
                 setEmote(event.data);
               }
             })
@@ -55,7 +50,7 @@ export const useEmotes = () => {
         };
       }
     }
-  }, []);
+  }, [game?.seed, game_id, playerNames.length, createEmoteEvents]);
 
   return {
     emote,

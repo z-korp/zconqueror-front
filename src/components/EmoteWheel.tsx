@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Button } from './ui/button';
-
-const emotes = ['🙅', '😂', '😡', '😈', '😎'];
+import emotes from '@/utils/emotes';
 
 interface EmoteWheelProps {
   onSelect: (emote: number) => void;
@@ -21,7 +20,10 @@ const EmoteWheel: React.FC<EmoteWheelProps> = ({ onSelect, children }) => {
           {emotes.map((emote, index) => {
             // Calcul de la rotation pour positionner l'émoticône
             //const angle = index * (360 / emotes.length);
+            // Angle is correct for 5 icons needs to be recomputed for more
             const angle = index * 30 - 150;
+
+            // Remember that you can compose tarnsform so the order you declare them is important
             return (
               <div
                 id={index.toString()}
