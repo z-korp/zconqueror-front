@@ -35,7 +35,6 @@ const StatusPlayer: React.FC<StatusPlayerProps> = ({ handleNextPhaseClick, isBtn
   const handleEmoteSelect = (emote: number) => {
     if (game_id == null || game_id == undefined) return;
     play.emote(account, game_id, player.index, emote);
-    console.log('selected emote 2', emote);
   };
 
   return (

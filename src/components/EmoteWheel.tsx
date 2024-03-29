@@ -18,8 +18,6 @@ const EmoteWheel: React.FC<EmoteWheelProps> = ({ onSelect, children }) => {
       {isVisible && (
         <div className="translate-x-[30%]">
           {emotes.map((emote, index) => {
-            // Calcul de la rotation pour positionner l'émoticône
-            //const angle = index * (360 / emotes.length);
             // Angle is correct for 5 icons needs to be recomputed for more
             const angle = index * 30 - 150;
 

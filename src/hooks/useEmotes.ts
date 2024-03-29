@@ -1,6 +1,5 @@
 import { useDojo } from '@/dojo/useDojo';
 import { useEffect, useRef, useState } from 'react';
-// Importez ici votre méthode pour écouter les événements d'émoticônes
 import { Subscription } from 'rxjs';
 import { useGame } from './useGame';
 import { useElementStore } from '@/utils/store';
