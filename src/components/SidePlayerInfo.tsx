@@ -10,6 +10,7 @@ import { Player } from '@/utils/types';
 import { useEmotes } from '@/hooks/useEmotes';
 import { useEffect, useState } from 'react';
 import emotes from '@/utils/emotes';
+import '@/styles/Emote.css';
 
 interface SidePlayerInfoProps {
   index: number;

@@ -81,7 +81,6 @@ const ActionPanel = () => {
 
   useEffect(() => {
     if (current_target !== null) {
-      console.log('target', current_target);
       const tile = tiles[current_target - 1];
       setTargetTile(tile);
       setTargetEntity(tilesEntities[current_target - 1]);
