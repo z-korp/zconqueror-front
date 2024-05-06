@@ -261,6 +261,21 @@ export async function setupWorld(provider: DojoProvider) {
       }
     };
 
+    // Cette fonction est le pendant front de celle appelé dans côté contrat in play.cairo
+    const emote = async (account: Account, gameId: number, playerIndex: number, emote: number) => {
+      try {
+        return await executeAndCheck(account, contractName, 'emote', [
+          provider.getWorldAddress(),
+          gameId,
+          playerIndex,
+          emote,
+        ]);
+      } catch (error) {
+        console.error('Error executing emote:', error);
+        throw error;
+      }
+    };
+
     return {
       attack,
       defend,
@@ -268,6 +283,7 @@ export async function setupWorld(provider: DojoProvider) {
       finish,
       transfer,
       supply,
+      emote,
       surrender,
       banish,
     };

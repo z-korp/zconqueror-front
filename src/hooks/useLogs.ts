@@ -42,10 +42,9 @@ const generateLogFromEvent = (event: Event): LogType => {
     return createSupplyLog(parseSupplyEvent(event));
   } else if (event.keys[0] === DEFEND_EVENT) {
     return createDefendLog(parseDefendEvent(event));
-  } else {
-    // if (event.keys[0] === FORTIFY_EVENT) {
+  } else if (event.keys[0] === FORTIFY_EVENT) {
     return createFortifyLog(parseFortifyEvent(event));
-  }
+  } // Do not just use else for default state you can receive event that are not the one you want
 };
 
 export const useLogs = () => {
