@@ -35,6 +35,7 @@ export async function createEventSubscription(keys: string[]): Promise<Observabl
           console.log({ error });
         }
       },
+
       error: (error) => console.log({ error }),
       complete: () => console.log('complete'),
     }

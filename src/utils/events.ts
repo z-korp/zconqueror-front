@@ -15,6 +15,14 @@ export function getNameFromId(id: number): string {
 }
 
 //---------------------------------------------------------------------
+// Emote event
+export interface EmoteEvent {
+  timestamp: string;
+  playerIndex: number;
+  emote: number;
+}
+
+//---------------------------------------------------------------------
 // Supply event
 export interface SupplyEvent {
   timestamp: string;
