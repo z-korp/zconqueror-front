@@ -21,11 +21,29 @@ const ActionLogs: React.FC = () => {
   const logsRef = useRef<HTMLDivElement>(null);
 
   const toggleCollapse = () => setIsCollapsed((prev) => !prev);
+  const marchingSoundRef = useRef(new Audio('/music/marchingShort.mp3'));
+  const swordSoundRef = useRef(new Audio('/music/sword.mp3'));
 
   useEffect(() => {
     if (logsRef.current) {
       setContentHeight(logsRef.current.scrollHeight);
       logsRef.current.scrollTop = logsRef.current.scrollHeight;
+    }
+    if (logs.length > 0) {
+      const lastLog = logs[logs.length - 1];
+      switch (lastLog.type) {
+        case EventType.Supply:
+          marchingSoundRef.current.play();
+          break;
+        case EventType.Defend:
+          swordSoundRef.current.play();
+          break;
+        case EventType.Fortify:
+          marchingSoundRef.current.play();
+          break;
+        default:
+          break;
+      }
     }
   }, [logs]);
 

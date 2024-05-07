@@ -1,6 +1,6 @@
 import { usePhase } from '@/hooks/usePhase';
 import { useTurn } from '@/hooks/useTurn';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Phase, useElementStore } from '../utils/store';
 import { getPhaseName } from '@/utils/textState';
 import ActionPanel from './ActionPanel';
@@ -93,9 +93,13 @@ const PlayPanel = () => {
   const [showBubble, setShowBubble] = useState(false);
   const [texts, setTexts] = useState<string[]>([]);
 
+  const audioRef = useRef(new Audio('/music/bell.mp3'));
+
   useEffect(() => {
     if (isItMyTurn && phase === Phase.DEPLOY) {
       if (player) {
+        audioRef.current.loop = false;
+        audioRef.current.play();
         if (canBeExchanged(player.cards.map((c) => cardTypeFromNumber(c))))
           setTexts(['It is now your turn, my Lord!', 'You can exchange cards if you want.']);
         else setTexts(['It is now your turn, my Lord!']);
