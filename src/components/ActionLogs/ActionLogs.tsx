@@ -22,7 +22,7 @@ const ActionLogs: React.FC = () => {
 
   const toggleCollapse = () => setIsCollapsed((prev) => !prev);
   const marchingSoundRef = useRef(new Audio('/music/marchingShort.mp3'));
-  const swwordSoundRef = useRef(new Audio('/music/sword.mp3'));
+  const swordSoundRef = useRef(new Audio('/music/sword.mp3'));
 
   useEffect(() => {
     if (logsRef.current) {
@@ -36,7 +36,7 @@ const ActionLogs: React.FC = () => {
           marchingSoundRef.current.play();
           break;
         case EventType.Defend:
-          swwordSoundRef.current.play();
+          swordSoundRef.current.play();
           break;
         case EventType.Fortify:
           marchingSoundRef.current.play();
