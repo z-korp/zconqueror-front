@@ -8,6 +8,7 @@ import SupplyLog from './SupplyLog';
 import { useGetPlayers } from '@/hooks/useGetPlayers';
 import DefendLog from './DefendLog';
 import FortifyLog from './FortifyLog';
+import { useAudioSettings } from '@/contexts/AudioContext';
 
 // TODO: add swap de cards
 
@@ -21,8 +22,8 @@ const ActionLogs: React.FC = () => {
   const logsRef = useRef<HTMLDivElement>(null);
 
   const toggleCollapse = () => setIsCollapsed((prev) => !prev);
-  const marchingSoundRef = useRef(new Audio('/music/marchingShort.mp3'));
-  const swordSoundRef = useRef(new Audio('/music/sword.mp3'));
+
+  const { playSound } = useAudioSettings();
 
   useEffect(() => {
     if (logsRef.current) {
@@ -33,13 +34,13 @@ const ActionLogs: React.FC = () => {
       const lastLog = logs[logs.length - 1];
       switch (lastLog.type) {
         case EventType.Supply:
-          marchingSoundRef.current.play();
+          playSound('marching');
           break;
         case EventType.Defend:
-          swordSoundRef.current.play();
+          playSound('sword');
           break;
         case EventType.Fortify:
-          marchingSoundRef.current.play();
+          playSound('marching');
           break;
         default:
           break;
