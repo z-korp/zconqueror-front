@@ -1,6 +1,5 @@
 import { validateAndParseAddress } from 'starknet';
 import { feltToStr, unpackU128toNumberArray } from './unpack';
-import { cardTypeFromNumber } from './cards';
 import { Player } from './types';
 
 export const sanitizeGame = (game: any) => {

@@ -40,7 +40,10 @@ const OverlayEndGame: React.FC<OverlayEndGameProps> = ({ me, players }) => {
                 {me.rank === 1 ? 'WINNER' : text}
               </span>
             </div>
-            <Button className="absolute top-0 right-2 p-1 text-secondary text-lg" onClick={handleCloseOverlay}>
+            <Button
+              className="absolute top-3 right-3 flex items-center justify-center p-1 w-[22px] h-[22px] bg-red-500 text-white rounded-full text-xs z-50"
+              onClick={handleCloseOverlay}
+            >
               ✕
             </Button>
             <div className="flex flex-col items-center justify-center w-full">

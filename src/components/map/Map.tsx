@@ -27,6 +27,7 @@ import {
   DialogHeader,
 } from '@/components/ui/dialog';
 import SoundsDialog from '../SoundsDialog';
+import { useGame } from '@/hooks/useGame';
 
 const Map = () => {
   const {
@@ -39,6 +40,7 @@ const Map = () => {
   const { isItMyTurn } = useMe();
 
   const { turn } = useTurn();
+  const game = useGame();
   const { phase } = usePhase();
   const { tiles } = useGetTiles();
   const { current_source, set_current_source, set_current_target, setContinentMode, isContinentMode, game_id } =
@@ -114,6 +116,9 @@ const Map = () => {
   return (
     <>
       <div className="relative z-0" ref={containerRef}>
+        {game && (
+          <div className="absolute z-20 top-0 left-0 flex items-center max-w-xl w-fit px-4 h-[40px] border-2 rounded-lg bg-stone-700 border-stone-900 text-white vt323-font">{`Turn: ${game.current_turn}/${game.number_max_turns}`}</div>
+        )}
         <div className="absolute z-20 top-0 right-0 gap-2 flex">
           <DynamicOverlayTuto tutorialStep="6" texts={tutorialData['6']}>
             <Tooltip>

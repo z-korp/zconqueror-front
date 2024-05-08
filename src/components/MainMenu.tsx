@@ -126,6 +126,8 @@ const MainMenu: React.FC = () => {
                 setHours={setHours}
                 minutes={minutes}
                 setMinutes={setMinutes}
+                limit={round_limit}
+                setLimit={(value: number) => setRoundLimit(value)}
                 isCreating={true}
               />
             </div>
