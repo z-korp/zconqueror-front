@@ -26,7 +26,7 @@ import {
   DialogFooter,
   DialogHeader,
 } from '@/components/ui/dialog';
-import MusicButton from '../MusicButton';
+import SoundsDialog from '../SoundsDialog';
 
 const Map = () => {
   const {
@@ -167,14 +167,9 @@ const Map = () => {
             <TooltipContent>Tutorial</TooltipContent>
           </Tooltip>
 
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div>
-                <MusicButton />
-              </div>
-            </TooltipTrigger>
-            <TooltipContent>Toggle music</TooltipContent>
-          </Tooltip>
+          <div>
+            <SoundsDialog />
+          </div>
         </div>
         {isContinentMode && (
           <div className="vt323-font text-xl absolute top-0 left-1/2 transform -translate-x-1/2 z-50">
