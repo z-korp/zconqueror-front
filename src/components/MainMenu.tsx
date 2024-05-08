@@ -11,7 +11,9 @@ import { DialogCreateJoin } from './DialogCreateJoin';
 
 const MainMenu: React.FC = () => {
   const { toast } = useToast();
-  const { set_game_state, set_game_id, player_name, setPlayerName } = useElementStore((state) => state);
+  const { set_game_state, set_game_id, player_name, setPlayerName, round_limit, setRoundLimit } = useElementStore(
+    (state) => state
+  );
 
   const {
     setup: {
@@ -25,7 +27,7 @@ const MainMenu: React.FC = () => {
   const player = useComponentValue(Player, useEntityQuery([HasValue(Player, { address: BigInt(account.address) })]));
 
   const [hours, setHours] = useState<number | null>(null);
-  const [minutes, setMinutes] = useState(2);
+  const [minutes, setMinutes] = useState(5);
 
   // if player is host of a game, go to the lobby
   useEffect(() => {
@@ -85,6 +87,8 @@ const MainMenu: React.FC = () => {
             setHours={(value: number | null) => setHours(value)}
             minutes={minutes}
             setMinutes={setMinutes}
+            limit={round_limit}
+            setLimit={(value: number) => setRoundLimit(value)}
             isCreating={true}
           />
         )}
