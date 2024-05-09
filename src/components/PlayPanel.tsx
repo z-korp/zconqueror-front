@@ -1,6 +1,6 @@
 import { usePhase } from '@/hooks/usePhase';
 import { useTurn } from '@/hooks/useTurn';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Phase, useElementStore } from '../utils/store';
 import { getPhaseName } from '@/utils/textState';
 import ActionPanel from './ActionPanel';
@@ -17,6 +17,7 @@ import { canBeExchanged, cardTypeFromNumber } from '@/utils/cards';
 import { toast } from './ui/use-toast';
 import DynamicOverlayTuto from './DynamicOverlayTuto';
 import tutorialData from '../data/tutorialSteps.json';
+import { useAudioSettings } from '@/contexts/AudioContext';
 
 const PlayPanel = () => {
   const {
@@ -93,9 +94,12 @@ const PlayPanel = () => {
   const [showBubble, setShowBubble] = useState(false);
   const [texts, setTexts] = useState<string[]>([]);
 
+  const { playSound } = useAudioSettings();
+
   useEffect(() => {
     if (isItMyTurn && phase === Phase.DEPLOY) {
       if (player) {
+        playSound('bell');
         if (canBeExchanged(player.cards.map((c) => cardTypeFromNumber(c))))
           setTexts(['It is now your turn, my Lord!', 'You can exchange cards if you want.']);
         else setTexts(['It is now your turn, my Lord!']);

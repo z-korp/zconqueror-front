@@ -1,7 +1,7 @@
 {
   "world": {
     "name": "dojo::world::world",
-    "address": "0xdb7e0d03a03a6390be442a190c0feb7301545b276fc09c41383c2603f8875",
+    "address": "0x2f160a75929560c8b9b82e12f4d4295362b6ee94c45e7468a01c27c9436f1a1",
     "class_hash": "0x5ad96ceea29160aa7305bb078d1ade41f73b487363ae12778dbea6393cc00b2",
     "abi": [
       {
@@ -968,8 +968,8 @@
   "contracts": [
     {
       "name": "zconqueror::systems::host::host",
-      "address": "0x419e8a37a269cd97fd2a884eab2b41cc636189af91b937d6cdbc6829add25ed",
-      "class_hash": "0x1cddb18eb0b65fe0d4dc8134e515b6ff831d495e66c1591cdc415c97ecf1bb7",
+      "address": "0x180fabadd0de73ba727024458511d6785f77a63ee073a7134e589cccaf0728a",
+      "class_hash": "0x133d4c55b030e33e251d550013b76094047ac129e469ff24820de415ef31e5",
       "abi": [
         {
           "type": "impl",
@@ -1179,6 +1179,10 @@
                 {
                   "name": "game_id",
                   "type": "core::integer::u32"
+                },
+                {
+                  "name": "round_count",
+                  "type": "core::integer::u32"
                 }
               ],
               "outputs": [],
@@ -1215,8 +1219,8 @@
     },
     {
       "name": "zconqueror::systems::play::play",
-      "address": "0x52bd71a00acbae2e46c58e980979c25ff7c2921fd0b891809a555fc6def761c",
-      "class_hash": "0x43309cc5cfb2dcacb553c792eb89beaaca53b060fd35266e1e918a51be6299",
+      "address": "0x371a10816be8a758416d856b63eec02881ff0465140b36c36746f4860c75db5",
+      "class_hash": "0x1187aa46c3706a5c8ca7afc219b4dc3c35fa25cefb6d421ed3985e8c7ec177c",
       "abi": [
         {
           "type": "impl",
@@ -1281,6 +1285,30 @@
           "type": "interface",
           "name": "zconqueror::systems::play::IPlay",
           "items": [
+            {
+              "type": "function",
+              "name": "emote",
+              "inputs": [
+                {
+                  "name": "world",
+                  "type": "dojo::world::IWorldDispatcher"
+                },
+                {
+                  "name": "game_id",
+                  "type": "core::integer::u32"
+                },
+                {
+                  "name": "player_index",
+                  "type": "core::integer::u32"
+                },
+                {
+                  "name": "emote_index",
+                  "type": "core::integer::u8"
+                }
+              ],
+              "outputs": [],
+              "state_mutability": "view"
+            },
             {
               "type": "function",
               "name": "attack",
@@ -1627,6 +1655,28 @@
         },
         {
           "type": "event",
+          "name": "zconqueror::events::Emote",
+          "kind": "struct",
+          "members": [
+            {
+              "name": "game_id",
+              "type": "core::integer::u32",
+              "kind": "key"
+            },
+            {
+              "name": "player_index",
+              "type": "core::integer::u32",
+              "kind": "data"
+            },
+            {
+              "name": "emote_index",
+              "type": "core::integer::u8",
+              "kind": "data"
+            }
+          ]
+        },
+        {
+          "type": "event",
           "name": "zconqueror::systems::play::play::Event",
           "kind": "enum",
           "variants": [
@@ -1648,6 +1698,11 @@
             {
               "name": "Battle",
               "type": "zconqueror::events::Battle",
+              "kind": "nested"
+            },
+            {
+              "name": "Emote",
+              "type": "zconqueror::events::Emote",
               "kind": "nested"
             }
           ]
@@ -1706,9 +1761,14 @@
           "name": "penalty",
           "type": "u64",
           "key": false
+        },
+        {
+          "name": "limit",
+          "type": "u32",
+          "key": false
         }
       ],
-      "class_hash": "0x5229e1e099ea3e31e733bd1357e5fdbc523aaf25637a59be845a7da2529633e",
+      "class_hash": "0x1f842af4c0d26d1c24392b100ba5d3c0f51269b429f4609d2fec2954d17b572",
       "abi": [
         {
           "type": "impl",
@@ -1950,6 +2010,10 @@
             {
               "name": "penalty",
               "type": "core::integer::u64"
+            },
+            {
+              "name": "limit",
+              "type": "core::integer::u32"
             }
           ]
         },

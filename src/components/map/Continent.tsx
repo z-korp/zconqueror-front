@@ -90,6 +90,7 @@ const Continent: React.FC<ContinentProps> = ({ continent, isVisible, svgPath, co
             supply={continent.supply}
             color={colorContinent}
             containerRef={containerRef}
+            name={continent.name}
           />,
 
           containerRef.current // render the button directly in the body

@@ -106,7 +106,7 @@ const ActionPanel = () => {
         army: targetArmy,
       },
     });
-  }, [armySelected, targetTile]);
+  }, [armySelected, targetTile, sourceTile]);
 
   function setSourceOverride() {
     let sourceArmy = sourceTile.army;

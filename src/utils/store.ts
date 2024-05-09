@@ -36,6 +36,8 @@ interface State {
   setTilesConqueredThisTurn: (tile: number[]) => void;
   last_log: LogType | null;
   set_last_log: (last_log: LogType | null) => void;
+  round_limit: number;
+  setRoundLimit: (limit: number) => void;
 }
 
 export const useElementStore = create<State>((set) => ({
@@ -63,4 +65,6 @@ export const useElementStore = create<State>((set) => ({
   setLastBattleResult: (battle: Battle | null) => set(() => ({ lastBattleResult: battle })),
   tilesConqueredThisTurn: [],
   setTilesConqueredThisTurn: (tile: number[]) => set(() => ({ tilesConqueredThisTurn: tile })),
+  round_limit: 15,
+  setRoundLimit: (limit: number) => set(() => ({ round_limit: limit })),
 }));

@@ -85,9 +85,9 @@ export async function setupWorld(provider: DojoProvider) {
       }
     };
 
-    const start = async (account: Account, gameId: number) => {
+    const start = async (account: Account, gameId: number, roundLimit: number) => {
       try {
-        return await executeAndCheck(account, contractName, 'start', [provider.getWorldAddress(), gameId]);
+        return await executeAndCheck(account, contractName, 'start', [provider.getWorldAddress(), gameId, roundLimit]);
       } catch (error) {
         console.error('Error executing start:', error);
         throw error;

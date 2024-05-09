@@ -8,6 +8,7 @@ import SupplyLog from './SupplyLog';
 import { useGetPlayers } from '@/hooks/useGetPlayers';
 import DefendLog from './DefendLog';
 import FortifyLog from './FortifyLog';
+import { useAudioSettings } from '@/contexts/AudioContext';
 
 // TODO: add swap de cards
 
@@ -22,10 +23,28 @@ const ActionLogs: React.FC = () => {
 
   const toggleCollapse = () => setIsCollapsed((prev) => !prev);
 
+  const { playSound } = useAudioSettings();
+
   useEffect(() => {
     if (logsRef.current) {
       setContentHeight(logsRef.current.scrollHeight);
       logsRef.current.scrollTop = logsRef.current.scrollHeight;
+    }
+    if (logs.length > 0) {
+      const lastLog = logs[logs.length - 1];
+      switch (lastLog.type) {
+        case EventType.Supply:
+          playSound('marching');
+          break;
+        case EventType.Defend:
+          playSound('sword');
+          break;
+        case EventType.Fortify:
+          playSound('marching');
+          break;
+        default:
+          break;
+      }
     }
   }, [logs]);
 

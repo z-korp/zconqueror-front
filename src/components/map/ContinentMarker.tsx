@@ -5,13 +5,21 @@ import '../../styles/Button.css';
 
 interface ContinentMarkerProps {
   position: { x: number; y: number };
+  name: string;
   handlePathClick: () => void;
   supply: number;
   color: string;
   containerRef: any;
 }
 
-const ContinentMarker: FC<ContinentMarkerProps> = ({ position, handlePathClick, supply, color, containerRef }) => {
+const ContinentMarker: FC<ContinentMarkerProps> = ({
+  position,
+  name,
+  handlePathClick,
+  supply,
+  color,
+  containerRef,
+}) => {
   const [markerPosition, setMarkerPosition] = useState(position);
 
   const [ratioElement, setRatioElement] = useState(1);
@@ -77,17 +85,22 @@ const ContinentMarker: FC<ContinentMarkerProps> = ({ position, handlePathClick, 
           left: `calc(${markerPosition.x}px - 30px)`,
         }}
       ></div>
+
       <RoundButton
         color={color}
         onClick={handlePathClick}
-        className="absolute"
+        className="absolute w-fit px-2"
         style={{
           top: `calc(${markerPosition.y}px - 15px)`,
-          left: `calc(${markerPosition.x}px - 15px)`,
+          left: `${markerPosition.x}px`, // Set left to x position
+          transform: 'translateX(-50%)', // This shifts the button left by half its own width
         }}
         shouldJump={false}
       >
-        <span className="text-white text-with-outline vt323-font text-xl" data-text={`+${supply}`}>{`+${supply}`}</span>
+        <span
+          className="text-white text-with-outline vt323-font text-xl"
+          data-text={`${name} (+${supply})`}
+        >{`${name} (+${supply})`}</span>
       </RoundButton>
     </>
   );

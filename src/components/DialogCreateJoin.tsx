@@ -22,6 +22,8 @@ interface DialogCreateJoinProps {
   setHours?: (hours: number) => void;
   minutes?: number;
   setMinutes?: (minutes: number) => void;
+  limit?: number;
+  setLimit?: (limit: number) => void;
   isCreating: boolean;
 }
 
@@ -36,6 +38,8 @@ export function DialogCreateJoin({
   setHours,
   minutes,
   setMinutes,
+  limit,
+  setLimit,
   isCreating,
 }: DialogCreateJoinProps) {
   return (
@@ -84,6 +88,19 @@ export function DialogCreateJoin({
                     value={minutes}
                     onChange={(e) => setMinutes && setMinutes(Number(e.target.value))}
                   />
+                </div>
+                <Label htmlFor="timeToPlay" className="text-sm font-semibold text-white my-2 ml-3">
+                  Turns of the game
+                </Label>
+                <div className="flex space-x-2">
+                  <Input
+                    id="limit"
+                    className="w-6/12"
+                    type="number"
+                    placeholder="Max turns"
+                    value={limit}
+                    onChange={(e) => setLimit && setLimit(Number(e.target.value))}
+                  ></Input>
                 </div>
               </>
             )}

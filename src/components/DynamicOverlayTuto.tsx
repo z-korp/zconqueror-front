@@ -6,6 +6,7 @@ import { useMe } from '@/hooks/useMe';
 import { avatars } from '@/utils/pfps';
 import { useTutorial } from '../contexts/TutorialContext';
 import { Button } from './ui/button';
+import { useAudioSettings } from '@/contexts/AudioContext';
 
 interface DynamicOverlayTutoProps {
   children: ReactNode;
@@ -35,6 +36,8 @@ const DynamicOverlayTuto: FC<DynamicOverlayTutoProps> = ({ tutorialStep, childre
   const [overlayStyle, setOverlayStyle] = useState<OverlayStyle>(initialStyle);
   const { me } = useMe();
   const { showTuto, setShowTuto, currentStep, nextStep } = useTutorial();
+
+  const { playSound } = useAudioSettings();
 
   const handleNextStep = () => {
     nextStep();
@@ -72,6 +75,7 @@ const DynamicOverlayTuto: FC<DynamicOverlayTutoProps> = ({ tutorialStep, childre
 
   function handleClose() {
     setShowTuto(false);
+    playSound('backgroundMusic');
   }
 
   let image = undefined;

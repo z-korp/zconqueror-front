@@ -21,7 +21,7 @@ const Lobby: React.FC = () => {
   } = useDojo();
   const { toast } = useToast();
 
-  const { set_game_state, set_game_id, game_id } = useElementStore((state) => state);
+  const { set_game_state, set_game_id, game_id, round_limit } = useElementStore((state) => state);
 
   const game = useGame();
 
@@ -57,7 +57,7 @@ const Lobby: React.FC = () => {
       return;
     }
     try {
-      await host.start(account, game_id);
+      await host.start(account, game_id, round_limit);
     } catch (error: any) {
       toast({
         variant: 'destructive',
