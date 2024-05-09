@@ -7,6 +7,7 @@ import { setup } from './dojo/setup';
 import { DojoProvider } from './dojo/DojoContext.tsx';
 import { TooltipProvider } from '@radix-ui/react-tooltip';
 import './index.css';
+import { AudioSettingsProvider } from './contexts/AudioContext.tsx';
 
 async function init() {
   const rootElement = document.getElementById('root');
@@ -18,13 +19,15 @@ async function init() {
     <React.StrictMode>
       <DojoProvider value={setupResult}>
         <TooltipProvider>
-          <Router>
-            <Routes>
-              <Route path="" element={<App />} />
-              <Route path="/:id" element={<App />} />
-            </Routes>
-          </Router>
-          {/* <App /> */}
+          <AudioSettingsProvider>
+            <Router>
+              <Routes>
+                <Route path="" element={<App />} />
+                <Route path="/:id" element={<App />} />
+              </Routes>
+            </Router>
+            {/* <App /> */}
+          </AudioSettingsProvider>
         </TooltipProvider>
       </DojoProvider>
     </React.StrictMode>

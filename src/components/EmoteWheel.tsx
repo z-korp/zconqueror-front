@@ -30,7 +30,10 @@ const EmoteWheel: React.FC<EmoteWheelProps> = ({ onSelect, children }) => {
                 style={{
                   transform: `rotate(${angle}deg) translate(100px) rotate(${-angle}deg) translateY(-80px)`,
                 }}
-                onClick={(e) => onSelect(e.currentTarget.id as unknown as number)}
+                onClick={(e) => {
+                  onSelect(e.currentTarget.id as unknown as number);
+                  setIsVisible(false);
+                }}
               >
                 <Button variant="tertiary" className="w-10 h-10 rounded-xl">
                   {emote}

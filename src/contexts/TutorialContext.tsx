@@ -33,12 +33,12 @@ export const TutorialProvider: FC<TutorialProviderProps> = ({ children }) => {
 
   const completeTutorial = () => {
     localStorage.setItem('tutorialCompleted', 'true');
-    setShowTuto(false); // Cache le tutoriel
+    setShowTuto(false);
   };
 
   const nextStep = () => {
     const currentIndex = tutorialSteps.indexOf(currentStep);
-    const nextIndex = (currentIndex + 1) % tutorialSteps.length; // Cela permet de revenir au début après la dernière étape
+    const nextIndex = (currentIndex + 1) % tutorialSteps.length;
     setCurrentStep(tutorialSteps[nextIndex]);
     if (currentStep === tutorialSteps[tutorialSteps.length - 1]) {
       completeTutorial();
@@ -48,9 +48,9 @@ export const TutorialProvider: FC<TutorialProviderProps> = ({ children }) => {
   useEffect(() => {
     const tutorialCompleted = localStorage.getItem('tutorialCompleted');
     if (tutorialCompleted === 'true') {
-      setShowTuto(false); // Ne montre pas le tutoriel si déjà complété
+      setShowTuto(false);
     } else {
-      setShowTuto(true); // Montre le tutoriel si non complété
+      setShowTuto(true);
     }
   }, []);
 

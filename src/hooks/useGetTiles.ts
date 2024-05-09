@@ -3,8 +3,10 @@ import { useDojo } from '@/dojo/useDojo';
 import { useElementStore } from '@/utils/store';
 import { useEntityQuery } from '@dojoengine/react';
 import { Has, HasValue, getComponentValue } from '@dojoengine/recs';
+import { useTurn } from './useTurn';
 
 export function useGetTiles() {
+  const { turn } = useTurn();
   const {
     setup: {
       clientComponents: { Tile },
@@ -24,7 +26,7 @@ export function useGetTiles() {
 
     // Sort the tiles by id to ensure consistent ordering in array
     return detailedTiles.sort((a, b) => a.tile.id - b.tile.id);
-  }, [tileEntities, Tile, game_id]);
+  }, [tileEntities, game_id, turn]);
 
   // Extract the sorted tiles and entityIds after transformation to minimize re-renders
   const tiles = useMemo(() => tilesData.map((t) => t.tile), [tilesData]);
