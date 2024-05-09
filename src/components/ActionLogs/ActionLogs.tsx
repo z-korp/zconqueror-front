@@ -89,7 +89,7 @@ const ActionLogs: React.FC = () => {
           <div className="p-2 rounded-b text-start">
             {logs.map((log, index) => (
               <div key={index} className="text-sm mb-2 text-left">
-                <span>{format(log.timestamp, 'HH:mm:ss')} - </span>
+                <span>{format(log.log.timestamp, 'HH:mm:ss')} - </span>
                 {log.type === EventType.Supply && (
                   <SupplyLog
                     log={log}
