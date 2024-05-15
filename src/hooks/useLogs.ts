@@ -81,7 +81,7 @@ export const useLogs = () => {
     setLogs([]);
 
     const fetchEvents = async (gameId: number) => {
-      //console.log('-----------> Fetch events', game_id);
+      console.log('-----------> Fetch events', game_id);
       await fetchEventsOnce([SUPPLY_EVENT, '0x' + gameId.toString(16)], async (event: Event) => {
         addLogIfUnique(generateLogFromEvent(event));
       });
@@ -139,9 +139,9 @@ export const useLogs = () => {
         const subscriptions: Subscription[] = [];
 
         const subscribeToEvents = async () => {
-          const supplyObservable = await createSupplyEvents(0);
-          const defendObservable = await createDefendEvents(0);
-          const fortifyObservable = await createFortifyEvents(0);
+          const supplyObservable = await createSupplyEvents('0x' + game_id.toString(16));
+          const defendObservable = await createDefendEvents('0x' + game_id.toString(16));
+          const fortifyObservable = await createFortifyEvents('0x' + game_id.toString(16));
 
           subscriptions.push(
             supplyObservable.subscribe((event) => {
@@ -164,7 +164,6 @@ export const useLogs = () => {
 
                     log.battle = battle;
                   }
-
                   return { log, event };
                 }),
                 // Filter out null results if event was skipped
