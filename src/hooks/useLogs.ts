@@ -81,7 +81,7 @@ export const useLogs = () => {
     setLogs([]);
 
     const fetchEvents = async (gameId: number) => {
-      console.log('-----------> Fetch events', game_id);
+      //console.log('-----------> Fetch events', game_id);
       await fetchEventsOnce([SUPPLY_EVENT, '0x' + gameId.toString(16)], async (event: Event) => {
         addLogIfUnique(generateLogFromEvent(event));
       });
