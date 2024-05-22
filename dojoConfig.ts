@@ -1,4 +1,5 @@
-const manifest = await import(`./assets/manifests/${import.meta.env.VITE_PUBLIC_MANIFEST_PROFILE}/manifest.json`);
+//const manifest = await import(`./src/assets/manifests/${import.meta.env.VITE_PUBLIC_MANIFEST_PROFILE}/manifest.json`);
+import manifest from './src/assets/manifests/sepolia/manifest.json';
 
 import { createDojoConfig } from '@dojoengine/core';
 
