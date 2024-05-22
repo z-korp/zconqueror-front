@@ -2,7 +2,7 @@ import BurnerDetails from './BurnerDetails';
 import { useEffect, useState } from 'react';
 import { useDojo } from '../dojo/useDojo';
 import { useNetwork } from '@starknet-react/core';
-import { Button } from './ui/Button';
+import { Button } from './ui/button';
 import { ClipboardPaste, Save } from 'lucide-react';
 
 const BurnersManager = () => {
