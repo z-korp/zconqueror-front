@@ -4,6 +4,9 @@ import { useDojo } from '@/dojo/useDojo';
 import { useEffect, useState } from 'react';
 import { Button } from './ui/button';
 import { CardType, cardTypeFromNumber } from '@/utils/cards';
+import imgCardExplanation from '../assets/cardassets/card_explanation.png';
+import { useToast } from '@/components/ui/use-toast';
+import { Toast, ToastClose, ToastProvider, ToastViewport } from './ui/toast';
 
 interface CardMenuProps {
   cards: CardType[];
@@ -22,6 +25,9 @@ const CardMenu = ({ onClose, cards }: CardMenuProps) => {
 
   const [selectedCards, setSelectedCards] = useState<number[]>([]);
   const [pendingCards, setPendingCards] = useState<number[]>([]);
+  const [isHovered, setIsHovered] = useState<boolean>(false);
+
+  const { toast } = useToast();
 
   useEffect(() => {
     setPendingCards(cards);
@@ -51,6 +57,16 @@ const CardMenu = ({ onClose, cards }: CardMenuProps) => {
       }
       setSelectedCards([...selectedCards, card]);
     }
+  };
+
+  const handleMouseEnter = () => {
+    setTimeout(() => {
+      setIsHovered(true);
+    }, 1500);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
   };
 
   return (
@@ -85,6 +101,8 @@ const CardMenu = ({ onClose, cards }: CardMenuProps) => {
                   transition: 'transform 0.3s',
                 }}
                 className="transform-gpu"
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
               >
                 {selectedCards.includes(pendingCards[index - 1]) && (
                   <div className="absolute top-0 right-0 p-1 w-5 h-5 m-2 bg-green-500 text-lg text-white rounded-full flex items-center justify-center">
@@ -101,6 +119,8 @@ const CardMenu = ({ onClose, cards }: CardMenuProps) => {
                   transform: `rotate(${rotationDegree}deg) translateY(${translateY}px)`,
                   transition: 'transform 0.3s',
                 }}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
               ></div>
             );
           })}
@@ -113,6 +133,16 @@ const CardMenu = ({ onClose, cards }: CardMenuProps) => {
           EXCHANGE
         </Button>
       </div>
+      <ToastProvider>
+        {isHovered && (
+          <ToastViewport>
+            <Toast>
+              <img src={imgCardExplanation} alt="Transfert card to win troops" />
+              <ToastClose />
+            </Toast>
+          </ToastViewport>
+        )}
+      </ToastProvider>
     </div>
   );
 };

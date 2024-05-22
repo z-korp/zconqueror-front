@@ -27,7 +27,7 @@ export const useEmotes = () => {
         const subscriptions: Subscription[] = [];
 
         const subscribeToEvents = async () => {
-          const emoteObservable = await createEmoteEvents(0);
+          const emoteObservable = await createEmoteEvents('0x' + game_id.toString(16));
 
           subscriptions.push(
             emoteObservable.subscribe((event) => {
