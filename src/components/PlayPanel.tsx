@@ -24,7 +24,7 @@ const PlayPanel = () => {
     setup: {
       client: { play },
     },
-    account: { account },
+    burnerManager: { account },
   } = useDojo();
 
   const { me: player, isItMyTurn } = useMe();
@@ -121,6 +121,7 @@ const PlayPanel = () => {
   if (player === undefined || player === null) return null;
 
   const handleNextPhaseClick = async () => {
+    if (!account) return;
     if (game.id == null || game.id == undefined) return;
     setIsBtnNextPhaseDisabled(true);
     setShowBubble(false);
@@ -137,6 +138,7 @@ const PlayPanel = () => {
         setIsBtnNextPhaseDisabled(false);
         return;
       }
+
       try {
         await play.finish(account, game.id);
       } catch (error: any) {

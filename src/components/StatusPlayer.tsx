@@ -20,7 +20,7 @@ const StatusPlayer: React.FC<StatusPlayerProps> = ({ handleNextPhaseClick, isBtn
     setup: {
       client: { play },
     },
-    account: { account },
+    burnerManager: { account },
   } = useDojo();
 
   const { game_id } = useElementStore((state) => state);
@@ -33,6 +33,7 @@ const StatusPlayer: React.FC<StatusPlayerProps> = ({ handleNextPhaseClick, isBtn
   const image = avatars[player.index + 1];
 
   const handleEmoteSelect = (emote: number) => {
+    if (!account) return;
     if (game_id == null || game_id == undefined) return;
     play.emote(account, game_id, player.index, emote);
   };

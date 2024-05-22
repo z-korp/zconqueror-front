@@ -28,13 +28,14 @@ import {
 } from '@/components/ui/dialog';
 import SoundsDialog from '../SoundsDialog';
 import { useGame } from '@/hooks/useGame';
+import WalletButton from '../WalletButton';
 
 const Map = () => {
   const {
     setup: {
       client: { play },
     },
-    account: { account },
+    burnerManager: { account },
   } = useDojo();
   const containerRef = useRef(null);
   const { isItMyTurn } = useMe();
@@ -47,7 +48,7 @@ const Map = () => {
     useElementStore((state) => state);
 
   const surrender = async () => {
-    if (game_id) await play.surrender(account, game_id);
+    if (game_id && account) await play.surrender(account, game_id);
   };
 
   const { setShowTuto } = useTutorial();
@@ -175,6 +176,8 @@ const Map = () => {
           <div>
             <SoundsDialog />
           </div>
+
+          <WalletButton />
         </div>
         {isContinentMode && (
           <div className="vt323-font text-xl absolute top-0 left-1/2 transform -translate-x-1/2 z-50">

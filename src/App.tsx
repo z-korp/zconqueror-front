@@ -1,4 +1,3 @@
-import './App.css';
 import PlayPanel from './components/PlayPanel';
 import Map from './components/map/Map';
 import { Toaster } from './components/ui/toaster';
@@ -10,13 +9,16 @@ import { TutorialProvider } from './contexts/TutorialContext';
 import { useGetPlayers } from './hooks/useGetPlayers';
 import { useElementStore } from './utils/store';
 import PlayersPanel from './components/PlayersPanel';
-import { DebugPanel } from './components/DebugPanel';
 import OverlayEndGame from './components/OverlayEndGame';
 import { useMe } from './hooks/useMe';
 import DynamicOverlayTuto from './components/DynamicOverlayTuto';
 import OverlayBattleReport from './components/BattleReport/OverlayBattleReport';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import ActionLogs from './components/ActionLogs/ActionLogs';
+import OverlayConnection from './components/OverlayConnection';
+import { WalletPanel } from './components/WalletPanel';
+import './App.css';
+import './fonts.css';
 
 function App() {
   // const { id } = useParams<{ id?: string }>();
@@ -45,12 +47,14 @@ function App() {
 
   return (
     <>
+      <OverlayConnection />
+      <div className="fixed top-[32px] right-[32px] w-full flex justify-end z-30">
+        <WalletPanel />
+      </div>
       <TutorialProvider>
         <Toaster />
         {battleReport && <OverlayBattleReport battle={battleReport} onClose={() => setBattleReport(null)} />}
-        <div className="fixed top-0 left-0 z-30">
-          <DebugPanel />
-        </div>
+
         {game_state === GameState.MainMenu && <MainMenu />}
         {game_state === GameState.Lobby && <Lobby />}
         {game_state === GameState.Game && (

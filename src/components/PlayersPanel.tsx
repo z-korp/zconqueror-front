@@ -19,7 +19,7 @@ const PlayersPanel = ({ players }: PlayersPanelProps) => {
     setup: {
       client: { play },
     },
-    account: { account },
+    burnerManager: { account },
   } = useDojo();
   const playersRef = useRef<HTMLDivElement>(null);
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -38,6 +38,8 @@ const PlayersPanel = ({ players }: PlayersPanelProps) => {
   const { currentPlayer } = useGetCurrentPlayer();
 
   const banPlayer = async () => {
+    if (!account) return;
+
     await play.banish(account, game.id);
   };
 

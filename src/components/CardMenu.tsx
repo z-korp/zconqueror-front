@@ -15,7 +15,7 @@ const CardMenu = ({ onClose, cards }: CardMenuProps) => {
     setup: {
       client: { play },
     },
-    account: { account },
+    burnerManager: { account },
   } = useDojo();
 
   const game = useGame();
@@ -28,7 +28,7 @@ const CardMenu = ({ onClose, cards }: CardMenuProps) => {
   }, [cards]);
 
   const discardCards = () => {
-    if (game.id !== undefined && game.id !== null) {
+    if (game.id !== undefined && game.id !== null && account !== null) {
       play.discard(account, game.id, selectedCards[0], selectedCards[1], selectedCards[2]);
       setSelectedCards([]);
     }

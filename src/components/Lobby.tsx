@@ -11,13 +11,14 @@ import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '.
 import { useMe } from '@/hooks/useMe';
 import { FaCrown } from 'react-icons/fa';
 import { Player } from '@/utils/types';
+import WalletButton from './WalletButton';
 
 const Lobby: React.FC = () => {
   const {
     setup: {
       client: { host },
     },
-    account: { account },
+    burnerManager: { account },
   } = useDojo();
   const { toast } = useToast();
 
@@ -48,6 +49,8 @@ const Lobby: React.FC = () => {
   };
 
   const startGame = async () => {
+    if (account === null) return;
+
     if (game_id === undefined) {
       console.error('Game id not defined');
       toast({
@@ -67,6 +70,8 @@ const Lobby: React.FC = () => {
   };
 
   const leaveGame = async (game_id: number) => {
+    if (account === null) return;
+
     try {
       if (isHost(game.host, account.address)) {
         await host.delete_game(account, game.id);
@@ -85,6 +90,8 @@ const Lobby: React.FC = () => {
   };
 
   const kickPlayer = async (player_index: number, game_id: number) => {
+    if (account === null) return;
+
     try {
       await host.kick(account, game_id, player_index);
     } catch (error: any) {
@@ -96,6 +103,8 @@ const Lobby: React.FC = () => {
   };
 
   const transferHost = async (player_index: number, game_id: number) => {
+    if (account === null) return;
+
     try {
       await host.transfer(account, game_id, player_index);
     } catch (error: any) {
@@ -106,6 +115,10 @@ const Lobby: React.FC = () => {
     }
   };
 
+  console.log('game', game);
+  console.log('me', me);
+  console.log('players', players);
+
   if (!game || !me || !players) {
     return;
   }
@@ -113,9 +126,9 @@ const Lobby: React.FC = () => {
   return (
     <div className="vt323-font">
       <div className="flex flex-col justify-center items-center gap-6">
-        <div className="flex justify-center w-full">
+        <div className="w-full relative h-16">
           <Button
-            className="mr-auto"
+            className="absolute left-0"
             variant="tertiary"
             onClick={async () => {
               if (game.id !== undefined) {
@@ -125,7 +138,12 @@ const Lobby: React.FC = () => {
           >
             Back
           </Button>
-          <div className="mr-auto w-96 rounded-lg uppercase text-white text-4xl bg-stone-500">zConqueror</div>
+          <div className="absolute left-1/2 transform -translate-x-1/2 w-96 rounded-lg uppercase text-white text-4xl bg-stone-500 text-center">
+            zConqueror
+          </div>
+          <div className="absolute right-0">
+            <WalletButton />
+          </div>
         </div>
 
         <div className="w-5/6 max-w-4xl flex flex-col bg-stone-500 p-8 rounded-lg">
@@ -193,13 +211,13 @@ const Lobby: React.FC = () => {
               </TableBody>
             </Table>
           )}
-          {isHost(game.host, account.address) && (
+          {isHost(game.host, account ? account.address : '') && (
             <Button className="mt-8 self-end w-fit hover:bg-green-600" variant="tertiary" onClick={startGame}>
               Start the Game
             </Button>
           )}
         </div>
-        {!isHost(game.host, account.address) && (
+        {!isHost(game.host, account ? account.address : '') && (
           <h1 className="mt-4 text-white text-6xl">
             Waiting for the game to start
             <span className="inline-block animate-jump delay-100">.</span>

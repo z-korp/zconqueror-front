@@ -26,7 +26,7 @@ const GameRow: React.FC<GameRowProps> = ({ game, setPlayerName }) => {
       client: { host },
       clientComponents: { Player },
     },
-    account: { account },
+    burnerManager: { account },
   } = useDojo();
 
   const { set_game_state, set_game_id, player_name } = useElementStore((state) => state);
@@ -36,6 +36,8 @@ const GameRow: React.FC<GameRowProps> = ({ game, setPlayerName }) => {
   const { players } = useGetPlayersForGame(game.id);
 
   const joinGame = async (gameid: number) => {
+    if (account === null) return;
+
     if (!player_name) {
       toast({
         variant: 'destructive',

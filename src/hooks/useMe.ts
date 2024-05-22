@@ -7,7 +7,7 @@ import { Player } from '@/utils/types';
 export function useMe(): { me: Player | null; isItMyTurn: boolean } {
   const {
     setup: {
-      account: { account },
+      burnerManager: { account },
     },
   } = useDojo();
   const { turn } = useTurn();
@@ -17,12 +17,12 @@ export function useMe(): { me: Player | null; isItMyTurn: boolean } {
   const { players } = useGetPlayers();
 
   useEffect(() => {
-    if (players.length > 0 && account.address) {
+    if (players.length > 0 && account?.address) {
       const me = players.find((p) => p.address === account.address);
       if (!me) return;
       setMe(me);
     }
-  }, [account.address, players]);
+  }, [account?.address, players]);
 
   return {
     me,

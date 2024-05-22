@@ -4,7 +4,7 @@ import { useDojo } from '@/dojo/useDojo';
 
 const Burners: React.FC = () => {
   const {
-    account: { account, create, list, select, isDeploying, clear },
+    burnerManager: { account, create, list, select, isDeploying, clear },
   } = useDojo();
 
   const handleCreate = () => {
@@ -24,7 +24,7 @@ const Burners: React.FC = () => {
             <li key={wallet.address}>
               <button
                 className={`${
-                  account.address === wallet.address ? 'bg-green-500' : 'bg-gray-300'
+                  account?.address === wallet.address ? 'bg-green-500' : 'bg-gray-300'
                 } hover:bg-green-700 text-white font-bold py-2 px-4 rounded min-w-[670px]`}
                 onClick={() => handleSelectWallet(wallet.address)}
               >

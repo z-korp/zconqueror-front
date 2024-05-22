@@ -28,7 +28,7 @@ const ActionPanel = () => {
       client: { play },
       clientComponents: { Tile },
     },
-    account: { account },
+    burnerManager: { account },
   } = useDojo();
 
   const {
@@ -162,6 +162,7 @@ const ActionPanel = () => {
   };
 
   const handleAttack = async () => {
+    if (account === null) return;
     if (current_source === null || current_target === null) return;
     if (game_id == null || game_id == undefined) return;
 
@@ -214,6 +215,7 @@ const ActionPanel = () => {
   };
 
   const handleMoveTroops = async () => {
+    if (account === null) return;
     if (current_source === null || current_target === null) return;
     if (game_id == null || game_id == undefined) return;
 

@@ -38,12 +38,14 @@ interface State {
   set_last_log: (last_log: LogType | null) => void;
   round_limit: number;
   setRoundLimit: (limit: number) => void;
+  isWalletPanelOpen: boolean;
+  setWalletPanelOpen: (isOpen: boolean) => void;
 }
 
 export const useElementStore = create<State>((set) => ({
   last_log: null,
   set_last_log: (last_log: LogType | null) => set(() => ({ last_log })),
-  game_id: 0,
+  game_id: -1,
   set_game_id: (game_id: number) => set(() => ({ game_id })),
   game_state: GameState.MainMenu,
   set_game_state: (game_state: GameState) => set(() => ({ game_state })),
@@ -67,4 +69,6 @@ export const useElementStore = create<State>((set) => ({
   setTilesConqueredThisTurn: (tile: number[]) => set(() => ({ tilesConqueredThisTurn: tile })),
   round_limit: 15,
   setRoundLimit: (limit: number) => set(() => ({ round_limit: limit })),
+  isWalletPanelOpen: false,
+  setWalletPanelOpen: (isOpen: boolean) => set(() => ({ isWalletPanelOpen: isOpen })),
 }));

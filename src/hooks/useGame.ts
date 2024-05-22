@@ -21,8 +21,8 @@ export const useGame = () => {
     [gameComponentValue]
   );
 
-  const current_turn = Math.floor(sanitizedGame.nonce / (3 * sanitizedGame.player_count) + 1);
-  const number_max_turns = Math.floor(sanitizedGame.limit / (3 * sanitizedGame.player_count));
+  const current_turn = sanitizedGame ? Math.floor(sanitizedGame.nonce / (3 * sanitizedGame.player_count) + 1) : 0;
+  const number_max_turns = sanitizedGame ? Math.floor(sanitizedGame.limit / (3 * sanitizedGame.player_count)) : 0;
 
   return {
     ...sanitizedGame,

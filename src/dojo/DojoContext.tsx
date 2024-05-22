@@ -1,56 +1,59 @@
-import { BurnerAccount, useBurnerManager } from '@dojoengine/create-burner';
-import { createContext, ReactNode, useContext, useMemo } from 'react';
-import { Account } from 'starknet';
+import { BurnerManagerHook, BurnerManager, useBurnerManager } from 'create-burner-forked';
+import { dojoConfig } from '../../dojoConfig.ts';
+import { ReactNode, createContext, useContext, useEffect, useState } from 'react';
+import { AccountInterface } from 'starknet';
 import { SetupResult } from './setup';
+import { useAccount } from '@starknet-react/core';
 
 interface DojoContextType extends SetupResult {
-  masterAccount: Account;
-  account: BurnerAccount;
+  masterAccount: AccountInterface | undefined;
+  burnerManager: BurnerManagerHook;
 }
 
 export const DojoContext = createContext<DojoContextType | null>(null);
 
-type Props = {
-  children: ReactNode;
-  value: SetupResult;
-};
-
-export const DojoProvider = ({ children, value }: Props) => {
+export const DojoProvider = ({ children, value }: { children: ReactNode; value: SetupResult }) => {
   const currentValue = useContext(DojoContext);
   if (currentValue) throw new Error('DojoProvider can only be used once');
 
-  const {
-    config: { masterAddress, masterPrivateKey },
-    burnerManager,
-    dojoProvider,
-  } = value;
+  const { account: masterAccount } = useAccount();
 
-  const masterAccount = useMemo(
-    () => new Account(dojoProvider.provider, masterAddress, masterPrivateKey, '1'),
-    [masterAddress, masterPrivateKey, dojoProvider.provider]
-  );
+  const [burnerManagerInstance, setBurnerManagerInstance] = useState<BurnerManager | null>(null);
 
-  const { create, list, get, account, select, isDeploying, clear, copyToClipboard, applyFromClipboard } =
-    useBurnerManager({
-      burnerManager,
-    });
+  useEffect(() => {
+    const initBurnerManagerInstance = async (masterAccount: AccountInterface) => {
+      const burnerManager = new BurnerManager({
+        masterAccount,
+        accountClassHash: dojoConfig.accountClassHash,
+        rpcProvider: value.dojoProvider.provider,
+        feeTokenAddress: dojoConfig.feeTokenAddress,
+      });
+
+      try {
+        await burnerManager.init();
+      } catch (e) {
+        console.error(e);
+      }
+
+      setBurnerManagerInstance(burnerManager);
+    };
+
+    if (masterAccount) {
+      console.log('Burner Manager init masterAccount ' + masterAccount.address);
+      initBurnerManagerInstance(masterAccount);
+    }
+  }, [masterAccount]);
+
+  const burnerManager = useBurnerManager({
+    burnerManager: burnerManagerInstance,
+  });
 
   return (
     <DojoContext.Provider
       value={{
         ...value,
         masterAccount,
-        account: {
-          create,
-          list,
-          get,
-          select,
-          clear,
-          account: account ? account : masterAccount,
-          isDeploying,
-          copyToClipboard,
-          applyFromClipboard,
-        },
+        burnerManager,
       }}
     >
       {children}

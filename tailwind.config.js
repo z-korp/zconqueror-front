@@ -80,6 +80,7 @@ module.exports = {
       },
       fontFamily: {
         'space-mono': ['Space Mono', 'monospace'],
+        joystix: ['Joystix', 'monospace'],
       },
     },
   },
