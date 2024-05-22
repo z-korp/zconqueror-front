@@ -1,5 +1,7 @@
 const manifest = await import(
-  `../zconqueror-contracts/manifests/${import.meta.env.VITE_PUBLIC_MANIFEST_PROFILE}/manifest.json`
+  import.meta.env.VITE_PUBLIC_TEST
+    ? `../zconqueror-contracts/manifests/${import.meta.env.VITE_PUBLIC_MANIFEST_PROFILE}/manifest.json`
+    : `./assets/manifests/${import.meta.env.VITE_PUBLIC_MANIFEST_PROFILE}/manifest.json`
 );
 
 import { createDojoConfig } from '@dojoengine/core';
