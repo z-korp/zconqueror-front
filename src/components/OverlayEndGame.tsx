@@ -47,24 +47,34 @@ const OverlayEndGame: React.FC<OverlayEndGameProps> = ({ me, players }) => {
               ✕
             </Button>
             <div className="flex flex-col items-center justify-center w-full">
-              {players
-                .filter((player: any) => player.rank !== 0)
+              {[...players]
                 .sort((playerA: any, playerB: any) => playerA.rank - playerB.rank)
                 .map((player: any, index: number) => (
                   <div className="flex gap-4 mb-2 items-center justify-center text-white text-lg w-full" key={index}>
-                    {player.rank === 1 && <Trophy className="w-8 h-8" stroke="gold" />}
-                    {player.rank === 2 && <Medal className="w-8 h-8" stroke="silver" />}
-                    {player.rank === 3 && <Medal className="w-8 h-8" stroke={getColorRGB('bronze')} />}
-                    {player.rank !== 1 && player.rank !== 2 && player.rank !== 3 && (
-                      <span className="w-8 h-8">{player.rank}</span>
+                    {player.rank !== 0 && (
+                      <>
+                        {player.rank === 1 && <Trophy className="w-8 h-8" stroke="gold" />}
+                        {player.rank === 2 && <Medal className="w-8 h-8" stroke="silver" />}
+                        {player.rank === 3 && <Medal className="w-8 h-8" stroke={getColorRGB('bronze')} />}
+                        {player.rank !== 1 && player.rank !== 2 && player.rank !== 3 && (
+                          <span className="w-8 h-8">{player.rank}</span>
+                        )}
+                        <img
+                          src={avatars[player.index + 1]}
+                          alt="player"
+                          className="rounded-full object-cover w-14 h-14 mx-4 drop-shadow-lg"
+                        />
+                      </>
                     )}
-                    <img
-                      src={avatars[player.index + 1]}
-                      alt="player"
-                      className="rounded-full object-cover w-14 h-14 mx-4 drop-shadow-lg"
-                    />
+                    {player.rank === 0 && (
+                      <>
+                        <span className="w-8 h-8">-</span>
+                        <div className="rounded-full object-cover w-14 h-14 mx-4 drop-shadow-lg" />
+                      </>
+                    )}
+
                     <div className="w-1/2 bg-black p-1 rounded-lg drop-shadow-lg">
-                      <h1>{player.name}</h1>
+                      <h1>{player.rank === 0 ? '-' : player.name}</h1>
                     </div>
                   </div>
                 ))}
