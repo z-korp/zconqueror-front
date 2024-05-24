@@ -27,7 +27,7 @@ export async function setupWorld(provider: DojoProvider) {
   // Transaction execution and checking wrapper
   const executeAndCheck = async (account: AccountInterface, contractName: string, methodName: string, args: any[]) => {
     const ret = await provider.execute(account, contractName, methodName, args, {
-      maxFee: '100000000000000', // 0.0001 ETH
+      maxFee: '5000000000000000', // 0.005 ETH
     });
     const receipt = await account.waitForTransaction(ret.transaction_hash, {
       retryInterval: 100,
