@@ -13,8 +13,8 @@ const OverlayConnection = () => {
         background: 'radial-gradient(circle, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.9) 100%)',
       }}
     >
-      <div className="relative flex flex-col items-center w-4/5 h-[350px] rounded-lg border-2 border-stone-900 p-16 z-[1001] vt323-font bg-stone-600 text-white justify-center">
-        <p className="text-xl mb-2">Connect your StarkNet wallet to get started.</p>
+      <div className="relative flex flex-col items-center max-w-[760px] w-4/5 h-[350px] rounded-lg border-2 border-stone-900 p-16 z-[1001] vt323-font bg-stone-600 text-white justify-center">
+        <p className="text-xl mb-2">Connect to get started.</p>
         <Connect />
       </div>
     </div>
