@@ -28,18 +28,11 @@ const ActionPanel = () => {
       client: { play },
       clientComponents: { Tile },
     },
-    burnerManager: { account },
   } = useDojo();
 
-  const {
-    current_source,
-    set_current_source,
-    current_target,
-    set_current_target,
-    game_id,
-    lastBattleResult,
-    setLastBattleResult,
-  } = useElementStore((state) => state);
+  const { current_source, set_current_source, current_target, set_current_target, game_id } = useElementStore(
+    (state) => state
+  );
 
   const { phase } = usePhase();
   const { currentPlayer } = useGetCurrentPlayer();

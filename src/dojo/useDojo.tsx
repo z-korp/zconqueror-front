@@ -7,6 +7,5 @@ export const useDojo = () => {
 
   return {
     setup: context,
-    burnerManager: context.burnerManager,
   };
 };

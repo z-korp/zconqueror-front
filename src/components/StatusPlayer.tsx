@@ -6,9 +6,8 @@ import { Button } from './ui/button';
 import DynamicOverlayTuto from './DynamicOverlayTuto';
 import tutorialData from '../data/tutorialSteps.json';
 import EmoteWheel from './EmoteWheel';
-import { useState } from 'react';
 import { useDojo } from '@/dojo/useDojo';
-import { useEmotes } from '@/hooks/useEmotes';
+import { useAccount } from '@starknet-react/core';
 
 interface StatusPlayerProps {
   handleNextPhaseClick: () => void;
@@ -20,8 +19,8 @@ const StatusPlayer: React.FC<StatusPlayerProps> = ({ handleNextPhaseClick, isBtn
     setup: {
       client: { play },
     },
-    burnerManager: { account },
   } = useDojo();
+  const { account } = useAccount();
 
   const { game_id } = useElementStore((state) => state);
 

@@ -1,6 +1,6 @@
 import { usePhase } from '@/hooks/usePhase';
 import { useTurn } from '@/hooks/useTurn';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Phase, useElementStore } from '../utils/store';
 import { getPhaseName } from '@/utils/textState';
 import ActionPanel from './ActionPanel';
@@ -18,14 +18,15 @@ import { toast } from './ui/use-toast';
 import DynamicOverlayTuto from './DynamicOverlayTuto';
 import tutorialData from '../data/tutorialSteps.json';
 import { useAudioSettings } from '@/contexts/AudioContext';
+import { useAccount } from '@starknet-react/core';
 
 const PlayPanel = () => {
   const {
     setup: {
       client: { play },
     },
-    burnerManager: { account },
   } = useDojo();
+  const { account } = useAccount();
 
   const { me: player, isItMyTurn } = useMe();
   const { turn } = useTurn();

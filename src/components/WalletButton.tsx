@@ -1,13 +1,12 @@
 import { shortAddress } from '@/utils/sanitizer';
 import { Wallet } from 'lucide-react';
 import { Button } from './ui/button';
-import { useDojo } from '@/dojo/useDojo';
 import { useElementStore } from '@/utils/store';
+import { useAccount } from '@starknet-react/core';
 
 const WalletButton = () => {
-  const {
-    burnerManager: { account },
-  } = useDojo();
+  const { account } = useAccount();
+
   const { isWalletPanelOpen, setWalletPanelOpen } = useElementStore((state) => state);
 
   return (

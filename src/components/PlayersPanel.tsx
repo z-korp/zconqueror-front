@@ -9,6 +9,7 @@ import { useGame } from '@/hooks/useGame';
 import { useDojo } from '@/dojo/useDojo';
 import { Button } from './ui/button';
 import usePlayerTimer from '@/hooks/usePlayerTimer';
+import { useAccount } from '@starknet-react/core';
 
 type PlayersPanelProps = {
   players: Player[];
@@ -19,8 +20,9 @@ const PlayersPanel = ({ players }: PlayersPanelProps) => {
     setup: {
       client: { play },
     },
-    burnerManager: { account },
   } = useDojo();
+  const { account } = useAccount();
+
   const playersRef = useRef<HTMLDivElement>(null);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [contentHeight, setContentHeight] = useState(0);

@@ -1,5 +1,5 @@
+import { erc20ABI } from '@/utils/erc20';
 import { useContractRead } from '@starknet-react/core';
-import { erc20ABI } from './erc20';
 import { BlockTag } from 'starknet';
 
 interface BalanceProps {

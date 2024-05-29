@@ -4,6 +4,7 @@ import { useDojo } from '@/dojo/useDojo';
 import { useEffect, useState } from 'react';
 import { Button } from './ui/button';
 import { CardType, cardTypeFromNumber } from '@/utils/cards';
+import { useAccount } from '@starknet-react/core';
 
 interface CardMenuProps {
   cards: CardType[];
@@ -15,8 +16,8 @@ const CardMenu = ({ onClose, cards }: CardMenuProps) => {
     setup: {
       client: { play },
     },
-    burnerManager: { account },
   } = useDojo();
+  const { account } = useAccount();
 
   const game = useGame();
 
@@ -28,7 +29,7 @@ const CardMenu = ({ onClose, cards }: CardMenuProps) => {
   }, [cards]);
 
   const discardCards = () => {
-    if (game.id !== undefined && game.id !== null && account !== null) {
+    if (game.id !== undefined && game.id !== null && account !== undefined) {
       play.discard(account, game.id, selectedCards[0], selectedCards[1], selectedCards[2]);
       setSelectedCards([]);
     }

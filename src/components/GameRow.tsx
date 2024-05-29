@@ -9,6 +9,7 @@ import { useDojo } from '@/dojo/useDojo';
 import { toast } from './ui/use-toast';
 import { DialogCreateJoin } from './DialogCreateJoin';
 import { useGetPlayersForGame } from '@/hooks/useGetPlayersForGame';
+import { useAccount } from '@starknet-react/core';
 
 interface GameRowProps {
   game: {
@@ -26,8 +27,8 @@ const GameRow: React.FC<GameRowProps> = ({ game, setPlayerName }) => {
       client: { host },
       clientComponents: { Player },
     },
-    burnerManager: { account },
   } = useDojo();
+  const { account } = useAccount();
 
   const { set_game_state, set_game_id, player_name } = useElementStore((state) => state);
 
@@ -36,7 +37,7 @@ const GameRow: React.FC<GameRowProps> = ({ game, setPlayerName }) => {
   const { players } = useGetPlayersForGame(game.id);
 
   const joinGame = async (gameid: number) => {
-    if (account === null) return;
+    if (account === undefined) return;
 
     if (!player_name) {
       toast({
@@ -45,6 +46,7 @@ const GameRow: React.FC<GameRowProps> = ({ game, setPlayerName }) => {
       });
       return;
     }
+    console.log('account', account);
     try {
       await host.join(account, gameid, player_name);
       set_game_id(gameid);

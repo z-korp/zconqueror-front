@@ -29,14 +29,16 @@ import {
 import SoundsDialog from '../SoundsDialog';
 import { useGame } from '@/hooks/useGame';
 import WalletButton from '../WalletButton';
+import { useAccount } from '@starknet-react/core';
 
 const Map = () => {
   const {
     setup: {
       client: { play },
     },
-    burnerManager: { account },
   } = useDojo();
+  const { account } = useAccount();
+
   const containerRef = useRef(null);
   const { isItMyTurn } = useMe();
 

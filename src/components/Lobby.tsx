@@ -12,15 +12,16 @@ import { useMe } from '@/hooks/useMe';
 import { FaCrown } from 'react-icons/fa';
 import { Player } from '@/utils/types';
 import WalletButton from './WalletButton';
-import TransactionState from './Transaction';
+import { useAccount } from '@starknet-react/core';
 
 const Lobby: React.FC = () => {
   const {
     setup: {
       client: { host },
     },
-    burnerManager: { account },
   } = useDojo();
+  const { account } = useAccount();
+
   const { toast } = useToast();
 
   const { set_game_state, set_game_id, game_id, round_limit } = useElementStore((state) => state);
@@ -55,7 +56,7 @@ const Lobby: React.FC = () => {
   };
 
   const startGame = async () => {
-    if (account === null) return;
+    if (account === undefined) return;
 
     if (game_id === undefined) {
       console.error('Game id not defined');
@@ -79,7 +80,7 @@ const Lobby: React.FC = () => {
   };
 
   const leaveGame = async (game_id: number) => {
-    if (account === null) return;
+    if (account === undefined) return;
 
     try {
       setLeaveLoading(true);
@@ -102,7 +103,7 @@ const Lobby: React.FC = () => {
   };
 
   const kickPlayer = async (player_index: number, game_id: number) => {
-    if (account === null) return;
+    if (account === undefined) return;
 
     try {
       setKickLoading(true);
@@ -118,7 +119,7 @@ const Lobby: React.FC = () => {
   };
 
   const transferHost = async (player_index: number, game_id: number) => {
-    if (account === null) return;
+    if (account === undefined) return;
 
     try {
       setTransferLoading(true);

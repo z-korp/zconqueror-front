@@ -1,6 +1,4 @@
-import { jsonRpcProvider } from '@starknet-react/core';
 import { Chain } from '@starknet-react/chains';
-import { dojoConfig } from '../dojoConfig';
 import { KATANA_ETH_CONTRACT_ADDRESS } from '@dojoengine/core';
 
 export const katana: Chain = {
@@ -23,11 +21,3 @@ export const katana: Chain = {
     },
   },
 };
-
-function rpc(chain: Chain) {
-  return {
-    nodeUrl: dojoConfig.rpcUrl,
-  };
-}
-
-export const provider = jsonRpcProvider({ rpc });

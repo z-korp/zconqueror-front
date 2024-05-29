@@ -1,17 +1,14 @@
 import { useState } from 'react';
 import { IoMdClose } from 'react-icons/io';
-import { useDojo } from '@/dojo/useDojo';
 import '../../src/styles/debugPanel.css';
 import { shortAddress } from '@/utils/sanitizer';
 import { Wallet } from 'lucide-react';
-import BurnersManager from './BurnersManager';
 import { Button } from './ui/button';
-import MasterAccountConnect from './MasterAccountConnect';
+import { useAccount } from '@starknet-react/core';
+import Connect from './Connect';
 
 export const DebugPanel = () => {
-  const {
-    burnerManager: { account },
-  } = useDojo();
+  const { account } = useAccount();
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -30,9 +27,7 @@ export const DebugPanel = () => {
             <IoMdClose size="2em" />
           </button>
         </div>
-        <MasterAccountConnect />
-        <div className="h-10" />
-        <BurnersManager />
+        <Connect />
       </div>
     </>
   );

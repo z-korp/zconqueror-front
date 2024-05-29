@@ -9,6 +9,7 @@ import { Table, TableBody, TableHead, TableHeader, TableRow } from './ui/table';
 import GameRow from './GameRow';
 import { DialogCreateJoin } from './DialogCreateJoin';
 import WalletButton from './WalletButton';
+import { useAccount } from '@starknet-react/core';
 
 const MainMenu: React.FC = () => {
   const { toast } = useToast();
@@ -21,8 +22,8 @@ const MainMenu: React.FC = () => {
       client: { host },
       clientComponents: { Game, Player },
     },
-    burnerManager: { account },
   } = useDojo();
+  const { account } = useAccount();
 
   const game = useComponentValue(
     Game,
