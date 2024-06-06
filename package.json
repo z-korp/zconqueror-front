@@ -14,7 +14,7 @@
     "create-components": "npx @dojoengine/core ./src/dojo/manifest.json src/dojo/generated/contractComponents.ts http://localhost:5050 0x2f160a75929560c8b9b82e12f4d4295362b6ee94c45e7468a01c27c9436f1a1"
   },
   "dependencies": {
-    "@cartridge/connector": "^0.3.23",
+    "@cartridge/connector": "^0.3.26",
     "@dojoengine/core": "^0.6.125",
     "@dojoengine/react": "^0.6.125",
     "@dojoengine/recs": "^0.1.35",
