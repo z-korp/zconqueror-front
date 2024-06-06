@@ -16,6 +16,7 @@ import { BattleEvent, parseBattleEvent } from '@/utils/events';
 import { Battle } from '@/utils/types';
 import { BATTLE_EVENT } from '@/constants';
 import { Entity } from '@/graphql/generated/graphql';
+import { useAccount } from '@starknet-react/core';
 
 const SLEEP_TIME = 600; // ms
 
@@ -33,6 +34,8 @@ const ActionPanel = () => {
   const { current_source, set_current_source, current_target, set_current_target, game_id } = useElementStore(
     (state) => state
   );
+
+  const { account } = useAccount();
 
   const { phase } = usePhase();
   const { currentPlayer } = useGetCurrentPlayer();
@@ -172,20 +175,47 @@ const ActionPanel = () => {
     try {
       await play.attack(account, game_id, current_source, current_target, armySelected);
 
-      await sleep(500);
-      const ret = await play.defend(account, game_id, current_source, current_target);
+      await sleep(2000);
 
-      const battleEvents: BattleEvent[] = [];
-      ret.events
-        .filter((e) => e.keys[0] === BATTLE_EVENT)
-        .forEach((event) => {
-          const battleEvent = parseBattleEvent(event);
-          battleEvents.push(battleEvent);
-        });
+      try {
+        const ret = await play.defend(account, game_id, current_source, current_target);
 
-      if (battleEvents.length !== 0) {
-        const battle = getBattleFromBattleEvents(battleEvents);
-        setBattleResult(battle);
+        const battleEvents: BattleEvent[] = [];
+        ret.events
+          .filter((e) => e.keys[0] === BATTLE_EVENT)
+          .forEach((event) => {
+            const battleEvent = parseBattleEvent(event);
+            battleEvents.push(battleEvent);
+          });
+
+        if (battleEvents.length !== 0) {
+          const battle = getBattleFromBattleEvents(battleEvents);
+          setBattleResult(battle);
+        }
+      } catch (defendError: any) {
+        // Retry once if the first attempt fails
+        console.log(`First defend attempt failed with error: ${defendError.message}`);
+        await sleep(2000);
+
+        try {
+          const ret = await play.defend(account, game_id, current_source, current_target);
+
+          const battleEvents: BattleEvent[] = [];
+          ret.events
+            .filter((e) => e.keys[0] === BATTLE_EVENT)
+            .forEach((event) => {
+              const battleEvent = parseBattleEvent(event);
+              battleEvents.push(battleEvent);
+            });
+
+          if (battleEvents.length !== 0) {
+            const battle = getBattleFromBattleEvents(battleEvents);
+            setBattleResult(battle);
+          }
+        } catch (secondDefendError: any) {
+          console.log(`Defend failed on retry: ${secondDefendError.message}`);
+          throw new Error(`Defend failed on retry: ${secondDefendError.message}`);
+        }
       }
 
       removeSelected();
