@@ -52,7 +52,14 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
         disabled={isDisabled || props.disabled}
       >
-        {isLoading ? <LucideLoader className="animate-spin-slow" /> : children}
+        {isLoading ? (
+          <div className="flex gap-2 items-center">
+            {children}
+            <LucideLoader className="animate-spin-slow" size={15} />
+          </div>
+        ) : (
+          children
+        )}
       </Comp>
     );
   }

@@ -11,6 +11,7 @@ import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '.
 import { useMe } from '@/hooks/useMe';
 import { FaCrown } from 'react-icons/fa';
 import { Player } from '@/utils/types';
+import { useState } from 'react';
 
 const Lobby: React.FC = () => {
   const {
@@ -27,6 +28,11 @@ const Lobby: React.FC = () => {
 
   const { players } = useGetPlayersForGame(game_id);
   const { me } = useMe();
+
+  const [leaveLoading, setLeaveLoading] = useState(false);
+  const [startLoading, setStartLoading] = useState(false);
+  const [kickLoading, setKickLoading] = useState(false);
+  const [transferLoading, setTransferLoading] = useState(false);
 
   useEffect(() => {
     if (me) {
@@ -57,17 +63,21 @@ const Lobby: React.FC = () => {
       return;
     }
     try {
+      setStartLoading(true);
       await host.start(account, game_id, round_limit);
     } catch (error: any) {
       toast({
         variant: 'destructive',
         description: <code className="text-white text-xs">{error.message}</code>,
       });
+    } finally {
+      setStartLoading(false);
     }
   };
 
   const leaveGame = async (game_id: number) => {
     try {
+      setLeaveLoading(true);
       if (isHost(game.host, account.address)) {
         await host.delete_game(account, game.id);
       } else {
@@ -81,28 +91,36 @@ const Lobby: React.FC = () => {
         variant: 'destructive',
         description: <code className="text-white text-xs">{error.message}</code>,
       });
+    } finally {
+      setLeaveLoading(false);
     }
   };
 
   const kickPlayer = async (player_index: number, game_id: number) => {
     try {
+      setKickLoading(true);
       await host.kick(account, game_id, player_index);
     } catch (error: any) {
       toast({
         variant: 'destructive',
         description: <code className="text-white text-xs">{error.message}</code>,
       });
+    } finally {
+      setKickLoading(false);
     }
   };
 
   const transferHost = async (player_index: number, game_id: number) => {
     try {
+      setTransferLoading(true);
       await host.transfer(account, game_id, player_index);
     } catch (error: any) {
       toast({
         variant: 'destructive',
         description: <code className="text-white text-xs">{error.message}</code>,
       });
+    } finally {
+      setTransferLoading(false);
     }
   };
 
@@ -115,6 +133,8 @@ const Lobby: React.FC = () => {
       <div className="flex flex-col justify-center items-center gap-6">
         <div className="flex justify-center w-full">
           <Button
+            isLoading={leaveLoading}
+            isDisabled={leaveLoading}
             className="mr-auto"
             variant="tertiary"
             onClick={async () => {
@@ -163,6 +183,8 @@ const Lobby: React.FC = () => {
                             {isHost(game.host, me.address) && player.address !== me.address && (
                               <>
                                 <Button
+                                  isLoading={kickLoading}
+                                  isDisabled={kickLoading}
                                   size="sm"
                                   variant="tertiary"
                                   className="hover:bg-red-600"
@@ -173,6 +195,8 @@ const Lobby: React.FC = () => {
                                   Kick
                                 </Button>
                                 <Button
+                                  isLoading={transferLoading}
+                                  isDisabled={transferLoading}
                                   size="sm"
                                   variant="tertiary"
                                   className="hover:bg-green-600"
@@ -194,7 +218,13 @@ const Lobby: React.FC = () => {
             </Table>
           )}
           {isHost(game.host, account.address) && (
-            <Button className="mt-8 self-end w-fit hover:bg-green-600" variant="tertiary" onClick={startGame}>
+            <Button
+              isLoading={startLoading}
+              isDisabled={startLoading}
+              className="mt-8 self-end w-fit hover:bg-green-600"
+              variant="tertiary"
+              onClick={startGame}
+            >
               Start the Game
             </Button>
           )}
