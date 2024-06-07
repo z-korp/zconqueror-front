@@ -38,6 +38,8 @@ interface State {
   set_last_log: (last_log: LogType | null) => void;
   round_limit: number;
   setRoundLimit: (limit: number) => void;
+  isWalletPanelOpen: boolean;
+  setWalletPanelOpen: (isOpen: boolean) => void;
 }
 
 export const useElementStore = create<State>((set) => ({
@@ -67,4 +69,6 @@ export const useElementStore = create<State>((set) => ({
   setTilesConqueredThisTurn: (tile: number[]) => set(() => ({ tilesConqueredThisTurn: tile })),
   round_limit: 15,
   setRoundLimit: (limit: number) => set(() => ({ round_limit: limit })),
+  isWalletPanelOpen: false,
+  setWalletPanelOpen: (isOpen: boolean) => set(() => ({ isWalletPanelOpen: isOpen })),
 }));

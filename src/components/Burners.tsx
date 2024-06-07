@@ -25,7 +25,7 @@ const Burners: React.FC = () => {
               <button
                 className={`${
                   account.address === wallet.address ? 'bg-green-500' : 'bg-gray-300'
-                } hover:bg-green-700 text-white font-bold py-2 px-4 rounded min-w-[670px]`}
+                } hover:bg-green-700 text-white font-bold py-2 px-4 rounded min-w-[670px] font-joystix`}
                 onClick={() => handleSelectWallet(wallet.address)}
               >
                 {wallet.address}
@@ -33,10 +33,14 @@ const Burners: React.FC = () => {
             </li>
           ))}
         </ul>
-        <Button className="self-end" onClick={handleCreate}>
-          {isDeploying ? 'Deploying...' : 'Create burner'}
-        </Button>
-        <Button onClick={() => clear()}>Clear burners</Button>
+        <div className="w-full flex justify-end gap-2">
+          <Button variant="destructive" onClick={() => clear()}>
+            Clear burners
+          </Button>
+          <Button variant="tertiary" onClick={handleCreate}>
+            {isDeploying ? 'Deploying...' : 'Create burner'}
+          </Button>
+        </div>
       </div>
     </div>
   );

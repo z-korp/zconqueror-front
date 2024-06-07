@@ -12,6 +12,7 @@ import { useMe } from '@/hooks/useMe';
 import { FaCrown } from 'react-icons/fa';
 import { Player } from '@/utils/types';
 import { useState } from 'react';
+import WalletButton from './WalletButton';
 
 const Lobby: React.FC = () => {
   const {
@@ -131,11 +132,11 @@ const Lobby: React.FC = () => {
   return (
     <div className="vt323-font">
       <div className="flex flex-col justify-center items-center gap-6">
-        <div className="flex justify-center w-full">
+        <div className="w-full relative h-16">
           <Button
             isLoading={leaveLoading}
             isDisabled={leaveLoading}
-            className="mr-auto"
+            className="absolute left-0"
             variant="tertiary"
             onClick={async () => {
               if (game.id !== undefined) {
@@ -145,7 +146,13 @@ const Lobby: React.FC = () => {
           >
             Back
           </Button>
-          <div className="mr-auto w-96 rounded-lg uppercase text-white text-4xl bg-stone-500">zConqueror</div>
+
+          <div className="absolute left-1/2 transform -translate-x-1/2 w-96 rounded-lg uppercase text-white text-4xl bg-stone-500 text-center">
+            zConqueror
+          </div>
+          <div className="absolute right-0">
+            <WalletButton />
+          </div>
         </div>
 
         <div className="w-5/6 max-w-4xl flex flex-col bg-stone-500 p-8 rounded-lg">

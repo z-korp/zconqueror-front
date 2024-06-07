@@ -8,6 +8,7 @@ import { HasValue, getComponentValue } from '@dojoengine/recs';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from './ui/table';
 import GameRow from './GameRow';
 import { DialogCreateJoin } from './DialogCreateJoin';
+import WalletButton from './WalletButton';
 
 const MainMenu: React.FC = () => {
   const { toast } = useToast();
@@ -74,7 +75,14 @@ const MainMenu: React.FC = () => {
   return (
     <div className="vt323-font">
       <div className="flex flex-col justify-center items-center gap-6">
-        <div className="w-96 rounded-lg uppercase text-white text-4xl bg-stone-500">Zconqueror</div>
+        <div className="w-full relative h-16">
+          <div className="absolute left-1/2 transform -translate-x-1/2 w-96 rounded-lg uppercase text-white text-4xl bg-stone-500 text-center">
+            zConqueror
+          </div>
+          <div className="absolute right-0">
+            <WalletButton />
+          </div>
+        </div>
         {games.length === 0 && (
           <DialogCreateJoin
             onClick={createNewGame}
