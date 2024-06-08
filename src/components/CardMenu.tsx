@@ -70,7 +70,7 @@ const CardMenu = ({ onClose, cards }: CardMenuProps) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50 vt323-font">
+    <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50 font-vt323">
       <div className="relative bg-stone-700 border-2 border-stone-900 p-6 rounded-lg shadow-lg text-center pointer-events-auto">
         <Button
           onClick={onClose}

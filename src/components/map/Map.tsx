@@ -10,47 +10,23 @@ import Continents from './Continents';
 import Svg from './Svg';
 import Region from './Region';
 import nameData from '../../assets/map/nameData.json'; // Adjust the path as necessary
-import { Button } from '../ui/button';
-import { useDojo } from '@/dojo/useDojo';
-import { BadgeHelp, Flag, Map as MapLucid } from 'lucide-react';
-import { useTutorial } from '../../contexts/TutorialContext';
-import DynamicOverlayTuto from '../DynamicOverlayTuto';
-import tutorialData from '../../data/tutorialSteps.json';
-import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogTitle,
-  DialogTrigger,
-  DialogFooter,
-  DialogHeader,
-} from '@/components/ui/dialog';
 import SoundsDialog from '../SoundsDialog';
 import { useGame } from '@/hooks/useGame';
+import WalletButton from '../WalletButton';
+import SurrenderDialog from '../SurrenderDialog';
+import TutorialButton from '../TutorialButton';
+import MapButton from '../MapButton';
 
 const Map = () => {
-  const {
-    setup: {
-      client: { play },
-    },
-    account: { account },
-  } = useDojo();
   const containerRef = useRef(null);
-  const { isItMyTurn } = useMe();
 
-  const { turn } = useTurn();
   const game = useGame();
+  const { turn } = useTurn();
   const { phase } = usePhase();
+  const { isItMyTurn } = useMe();
   const { tiles } = useGetTiles();
-  const { current_source, set_current_source, set_current_target, setContinentMode, isContinentMode, game_id } =
-    useElementStore((state) => state);
 
-  const surrender = async () => {
-    if (game_id) await play.surrender(account, game_id);
-  };
-
-  const { setShowTuto } = useTutorial();
+  const { current_source, set_current_source, set_current_target, isContinentMode } = useElementStore((state) => state);
 
   const handleRegionClick = (regionId: number) => {
     if (isTest) console.log('regionId', regionId);
@@ -109,75 +85,22 @@ const Map = () => {
     }
   };
 
-  function handleShowTuto() {
-    setShowTuto(true);
-  }
-
   return (
     <>
       <div className="relative z-0" ref={containerRef}>
         {game && (
-          <div className="absolute z-20 top-0 left-0 flex items-center max-w-xl w-fit px-4 h-[40px] border-2 rounded-lg bg-stone-700 border-stone-900 text-white vt323-font">{`Turn: ${game.current_turn}/${game.number_max_turns}`}</div>
+          <div className="absolute z-20 top-0 left-0 flex items-center max-w-xl w-fit px-4 h-[40px] border-2 rounded-lg bg-stone-700 border-stone-900 text-white font-vt323">{`Turn: ${game.current_turn}/${game.number_max_turns}`}</div>
         )}
-        <div className="absolute z-20 top-0 right-0 gap-2 flex">
-          <DynamicOverlayTuto tutorialStep="6" texts={tutorialData['6']}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="secondary"
-                  onMouseEnter={() => setContinentMode(true)} // Activates when the mouse enters the button area
-                  onMouseLeave={() => setContinentMode(false)} // Deactivates when the mouse leaves the button area
-                >
-                  <MapLucid />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Continents</TooltipContent>
-            </Tooltip>
-          </DynamicOverlayTuto>
+        <div className="absolute z-20 top-0 right-0 gap-3 flex items-end">
+          <MapButton />
+          <SurrenderDialog />
+          <TutorialButton />
+          <SoundsDialog />
 
-          <div>
-            <Dialog>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <DialogTrigger asChild>
-                    <Button variant="secondary">
-                      <Flag />
-                    </Button>
-                  </DialogTrigger>
-                </TooltipTrigger>
-                <TooltipContent>Surrender</TooltipContent>
-              </Tooltip>
-              <DialogContent className="sm:max-w-md bg-stone-700 border-2 border-black">
-                <DialogHeader>
-                  <DialogTitle className="text-white text-xl">Do you confirm you want to surrender?</DialogTitle>
-                </DialogHeader>
-                <DialogFooter className="sm:justify-center">
-                  <DialogClose asChild>
-                    <Button variant="destructive" className="m-4 gap-2" onClick={surrender}>
-                      Yes I want to surrender !
-                      <Flag />
-                    </Button>
-                  </DialogClose>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-          </div>
-
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="secondary" onClick={handleShowTuto}>
-                <BadgeHelp />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Tutorial</TooltipContent>
-          </Tooltip>
-
-          <div>
-            <SoundsDialog />
-          </div>
+          <WalletButton />
         </div>
         {isContinentMode && (
-          <div className="vt323-font text-xl absolute top-0 left-1/2 transform -translate-x-1/2 z-50">
+          <div className="font-vt323 text-xl absolute top-10 left-1/2 transform -translate-x-1/2 z-50 text-white text-shadow-black-outline">
             <div>Controlling a full continent awards supply bonuses.</div>
             <div>Here are the bonuses for each continent.</div>
           </div>

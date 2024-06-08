@@ -12,7 +12,7 @@ const WalletButton = () => {
 
   return (
     <Button className="p-2 flex gap-3" variant="tertiary" onClick={() => setWalletPanelOpen(!isWalletPanelOpen)}>
-      <Wallet size={16} /> <p className="vt323-font">{account?.address ? shortAddress(account?.address) : 'Connect'}</p>
+      <Wallet size={16} /> <p className="font-vt323">{account?.address ? shortAddress(account?.address) : 'Connect'}</p>
     </Button>
   );
 };

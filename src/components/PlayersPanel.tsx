@@ -59,7 +59,7 @@ const PlayersPanel = ({ players }: PlayersPanelProps) => {
   return (
     <div className="max-w-xl w-full border-2 rounded-lg bg-stone-700 border-stone-900 text-white">
       <div
-        className="flex justify-between items-center p-2 border-b border-stone-900 rounded-t cursor-pointer vt323-font"
+        className="flex justify-between items-center p-2 border-b border-stone-900 rounded-t cursor-pointer font-vt323"
         onClick={toggleCollapse}
       >
         <span>{`Players (${players.length})`}</span>
@@ -71,11 +71,11 @@ const PlayersPanel = ({ players }: PlayersPanelProps) => {
           <div key={index}>
             {!isCollapsed && currentPlayer && currentPlayer.index === index && (
               <div className="absolute -left-24 mt-4 flex justify-center items-center h-14 w-24 rounded-l-lg bg-stone-900 text-stone-500 flex-col">
-                <span className="vt323-font text-white">{phaseName} ▶︎</span>
-                {timeLeft > 0 && <span className="vt323-font text-white mb-1">{timeLeft}</span>}
+                <span className="font-vt323 text-white">{phaseName} ▶︎</span>
+                {timeLeft > 0 && <span className="font-vt323 text-white mb-1">{timeLeft}</span>}
                 {timeLeft === 0 && !isItMyTurn && (
                   <Button
-                    className="vt323-font text-white px-3 py-1 text-xs h-fit border-white border-[1px] rounded-lg"
+                    className="font-vt323 text-white px-3 py-1 text-xs h-fit border-white border-[1px] rounded-lg"
                     onClick={banPlayer}
                   >
                     BAN

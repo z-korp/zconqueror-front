@@ -73,7 +73,7 @@ const MainMenu: React.FC = () => {
 
   if (!games) return null;
   return (
-    <div className="vt323-font">
+    <div className="font-vt323">
       <div className="flex flex-col justify-center items-center gap-6">
         <div className="w-full relative h-16">
           <div className="absolute left-1/2 transform -translate-x-1/2 w-96 rounded-lg uppercase text-white text-4xl bg-stone-500 text-center">
