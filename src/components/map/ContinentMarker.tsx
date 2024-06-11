@@ -98,7 +98,7 @@ const ContinentMarker: FC<ContinentMarkerProps> = ({
         shouldJump={false}
       >
         <span
-          className="text-white text-with-outline vt323-font text-xl"
+          className="text-white text-with-outline font-vt323 text-xl"
           data-text={`${name} (+${supply})`}
         >{`${name} (+${supply})`}</span>
       </RoundButton>

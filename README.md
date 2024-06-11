@@ -46,8 +46,13 @@ sozo auth writer Moves spawn
 
 3. **Terminal 3 - Client**:
 
+## Local
 ```console
-cd client && yarn && yarn dev
+cd client && bun i && bun run dev
+```
+## Slot
+```console
+cd client && bun i && bun run slot
 ```
 
 4. **Terminal 4 - Torii**:

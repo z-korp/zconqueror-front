@@ -1,18 +1,11 @@
 import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useState } from 'react';
 
 interface DialogCreateJoinProps {
-  onClick: () => void;
+  onClick: () => Promise<void>;
   playerName: string;
   setPlayerName: (name: string) => void;
   dialogTitle: string;
@@ -42,8 +35,23 @@ export function DialogCreateJoin({
   setLimit,
   isCreating,
 }: DialogCreateJoinProps) {
+  const [loading, setLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleClick = async () => {
+    setLoading(true);
+    try {
+      await onClick();
+      setIsOpen(false); // Close the dialog after the operation
+    } catch (error) {
+      console.error('Error executing onClick:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button variant="tertiary" className="hover:bg-green-600">
           {buttonTextDisplayed}
@@ -59,6 +67,7 @@ export function DialogCreateJoin({
               nickname
             </Label>
             <Input
+              disabled={loading}
               id="nickname"
               className="w-full"
               type="text"
@@ -73,6 +82,7 @@ export function DialogCreateJoin({
                 </Label>
                 <div className="flex space-x-2">
                   <Input
+                    disabled={loading}
                     id="hours"
                     className="w-full"
                     type="number"
@@ -81,6 +91,7 @@ export function DialogCreateJoin({
                     onChange={(e) => setHours && setHours(Number(e.target.value))}
                   />
                   <Input
+                    disabled={loading}
                     id="minutes"
                     className="w-full"
                     type="number"
@@ -94,24 +105,29 @@ export function DialogCreateJoin({
                 </Label>
                 <div className="flex space-x-2">
                   <Input
+                    disabled={loading}
                     id="limit"
                     className="w-6/12"
                     type="number"
                     placeholder="Max turns"
                     value={limit}
                     onChange={(e) => setLimit && setLimit(Number(e.target.value))}
-                  ></Input>
+                  />
                 </div>
               </>
             )}
           </div>
         </div>
         <DialogFooter className="sm:justify-center">
-          <DialogClose asChild>
-            <Button onClick={onClick} variant="tertiary" className="hover:bg-green-600">
-              {buttonText}
-            </Button>
-          </DialogClose>
+          <Button
+            isLoading={loading}
+            isDisabled={loading}
+            onClick={handleClick}
+            variant="tertiary"
+            className="hover:bg-green-600"
+          >
+            {buttonText}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

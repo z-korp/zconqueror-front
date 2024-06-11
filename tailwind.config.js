@@ -79,9 +79,26 @@ module.exports = {
         'spin-slow': 'spin 2s linear infinite',
       },
       fontFamily: {
+        vt323: ['VT323', 'monospace'],
         'space-mono': ['Space Mono', 'monospace'],
+        joystix: ['Joystix', 'monospace'],
+      },
+      textShadow: {
+        'black-outline':
+          '1px 1px 0 #000, -1px 1px 0 #000, 1px -1px 0 #000, -1px -1px 0 #000, 1px 0px 0 #000, -1px 0px 0 #000, 0px 1px 0 #000, 0px -1px 0 #000',
       },
     },
   },
-  plugins: [require('tailwindcss-animate', '@tailwindcss/transition')],
+  plugins: [
+    require('tailwindcss-animate', '@tailwindcss/transition'),
+    function ({ addUtilities }) {
+      const newUtilities = {
+        '.text-shadow-black-outline': {
+          textShadow:
+            '1px 1px 0 #000, -1px 1px 0 #000, 1px -1px 0 #000, -1px -1px 0 #000, 1px 0px 0 #000, -1px 0px 0 #000, 0px 1px 0 #000, 0px -1px 0 #000',
+        },
+      };
+      addUtilities(newUtilities, ['responsive', 'hover']);
+    },
+  ],
 };

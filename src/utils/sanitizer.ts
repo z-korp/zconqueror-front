@@ -23,8 +23,8 @@ export const bigIntAddressToString = (address: bigint) => {
   return removeLeadingZeros(validateAndParseAddress(address));
 };
 
-export const shortAddress = (address: string) => {
-  return `${address.slice(0, 4)}...${address.slice(-4)}`;
+export const shortAddress = (address: string, size = 4) => {
+  return `${address.slice(0, size)}...${address.slice(-size)}`;
 };
 
 export const removeLeadingZeros = (address: string) => {

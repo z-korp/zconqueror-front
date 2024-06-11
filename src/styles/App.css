@@ -1,11 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+@import 'fonts.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-.vt323-font {
-  font-family: 'VT323', monospace;
-}
 
 #root {
   max-width: 1280px;

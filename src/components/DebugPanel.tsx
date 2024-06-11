@@ -1,28 +1,16 @@
-import { useState } from 'react';
-import { IoIosSettings, IoMdClose } from 'react-icons/io';
+import { IoMdClose } from 'react-icons/io';
 import Burners from './Burners';
-import { useDojo } from '@/dojo/useDojo';
+import { useElementStore } from '@/utils/store';
 import '../../src/styles/debugPanel.css';
 
 export const DebugPanel = () => {
-  const {
-    account: { account },
-  } = useDojo();
-
-  const [isOpen, setIsOpen] = useState(false);
+  const { isWalletPanelOpen, setWalletPanelOpen } = useElementStore((state) => state);
 
   return (
     <>
-      <div className="w-screen flex items-center justify-between pr-2">
-        <button onClick={() => setIsOpen(!isOpen)}>
-          <IoIosSettings size="2em" />
-        </button>
-        <div>{account.address}</div>
-      </div>
-
-      <div className={`side-panel ${isOpen ? 'open' : ''}`}>
+      <div className={`side-panel ${isWalletPanelOpen ? 'open' : ''} z-31`}>
         <div className="side-panel-element">
-          <button className="btn-close" onClick={() => setIsOpen(!isOpen)}>
+          <button className="btn-close" onClick={() => setWalletPanelOpen(!isWalletPanelOpen)}>
             <IoMdClose size="2em" />
           </button>
         </div>

@@ -29,7 +29,7 @@ const OverlayEndGame: React.FC<OverlayEndGameProps> = ({ me, players }) => {
     <>
       {showOverlay && (
         <div
-          className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-70 flex flex-col items-center justify-center z-[1000] vt323-font"
+          className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-70 flex flex-col items-center justify-center z-[1000] font-vt323"
           style={{
             background: 'radial-gradient(circle, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.9) 100%)',
           }}

@@ -75,7 +75,7 @@ const ActionLogs: React.FC = () => {
   });
 
   return (
-    <div className="max-w-xl w-full border-2 rounded-lg bg-stone-700 border-stone-900 text-white vt323-font">
+    <div className="max-w-xl w-full border-2 rounded-lg bg-stone-700 border-stone-900 text-white font-vt323">
       <div
         className="flex justify-between items-center p-2 border-b border-stone-900 rounded-t cursor-pointer"
         onClick={toggleCollapse}

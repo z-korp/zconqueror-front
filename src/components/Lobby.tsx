@@ -11,6 +11,9 @@ import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '.
 import { useMe } from '@/hooks/useMe';
 import { FaCrown } from 'react-icons/fa';
 import { Player } from '@/utils/types';
+import { useState } from 'react';
+import WalletButton from './WalletButton';
+import Loading from './Loading';
 
 const Lobby: React.FC = () => {
   const {
@@ -27,6 +30,11 @@ const Lobby: React.FC = () => {
 
   const { players } = useGetPlayersForGame(game_id);
   const { me } = useMe();
+
+  const [leaveLoading, setLeaveLoading] = useState(false);
+  const [startLoading, setStartLoading] = useState(false);
+  const [kickLoading, setKickLoading] = useState(false);
+  const [transferLoading, setTransferLoading] = useState(false);
 
   useEffect(() => {
     if (me) {
@@ -57,17 +65,21 @@ const Lobby: React.FC = () => {
       return;
     }
     try {
+      setStartLoading(true);
       await host.start(account, game_id, round_limit);
     } catch (error: any) {
       toast({
         variant: 'destructive',
         description: <code className="text-white text-xs">{error.message}</code>,
       });
+    } finally {
+      setStartLoading(false);
     }
   };
 
   const leaveGame = async (game_id: number) => {
     try {
+      setLeaveLoading(true);
       if (isHost(game.host, account.address)) {
         await host.delete_game(account, game.id);
       } else {
@@ -81,28 +93,36 @@ const Lobby: React.FC = () => {
         variant: 'destructive',
         description: <code className="text-white text-xs">{error.message}</code>,
       });
+    } finally {
+      setLeaveLoading(false);
     }
   };
 
   const kickPlayer = async (player_index: number, game_id: number) => {
     try {
+      setKickLoading(true);
       await host.kick(account, game_id, player_index);
     } catch (error: any) {
       toast({
         variant: 'destructive',
         description: <code className="text-white text-xs">{error.message}</code>,
       });
+    } finally {
+      setKickLoading(false);
     }
   };
 
   const transferHost = async (player_index: number, game_id: number) => {
     try {
+      setTransferLoading(true);
       await host.transfer(account, game_id, player_index);
     } catch (error: any) {
       toast({
         variant: 'destructive',
         description: <code className="text-white text-xs">{error.message}</code>,
       });
+    } finally {
+      setTransferLoading(false);
     }
   };
 
@@ -111,11 +131,13 @@ const Lobby: React.FC = () => {
   }
 
   return (
-    <div className="vt323-font">
+    <div className="font-vt323">
       <div className="flex flex-col justify-center items-center gap-6">
-        <div className="flex justify-center w-full">
+        <div className="w-full relative h-16">
           <Button
-            className="mr-auto"
+            isLoading={leaveLoading}
+            isDisabled={leaveLoading}
+            className="absolute left-0"
             variant="tertiary"
             onClick={async () => {
               if (game.id !== undefined) {
@@ -125,7 +147,13 @@ const Lobby: React.FC = () => {
           >
             Back
           </Button>
-          <div className="mr-auto w-96 rounded-lg uppercase text-white text-4xl bg-stone-500">zConqueror</div>
+
+          <div className="absolute left-1/2 transform -translate-x-1/2 w-96 rounded-lg uppercase text-white text-4xl bg-stone-500 text-center">
+            zConqueror
+          </div>
+          <div className="absolute right-0">
+            <WalletButton />
+          </div>
         </div>
 
         <div className="w-5/6 max-w-4xl flex flex-col bg-stone-500 p-8 rounded-lg">
@@ -163,6 +191,8 @@ const Lobby: React.FC = () => {
                             {isHost(game.host, me.address) && player.address !== me.address && (
                               <>
                                 <Button
+                                  isLoading={kickLoading}
+                                  isDisabled={kickLoading}
                                   size="sm"
                                   variant="tertiary"
                                   className="hover:bg-red-600"
@@ -173,6 +203,8 @@ const Lobby: React.FC = () => {
                                   Kick
                                 </Button>
                                 <Button
+                                  isLoading={transferLoading}
+                                  isDisabled={transferLoading}
                                   size="sm"
                                   variant="tertiary"
                                   className="hover:bg-green-600"
@@ -194,19 +226,18 @@ const Lobby: React.FC = () => {
             </Table>
           )}
           {isHost(game.host, account.address) && (
-            <Button className="mt-8 self-end w-fit hover:bg-green-600" variant="tertiary" onClick={startGame}>
+            <Button
+              isLoading={startLoading}
+              isDisabled={startLoading}
+              className="mt-8 self-end w-fit hover:bg-green-600"
+              variant="tertiary"
+              onClick={startGame}
+            >
               Start the Game
             </Button>
           )}
         </div>
-        {!isHost(game.host, account.address) && (
-          <h1 className="mt-4 text-white text-6xl">
-            Waiting for the game to start
-            <span className="inline-block animate-jump delay-100">.</span>
-            <span className="inline-block animate-jump delay-200">.</span>
-            <span className="inline-block animate-jump delay-300">.</span>
-          </h1>
-        )}
+        {!isHost(game.host, account.address) && <Loading text="Waiting for the game to start" />}
       </div>
     </div>
   );

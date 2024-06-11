@@ -15,15 +15,14 @@ export function useGetPlayers(): { players: Player[]; playerNames: string[] } {
 
   const { game_id } = useElementStore((state) => state);
 
-  const [playerHash, setPlayerHash] = useState<string>('');
-
   const playerEntities = useEntityQuery([Has(Player), HasValue(Player, { game_id: game_id })]);
   const players = useMemo(
     () =>
       playerEntities
         .map((id) => getComponentValue(Player, id))
         .sort((a, b) => a.index - b.index)
-        .map(sanitizePlayer),
+        .map(sanitizePlayer)
+        .filter((player) => player.address !== '0x'), // bug when user leave game
     [playerEntities, Player]
   );
 

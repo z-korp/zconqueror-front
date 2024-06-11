@@ -196,7 +196,7 @@ const TroopsMarker: FC<TroopsMarkerProps> = ({ position, handlePathClick, troups
         shouldJump={shouldJump(phase)}
         shouldAnimate={shouldAnimate}
       >
-        <span className="vt323-font text-xl text-white text-with-outline" data-text={displayedTroups}>
+        <span className="font-vt323 text-xl text-white text-with-outline" data-text={displayedTroups}>
           {displayedTroups}
         </span>
       </RoundButton>

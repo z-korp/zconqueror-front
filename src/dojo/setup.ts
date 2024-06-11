@@ -8,6 +8,7 @@ import { setupWorld } from './systems';
 import { Account } from 'starknet';
 import { BurnerManager } from '@dojoengine/create-burner';
 import { createUpdates } from './createUpdates';
+import { TypedData, WeierstrassSignatureType } from 'starknet';
 
 export type SetupResult = Awaited<ReturnType<typeof setup>>;
 
@@ -16,6 +17,7 @@ export async function setup({ ...config }: DojoConfig) {
   const toriiClient = await torii.createClient([], {
     rpcUrl: config.rpcUrl,
     toriiUrl: config.toriiUrl,
+    relayUrl: '',
     worldAddress: config.manifest.world.address || '',
   });
 
@@ -41,8 +43,11 @@ export async function setup({ ...config }: DojoConfig) {
   const burnerManager = new BurnerManager({
     masterAccount: new Account(dojoProvider.provider, config.masterAddress, config.masterPrivateKey),
     accountClassHash: config.accountClassHash,
+    feeTokenAddress: config.feeTokenAddress,
     rpcProvider: dojoProvider.provider,
   });
+
+  await burnerManager.init();
 
   if (burnerManager.list().length === 0) {
     try {
@@ -52,12 +57,16 @@ export async function setup({ ...config }: DojoConfig) {
     }
   }
 
-  burnerManager.init();
-
   return {
     client,
     clientComponents,
     contractComponents,
+    publish: (typedData: TypedData, signature: WeierstrassSignatureType) => {
+      toriiClient.publishMessage(typedData, {
+        r: signature.r.toString(),
+        s: signature.s.toString(),
+      });
+    },
     config,
     dojoProvider,
     burnerManager,
