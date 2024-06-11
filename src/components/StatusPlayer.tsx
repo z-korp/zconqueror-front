@@ -39,7 +39,7 @@ const StatusPlayer: React.FC<StatusPlayerProps> = ({ handleNextPhaseClick, isBtn
 
   return (
     <>
-      <div className="relative w-auto h-100 flex flex-col vt323-font text-white rounded-lg drop-shadow-lg">
+      <div className="relative w-auto h-100 flex flex-col font-vt323 text-white rounded-lg drop-shadow-lg">
         <div className="absolute -top-6 -left-5 w-24 h-24">
           <EmoteWheel onSelect={handleEmoteSelect}>
             <button>

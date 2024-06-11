@@ -30,10 +30,22 @@ export const DojoProvider = ({ children, value }: Props) => {
     [masterAddress, masterPrivateKey, dojoProvider.provider]
   );
 
-  const { create, list, get, account, select, isDeploying, clear, copyToClipboard, applyFromClipboard } =
-    useBurnerManager({
-      burnerManager,
-    });
+  const {
+    create,
+    list,
+    get,
+    account,
+    select,
+    isDeploying,
+    clear,
+    copyToClipboard,
+    applyFromClipboard,
+    remove,
+    deselect,
+    count,
+  } = useBurnerManager({
+    burnerManager,
+  });
 
   return (
     <DojoContext.Provider
@@ -50,6 +62,9 @@ export const DojoProvider = ({ children, value }: Props) => {
           isDeploying,
           copyToClipboard,
           applyFromClipboard,
+          remove,
+          deselect,
+          count,
         },
       }}
     >

@@ -1,5 +1,5 @@
 import manifest from './src/dojo/manifest.json';
-import { createDojoConfig } from '@dojoengine/core';
+import { KATANA_ETH_CONTRACT_ADDRESS, createDojoConfig } from '@dojoengine/core';
 
 export const dojoConfig = createDojoConfig({
   manifest,
@@ -8,4 +8,5 @@ export const dojoConfig = createDojoConfig({
   masterAddress: import.meta.env.VITE_PUBLIC_MASTER_ADDRESS,
   masterPrivateKey: import.meta.env.VITE_PUBLIC_MASTER_PRIVATE_KEY,
   accountClassHash: import.meta.env.VITE_PUBLIC_ACCOUNT_CLASS_HASH,
+  feeTokenAddress: KATANA_ETH_CONTRACT_ADDRESS,
 });

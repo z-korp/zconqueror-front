@@ -56,7 +56,7 @@ const SidePlayerInfo: React.FC<SidePlayerInfoProps> = ({ index, player }) => {
     .reduce((acc, curr) => acc + curr, 0);
 
   return (
-    <div className="divide-y divide-stone-500 text-black vt323-font">
+    <div className="divide-y divide-stone-500 text-black font-vt323">
       <div className="py-2 px-4">
         <div className="flex items-center">
           {/* Player Image or emote */}

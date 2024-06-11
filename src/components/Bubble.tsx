@@ -48,7 +48,7 @@ const Bubble: React.FC<ComicBubbleProps> = ({ texts, variant }) => {
 
   return isVisible ? (
     <div
-      className={`vt323-font bubble ${variant} relative max-w-md p-3 border-2 border-black rounded-lg bg-white text-lg`}
+      className={`font-vt323 bubble ${variant} relative max-w-md p-3 border-2 border-black rounded-lg bg-white text-lg`}
     >
       {`“${displayText}”`}
     </div>

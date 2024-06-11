@@ -193,7 +193,7 @@ const PlayPanel = () => {
         {/* Menu des cartes */}
         {showCardMenu && <CardMenu cards={cards} onClose={() => setShowCardMenu(false)} />}
         <div className="flex flex-col max-w-[420px] w-full z-20 pointer-events-auto">
-          <div className="mb-8 vt323-font">
+          <div className="mb-8 font-vt323">
             <ActionPanel />
           </div>
           {showBubble && (

@@ -1,22 +1,18 @@
-import './App.css';
-import PlayPanel from './components/PlayPanel';
-import Map from './components/map/Map';
 import { Toaster } from './components/ui/toaster';
-import tutorialData from './data/tutorialSteps.json';
 import GameState from './utils/gamestate';
 import MainMenu from './components/MainMenu';
 import Lobby from './components/Lobby';
 import { TutorialProvider } from './contexts/TutorialContext';
 import { useGetPlayers } from './hooks/useGetPlayers';
 import { useElementStore } from './utils/store';
-import PlayersPanel from './components/PlayersPanel';
 import { DebugPanel } from './components/DebugPanel';
 import OverlayEndGame from './components/OverlayEndGame';
 import { useMe } from './hooks/useMe';
-import DynamicOverlayTuto from './components/DynamicOverlayTuto';
 import OverlayBattleReport from './components/BattleReport/OverlayBattleReport';
 import { SpeedInsights } from '@vercel/speed-insights/react';
-import ActionLogs from './components/ActionLogs/ActionLogs';
+import Game from './components/Game';
+
+import './styles/App.css';
 
 function App() {
   // const { id } = useParams<{ id?: string }>();
@@ -53,34 +49,7 @@ function App() {
         </div>
         {game_state === GameState.MainMenu && <MainMenu />}
         {game_state === GameState.Lobby && <Lobby />}
-        {game_state === GameState.Game && (
-          <>
-            <div className="flex">
-              <div className="w-full">
-                <DynamicOverlayTuto tutorialStep="5" texts={tutorialData['5']}>
-                  <DynamicOverlayTuto tutorialStep="4" texts={tutorialData['4']}>
-                    <DynamicOverlayTuto tutorialStep="2" texts={tutorialData['2']}>
-                      <Map />
-                    </DynamicOverlayTuto>
-                  </DynamicOverlayTuto>
-                </DynamicOverlayTuto>
-              </div>
-            </div>
-            <div className="fixed bottom-0 left-0 w-1/4 p-1">
-              <DynamicOverlayTuto tutorialStep="7" texts={tutorialData['7']}>
-                <ActionLogs />
-              </DynamicOverlayTuto>
-            </div>
-            <div className="fixed bottom-0 right-0 w-1/4 pb-1 pr-1">
-              <DynamicOverlayTuto tutorialStep="1" texts={tutorialData['1']}>
-                <PlayersPanel players={players} />
-              </DynamicOverlayTuto>
-            </div>
-            <div className="flex justify-center">
-              <PlayPanel />
-            </div>
-          </>
-        )}
+        {game_state === GameState.Game && <Game />}
         {me && me.rank !== 0 && <OverlayEndGame me={me} players={players} />}
       </TutorialProvider>
       <SpeedInsights />

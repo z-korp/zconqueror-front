@@ -31,15 +31,9 @@ const ActionPanel = () => {
     account: { account },
   } = useDojo();
 
-  const {
-    current_source,
-    set_current_source,
-    current_target,
-    set_current_target,
-    game_id,
-    lastBattleResult,
-    setLastBattleResult,
-  } = useElementStore((state) => state);
+  const { current_source, set_current_source, current_target, set_current_target, game_id } = useElementStore(
+    (state) => state
+  );
 
   const { phase } = usePhase();
   const { currentPlayer } = useGetCurrentPlayer();
@@ -152,13 +146,12 @@ const ActionPanel = () => {
     } finally {
       await sleep(SLEEP_TIME); // otherwise value blink on tile
       Tile.removeOverride(ovIdSource);
+
+      removeSelected();
+
       // Disable btn if there is an error to avoid stuck state
       setIsBtnActionDisabled(false);
     }
-
-    removeSelected();
-    // Tx is done enable btn
-    setIsBtnActionDisabled(false);
   };
 
   const handleAttack = async () => {
@@ -178,23 +171,32 @@ const ActionPanel = () => {
     try {
       await play.attack(account, game_id, current_source, current_target, armySelected);
 
-      await sleep(500);
-      const ret = await play.defend(account, game_id, current_source, current_target);
+      await sleep(2000);
 
-      const battleEvents: BattleEvent[] = [];
-      ret.events
-        .filter((e) => e.keys[0] === BATTLE_EVENT)
-        .forEach((event) => {
-          const battleEvent = parseBattleEvent(event);
-          battleEvents.push(battleEvent);
-        });
+      const tryDefend = async () => {
+        const ret = await play.defend(account, game_id, current_source, current_target);
+        const battleEvents: BattleEvent[] = ret.events
+          .filter((e) => e.keys[0] === BATTLE_EVENT)
+          .map((event) => parseBattleEvent(event));
 
-      if (battleEvents.length !== 0) {
-        const battle = getBattleFromBattleEvents(battleEvents);
-        setBattleResult(battle);
+        if (battleEvents.length !== 0) {
+          const battle = getBattleFromBattleEvents(battleEvents);
+          setBattleResult(battle);
+        }
+      };
+
+      try {
+        await tryDefend();
+      } catch (defendError: any) {
+        console.log(`First defend attempt failed with error: ${defendError.message}`);
+
+        try {
+          await tryDefend();
+        } catch (secondDefendError: any) {
+          console.log(`Defend failed on retry: ${secondDefendError.message}`);
+          throw new Error(`Defend failed on retry: ${secondDefendError.message}`);
+        }
       }
-
-      removeSelected();
     } catch (error: any) {
       toast({
         variant: 'destructive',
@@ -204,13 +206,11 @@ const ActionPanel = () => {
       await sleep(SLEEP_TIME); // otherwise value blink on tile
       Tile.removeOverride(ovIdSource);
       Tile.removeOverride(ovIdTarget);
+
+      removeSelected();
       // Disable btn if there is an error to avoid stuck state
       setIsBtnActionDisabled(false);
     }
-
-    removeSelected();
-    // Tx is done enable btn
-    setIsBtnActionDisabled(false);
   };
 
   const handleMoveTroops = async () => {
@@ -231,13 +231,12 @@ const ActionPanel = () => {
       await sleep(SLEEP_TIME); // otherwise value blink on tile
       Tile.removeOverride(ovIdSource);
       Tile.removeOverride(ovIdTarget);
+
+      removeSelected();
+
       // Disable btn if there is an error to avoid stuck state
       setIsBtnActionDisabled(false);
     }
-
-    removeSelected();
-    // Tx is done enable btn
-    setIsBtnActionDisabled(false);
   };
 
   const removeSelected = (): void => {

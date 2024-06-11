@@ -16,16 +16,16 @@ const Burners: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center p-4">
+    <div className="flex justify-center p-4 font-vt323">
       <div className="flex flex-col items-start gap-2">
-        <h3 className="font-bold text-start">Wallets:</h3>
+        <h3 className="font-bold text-start text-2xl">Wallets:</h3>
         <ul className="flex flex-col gap-1">
           {list().map((wallet) => (
             <li key={wallet.address}>
               <button
                 className={`${
                   account.address === wallet.address ? 'bg-green-500' : 'bg-gray-300'
-                } hover:bg-green-700 text-white font-bold py-2 px-4 rounded min-w-[670px]`}
+                } hover:bg-green-700 text-white font-bold py-2 px-4 rounded min-w-[670px] text-xs font-joystix`}
                 onClick={() => handleSelectWallet(wallet.address)}
               >
                 {wallet.address}
@@ -33,10 +33,14 @@ const Burners: React.FC = () => {
             </li>
           ))}
         </ul>
-        <Button className="self-end" onClick={handleCreate}>
-          {isDeploying ? 'Deploying...' : 'Create burner'}
-        </Button>
-        <Button onClick={() => clear()}>Clear burners</Button>
+        <div className="w-full flex justify-end gap-2">
+          <Button variant="destructive" className="text-xl" onClick={() => clear()}>
+            Clear burners
+          </Button>
+          <Button variant="tertiary" className="text-xl" onClick={handleCreate}>
+            {isDeploying ? 'Deploying...' : 'Create burner'}
+          </Button>
+        </div>
       </div>
     </div>
   );
